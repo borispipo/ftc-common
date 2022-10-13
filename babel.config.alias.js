@@ -1,7 +1,26 @@
 const path = require("path");
-/*** */
+const platforms = require("./src/platforms");
+const getPlatform = (platform)=>{
+    platform = (typeof platform =='string'? platform : "web").toLowerCase();
+    for(let i in platforms){
+        let pl = platforms[i];
+        if(!pl || typeof pl !='string') continue;
+        if(pl.toLowerCase() == platform) return platform;
+    }
+    return "web";
+}
+/*** 
+ * @param {object}, les options du resolver, objet de la forme : 
+ * {
+ *      base : {string}, le chemin racine du projet
+ *      platform : {web||expo},//La plateforme du client
+ *      assets : {string}, le chemin assets de l'application 
+ * }
+ * 
+*/
 module.exports = function(opts){
-    let {base,assets} = opts && typeof opts =="object"? opts : {};
+    let {base,assets,platfom} = opts && typeof opts =="object"? opts : {};
+    platfom = getPlatform(platfom);
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
     base = base? base : path.resolve(__dirname,"..");
@@ -45,8 +64,7 @@ module.exports = function(opts){
         "$data-sources" : path.resolve(database,"dataSources"),
         "$dataSources" : path.resolve(database,"dataSources"),
         "$ctheme" : path.resolve(common,"theme"),
-        "$cnotify" : path.resolve(common,"notify"),
-        "$notify" : path.resolve(src,"notify"),
+        "$notify" : path.resolve(common,"notify"),
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
         "$uri" : path.resolve(common,"utils","uri"),
@@ -68,6 +86,7 @@ module.exports = function(opts){
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
+        "$active-platform" : path.resolve(common,"platforms",platfom),
         "$common":common,
     }
     if(assets){

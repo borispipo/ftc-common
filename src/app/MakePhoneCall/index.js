@@ -1,7 +1,7 @@
 //import * as Linking from 'expo-linking';
 import {isNonNullString,isObj,defaultObj,isPromise} from "$utils";
 import {isMobileNative,isChromeBrowser,isMobileBrowser} from "$platform";
-import notify from "$notify";
+import notify from "$active-platform/notify";
 import ButtonSheetProvider from "$components/BottomSheet/Provider";
 
 export const canMakePhoneCall = ()=> isMobileNative() || isChromeBrowser() ? true : false;

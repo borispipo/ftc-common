@@ -2,8 +2,8 @@ import {logout,setToken,isLoggedIn} from "./utils";
 import login from "./utils/login";
 import {post} from "$api";
 import {SIGN_IN} from "$cauth/routes";
-import {navigate} from "$navigation/utils";
-import notify from "$notify";
+import {navigate} from "$cnavigation/utils";
+import notify from "$active-platform/notify";
 import i18n from "$i18n";
 import {SIGNIN_API_PATH,SIGNOUT_API_PATH,} from "./routes";
 

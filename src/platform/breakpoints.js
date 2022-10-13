@@ -1,4 +1,4 @@
-import Dimensions from '$src/platform/dimensions';
+import Dimensions from '$active-platform/dimensions';
 import {isObj,defaultObj,extendObj} from "$utils";
 
 export const breakpoints = {

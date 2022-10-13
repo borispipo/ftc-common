@@ -212,7 +212,7 @@ export function getTextContent (elem,childContentSeparator) {
     return getTextContent(children);
   }
 
-  if(isClientSide()){
+  if(isClientSide() && !React.Concat && !React.setProps && !React.getTextContent){
     React.Concat = concat;
     React.setProps = setProps;
     React.extractPropTypes = extractPropTypes;

@@ -1,6 +1,6 @@
 
 //import * as Clipboard from 'expo-clipboard';
-import notify from "$notify";
+import notify from "$active-platform/notify";
 
 export const readText = x => Promise.reject({});//Clipboard.getStringAsync();
 

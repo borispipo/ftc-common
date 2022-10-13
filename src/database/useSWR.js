@@ -1,5 +1,5 @@
 
-//import useSWR from 'swr';
+import useSWR from 'swr';
 import { getFetcherOptions } from '$api';
 import {defaultObj} from "$utils";
 
@@ -22,8 +22,6 @@ import {defaultObj} from "$utils";
  */
 export default function useSwr (path,opts) {
     const {fetcher,url,...options} = getFetcherOptions(path,opts);
-    console.error("swr not installed ",path,options);
-    throw 'swr not installed'
     const { data, error,...rest } = useSWR(url, fetcher,options)
     return {
       ...defaultObj(rest),

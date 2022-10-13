@@ -2,6 +2,7 @@ import {isObj,isFunction,extendObj,defaultStr,defaultObj,isNonNullString} from "
 import {getURIPathName} from "$utils/uri";
 import {isWeb,isClientSide} from "$platform";
 import actions from "$cactions/actions";
+import { navigationRef } from "$active-platform/navigation";
 
 import * as React from "react";
 
@@ -25,16 +26,6 @@ export const getInitialRouteName = ()=> initialRouteName;
 
 export const DRAWER_NAVIGATOR_NAME = "DRAWER_NAVIGATOR_NAME";
 
-const navigationR = React.createRef();
-
-export const navigationRef = {
-    get current (){
-        return navigationR.current || {};
-    },
-    set current (value){
-        navigationR.current = isObj(value)? value : {};
-    }
-}
 
 export const activeNavigationRef = React.createRef(null);
 

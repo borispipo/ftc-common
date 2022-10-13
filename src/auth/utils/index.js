@@ -1,5 +1,5 @@
 import {isObj,defaultStr} from "$utils";
-import notify from "$notify";
+import notify from "$active-platform/notify";
 import {encrypt,decrypt} from "$crypto";
 import { SIGN_IN} from "../routes";
 import {getURIPathName} from "$utils/uri";

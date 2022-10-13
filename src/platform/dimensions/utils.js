@@ -1,11 +1,11 @@
-import Dimensions from '$src/platform/dimensions';
+import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from '../breakpoints';
 import {isObj,defaultStr} from "$utils"
 import APP from "$app/instance";
 import {addClassName,removeClassName,isDOMElement} from "$utils/dom";
 import isTouchDevice from "$utils/isTouchDevice";
 
-export {default as useWindowDimensions} from "$src/platform/useWindowDimensions";
+export {default as useWindowDimensions} from "$active-platform/useWindowDimensions";
 
 const msp = (dim, limit) => {
     return (dim.scale * dim.width) >= limit || (dim.scale * dim.height) >= limit;

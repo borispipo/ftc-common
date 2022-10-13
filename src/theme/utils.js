@@ -1,6 +1,6 @@
 import { lightColors,darkColors} from "./defaultTheme";
-import {modesObject} from "$ccomponents/TextField/utils";
-import themeRef from "$src/theme/themeRef";
+import {modesObject} from "$common/TextField/utils";
+import themeRef from "$active-platform/themeRef";
 
 export * from "./alpha";
 

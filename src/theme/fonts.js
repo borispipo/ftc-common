@@ -1,4 +1,4 @@
-import Platform from '$src/platform';
+import Platform from '$active-platform';
 
 export const fontConfig = {
   web: {

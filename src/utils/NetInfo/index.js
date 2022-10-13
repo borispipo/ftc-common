@@ -2,11 +2,10 @@ import {isWeb,isClientSide} from "$platform";
 import {buildAPIPath} from "$api/host";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;
-
 const init = ()=>{
     if(!NetInfo && isClientSide() && !hasNetInfoIntialized){
         const path = buildAPIPath("net-info");
-        NetInfo = require('@react-native-community/netinfo').default;
+        NetInfo = require('$active-platform/NetInfo').default;
         NetInfo.configure({
             /**** The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
             reachabilityUrl: path,

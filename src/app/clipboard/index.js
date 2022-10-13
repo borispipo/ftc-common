@@ -5,7 +5,7 @@ import  {defaultObj,defaultStr,isNonNullString,isObj,uniqid} from "$utils";
 ///import formatField from "$database/exporter/formatField";
 import {open,close} from "$components/Dialog/Provider";
 import { COPY_ICON } from '$components/Icon';
-import notify from "$notify";
+import notify from "$active-platform/notify";
 import {copyTextToClipboard} from "./utils";
 import {isMobileOrTabletMedia} from "$platform/dimensions";
 import session from "$session";

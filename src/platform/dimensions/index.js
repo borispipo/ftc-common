@@ -1,5 +1,5 @@
 import * as Dim from "./utils";
-import Dimensions  from "$src/platform/dimensions";
+import Dimensions  from "$active-platform/dimensions";
 import { useWindowDimensions } from "./utils";
 export * from "./utils";
 
