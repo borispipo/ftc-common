@@ -19,8 +19,8 @@ const getPlatform = (platform)=>{
  * 
 */
 module.exports = function(opts){
-    let {base,assets,platfom} = opts && typeof opts =="object"? opts : {};
-    platfom = getPlatform(platfom);
+    let {base,assets,platform} = opts && typeof opts =="object"? opts : {};
+    platform = getPlatform(platform);
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
     base = base? base : path.resolve(__dirname,"..");
@@ -41,19 +41,15 @@ module.exports = function(opts){
         "$navigation" : path.resolve(src,"navigation"),
         "$platform" : path.resolve(common,"platform"),
         "$dimensions" : path.resolve(common,"platform/dimensions"),
-        "$cimages" : path.resolve(common,"assets","images"),
         "$observable" : path.resolve(common,"lib","observable"),
         "$validator" : path.resolve(common,"lib","validator"),
         "$crypto" : path.resolve(common,"lib","crypto-js"),
         "$date" : path.resolve(common,"lib","date"),
         "$crypto-js" : path.resolve(common,"lib","crypto-js"),
         "$ccountries" : path.resolve(common,"countries"),
-        "$ccomponents" : path.resolve(common,"components"),
-        "$ccontainers" : path.resolve(common,"containers"),
         "$cscreens" : path.resolve(common,"screens"),
         "$countries" : path.resolve(src,"components","Countries"),
         '$components' : path.resolve(src,"components"),
-        '$containers' : path.resolve(src,"containers"),
         "$cdatabase" : path.resolve(common,"database"),
         "$database" : database,
         "$models" : path.resolve(database,"models"),
@@ -72,21 +68,17 @@ module.exports = function(opts){
         "$session" : path.resolve(common,"session"),
         "$base64" : path.resolve(common,"lib","base-64"),
         "$base-64" : path.resolve(common,"lib","base-64"),
-        "cform" : path.resolve(common,"components","Forms"),
-        "$clayouts" : path.resolve(common,"layouts"),
-        "$cscreens" : path.resolve(common,"screens"),
         "$screens" : path.resolve(src,"screens"),
         "$layouts" : path.resolve(src,"layouts"),
         "$screen" : path.resolve(src,"layouts","Screen"),
         "$form" : path.resolve(src,"components","Form"),
         "$form-manager" : path.resolve(src,"components","Form/utils/FormManager"),
-        "$cpreloader" : path.resolve(common,"preloader"),
         "$preloader" : path.resolve(src,"components","Preloader"),
         "$cactions" : path.resolve(common,"actions"),
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
-        "$active-platform" : path.resolve(common,"platforms",platfom),
+        "$active-platform" : path.resolve(common,"platforms",platform),
         "$common":common,
     }
     if(assets){
