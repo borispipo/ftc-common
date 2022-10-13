@@ -9,10 +9,6 @@ export {default as Container} from "./Container";
 
 export {default as AuthProvider} from "./AuthProvider";
 
-export {default as providers} from "./providers";
-
-export * from "./providers";
-
 Auth.Container = Container;
 Auth.Provider = Provider;
 
