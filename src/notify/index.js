@@ -7,6 +7,9 @@ export const TYPES = {
     warning : 'warn',
 }
 
+const notificationRef = React.createRef(null);
+
+export {notificationRef};
 export const notifyRef = React.createRef();
 export const notify = function(message,type,title,settings){
     if(typeof notifyRef.current !=='function') return;

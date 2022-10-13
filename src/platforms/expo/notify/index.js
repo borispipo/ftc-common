@@ -1,13 +1,9 @@
 import {ToastAndroid } from 'react-native';
 import React from "react";
 import {isAndroid} from "$platform";
-import { notifyRef,TYPES} from "$notify";
+import { notifyRef,notificationRef,TYPES} from "$notify";
 
 export {default} from "$notify";
-
-const notificationRef = React.createRef(null);
-
-export {notificationRef};
 
 notifyRef.current = (options)=>{
     if(type == TYPES.info && isAndroid()){

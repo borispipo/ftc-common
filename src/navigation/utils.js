@@ -4,6 +4,8 @@ import {isWeb,isClientSide} from "$platform";
 import actions from "$cactions/actions";
 import { navigationRef } from "$active-platform/navigation";
 
+export * from "$active-platform/navigation";
+
 import * as React from "react";
 
 export const sanitizeName =  function (screenName,screenType){
