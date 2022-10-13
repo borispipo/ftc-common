@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/borispipo/common#readme",
   "dependencies": {
+    "js-base64": "^3.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "unfetch": "^4.2.0"

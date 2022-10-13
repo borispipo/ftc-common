@@ -16,16 +16,13 @@ module.exports = function(opts){
         "$i18n" : path.resolve(common,"i18n"),
         "$lib" : path.resolve(common,"lib"),
         "$cauth":path.resolve(common,"auth"),
-        "$provider":path.resolve(common,"auth","providers"),
+        "$providers":path.resolve(src,"auth","providers"),
         "$auth" : path.resolve(src,"auth"),
         "$cnavigation" : path.resolve(common,"navigation"),
         "$navigation" : path.resolve(src,"navigation"),
         "$platform" : path.resolve(common,"platform"),
         "$dimensions" : path.resolve(common,"platform/dimensions"),
         "$cimages" : path.resolve(common,"assets","images"),
-        "$assets" : assets,
-        "$images" : path.resolve(assets,"images"),
-        "$css" : path.resolve(assets,"css"),
         "$observable" : path.resolve(common,"lib","observable"),
         "$validator" : path.resolve(common,"lib","validator"),
         "$crypto" : path.resolve(common,"lib","crypto-js"),
@@ -55,14 +52,12 @@ module.exports = function(opts){
         "$uri" : path.resolve(common,"utils","uri"),
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
-        "$vendors" : path.resolve(common,"vendors"),
         "$base64" : path.resolve(common,"lib","base-64"),
         "$base-64" : path.resolve(common,"lib","base-64"),
         "cform" : path.resolve(common,"components","Forms"),
         "$clayouts" : path.resolve(common,"layouts"),
         "$cscreens" : path.resolve(common,"screens"),
         "$screens" : path.resolve(src,"screens"),
-        "$clayouts" : path.resolve(common,"layouts"),
         "$layouts" : path.resolve(src,"layouts"),
         "$screen" : path.resolve(src,"layouts","Screen"),
         "$form" : path.resolve(src,"components","Form"),
@@ -74,6 +69,11 @@ module.exports = function(opts){
         "$base" :base, 
         "$src" : src,
         "$common":common,
+    }
+    if(assets){
+        r["$assets"] = assets;
+        r["$images"] = path.resolve(assets,"images");
+        r["$css"] = path.resolve(assets,"css");
     }
     return r;
 }
