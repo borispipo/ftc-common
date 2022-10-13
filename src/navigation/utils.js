@@ -44,14 +44,14 @@ export function setActiveRoute (currentRoute){
     return currentRoute;
 }
 
-export const canUseNavigationRef = x=> isObj(navigationRef.current) && isFunction(navigationRef.current.isReady) && navigationRef.current.isReady();
+export const canUseNavigationRef = x=> isObj(navigationRef) && isFunction(navigationRef.isReady) && navigationRef.isReady();
 export const getActiveRoute = x=> {
     if(isObj(ROUTER_MANAGER.currentRoute) && isNonNullString(ROUTER_MANAGER.currentRoute.name)){
         ROUTER_MANAGER.currentRoute.routeName = defaultStr(ROUTER_MANAGER.currentRoute.routeName,ROUTER_MANAGER.currentRoute.name);
         return ROUTER_MANAGER.currentRoute;
     }
-    if(canUseNavigationRef() && navigationRef.current.getCurrentRoute){
-        return defaultObj(navigationRef.current.getCurrentRoute());
+    if(canUseNavigationRef() && navigationRef.getCurrentRoute){
+        return defaultObj(navigationRef.getCurrentRoute());
     }
     const name = defaultStr(getInitialRouteName());
     return {name,routeName:name};
@@ -62,7 +62,7 @@ export const goBack = (options,navigation)=>{
     if(typeof options ==='function'){
         options = {onGoBack:options};
     }
-    navigation = isValidNavigation(navigation) ? navigation : navigationRef.current;
+    navigation = isValidNavigation(navigation) ? navigation : navigationRef;
     if(typeof navigation.canGoBack ==='function' && navigation.canGoBack()){
         options = defaultObj(options);
         if(typeof options.beforeGoBack =='function' && options.beforeGoBack({...options,beforeGoBack:undefined,goBack:()=> navigation.goBack(null)}) === false) return false;
@@ -87,7 +87,7 @@ export const EXIT_COUNTER = {
 export const isValidNavigation = (navigation)=> isObj(navigation) && isFunction(navigation.navigate) && isFunction(navigation.goBack);
 
 export const useNavigation = ()=> {
-    return activeNavigationRef.current && activeNavigationRef.current.setOptions ? activeNavigationRef.current : navigationRef.current;
+    return activeNavigationRef.current && activeNavigationRef.current.setOptions ? activeNavigationRef.current : navigationRef;
 };
 
 
@@ -176,7 +176,7 @@ export const navigate = (toRoute,navigation)=>{
     params = extendObj({},routeParams,params);
     params = {...defaultObj(rest),...params};
     source = defaultStr(source).toLowerCase();
-    const currentNavigation = isValidNavigation(navigation) ? navigation : navigationRef.current;
+    const currentNavigation = isValidNavigation(navigation) ? navigation : navigationRef;
     const {navigate} = currentNavigation;
     if(typeof navigate === "function"){
         params = {...defaultObj(rest),...params};
