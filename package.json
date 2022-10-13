@@ -1,0 +1,30 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "Un ensemble de bibliothèques et d'utilistaires pour le développement d'applications javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/borispipo/common.git"
+  },
+  "keywords": [
+    "Bibliothèques",
+    "utilitaires",
+    "libraries",
+    "utiles"
+  ],
+  "author": "Boris Fouomene",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/borispipo/common/issues"
+  },
+  "homepage": "https://github.com/borispipo/common#readme",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "unfetch": "^4.2.0"
+  }
+}
