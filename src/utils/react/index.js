@@ -212,24 +212,6 @@ export function getTextContent (elem,childContentSeparator) {
     return getTextContent(children);
   }
 
-  if(isClientSide() && !React.Concat && !React.setProps && !React.getTextContent){
-    React.Concat = concat;
-    React.setProps = setProps;
-    React.extractPropTypes = extractPropTypes;
-    React.Children.deepForEach = deepForEach;
-    React.hasChildren = hasChildren;
-    React.Children.exists = React.Children.has = hasChildren;
-    React.Children.hasRecursive = hasRecursiveChildren;
-    React.Children.onlyText = onlyText;
-    React.Children.text = onlyText;
-    React.Children.filter = filter;
-    React.Children.deepFind = deepFind;
-    React.getTextContent = getTextContent;
-    if(!React.isValidElement.___overried){
-        React.isValidElement = isValidElement;
-        React.isValidElement.___overried = true;
-    }
-}
 
 
 /**
@@ -405,6 +387,23 @@ export function useLatest(value) {
 
 
 React.isComponent = React.isComponent || React.isValidElement;///check if is valid react component    
+if(isClientSide() && !React.setProps && !React.getTextContent){
+    React.setProps = setProps;
+    React.extractPropTypes = extractPropTypes;
+    React.Children.deepForEach = deepForEach;
+    React.hasChildren = hasChildren;
+    React.Children.exists = React.Children.has = hasChildren;
+    React.Children.hasRecursive = hasRecursiveChildren;
+    React.Children.onlyText = onlyText;
+    React.Children.text = onlyText;
+    React.Children.filter = filter;
+    React.Children.deepFind = deepFind;
+    React.getTextContent = getTextContent;
+    if(!React.isValidElement.___overried){
+        React.isValidElement = isValidElement;
+        React.isValidElement.___overried = true;
+    }
+}
 if(!React.stopEventPropagation){
     Object.defineProperties(React,{
         'concat':{ ///permet de concaténer un ou plusieurs composants React, retourne un ensemble de composant react concatenés
