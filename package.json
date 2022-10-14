@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/borispipo/ftc-common.git"
+    "url": "git+https://github.com/borispipo/common.git"
   },
   "keywords": [
     "Bibliothèques",
