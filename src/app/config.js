@@ -2,7 +2,6 @@ import React from "react";
 import "$cutils/extend.prototypes";
 import isNonNullString from "$utils/isNonNullString";
 
-const isNonNullString = x=> x && typeof x =='string';
 const configRef = React.createRef();
 
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
