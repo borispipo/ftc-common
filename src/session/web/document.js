@@ -1,7 +1,7 @@
 import storage from "./storage";
 import {isJSON, parseJSON,stringify} from "$utils/json"
 import isNonNullString from "$utils/isNonNullString";
-import prefixStrWithAppId from "$utils/prefixStrWithAppId";
+import {prefixStrWithAppId} from "$app/config";
 import isDateObj from "$utils/isDateObj";
 function extend () {
     var i = 0;

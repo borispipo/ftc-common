@@ -7,7 +7,6 @@ import { parseJSON as pJSON, isJSON as isJ } from "./json";
 import isDateObj from "./isDateObj";
 import sprintf  from "./sprintf";
 import base64 from "$base64";
-const appConf = require("$app/config");
 
 export {sprintf};
 export {default as LorenIpsum} from "./loremIpsum";
@@ -407,13 +406,6 @@ require("./dom")
 
 require("./polyfill");
 
-export const prefixStrWithAppId = (text,sep)=>{
-    const appId = appConf.id;
-    if(typeof text !=="string") return appId;
-    sep = typeof sep =="string"? sep : "-";
-    let r = appId+sep;
-    return r+text.ltrim(r); 
-}
 
 export const sanitizeSheetName = function(sheetName){
     if(!isNonNullString(sheetName)) return "";
