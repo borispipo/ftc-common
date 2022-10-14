@@ -1,5 +1,5 @@
 {
-  "name": "ftc-common",
+  "name": "@ftc/common",
   "version": "1.0.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
