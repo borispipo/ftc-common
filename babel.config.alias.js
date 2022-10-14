@@ -40,6 +40,8 @@ module.exports = function(opts){
         "$cobservable" : path.resolve(common,"lib","observable"),
         "$cvalidator" : path.resolve(common,"lib","validator"),
         "$cdate" : path.resolve(common,"lib","date"),
+        "$cplatform" : path.resolve(common,"platform"),
+        
 
         "$app" : path.resolve(src,"app"),
         "$media" : path.resolve(src,"media"),
