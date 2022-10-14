@@ -1,5 +1,5 @@
 import {observable,isObservable,addObserver } from "../observable";
-import i18n from "$ci18N";
+import i18n from "$ci18n";
 import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isValidEmail,isValidDataFileName} from "$cutils";
 import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";

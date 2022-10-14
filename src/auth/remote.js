@@ -4,7 +4,7 @@ import {post} from "$capi";
 import {SIGN_IN} from "$cauth/routes";
 import {navigate} from "$cnavigation/utils";
 import notify from "$active-platform/notify";
-import i18n from "$ci18N";
+import i18n from "$ci18n";
 import {SIGNIN_API_PATH,SIGNOUT_API_PATH,} from "./routes";
 
 export const isSignedIn = isLoggedIn;

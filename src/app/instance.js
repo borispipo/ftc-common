@@ -8,7 +8,7 @@ if(isClientSide()){
     })
 }
 import sprintf from "$cutils/sprintf";
-import i18n from "$ci18N";
+import i18n from "$ci18n";
 import {defaultObj} from "$cutils";
 import appConfig from "./config";
 import Platform from "$cplatform";
