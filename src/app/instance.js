@@ -30,6 +30,9 @@ let APP_INSTANCE = {
     get getName (){
         return x=> appConfig.name;
     },
+    get getVersion (){
+        return x=> appConfig.version;
+    },
     get version (){
         return appConfig.version;
     },
