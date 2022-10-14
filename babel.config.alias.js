@@ -49,7 +49,7 @@ module.exports = function(opts){
         "$ccountries" : path.resolve(common,"countries"),
         "$cscreens" : path.resolve(common,"screens"),
         "$countries" : path.resolve(src,"components","Countries"),
-        '$components' : path.resolve(src,"components"),
+        '$ecomponents' : path.resolve(src,"components"),
         "$cdatabase" : path.resolve(common,"database"),
         "$database" : database,
         "$models" : path.resolve(database,"models"),

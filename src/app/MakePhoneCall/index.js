@@ -1,8 +1,8 @@
-//import * as Linking from 'expo-linking';
-import {isNonNullString,isObj,defaultObj,isPromise} from "$utils";
-import {isMobileNative,isChromeBrowser,isMobileBrowser} from "$platform";
+import * as Linking from 'expo-linking';
+import {isNonNullString,isObj,defaultObj} from "$utils";
+import {isMobileNative,isChromeBrowser} from "$platform";
 import notify from "$active-platform/notify";
-import ButtonSheetProvider from "$components/BottomSheet/Provider";
+import ButtonSheetProvider from "$ecomponents/BottomSheet/Provider";
 
 export const canMakePhoneCall = ()=> isMobileNative() || isChromeBrowser() ? true : false;
 /**** permet d'exécuter un appel téléphonique
@@ -25,8 +25,8 @@ export function makePhoneCall(tel,options){
         return Promise.reject({status:false,msg:"Le numéro de téléphone "+tel+" que vous désirez appeler est invalide, merci d'entrer un numéro de téléphone valide"})
     }
     return new Promise ((resolve,reject)=>{
-        //Linking.openURL(`tel:${tel}`);
-        //notify.success("appel lancé au Numéro de teléphone ["+tel+"]")
+        Linking.openURL(`tel:${tel}`);
+        notify.success("appel lancé au Numéro de teléphone ["+tel+"]")
     })
 }
 

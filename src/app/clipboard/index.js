@@ -1,15 +1,15 @@
 
-import FormData from "$components/Form/FormData";
-import {getFormData as getData} from "$components/Form/utils/FormsManager";
+import FormData from "$ecomponents/Form/FormData";
+import {getFormData as getData} from "$ecomponents/Form/utils/FormsManager";
 import  {defaultObj,defaultStr,isNonNullString,isObj,uniqid} from "$utils";
 ///import formatField from "$database/exporter/formatField";
-import {open,close} from "$components/Dialog/Provider";
-import { COPY_ICON } from '$components/Icon';
+import {open,close} from "$ecomponents/Dialog/Provider";
+import { COPY_ICON } from '$ecomponents/Icon';
 import notify from "$active-platform/notify";
 import {copyTextToClipboard} from "./utils";
 import {isMobileOrTabletMedia} from "$platform/dimensions";
 import session from "$session";
-import ScrollView  from "$components/ScrollView";
+import ScrollView  from "$ecomponents/ScrollView";
 
 export * from "./utils";
 

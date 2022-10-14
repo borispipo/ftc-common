@@ -1,15 +1,15 @@
 import React from "$react";
-import Label from "$components/Label";
-import Auth,{login} from "$auth";
-import View from "$components/View";
+import Label from "$ecomponents/Label";
+import Auth,{login} from "$cauth";
+import View from "$ecomponents/View";
 import Colors from "../../colors";
 import { StyleSheet } from "react-native";
 import {colors as defaultColors,defaultThemeName} from "$theme/defaultTheme";
 import theme,{defaultDarkTheme,defaultLightTheme} from "$theme";
-import Provider from "$components/Form/FormData/DialogProvider";
-import Dropdown from "$components/Dropdown";
+import Provider from "$ecomponents/Form/FormData/DialogProvider";
+import Dropdown from "$ecomponents/Dropdown";
 import {defaultObj} from "$utils";
-import Icon from "$components/Icon";
+import Icon from "$ecomponents/Icon";
 import {open,close} from "$preloader";
 import {fields,getThemeData} from "../../utils";
 
