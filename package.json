@@ -1,14 +1,14 @@
 {
-  "name": "ftc-utils",
+  "name": "ftc-common",
   "version": "1.0.0",
-  "description": "Un ensemble de bibliothèques et d'utilistaires pour le développement d'applications javascript",
+  "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/borispipo/ftc-utils.git"
+    "url": "git+https://github.com/borispipo/ftc-common.git"
   },
   "keywords": [
     "Bibliothèques",
