@@ -1,10 +1,11 @@
 {
   "name": "@fto-consult/common",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
-    "publish": "npm publish --access=public"
+    "publish": "npm publish --access=public",
+    "unpublish":"npm -f unpublish @fto-consult/common"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,6 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/borispipo/common/issues"
-  },
-  "publishConfig": {
-    "@borispipo:registry": "https://npm.pkg.github.com"
   },
   "homepage": "https://github.com/borispipo/common#readme",
   "dependencies": {
