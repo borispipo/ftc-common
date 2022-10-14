@@ -85,9 +85,6 @@ module.exports = function(opts){
         
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
-        "$form" : path.resolve(src,"components","Form"),
-        "$form-manager" : path.resolve(src,"components","Form/utils/FormManager"),
-        "$preloader" : path.resolve(src,"components","Preloader"),
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
