@@ -1,18 +1,13 @@
-import * as React from "react";
-const {isValidElement} = React;
+import * as ReactIs from "react-is";
 export default function isValidElementCustom(element,includeStrOrText){
+    if(ReactIs.isElement(element)) return true;
     if(includeStrOrText && (typeof element =="string" || typeof element =="number" || typeof element =='boolean')){
         return true;
     }
-    if(isValidElement(element)) return true;
-    if(Array.isArray(element)){
-        if(element.length ===0) return true;
-        for(let i = 0;i <element.length; i++){
-            if(isValidElementCustom(element[i],includeStrOrText)){
-                return true;
-            }
-        }
-        return false;
+    if (Array.isArray(element)) {
+        if(element.length == 0) return true;
+        let isV = element.reduce((acc, e) => acc && isValidElementCustom(e,includeStrOrText), true);
+        if(isV) return true;
     }
     return false;
 }

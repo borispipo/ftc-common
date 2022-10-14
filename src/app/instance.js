@@ -1,11 +1,5 @@
-
-import extendObj from "$utils/extendObj";
 import * as Utils from "$utils";
-import sprintf from "$utils/sprintf";
-import i18n from "$i18n";
 import {isClientSide} from "$platform/utils";
-import {defaultObj,isNonNullString} from "$utils";
-
 if(isClientSide()){
     Object.map(Utils,(u,i)=>{
         if(typeof u =="function" && !window[i]){
@@ -13,14 +7,33 @@ if(isClientSide()){
         }
     })
 }
-
+import sprintf from "$utils/sprintf";
+import i18n from "$i18n";
+import {defaultObj} from "$utils";
+import appConfig from "./config";
 import Platform from "$platform";
 import EVENTS from "./events";
 import { observable,addObserver } from "$lib/observable";
-const appConfig = require("./config")
 import NetInfo from '$utils/NetInfo';
 
-let APP_INSTANCE = {};
+
+let APP_INSTANCE = {
+    get NAME (){
+        return appConfig.name;
+    },
+    get config (){
+        return appConfig;
+    },
+    get name () {
+        return appConfig.name;
+    },
+    get getName (){
+        return x=> appConfig.name;
+    },
+    get version (){
+        return appConfig.version;
+    },
+};
 if(isClientSide() && typeof window !== 'undefined'){
     if((!(window.APP) || typeof window.APP != 'object')){
         Object.defineProperties(window,{
@@ -120,28 +133,7 @@ if(!APP_INSTANCE.EVENTS || typeof APP_INSTANCE.EVENTS !=='object'){
         }
     })
 }
-export const getName = ()=> APP_INSTANCE.NAME;
 
-extendObj(APP_INSTANCE,{
-    NAME : appConfig.name,
-    getFeeds : x=> appConfig.feeds, //retournes la liste des flux RSS INTERNES A L'APPLICATION
-    getVersion : x=>appConfig.version,
-    getCopyright : x => appConfig.copyRight,
-    getDevMail : x => appConfig.devMail,
-    getAuthor : x=> appConfig.author,
-    getDevWebsite : x=> appConfig.devWebsite,
-    getCopyright : x => appConfig.copyRight,
-    getDevMail : x => appConfig.devMail,
-    getAuthor : x=> appConfig.author,
-    getDevWebsite : x=> appConfig.devWebsite,
-    
-    getName,
-    setName : function(name){
-        if(isNonNullString(name)){
-            APP_INSTANCE.NAME = name;
-        }
-    },
-})
 
 observable(APP_INSTANCE);
 addObserver(APP_INSTANCE);

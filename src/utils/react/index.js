@@ -387,37 +387,26 @@ export function useLatest(value) {
 
 
 React.isComponent = React.isComponent || React.isValidElement;///check if is valid react component    
-if(isClientSide() && !React.setProps && !React.getTextContent){
-    React.setProps = setProps;
-    React.extractPropTypes = extractPropTypes;
+if(isClientSide()){
     React.Children.deepForEach = deepForEach;
-    React.hasChildren = hasChildren;
     React.Children.exists = React.Children.has = hasChildren;
-    React.Children.hasRecursive = hasRecursiveChildren;
     React.Children.onlyText = onlyText;
     React.Children.text = onlyText;
     React.Children.filter = filter;
     React.Children.deepFind = deepFind;
-    React.getTextContent = getTextContent;
-    if(!React.isValidElement.___overried){
-        React.isValidElement = isValidElement;
-        React.isValidElement.___overried = true;
-    }
 }
 if(!React.stopEventPropagation){
     Object.defineProperties(React,{
-        'concat':{ ///permet de concaténer un ou plusieurs composants React, retourne un ensemble de composant react concatenés
-            value : concat,
-            override : false,
-            writable : false
+        isValidElement : {
+            value : isValidElement
         },
+        deepFind : {value :deepFind},
+        concat : {value:concat},
+        extractPropTypes : {value:extractPropTypes},
+        hasChildren : {value:hasChildren},
+        childrenExists : {value:hasRecursiveChildren},
         stopEventPropagation : {
             value : stopEventPropagation,override : false,writable : false
-        },
-        'Concat':{ ///permet de concaténer un ou plusieurs composants React, retourne un ensemble de composant react concatenés
-            value : concat,
-            override : false,
-            writable : false
         },
         key : {
             value : getKey,override:false,writable:false

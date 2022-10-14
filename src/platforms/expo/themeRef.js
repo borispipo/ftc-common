@@ -1,3 +1,4 @@
+import {defaultStr} from "$utils";
 import {StyleSheet,Appearance} from "react-native";
 import * as SystemUI from 'expo-system-ui';
 

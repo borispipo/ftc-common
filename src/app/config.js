@@ -11,7 +11,7 @@ export const setConfig = configValue=> {
     }
 }
 
-export const getValue = function(){
+export const getConfigValue = function(){
     const conf = getConfig();
     const args = Array.prototype.slice.call(arguments,0);
     let hasKey = false;
@@ -26,7 +26,6 @@ export const getValue = function(){
     }
     return hasKey ? undefined : conf;
 }
-export const getConfigValue = getValue;
 
 const config = {
     get current(){
@@ -67,7 +66,7 @@ const config = {
     },
     //l'unique id de l'application
     get id (){
-        return getValue("id");
+        return getConfigValue("id");
     },
     get appId (){
         return getAppId();
@@ -77,22 +76,26 @@ const config = {
     },
     get prefixWithAppId (){
         return prefixStrWithAppId;
+    },
+    get feeds (){
+        return getFeeds();
     }
 }
 
-export const getName = x=>getValue("name");
-export const getDescription = x=>getValue("description","desc");
+export const getName = x=>getConfigValue("name");
+export const getDescription = x=>getConfigValue("description","desc");
 export const getDesc = getDescription;
-export const getVersion = x=>getValue("version");
-export const getEnv = x=>getValue("env");
-export const getReleaseDateStr = x=>getValue("realeaseDateStr");
-export const getReleaseDate = x=>getValue("releaseDate");
-export const getDevMail = x=>getValue("devMail");
-export const getDevWebsite = x=>getValue("devWebsite");
-export const getCopyRight = x=>getValue("copyRight");
-export const getAuthor = x=>getValue("author");
-export const getAppId = x=>getValue("appId");
-export const getAppVersion = x=>getValue("apiVersion");
+export const getVersion = x=>getConfigValue("version");
+export const getEnv = x=>getConfigValue("env");
+export const getReleaseDateStr = x=>getConfigValue("realeaseDateStr");
+export const getReleaseDate = x=>getConfigValue("releaseDate");
+export const getDevMail = x=>getConfigValue("devMail");
+export const getDevWebsite = x=>getConfigValue("devWebsite");
+export const getCopyRight = x=>getConfigValue("copyRight");
+export const getAuthor = x=>getConfigValue("author");
+export const getAppId = x=>getConfigValue("appId");
+export const getAppVersion = x=>getConfigValue("apiVersion");
+export const getFeeds = x=>getConfigValue("feeds");
 
 export const prefixStrWithAppId = (text,sep)=>{
     const appId = getAppId();
