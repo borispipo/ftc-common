@@ -102,9 +102,7 @@ export const getFeeds = x=>getConfigValue("feeds");
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
     if(typeof t =='object' && t && !Array.isArray(t)){
-        if(isNonNullString(t.primary) && isNonNullString(t.secondary)){
-            return t;
-        }
+        return t;
     }
     return {};
 }
