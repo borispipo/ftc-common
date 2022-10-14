@@ -1,10 +1,10 @@
 {
-  "name": "@ftc.borispipo/common",
+  "name": "@fto-consult/common",
   "version": "1.0.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access=public"
   },
   "repository": {
     "type": "git",

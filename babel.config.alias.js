@@ -80,6 +80,7 @@ module.exports = function(opts){
         "$src" : src,
         "$active-platform" : path.resolve(common,"platforms",platform),
         "$common":common,
+        "$ftc" : "@fto-consult"
     }
     if(assets){
         r["$assets"] = assets;
