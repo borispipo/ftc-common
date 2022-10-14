@@ -43,11 +43,11 @@ module.exports = function(opts){
         "$cplatform" : path.resolve(common,"platform"),
         
 
-        "$app" : path.resolve(src,"app"),
-        "$media" : path.resolve(src,"media"),
-        "$api" : path.resolve(src,"api"),
-        "$i18n" : path.resolve(src,"i18n"),
-        "$lib" : path.resolve(src,"lib"),
+        "$app" : path.resolve(common,"app"),
+        "$media" : path.resolve(common,"media"),
+        "$api" : path.resolve(common,"api"),
+        "$i18n" : path.resolve(common,"i18n"),
+        "$lib" : path.resolve(common,"lib"),
         "$auth":path.resolve(src,"auth"),
         "$navigation" : path.resolve(src,"navigation"),
         "$platform" : path.resolve(common,"platform"),
