@@ -44,7 +44,7 @@ module.exports = function(opts){
         "$app" : path.resolve(src,"app"),
         "$media" : path.resolve(src,"media"),
         "$api" : path.resolve(src,"api"),
-        "$i18N" : path.resolve(src,"i18n"),
+        "$i18n" : path.resolve(src,"i18n"),
         "$lib" : path.resolve(src,"lib"),
         "$auth":path.resolve(src,"auth"),
         "$navigation" : path.resolve(src,"navigation"),
