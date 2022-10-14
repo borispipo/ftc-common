@@ -14,12 +14,13 @@ const getPlatform = (platform)=>{
  * {
  *      base : {string}, le chemin racine du projet
  *      platform : {web||expo},//La plateforme du client
- *      assets : {string}, le chemin assets de l'application 
+ *      assets : {string}, le chemin assets de l'application,
+ *      alias  : {object}, les alias supplémentaires, pouvant être concaténés à ceux généré
  * }
  * 
 */
 module.exports = function(opts){
-    let {base,assets,platform} = opts && typeof opts =="object"? opts : {};
+    let {base,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
@@ -95,6 +96,7 @@ module.exports = function(opts){
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",
         "$ftc" : "@fto-consult",
+        ...(typeof alias =='object' && !Array.isArray(alias) && alias || {})
     }
     if(assets){
         r["$assets"] = assets;
