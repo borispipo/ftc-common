@@ -1,5 +1,6 @@
 import React from "react";
 import "$cutils/extend.prototypes";
+import isNonNullString from "$utils/isNonNullString";
 
 const isNonNullString = x=> x && typeof x =='string';
 const configRef = React.createRef();
@@ -33,6 +34,9 @@ const config = {
     },
     set current(configValue){
         return setConfig(configValue);
+    },
+    get theme () {
+        return getTheme();
     },
     get name (){
         return getName();
@@ -96,6 +100,15 @@ export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>getConfigValue("appId");
 export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
+export const getTheme  =x=>{
+    const t = getConfigValue("theme");
+    if(typeof t =='object' && t && !Array.isArray(t)){
+        if(isNonNullString(t.primary) && isNonNullString(t.secondary)){
+            return t;
+        }
+    }
+    return {};
+}
 
 export const prefixStrWithAppId = (text,sep)=>{
     const appId = getAppId();

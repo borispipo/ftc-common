@@ -1,6 +1,16 @@
 import color from 'color';
 import configureFonts from './fonts';
 import { black, pinkA400, white } from './colors';
+import appConfig from "$capp/config";
+
+const isObj = x => x && typeof x =="object" && !Array.isArray(x);
+const t = appConfig.theme;
+
+///les couleurs du theme light par défaut, définit dans les configurations
+export const defaultLight = isObj(t.light) && t.light.primary ? t.light : t;
+
+///les couleurs du theme dark par défaut, définit dans les configurations
+export const defaultDark = isObj(t.dark) && t.dark.primary ? t.dark : {};
 
 export default {
   dark: false,
@@ -8,7 +18,8 @@ export default {
   version: 2,
   isV3: false,
   colors: {
-    primary: '#6200ee',
+    primary: "#3D8B5F",
+    secondary : "#354448",
     accent: '#03dac4',
     background: '#f6f6f6',
     surface: white,
@@ -19,6 +30,7 @@ export default {
     placeholder: color(black).alpha(0.54).rgb().string(),
     backdrop: color(black).alpha(0.5).rgb().string(),
     notification: pinkA400,
+    ...defaultLight,
   },
   fonts: configureFonts(),
   animation: {

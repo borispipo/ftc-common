@@ -2,13 +2,13 @@ import Colors from "./colors";
 import {isObj,defaultStr} from "$cutils";
 import APP from "$capp/instance";
 const appName = defaultStr(APP.getName()).toLowerCase();
-import DefaultTheme from './defTheme';
+import DefaultTheme,{defaultLight,defaultDark} from './defTheme';
 import { ALPHA } from "./alpha";
 
 export const defaultThemeName = appName;
 
-const defaultPrimary = "#3D8B5F";
-const defaultSecondary = "#354448";
+const defaultPrimary = DefaultTheme.colors.primary;
+const defaultSecondary = DefaultTheme.colors.secondary;
 
 export const black = "black";
 
@@ -32,7 +32,8 @@ export const lightColors = {
     disabled: Colors.setAlpha(black,0.26),
     placeholder: Colors.setAlpha(black,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
-    divider : Colors.setAlpha(black,0.18)
+    divider : Colors.setAlpha(black,0.18),
+    ...defaultLight,
 }
 export const darkColors = {
     info : '#39c0ed',
@@ -52,6 +53,7 @@ export const darkColors = {
     placeholder: Colors.setAlpha(white,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(white,0.18),
+    ...defaultDark,
     //divider : "#dee2e6"
 }
 const dark1name = "Sombre|Dark";
