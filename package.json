@@ -1,5 +1,5 @@
 {
-  "name": "ftc-common-tools",
+  "name": "ftc-utils",
   "version": "1.0.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires pour le développement d'applications javascript",
   "main": "index.js",
