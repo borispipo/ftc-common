@@ -398,7 +398,7 @@ export const isMobileOrTablet = function(){
 
 export {default as isTouchDevice} from "./isTouchDevice"
 
-export {isClientSide,isServerSide} from "$platform"
+export {isClientSide,isServerSide} from "$cplatform"
 
 export * from "./extend.prototypes";
 

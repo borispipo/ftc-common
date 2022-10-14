@@ -1,9 +1,9 @@
 import {ToastAndroid } from 'react-native';
 import React from "react";
-import {isAndroid} from "$platform";
-import { notifyRef,notificationRef,TYPES} from "$notify";
+import {isAndroid} from "$cplatform";
+import { notifyRef,notificationRef,TYPES} from "$cnotify";
 
-export {default} from "$notify";
+export {default} from "$cnotify";
 
 notifyRef.current = (options)=>{
     if(type == TYPES.info && isAndroid()){
@@ -13,4 +13,4 @@ notifyRef.current = (options)=>{
     return notificationRef.current.alertWithType(options);
 }
 
-export * from "$notify";
+export * from "$cnotify";

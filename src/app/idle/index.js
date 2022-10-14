@@ -1,6 +1,6 @@
 export {default as AppStateService} from "./AppStateService";
-import APP from "$app/instance";
-import runBackgroundTasks from "$app/runBackgroundTasks";
+import APP from "$capp/instance";
+import runBackgroundTasks from "$capp/runBackgroundTasks";
 
 let idleTime = 10000;
 let isIDLRunning = false;

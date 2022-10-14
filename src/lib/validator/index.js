@@ -1,8 +1,8 @@
 import {observable,isObservable,addObserver } from "../observable";
-import i18n from "$i18n";
-import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isValidEmail,isValidDataFileName} from "$utils";
-import APP from "$app/instance";
-import {isValidUrl} from "$utils/uri";
+import i18n from "$ci18N";
+import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isValidEmail,isValidDataFileName} from "$cutils";
+import APP from "$capp/instance";
+import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
 //import getData from "$database/getData";
 import {isValidDate} from "$common/lib/date";

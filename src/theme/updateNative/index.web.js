@@ -1,5 +1,5 @@
-import {uniqid} from "$utils";
-import { isWeb } from "$platform";
+import {uniqid} from "$cutils";
+import { isWeb } from "$cplatform";
 import { TIPPY_THEME } from "./utils";
 const themeDomId = uniqid("web-theme-id");
 

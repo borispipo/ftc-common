@@ -1,8 +1,8 @@
 import { USER_SESSION_KEY} from "./session";
-import APP from "$app/instance";
+import APP from "$capp/instance";
 import $session from "$session";
 import { updateTheme } from "./session";
-import {isObj,isNonNullString} from "$utils";
+import {isObj,isNonNullString} from "$cutils";
 
 /**** connecte l'utilisateur actuel */
 export default function login (user,trigger){

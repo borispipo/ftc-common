@@ -1,8 +1,8 @@
 import React from "react";
-import defaultStr from "$utils/defaultStr";
-import { notifyRef} from "$notify";
+import defaultStr from "$cutils/defaultStr";
+import { notifyRef} from "$cnotify";
 
-export {default} from "$notify";
+export {default} from "$cnotify";
 
 const notificationRef = React.createRef(null);
 
@@ -16,4 +16,4 @@ notifyRef.current = (options)=>{
     return console.info(options.message)
 }
 
-export * from "$notify";
+export * from "$cnotify";

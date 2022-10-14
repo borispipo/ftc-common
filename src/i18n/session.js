@@ -1,5 +1,5 @@
 import session from "$session";
-import isNonNullString from "$utils/isNonNullString";
+import isNonNullString from "$cutils/isNonNullString";
 import defaultLang from "./defaultLang";
 
 const sessionKey = "i18n.lang.session";

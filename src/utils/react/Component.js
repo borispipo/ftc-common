@@ -1,9 +1,9 @@
-import {uniqid,defaultObj,isFunction,isBool,autobind,debounce} from "$utils";
-import { observable,addObserver } from "$lib/observable";
+import {uniqid,defaultObj,isFunction,isBool,autobind,debounce} from "$cutils";
+import { observable,addObserver } from "$clib/observable";
 const previousStateSymbol = uniqid("prev-state-react-comopp");
 import React from "react";
 import PropTypes from "prop-types";
-import APP from "$app/instance";
+import APP from "$capp/instance";
 
 export class BaseComponent extends React.PureComponent {
     constructor(props){

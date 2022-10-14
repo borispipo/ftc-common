@@ -1,10 +1,10 @@
 import {logout,setToken,isLoggedIn} from "./utils";
 import login from "./utils/login";
-import {post} from "$api";
+import {post} from "$capi";
 import {SIGN_IN} from "$cauth/routes";
 import {navigate} from "$cnavigation/utils";
 import notify from "$active-platform/notify";
-import i18n from "$i18n";
+import i18n from "$ci18N";
 import {SIGNIN_API_PATH,SIGNOUT_API_PATH,} from "./routes";
 
 export const isSignedIn = isLoggedIn;

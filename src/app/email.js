@@ -1,5 +1,5 @@
-import {isElectron} from "$platform";
-import {isObj} from "$utils";
+import {isElectron} from "$cplatform";
+import {isObj} from "$cutils";
 
 export const canSendMail = ()=>{
     if(!isElectron() || !isObj(ELECTRON.EMAIL)) return false;

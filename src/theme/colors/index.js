@@ -1,5 +1,5 @@
 
- import {isDecimal,defaultDecimal,isNumber,isNonNullString} from "$utils";
+ import {isDecimal,defaultDecimal,isNumber,isNonNullString} from "$cutils";
  import * as RNColors from "./rn-colors";
  import namesColors from "./names-colors";
  import {isHex} from "./tiny-color/utils";

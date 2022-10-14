@@ -1,4 +1,4 @@
-import defaultStr from "$utils/defaultStr";
+import defaultStr from "$cutils/defaultStr";
 
 let localhost = undefined;
 export const getLocalHost  = x=>{

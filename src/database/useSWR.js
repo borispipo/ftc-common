@@ -1,7 +1,7 @@
 
 import useSWR from 'swr';
-import { getFetcherOptions } from '$api';
-import {defaultObj} from "$utils";
+import { getFetcherOptions } from '$capi';
+import {defaultObj} from "$cutils";
 
 /****
  * Cette fonction est une abstraction au hook useSWR de @https://swr.vercel.app/docs/with-nextjs

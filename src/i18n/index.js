@@ -1,9 +1,9 @@
 
-import { observable } from "$lib/observable";
+import { observable } from "$clib/observable";
 import { i18nFrLang } from "./lang/i18n.fr";
 import { i18nEnLang } from "./lang/i18n.en";
-import extendObj  from "$utils/extendObj";
-import isNonNullString from "$utils/isNonNullString";
+import extendObj  from "$cutils/extendObj";
+import isNonNullString from "$cutils/isNonNullString";
 import {getLang,setLang} from "./session";
 
 var i = i || 0,j = j || 0; //fix somme for loops bug

@@ -1,7 +1,7 @@
 
 import currencies from "./currencies";
-import isString from "$utils/isString";
-import defaultStr from "$utils/defaultStr";
+import isString from "$cutils/isString";
+import defaultStr from "$cutils/defaultStr";
 const isObj = x => x && typeof x =='object';
 const defaultObj = function() {
     var args = Array.prototype.slice.call(arguments,0);

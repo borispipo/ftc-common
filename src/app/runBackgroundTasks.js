@@ -1,4 +1,4 @@
-import APP from "$app/instance";
+import APP from "$capp/instance";
 
 const runBackgroundTasks = APP.runBackgroundTasks = (force)=>{
     return new Promise((resolve,reject)=>{

@@ -1,6 +1,6 @@
-import defaultStr from "$utils/defaultStr";
+import defaultStr from "$cutils/defaultStr";
 import fNumber from "./formatNumber";
-import Currency from "$currency";
+import Currency from "$ccurrency";
 
 // Got this from MDN:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString#Example:_Checking_for_support_for_locales_and_options_arguments

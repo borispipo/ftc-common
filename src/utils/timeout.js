@@ -1,4 +1,4 @@
-import i18n from "$i18n";
+import i18n from "$ci18N";
 import React from "$react";
 
 export default function timeout(ms, promise,errorArgs) {

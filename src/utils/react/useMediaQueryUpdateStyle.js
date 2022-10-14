@@ -1,7 +1,7 @@
-import Dimensions from "$platform/dimensions";
+import Dimensions from "$cplatform/dimensions";
 import useStableMemo  from "./useStableMemo";
-import { useWindowDimensions } from "$dimensions";
-import {isObj} from "$utils";
+import { useWindowDimensions } from "$cdimensions";
+import {isObj} from "$cutils";
 
 /*** met à jour dynamiquemnet les propriétés style d'un objet en fonction du changement de la taille de l'objet
  * @param {useCurrentMedia} {boolean} si true, alors les propriétés sont mis à jour uniquement si le current media change

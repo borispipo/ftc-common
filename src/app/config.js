@@ -1,5 +1,5 @@
 import React from "react";
-import "$utils/extend.prototypes";
+import "$cutils/extend.prototypes";
 
 const isNonNullString = x=> x && typeof x =='string';
 const configRef = React.createRef();

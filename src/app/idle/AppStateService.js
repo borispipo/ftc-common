@@ -2,7 +2,7 @@
  * Class to allow us to refer to the app state service
  * @see : https://stackoverflow.com/questions/50565458/app-state-in-react-native-does-not-remove-the-listener
  */
-import APP from "$app";
+import APP from "$capp";
 const isStateInactive = x => x && typeof x =="string" ? x.match(/inactive|background/) ? true : false  : false;
 const isStateActive = x => x =="active";
  export default class AppStateService {

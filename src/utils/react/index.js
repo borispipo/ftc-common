@@ -1,20 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import isDOMElement from "$utils/dom/isDOMElement";
-import defaultStr from "$utils/defaultStr";
-import uniqid from "$utils/uniqid"
-import {isPlainObj,isNonNullString,isObj,isUndefined,debounce} from "$utils";
+import isDOMElement from "$cutils/dom/isDOMElement";
+import defaultStr from "$cutils/defaultStr";
+import uniqid from "$cutils/uniqid"
+import {isPlainObj,isNonNullString,isObj,isUndefined,debounce} from "$cutils";
 import Component from "./Component";
 import useIsMounted from "./useIsMounted";
 import setRef from "./setRef";
 import  isValidElement  from "./isValidElement";
-import Dimensions from '$dimensions';
+import Dimensions from '$cdimensions';
 import {addEventListener,addListener} from "./eventListener";
 import useForceRender from "./useForceRender";
 import * as isComponents from "./isComponent";
 import useStableMemo from "./useStableMemo";
 import useMediaQueryUpdateStyle from "./useMediaQueryUpdateStyle";
-import {isClientSide} from "$platform";
+import {isClientSide} from "$cplatform";
 import memoize from "./memoize";
 
 export {memoize};

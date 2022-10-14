@@ -1,5 +1,5 @@
-import {isWeb,isClientSide} from "$platform";
-import {buildAPIPath} from "$api/host";
+import {isWeb,isClientSide} from "$cplatform";
+import {buildAPIPath} from "$capi/host";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;
 const init = ()=>{

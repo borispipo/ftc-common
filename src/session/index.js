@@ -1,8 +1,8 @@
 import storage from "./web/storage";
-import {isJSON, parseJSON,stringify} from "$utils/json"
-import {isNonNullString} from "$utils";
-import {prefixStrWithAppId} from "$app/config";
-import isDateObj from "$utils/isDateObj";
+import {isJSON, parseJSON,stringify} from "$cutils/json"
+import {isNonNullString} from "$cutils";
+import {prefixStrWithAppId} from "$capp/config";
+import isDateObj from "$cutils/isDateObj";
 function extend () {
     var i = 0;
     var result = {};

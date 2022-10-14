@@ -1,17 +1,17 @@
-import {isObj,defaultNumber,extendObj,defaultObj,defaultStr} from "$utils";
+import {isObj,defaultNumber,extendObj,defaultObj,defaultStr} from "$cutils";
 import Colors from "./colors";
-import {isWeb,isIos} from "$platform";
+import {isWeb,isIos} from "$cplatform";
 import PropTypes from "prop-types";
 import styled  from "$active-platform/styled";
 import updateNativeTheme from "./updateNative";
 import {modes} from "$common/TextField/utils";
-import {isMobileMedia} from "$platform/dimensions";
+import {isMobileMedia} from "$cplatform/dimensions";
 import * as React from "react";
 import { isComponent } from "$react/isComponent";
 import defTheme,{white,black,lightColors,darkColors} from "./defaultTheme";
 import { getStyleSheet,themeRef } from "./utils";
 
-import APP from "$app/instance";
+import APP from "$capp/instance";
 const StyleSheet = getStyleSheet();
 export * from "./utils";
 

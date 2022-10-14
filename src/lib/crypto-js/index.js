@@ -1,4 +1,4 @@
-import defaultStr from "$utils/defaultStr";
+import defaultStr from "$cutils/defaultStr";
 /**** Encrypt and decrypt with XOR function en base64 string */
 import Base64 from "$base64";
 /*** crypte le message prase passé en paramètre

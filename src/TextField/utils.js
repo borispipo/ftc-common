@@ -1,4 +1,4 @@
-import {defaultStr,parseDecimal as NParseDecimal,defaultDecimal} from "$utils";
+import {defaultStr,parseDecimal as NParseDecimal,defaultDecimal} from "$cutils";
 
 
 export const flatMode = 'flat';

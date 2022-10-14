@@ -8,7 +8,7 @@ import {colors as defaultColors,defaultThemeName} from "$theme/defaultTheme";
 import theme,{defaultDarkTheme,defaultLightTheme} from "$theme";
 import Provider from "$ecomponents/Form/FormData/DialogProvider";
 import Dropdown from "$ecomponents/Dropdown";
-import {defaultObj} from "$utils";
+import {defaultObj} from "$cutils";
 import Icon from "$ecomponents/Icon";
 import {open,close} from "$preloader";
 import {fields,getThemeData} from "../../utils";

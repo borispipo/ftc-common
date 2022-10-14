@@ -1,6 +1,6 @@
-import Dimensions, {useWindowDimensions} from '$dimensions';
-import breakpoints from "$platform/breakpoints";
-import {isNumber,parseDecimal,defaultStr,isFunction,isNonNullString,defaultVal,isObj,defaultObj} from "$utils";
+import Dimensions, {useWindowDimensions} from '$cdimensions';
+import breakpoints from "$cplatform/breakpoints";
+import {isNumber,parseDecimal,defaultStr,isFunction,isNonNullString,defaultVal,isObj,defaultObj} from "$cutils";
 import {canBeNumber} from "./utils";
 
 let colWidth = 100 / 12;

@@ -1,6 +1,6 @@
 import $session from "$session";
-import {isObj,extendObj,isNonNullString,defaultStr,defaultObj} from "$utils";
-import APP from "$app/instance";
+import {isObj,extendObj,isNonNullString,defaultStr,defaultObj} from "$cutils";
+import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
 import theme,{defaultDarkTheme,defaultLightTheme} from "$theme";

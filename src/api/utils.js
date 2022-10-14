@@ -1,5 +1,5 @@
-import {getQueryParams} from "$utils/uri";
-import {extendObj,defaultObj,defaultStr,isObj,isObjOrArray} from "$utils";
+import {getQueryParams} from "$cutils/uri";
+import {extendObj,defaultObj,defaultStr,isObj,isObjOrArray} from "$cutils";
 import React from "$react";
 export * from "./host";
 

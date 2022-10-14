@@ -1,4 +1,4 @@
-import defaultStr from "$utils/defaultStr";
+import defaultStr from "$cutils/defaultStr";
 /**** Les actions sont utiles pour l'écoute des évènement de l'application.
  *    Ils ont pour rôle de prendre en paramètre : 
  *    le nom du composant, puis retourner l'unique action correspondante au type

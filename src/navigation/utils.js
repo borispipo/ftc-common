@@ -1,6 +1,6 @@
-import {isObj,isFunction,extendObj,defaultStr,defaultObj,isNonNullString} from "$utils";
-import {getURIPathName} from "$utils/uri";
-import {isWeb,isClientSide} from "$platform";
+import {isObj,isFunction,extendObj,defaultStr,defaultObj,isNonNullString} from "$cutils";
+import {getURIPathName} from "$cutils/uri";
+import {isWeb,isClientSide} from "$cplatform";
 import actions from "$cactions/actions";
 import { navigationRef } from "$active-platform/navigation";
 

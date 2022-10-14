@@ -1,9 +1,9 @@
-import {isObj,defaultStr} from "$utils";
+import {isObj,defaultStr} from "$cutils";
 import notify from "$active-platform/notify";
 import {encrypt,decrypt} from "$crypto";
 import { SIGN_IN} from "../routes";
-import {getURIPathName} from "$utils/uri";
-import {NOT_SIGNED_IN} from "$api/status";
+import {getURIPathName} from "$cutils/uri";
+import {NOT_SIGNED_IN} from "$capi/status";
 
 export * from "./session";
 export const permProfilesTableName = "PERMS_PROFILES";

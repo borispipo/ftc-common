@@ -1,8 +1,8 @@
 /*** for usage, @see : https://github.com/raphaelpor/sync-storage */
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import isPromise from "$utils/isPromise";
+import isPromise from "$cutils/isPromise";
 import {handleError} from './helpers';
-import {stringify} from "$utils/json";
+import {stringify} from "$cutils/json";
 
 let currentInitSession = undefined;
 

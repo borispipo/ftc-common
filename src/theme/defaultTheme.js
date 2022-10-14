@@ -1,6 +1,6 @@
 import Colors from "./colors";
-import {isObj,defaultStr} from "$utils";
-import APP from "$app/instance";
+import {isObj,defaultStr} from "$cutils";
+import APP from "$capp/instance";
 const appName = defaultStr(APP.getName()).toLowerCase();
 import DefaultTheme from './defTheme';
 import { ALPHA } from "./alpha";

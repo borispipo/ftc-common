@@ -1,5 +1,5 @@
 import {handleGetValue,handleSetValue} from "./utils";
-import {isElectron} from "$platform";
+import {isElectron} from "$cplatform";
 let get, set
 if(isElectron() && window.ELECTRON && typeof ELECTRON.SESSION=="object" && ELECTRON.SESSION){
     if(typeof ELECTRON.SESSION.set =='function'){

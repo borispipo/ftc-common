@@ -1,5 +1,5 @@
 /**@see : https://github.com/yamadapc/js-written-number*/
-import defaultStr from "$utils/defaultStr";
+import defaultStr from "$cutils/defaultStr";
 const writtenNumber = require('written-number');
 export default function numberToWords(number,options){
     if(isNonNullString(options)){

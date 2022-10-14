@@ -1,9 +1,9 @@
 import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from '../breakpoints';
-import {isObj,defaultStr} from "$utils"
-import APP from "$app/instance";
-import {addClassName,removeClassName,isDOMElement} from "$utils/dom";
-import isTouchDevice from "$utils/isTouchDevice";
+import {isObj,defaultStr} from "$cutils"
+import APP from "$capp/instance";
+import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
+import isTouchDevice from "$cutils/isTouchDevice";
 
 export {default as useWindowDimensions} from "$active-platform/useWindowDimensions";
 

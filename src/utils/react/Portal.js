@@ -1,4 +1,4 @@
-import {defaultStr,isFunction,uniqid,isNonNullString} from "$utils";
+import {defaultStr,isFunction,uniqid,isNonNullString} from "$cutils";
 import React from "react";
 import {flattenStyle} from "$theme/utils";
 import ReactDOM  from "react-dom";

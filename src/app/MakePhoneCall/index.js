@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
-import {isNonNullString,isObj,defaultObj} from "$utils";
-import {isMobileNative,isChromeBrowser} from "$platform";
+import {isNonNullString,isObj,defaultObj} from "$cutils";
+import {isMobileNative,isChromeBrowser} from "$cplatform";
 import notify from "$active-platform/notify";
 import ButtonSheetProvider from "$ecomponents/BottomSheet/Provider";
 

@@ -1,13 +1,13 @@
 import originalFetch from "unfetch";
 import { buildAPIPath} from "./utils";
-import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$utils";
+import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
 import {NOT_SIGNED_IN,SUCCESS} from "./status";
 import notify from "$active-platform/notify";
 import {getToken,isValidToken} from "$cauth/utils";
-import APP from "$app/instance";
+import APP from "$capp/instance";
 import {timeout} from "./utils";
-import {isClientSide} from "$platform";
-import {prefixStrWithAppId} from "$app/config";
+import {isClientSide} from "$cplatform";
+import {prefixStrWithAppId} from "$capp/config";
 
 let codeVerifier = null;
 

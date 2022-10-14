@@ -1,5 +1,5 @@
-import {getQueryParams,removeQueryString,isValidURL,queryString} from "$utils/uri";
-import defaultStr from "$utils/defaultStr";
+import {getQueryParams,removeQueryString,isValidURL,queryString} from "$cutils/uri";
+import defaultStr from "$cutils/defaultStr";
 import {getAPIHost} from "./utils";
 
 export * from "./utils";

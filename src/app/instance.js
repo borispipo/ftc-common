@@ -1,5 +1,5 @@
-import * as Utils from "$utils";
-import {isClientSide} from "$platform/utils";
+import * as Utils from "$cutils";
+import {isClientSide} from "$cplatform/utils";
 if(isClientSide()){
     Object.map(Utils,(u,i)=>{
         if(typeof u =="function" && !window[i]){
@@ -7,14 +7,14 @@ if(isClientSide()){
         }
     })
 }
-import sprintf from "$utils/sprintf";
-import i18n from "$i18n";
-import {defaultObj} from "$utils";
+import sprintf from "$cutils/sprintf";
+import i18n from "$ci18N";
+import {defaultObj} from "$cutils";
 import appConfig from "./config";
-import Platform from "$platform";
+import Platform from "$cplatform";
 import EVENTS from "./events";
-import { observable,addObserver } from "$lib/observable";
-import NetInfo from '$utils/NetInfo';
+import { observable,addObserver } from "$clib/observable";
+import NetInfo from '$cutils/NetInfo';
 
 
 let APP_INSTANCE = {
