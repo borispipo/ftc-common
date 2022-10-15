@@ -1,8 +1,7 @@
-import * as React from "react";
 import "$cutils/extend.prototypes";
 import isNonNullString from "$utils/isNonNullString";
 
-const configRef = React.createRef();
+const configRef = {current:null};
 
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
 export const setConfig = configValue=> {
