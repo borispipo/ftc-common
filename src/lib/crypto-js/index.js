@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import defaultStr from "$cutils/defaultStr";
 /**** Encrypt and decrypt with XOR function en base64 string */
 import Base64 from "$base64";

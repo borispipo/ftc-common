@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import {uniqid,defaultObj,isFunction,isBool,autobind,debounce} from "$cutils";
 import { observable,addObserver } from "$clib/observable";
 const previousStateSymbol = uniqid("prev-state-react-comopp");

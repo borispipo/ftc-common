@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import {observable,isObservable,addObserver } from "../observable";
 import i18n from "$ci18n";
 import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isValidEmail,isValidDataFileName} from "$cutils";

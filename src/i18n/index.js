@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 
 import { observable } from "$clib/observable";
 import { i18nFrLang } from "./lang/i18n.fr";

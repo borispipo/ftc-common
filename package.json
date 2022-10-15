@@ -1,11 +1,13 @@
 {
   "name": "@fto-consult/common",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
     "publish": "npm publish --access=public",
-    "unpublish": "npm -f unpublish @fto-consult/common"
+    "unpublish": "npm -f unpublish @fto-consult/common",
+    "build-docs" : "npx jsdoc src -r -c ./jsdoc.conf.json -d docs",
+    "docs" : "npm run build-docs"
   },
   "repository": {
     "type": "git",

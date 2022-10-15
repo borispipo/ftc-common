@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 /**
  * Class to allow us to refer to the app state service
  * @see : https://stackoverflow.com/questions/50565458/app-state-in-react-native-does-not-remove-the-listener

@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+/***@namespace actions */
 import defaultStr from "$cutils/defaultStr";
 /**** Les actions sont utiles pour l'écoute des évènement de l'application.
  *    Ils ont pour rôle de prendre en paramètre : 

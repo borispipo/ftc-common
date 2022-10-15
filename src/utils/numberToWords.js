@@ -1,4 +1,7 @@
-/**@see : https://github.com/yamadapc/js-written-number*/
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import defaultStr from "$cutils/defaultStr";
 const writtenNumber = require('written-number');
 export default function numberToWords(number,options){

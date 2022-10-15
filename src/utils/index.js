@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import _uniqid from "./uniqid";
 import _isDomElement from "./dom/isDOMElement";
 import { isPlainObject as _isPlainObject} from "./extendObj";

@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import isNonNullString from "./isNonNullString";
 /*** cette fonction prend en paramètre une chaine de caractère et échape certains motifs  
  *  les motifs à remplacer sont de la forme : {motif}, mis entre crochet

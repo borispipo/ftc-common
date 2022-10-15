@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import {isObj,defaultStr} from "$cutils";
 import notify from "$active-platform/notify";
 import {encrypt,decrypt} from "$crypto";
