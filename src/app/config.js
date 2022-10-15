@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import "$cutils/extend.prototypes";
 import isNonNullString from "$utils/isNonNullString";
 
