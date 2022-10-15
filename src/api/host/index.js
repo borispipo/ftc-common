@@ -1,18 +1,19 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+/***@namespace api/host */
 import {getQueryParams,removeQueryString,isValidURL,queryString} from "$cutils/uri";
 import defaultStr from "$cutils/defaultStr";
 import {getAPIHost} from "./utils";
 
 export * from "./utils";
 
-/**** cette fonction a pour rôle de préfixer toutes les routes passés en paramètre par la chaine de caractère définie dans la constante
- * @param path {string} : la chaine de caractère qu'on souhaite préfixée
- * @param params {object} : les paramètres à ajouter à la requête
- * @return {string} une chaine de caractère préfixée par la constante retournée par getAPIHost
- * exemple : buildAPIPath ("app","route","settings",{test=2}) => appp/route/settings?test=2
+/**** 
+ * construit une route/url (url|api) à partir des paramtères pris dynamiquement 
+ * @param {...({string|object})} - les paramètres devant figurer dans la route à construire
+ * @return {string} une chaine de caractère préfixée par la constante retournée par getAPIHost @see {@link getAPIHost}
+ * @see {getAPIHost}
+ * exemple : buildAPIPath ("app","route","final","settings",{test=2,t1=3}) => appp/route/final/settings?test=2&t1=3
  */
  export const buildAPIPath = function  (){
     const args = Array.prototype.slice.call(arguments,0);
@@ -47,7 +48,15 @@ export * from "./utils";
     }
     return bPath;
 }
-
+/****
+ * cette fonction retourne l'url absolue à partir d'un objet NextRequest où options passés en paramètre
+ * @typedef {{headers : {{host:string}}}} NextRequest
+ * @param {NextRequest} req - l'object {NextRequest}, @see 
+ * @param {(string | {{url:string,path:string}})} options - les options supplémentaires
+ *      - si options est une chaine de caractère, alors options est considéré comme le chemin à partir duquel l'url absolue sera construire
+ *      - si options est un object, alors l'une des propriété url où path est utilisée pour construire l'url absolue
+ * 
+ */
 export function absoluteUrl(req, options) {
     if(typeof options =='string'){
         options = {path:options}

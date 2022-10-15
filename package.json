@@ -6,7 +6,8 @@
   "scripts": {
     "publish": "npm publish --access=public",
     "unpublish": "npm -f unpublish @fto-consult/common",
-    "build-docs" : "npx jsdoc src -r -c ./jsdoc.conf.json -d docs",
+    "delete-docs" : "node ./deleteDocsFolder",
+    "build-docs" : "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
     "docs" : "npm run build-docs"
   },
   "repository": {

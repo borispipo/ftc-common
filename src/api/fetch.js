@@ -1,7 +1,9 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+/*** @namespace api/fetch
+ * Ensemble des fonctions utiles pour l'exécution des requêtes distantes (ajax)
+ */
 import originalFetch from "unfetch";
 import { buildAPIPath} from "./utils";
 import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
@@ -21,21 +23,33 @@ export  function setCodeVerifierHeader(verifier) {
 export const getRequestHeaderKey = x=>{
   return prefixStrWithAppId(x);
 }
+/**** recupère l'ensemble des entêtes par défaut à ajouter au header de la requête. 
+ * @namespace api/fetch
+ * Par défaut, l'entête Authorization Baerer est ajoutée à l'entête de la requête, lorsqu'il existe un token valide
+ * @param {{headers : {object}}} opts - les options de la requêtes
+ * @return {{headers}} : l'entête directement exploitable pour l'exécution de la méthode fetch ({@link fetch})
+ */
 export const getRequestHeaders = function (opts){
     opts = typeof opts !=="object" || Array.isArray(opts) || !opts ? {} : opts;
     const ret = {};
     const token = getToken();
-    if(isValidToken(token)){
+    if(isValidToken(token) && ! ret.Authorization){
        ret.Authorization = "bearer "+token.token;
     }
     ret.mode = defaultStr(opts.mode,"cors");
     ret.headers = defaultObj(ret.headers);
     ret.headers['Access-Control-Allow-Origin'] = defaultStr(ret.headers['Access-Control-Allow-Origin'],'*');
-    console.log(ret," is request header heinn")
     return ret;
 }
 
-
+/**** exécute une requête ajax distante
+ * @namaspace api/fetch
+ * @typedef {{url:string,path:string,fetcher:function,checkOnline:bool}} fetchOptions
+ * @param {(string|fetchOptions)} url, 
+ *    - s'il s'agit d'une chaine de caractère, alors url repésente l'url absolue où relative à via laquelle la requête fetch doit être exécutée
+ *    - s'il s'agit d'un objet, alors url est subsitué au paramètre options et l'une des propriétés path où url de cet objet est utilisé pour l'exécution de la requête fetch
+ * @param {fetchOptions}, les options supplémentaires à passer à la fonction fetch
+ */
 export default function fetch (url, options = {}) {
   const {fetcher,checkOnline,url:u,path,...opts} = getFetcherOptions(url,options);
   const cb = ()=>{
@@ -48,7 +62,17 @@ export default function fetch (url, options = {}) {
   }
   return cb();
 };
+/***@function
+ * @namespace api/fetch
+ *  function permettant d'exécuter la requête ajax de type GET 
+ * les paramètres sont identiques à ceux de la function {@link fetch} à la seule différence que 
+ * la méthode utilisée (props method des options) est GET
+ */
 export const get = fetch;
+/***@function 
+ * function permettant d'exécuter la requête ajax POST, les paramètres sont identiques à ceux de la function {@link fetch} à la seule différence que 
+ * la méthode utilisée (props method des options) est POST
+ */
 export const post = (url, options = {})=> {
   options = defaultObj(options);
   options.method = 'POST';
@@ -57,6 +81,7 @@ export const post = (url, options = {})=> {
 
 const cType = 'Content-Type';
 
+/**** permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch} */
 export const handleFetchResult = ({fetchResult:res,showError,json,isAuth,redirectWhenNoSignin}) =>{
    return new Promise((resolve,reject)=>{
       return json !== false ? res.json().then((d)=>{
