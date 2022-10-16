@@ -5,7 +5,7 @@ import {extendObj} from "$cutils";
 import DateLib from "$date";
 import {getDBName,getDBNamePrefix,actions,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
 import { sanitizeName,isCommon } from './dataFileManager/utils';
-import { getLoggedUser} from '$auth/utils';
+import { getLoggedUser} from '$cauth/utils';
 import uniqid from "./pouchdb/plugins/uniqid";
 import createDefaultIndexes from "./pouchdb/plugins/createDefaultIndexes";
 import getRealName from "./pouchdb/plugins/getRealName";
