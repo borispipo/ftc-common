@@ -6,15 +6,14 @@ import DateLib from "$date";
 import {getDBName,getDBNamePrefix,actions,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
 import { sanitizeName,isCommon } from './dataFileManager/utils';
 import { getLoggedUser} from '$auth/utils';
-import uniqid from "./plugins/uniqid";
-import createDefaultIndexes from "./plugins/createDefaultIndexes";
-import getRealName from "./plugins/getRealName";
-import toJSON from "./plugins/toJSON";
+import uniqid from "./pouchdb/plugins/uniqid";
+import createDefaultIndexes from "./pouchdb/plugins/createDefaultIndexes";
+import getRealName from "./pouchdb/plugins/getRealName";
+import toJSON from "./pouchdb/plugins/toJSON";
 import structDataDBName from "$cdatabase/data/struct_data/dbName";
 import triggerEventTableName from "$cdatabase/data/struct_data/triggerEventTableName";
-import canOverrideRemove from "./plugins/canOverrideRemove";
-
-require("./polyfill");
+import canOverrideRemove from "./pouchdb/plugins/canOverrideRemove";
+import "./polyfill";
 
 import PouchObj from "./pouchdb";
 
@@ -26,8 +25,8 @@ if(typeof window !== 'undefined' && !window.PouchDB){
     })
 }
 
-import QMapReduce from "./plugins/queryMapReduce";
-import PouchDBFind from "./plugins/find";
+import QMapReduce from "./pouchdb/plugins/queryMapReduce";
+import PouchDBFind from "./pouchdb/plugins/find";
 PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(require('pouchdb-authentication'));
 PouchDB.plugin(require('pouchdb-erase'));

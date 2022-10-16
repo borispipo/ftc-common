@@ -18,3 +18,5 @@ export default {
   PouchDB,
   ...extra
 }
+
+export {PouchDB};

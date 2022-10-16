@@ -1,3 +1,7 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 import {isCommon as isCommonDataFile,isStructData,sanitizeName} from "$cdatabase/dataFileManager/utils";
 import DATABASES_INDEXES from "$cdatabase/utils/DATABASES_INDEXES";
 import indexes from "./defaultIndexes";

@@ -1,12 +1,14 @@
 const {encode,decode} = require("$clib/base-64");
 
-if (!window.btoa) {
-    window.btoa = encode;
-}
-if (!window.atob) {
-    window.atob = decode;
+if(typeof window !='undefined' && window){
+    if (!window.btoa) {
+        window.btoa = encode;
+    }
+    if (!window.atob) {
+        window.atob = decode;
+    }
+    require("./fetch.js")
 }
 
-require("./fetch.js")
 
 module.exports =  {encode,decode}

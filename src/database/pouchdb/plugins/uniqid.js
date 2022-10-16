@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import DateLib from "$date";
-import {sanitizeName} from "../dataFileManager/utils";
+import sanitizeName from "../../dataFileManager/sanitizeName";
 /*** uniqid plugin */
 /*** 
     permet de générer l'id pour l'objet passé en paramètre

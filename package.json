@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "color": "^4.2.3",
     "invariant": "^2.2.4",
     "js-base64": "^3.7.2",
+    "pouchdb-find": "^7.3.0",
     "prop-types": "^15.8.1",
     "qs": "^6.11.0",
     "react-is": "^18.2.0",

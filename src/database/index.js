@@ -6,6 +6,9 @@ import parseDBName from "./utils/parseDBName";
 import getDB from "./getDB";
 import CONSTANTS from "./constants";
 import getData from "./getData";
+import pouch from "./pouchdb";
+
+const PouchDB = pouch.PouchDB;
 
 export * from "./getDB";
 
@@ -16,6 +19,7 @@ export {
     CONSTANTS,
     getData,
     parseDBName,
+    PouchDB,
 }
 
 export default {
@@ -23,4 +27,5 @@ export default {
     CONSTANTS,
     getData,
     parseDBName,
+    ...pouch,
 }
