@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import "$cutils/extend.prototypes";
-import isNonNullString from "$utils/isNonNullString";
+import isNonNullString from "$cutils/isNonNullString";
 
 const configRef = {current:null};
 
@@ -85,6 +85,16 @@ const config = {
     },
     get feeds (){
         return getFeeds();
+    },
+    ///le préfixe de base de données pouchdb local
+    get dbNamePrefix(){
+        return getDBNamePrefix();
+    },
+    get pouchdbPrefix(){
+        return getDBNamePrefix();
+    },
+    get pouchdbNamePrefix (){
+        return getDBNamePrefix();
     }
 }
 
@@ -102,6 +112,7 @@ export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>getConfigValue("appId");
 export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
+export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
     if(typeof t =='object' && t && !Array.isArray(t)){

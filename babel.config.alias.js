@@ -26,7 +26,6 @@ module.exports = function(opts){
     const common = path.resolve(rootDir,"src");
     base = base? base : path.resolve(__dirname,"..");
     const src = path.resolve(base,"src");
-    const database = path.resolve(src,"database");
     const r = {
         "$react" : path.resolve(common,"utils","react"),
         "$cmedia" : path.resolve(common,"media"),
@@ -41,7 +40,6 @@ module.exports = function(opts){
         "$cobservable" : path.resolve(common,"lib","observable"),
         "$cvalidator" : path.resolve(common,"lib","validator"),
         "$cdate" : path.resolve(common,"lib","date"),
-        "$cplatform" : path.resolve(common,"platform"),
         "$crypto-js" : path.resolve(common,"lib","crypto-js"),
         "$ccountries" : path.resolve(common,"countries"),
         "$cdatabase" : path.resolve(common,"database"),
@@ -70,7 +68,6 @@ module.exports = function(opts){
         "$validator" : path.resolve(common,"lib","validator"),
         "$crypto" : path.resolve(common,"lib","crypto-js"),
         "$date" : path.resolve(common,"lib","date"),
-        "$database" : database,
         "$notify" : path.resolve(common,"notify"),
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
@@ -92,6 +89,12 @@ module.exports = function(opts){
         r["$assets"] = assets;
         r["$images"] = path.resolve(assets,"images");
         r["$css"] = path.resolve(assets,"css");
+    }
+    if(!r["$database"]){
+        r["$database"] = r["$cdatabase"];
+    }
+    if(!r["$app-events"]){
+        r["$app-events"] = path.resolve(src,"app","_events");
     }
     return r;
 }

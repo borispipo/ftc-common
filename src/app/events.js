@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+///la liste des évènements supplémentaires à personnaliser, voir fichier babel.config.alias
+import * as appEvents from "$app-events"; 
+export * from "$app-events";
+
 export const STATE_CHANGE = 'STATE_CHANGE';
 
 export const STATE_ACTIVE = "STATE_ACTIVE";
@@ -33,7 +37,10 @@ export const BACK_BUTTON = "BACK_BUTTON";
 
 export const TOGGLE_MINIMIZE_DRAWER = "TOGGLE_MINIMIZE_DRAWER";
 
+export const REMOVE_DATABASE = "REMOVE_DATABASE";
+
 export default {
+    REMOVE_DATABASE,
     STATE_CHANGE,
     STATE_ACTIVE,
     STATE_INACTIVE,
@@ -49,5 +56,6 @@ export default {
     UPDATE_THEME,
     TOGGLE_MINIMIZE_DRAWER,
     NAVIGATION_SESSION_STATE_CHANGED,
-    BACK_BUTTON
+    BACK_BUTTON,
+    ...appEvents,
 }

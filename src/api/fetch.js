@@ -45,6 +45,12 @@ export const getRequestHeaders = function (opts){
 /**** exécute une requête ajax distante
  * @namaspace api/fetch
  * @typedef {{url:string,path:string,fetcher:function,checkOnline:bool}} fetchOptions
+ * avec : fetchOptions est de la forme : {
+ *    path : {string}: le chemin de l'api qu'on veut préfixer,
+ *    url : {string} : alias à path
+ *    fetcher : {function} : la fonction de récupération des données distante. par défaut, (url)=>fetch(url); ou fetch est par défaut importé du package 'unfetch'
+ *    queryParams : {object} : les paramètres queryString à passer à la fonction buildAPIPath, {@link buildAPIPath}
+ * }
  * @param {(string|fetchOptions)} url, 
  *    - s'il s'agit d'une chaine de caractère, alors url repésente l'url absolue où relative à via laquelle la requête fetch doit être exécutée
  *    - s'il s'agit d'un objet, alors url est subsitué au paramètre options et l'une des propriétés path où url de cet objet est utilisé pour l'exécution de la requête fetch

@@ -9,7 +9,7 @@ import Base64 from "$base64";
  *  @param data {string} le texte à crypter
  *  @parm key {string} la clé à utiliser pour crypter
  */
-let encode = function(data,key) {
+const encode = function(data,key) {
     if((data) && typeof data =='object'){
         key = defaultStr(data.key)
         data = defaultStr(data.pass,data.password);
@@ -21,7 +21,7 @@ let encode = function(data,key) {
  *  @param data {string} le texte à décrypter
  *  @param key {string} la clé à utiliser pour décrypter
  */
-let decode = function(data,key) {
+const decode = function(data,key) {
     if(data && typeof (data) =='object'){
         key = defaultStr(data.key)
         data = defaultStr(data.pass,data.password);

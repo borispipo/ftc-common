@@ -20,7 +20,7 @@ import {defaultObj} from "$cutils";
  *    path : {string}: le chemin de l'api qu'on veut préfixer,
  *    options : {object} : les options à passer à la fonction useSWR : voir https://swr.vercel.app/docs/options
  *    fetcher : {function} : la fonction de récupération des données distante. par défaut, (url)=>fetch(url); ou fetch est par défaut importé du package 'unfetch'
- *    queryParams : {object} : les paramètres queryString à passer à la fonction buildAPIPath
+ *    queryParams : {object} : les paramètres queryString à passer à la fonction buildAPIPath, @see api/fetch {@link api/fetch}
  * }
  * 
  */
