@@ -33,6 +33,7 @@ module.exports = function(opts){
         "$cmedia" : path.resolve(common,"media"),
         "$capp" : path.resolve(common,"app"),
         "$capi" : path.resolve(common,"api"),
+        "$fetch" : path.resolve(common,"api","fetch"),
         "$ci18n" : path.resolve(common,"i18n"),
         "$clib" : path.resolve(common,"lib"),
         "$cauth":path.resolve(common,"auth"),
