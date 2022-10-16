@@ -53,9 +53,6 @@ module.exports = function(opts){
         "$base64" : path.resolve(common,"lib","base-64"),
         "$cactions" : path.resolve(common,"actions"),
         
-        
-
-        "$app" : path.resolve(common,"app"),
         "$media" : path.resolve(common,"media"),
         "$api" : path.resolve(common,"api"),
         "$i18n" : path.resolve(common,"i18n"),
@@ -93,6 +90,9 @@ module.exports = function(opts){
     }
     if(!r["$app-events"]){
         r["$app-events"] = path.resolve(src,"app","_events");
+    }
+    if(!r["$app"]){
+        r["$app"] = r["$capp"];
     }
     return r;
 }
