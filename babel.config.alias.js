@@ -20,12 +20,13 @@ const getPlatform = (platform)=>{
  * 
 */
 module.exports = function(opts){
-    let {base,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
+    let {base,withPouchdb,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
     base = base? base : path.resolve(__dirname,"..");
     const src = path.resolve(base,"src");
+    const databaseIndex = path.resolve(common,"database",withPouchdb?"index.with-pouchdb":"index.with-no-pouchdb");
     const r = {
         "$react" : path.resolve(common,"utils","react"),
         "$cmedia" : path.resolve(common,"media"),
@@ -42,6 +43,7 @@ module.exports = function(opts){
         "$cdate" : path.resolve(common,"lib","date"),
         "$crypto-js" : path.resolve(common,"lib","crypto-js"),
         "$ccountries" : path.resolve(common,"countries"),
+        "$cdbMainDatabaseIndex" : databaseIndex,
         "$cdatabase" : path.resolve(common,"database"),
         "$ctheme" : path.resolve(common,"theme"),
         "$cnotify" : path.resolve(common,"notify"),
