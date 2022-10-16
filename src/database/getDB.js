@@ -10,8 +10,8 @@ import uniqid from "./pouchdb/plugins/uniqid";
 import createDefaultIndexes from "./pouchdb/plugins/createDefaultIndexes";
 import getRealName from "./pouchdb/plugins/getRealName";
 import toJSON from "./pouchdb/plugins/toJSON";
-import structDataDBName from "$cdatabase/data/struct_data/dbName";
-import triggerEventTableName from "$cdatabase/data/struct_data/triggerEventTableName";
+import {structDataDBName } from "./dataFileManager/structData";
+import {triggerEventTableName} from "./dataFileManager/structData";
 import canOverrideRemove from "./pouchdb/plugins/canOverrideRemove";
 import "./polyfill";
 

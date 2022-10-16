@@ -3,6 +3,8 @@
  *      plugin pouchdb-find de pouchdb, voir https://pouchdb.com/guides/mango-queries.html
  *    sinon, alors, toutes les données de la base seront exportées
  */
+import formatJSON from "../../exporter/formatJSON";
+import {isObj,defaultObj,} from "$utils";
 export default function toJSONPouchdbPlugin (success,error,options){
     return new Promise((resolve,reject)=>{
         if(isObj(success)){
@@ -32,7 +34,7 @@ export default function toJSONPouchdbPlugin (success,error,options){
                 }
             }
             if(format) {
-                require("../exporter/formatJSON")({format,validate,docs,dbName:db.getName()}).then(sF)
+                formatJSON({format,validate,docs,dbName:db.getName()}).then(sF)
             } else {
                 sF(docs);
             }

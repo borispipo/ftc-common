@@ -78,10 +78,11 @@ module.exports = function(opts){
         "$database" : path.resolve(src,"database"),
         "$active-platform" : path.resolve(common,"platforms",platform),
         "$common":common,
+        "$datafileManager" : path.resolve(common,"database","dataFileManager"),
+        ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",
         "$ftc" : "@fto-consult",
-        ...(typeof alias =='object' && !Array.isArray(alias) && alias || {})
     }
     if(assets){
         r["$assets"] = assets;

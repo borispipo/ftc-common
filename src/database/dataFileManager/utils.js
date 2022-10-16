@@ -1,6 +1,5 @@
 import {isNonNullString,isObj,defaultStr,extendObj,defaultDecimal,defaultBool,defaultFunc,defaultArray} from "$cutils";
 import dataFileText from "./dataFileText";
-import structDataBBName from "./../data/struct_data/dbName";
 import sanitizeName from "./sanitizeName";
 import isValid from "./isValidDataFile";
 import getAllDefault from "./getAllDefault";
@@ -10,6 +9,7 @@ import setCurrentDB from "./setCurrentDB";
 import table from "./table";
 import isCommon from "./isCommon";
 import docId from "./docId";
+import {structDataDBName} from "./structData";
 
 const dataFilesCounter = {};
 
@@ -17,7 +17,7 @@ const dataFilesCounter = {};
 export {default as dbName} from "./dbName";
 
 const tableName = table;
-export {dataFileText,docId,tableName,table,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
+export {dataFileText,structDataDBName,docId,tableName,table,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
 
 
 export const trimCommonDocId = (docCodeOrId,dbName)=>{
@@ -52,7 +52,7 @@ export const isStructData = (dFCode)=>{
     if(isObj(dFCode)){
         dFCode = dFCode.code;
     }
-    return defaultStr(dFCode).toLowerCase().trim() === structDataBBName.toLowerCase().trim();
+    return defaultStr(dFCode).toLowerCase().trim() === structDataDBName.toLowerCase().trim();
 }
 export const getLabel = (code)=>{
     let dF = get(code);
