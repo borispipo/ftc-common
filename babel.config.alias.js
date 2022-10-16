@@ -57,7 +57,7 @@ module.exports = function(opts){
         "$cactions" : path.resolve(common,"actions"),
         
         "$media" : path.resolve(common,"media"),
-        "$api" : path.resolve(common,"api"),
+        "$capi" : path.resolve(common,"api"),
         "$i18n" : path.resolve(common,"i18n"),
         "$lib" : path.resolve(common,"lib"),
         "$auth":path.resolve(src,"auth"),
@@ -86,6 +86,9 @@ module.exports = function(opts){
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",
         "$ftc" : "@fto-consult",
+    }
+    if(!r.$api){
+        r.$api = r.$capi;
     }
     if(assets){
         r["$assets"] = assets;
