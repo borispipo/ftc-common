@@ -89,7 +89,7 @@ module.exports = function(opts){
         r["$css"] = path.resolve(assets,"css");
     }
     if(!r["$app-events"]){
-        r["$app-events"] = path.resolve(src,"app","_events");
+        r["$app-events"] = path.resolve(common,"app","_events");
     }
     if(!r["$app"]){
         r["$app"] = r["$capp"];
