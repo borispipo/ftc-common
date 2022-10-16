@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import getAllDefault from "./getAllDefault";
-import getDB from "$database/getDB";
+import getDB from "$cdatabase/getDB";
 import dbName from "./dbName";
 import APP from "$capp/instance";
 import {set as setDataFiles} from "./DATA_FILES";

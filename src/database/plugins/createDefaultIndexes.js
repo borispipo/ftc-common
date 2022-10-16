@@ -1,5 +1,5 @@
-import {isCommon as isCommonDataFile,isStructData,sanitizeName} from "$database/dataFileManager/utils";
-import DATABASES_INDEXES from "$database/utils/DATABASES_INDEXES";
+import {isCommon as isCommonDataFile,isStructData,sanitizeName} from "$cdatabase/dataFileManager/utils";
+import DATABASES_INDEXES from "$cdatabase/utils/DATABASES_INDEXES";
 import indexes from "./defaultIndexes";
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};

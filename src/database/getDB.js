@@ -10,8 +10,8 @@ import uniqid from "./plugins/uniqid";
 import createDefaultIndexes from "./plugins/createDefaultIndexes";
 import getRealName from "./plugins/getRealName";
 import toJSON from "./plugins/toJSON";
-import structDataDBName from "$database/data/struct_data/dbName";
-import triggerEventTableName from "$database/data/struct_data/triggerEventTableName";
+import structDataDBName from "$cdatabase/data/struct_data/dbName";
+import triggerEventTableName from "$cdatabase/data/struct_data/triggerEventTableName";
 import canOverrideRemove from "./plugins/canOverrideRemove";
 
 require("./polyfill");

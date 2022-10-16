@@ -78,6 +78,7 @@ module.exports = function(opts){
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
+        "$database" : path.resolve(src,"database"),
         "$active-platform" : path.resolve(common,"platforms",platform),
         "$common":common,
         "$ftc-common":"@fto-consult/common",
@@ -89,9 +90,6 @@ module.exports = function(opts){
         r["$assets"] = assets;
         r["$images"] = path.resolve(assets,"images");
         r["$css"] = path.resolve(assets,"css");
-    }
-    if(!r["$database"]){
-        r["$database"] = r["$cdatabase"];
     }
     if(!r["$app-events"]){
         r["$app-events"] = path.resolve(src,"app","_events");
