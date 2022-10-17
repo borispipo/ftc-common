@@ -1,7 +1,10 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+/****
+ * @namespace utils/uri
+ * Enseble de fonctions utiles pour la manipulation des url
+ */
 import extendObj from "./extendObj";
 import defaultStr from "./defaultStr";
 import  "./extend.prototypes";

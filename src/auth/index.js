@@ -5,6 +5,7 @@
 import Auth from "./instance";
 import Provider from "./AuthProvider";
 import Container from "./Container";
+import * as routes from "./routes";
 
 export * from "./AuthProvider";
 export * from "./instance";
@@ -12,6 +13,9 @@ export * from "./instance";
 export {default as Container} from "./Container";
 
 export {default as AuthProvider} from "./AuthProvider";
+
+export {routes};
+
 
 Auth.Container = Container;
 Auth.Provider = Provider;

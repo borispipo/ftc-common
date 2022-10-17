@@ -4,7 +4,8 @@
 
 import {handleGetValue,handleSetValue} from "./utils";
 import {isElectron} from "$cplatform";
-let get, set
+import web from "./web/storage";
+let get = web.get, set = web.set;
 if(isElectron() && window.ELECTRON && typeof ELECTRON.SESSION=="object" && ELECTRON.SESSION){
     if(typeof ELECTRON.SESSION.set =='function'){
         set = (key,value,decycle)=>{
@@ -18,6 +19,4 @@ if(isElectron() && window.ELECTRON && typeof ELECTRON.SESSION=="object" && ELECT
 
 export default {get,set};
 
-export {get,set}
-
-export {AsyncStorage} from '@react-native-async-storage/async-storage';
+export {get,set};

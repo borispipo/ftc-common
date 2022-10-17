@@ -80,7 +80,7 @@ module.exports = function(opts){
         "$base" :base, 
         "$src" : src,
         "$database" : path.resolve(src,"database"),
-        "$active-platform" : path.resolve(common,"platforms",platform),
+        "$active-platform" : path.resolve(common,"active-platform",platform),
         "$common":common,
         "$datafileManager" : path.resolve(common,"database","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
@@ -101,6 +101,9 @@ module.exports = function(opts){
     }
     if(!r["$app"]){
         r["$app"] = r["$capp"];
+    }
+    if(!r["$signIn2SignOut"]){
+        r["$signIn2SignOut"] = path.resolve(common,"auth","signIn2SignOut");
     }
     return r;
 }

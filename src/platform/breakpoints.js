@@ -19,7 +19,7 @@ export const breakpoints = {
 }
 
 // int comparer for sorts
-var compareInts = function compare(a, b) {
+const compareInts = function compare(a, b) {
     if (a < b) {
         return -1;
     }

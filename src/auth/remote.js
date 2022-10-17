@@ -6,27 +6,44 @@ import {logout,setToken,isLoggedIn} from "./utils";
 import login from "./utils/login";
 import {post} from "$capi";
 import {SIGN_IN} from "$cauth/routes";
-import {navigate} from "$cnavigation/utils";
+import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGNIN_API_PATH,SIGNOUT_API_PATH,} from "./routes";
+import { getLoggedUser } from "./utils/session";
+import {isObj,defaultObj} from "$cutils";
+///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
+import S2Out from "$signIn2SignOut";
+
+
+
+/*** cette variable sert à personnaliser les fonction d'authentification/connexion signIn et de déconnexion signOut d'un utilisateur côté client */
+export const SignIn2SignOut = typeof S2Out =='object' && S2Out ? S2Out : {};
 
 export const isSignedIn = isLoggedIn;
 
-/***** persist new user into session */
+/***** 
+ * authentifie l'utilisateur passé en paramètre
+ * 
+ */
 export const signIn = (user,callback)=>{
-  return post({
+  const isCustom = typeof SignIn2SignOut.signIn =='function';
+  return (isCustom?SignIn2SignOut.signIn({
+    user,
+  }):post({
       isAuth : true,
       json : true,
       url : SIGNIN_API_PATH,
       body : user
-  }).then(({response,userId,token,...rest})=>{
-    if(response.success){
+  })).then(({response,userId,token,...rest})=>{
+    if(isCustom || (isObj(response) && response.success)){
       delete user.password;
       user.id = defaultStr(userId,user.id,user.code,user.email);
-      user.token = token;
       user.code = defaultStr(user.code,user.email);
-      setToken({userId,token});
+      if(token){
+        user.token = token;
+        setToken({userId,token});
+      }
       delete user.password;
       delete user.pass;
       login(user,true);
@@ -34,7 +51,7 @@ export const signIn = (user,callback)=>{
           callback(user);
       }
     }
-    return {response,userId,token,...rest};
+    return {response,user,userId,token,...rest};
   }).catch((e)=>{
       console.log(e," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
@@ -44,7 +61,8 @@ export const signIn = (user,callback)=>{
 }
 
 /**** signOut current user */
-export const signOut = (callback)=>{
+export const signOut = (callback,user)=>{
+  const isCustom = typeof SignIn2SignOut.signOut =='function';
   const cb = ()=>{
     logout(null);
     setToken(null);
@@ -54,11 +72,13 @@ export const signOut = (callback)=>{
     if(callback === false) return;
     notify.success(i18n.lang("you_are_successfull_logged_out"))
   }
-  return post({
+  return (isCustom?SignIn2SignOut.signOut({
+    user : defaultObj(user,getLoggedUser()),
+  }):post({
       url : SIGNOUT_API_PATH
-  }).catch((e)=>{
-    return e;
-  }).finally(cb);
+  })).catch((e)=>{
+      return e;
+    }).finally(cb);
 }
 
 /*** déconnecte l'utilisateur et le redirige vers la page voulue redirectStr

@@ -7,6 +7,7 @@ import { isWeb } from "$cplatform";
 import { TIPPY_THEME } from "./utils";
 const themeDomId = uniqid("web-theme-id");
 
+/*** met à jour le theme en environnement web */
 export default function updateWebTheme(theme){
     if(!isWeb()) return null;
     if(typeof document === 'undefined' || !document.getElementById) return null;

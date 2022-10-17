@@ -1,7 +1,10 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+/***
+ * @namespace notify
+ * permet de gérer les différentes notifications de l'application
+ */
 import React from "react";
 import {isNonNullString,defaultNumber,defaultObj,defaultVal,isObj,defaultStr} from "$cutils";
 export const TYPES = {
