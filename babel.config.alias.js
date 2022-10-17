@@ -60,7 +60,6 @@ module.exports = function(opts){
         "$capi" : path.resolve(common,"api"),
         "$i18n" : path.resolve(common,"i18n"),
         "$lib" : path.resolve(common,"lib"),
-        "$auth":path.resolve(src,"auth"),
         "$platform" : path.resolve(common,"platform"),
         "$dimensions" : path.resolve(common,"platform/dimensions"),
         "$observable" : path.resolve(common,"lib","observable"),
@@ -77,12 +76,12 @@ module.exports = function(opts){
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
-        "$database" : path.resolve(src,"database"),
         "$datafileManager" : path.resolve(common,"database","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",
         "$ftc" : "@fto-consult",
+        "$cloginComponent":path.resolve(common,"auth","LoginComponent"),
     }
     if(!r.$api){
         r.$api = r.$capi;
@@ -106,6 +105,15 @@ module.exports = function(opts){
     r["$react"] = path.resolve(common,"utils","react");
     if(!r["$navigation"]){
         r["$navigation"] = r["$cnavigation"];
+    }
+    if(!r["$loginComponent"]){
+        r["$loginComponent"] = r["$cloginComponent"];
+    }
+    if(!r["$auth"]){
+        r["$auth"] = r["$cauth"];
+    }
+    if(!r["$database"]){
+        r["$database"] = r["$cdatabase"];
     }
     return r;
 }

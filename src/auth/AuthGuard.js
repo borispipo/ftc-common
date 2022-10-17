@@ -4,6 +4,8 @@
 
 import { useAuth } from "./AuthProvider"
 import React from "$react";
+/*** cet alias est utilisé pour définir le composant de connexion */
+import LoginComponent from "$loginComponent";
 
 export default function AuthGuard({ children,...rest}) {
   const auth = useAuth();
@@ -20,4 +22,4 @@ export default function AuthGuard({ children,...rest}) {
 }
 
 ///on peut override cette fonction, pour le rendu de la méthode login
-AuthGuard.Login = ()=>null;
+AuthGuard.Login = React.isComponent(LoginComponent)? LoginComponent : ()=>null;
