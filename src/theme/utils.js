@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import { lightColors,darkColors} from "./defaultTheme";
-import {modesObject} from "$common/TextField/utils";
+import {modesObject} from "../TextField";
 import themeRef from "$active-platform/themeRef";
 
 export * from "./alpha";
