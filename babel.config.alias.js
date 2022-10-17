@@ -61,7 +61,6 @@ module.exports = function(opts){
         "$i18n" : path.resolve(common,"i18n"),
         "$lib" : path.resolve(common,"lib"),
         "$auth":path.resolve(src,"auth"),
-        "$navigation" : path.resolve(src,"navigation"),
         "$platform" : path.resolve(common,"platform"),
         "$dimensions" : path.resolve(common,"platform/dimensions"),
         "$observable" : path.resolve(common,"lib","observable"),
@@ -105,5 +104,8 @@ module.exports = function(opts){
     r["$active-platform"] = path.resolve(common,"platforms",platform);
     r["$common"] = common;
     r["$react"] = path.resolve(common,"utils","react");
+    if(!r["$navigation"]){
+        r["$navigation"] = r["$cnavigation"];
+    }
     return r;
 }
