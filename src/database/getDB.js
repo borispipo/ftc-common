@@ -3,7 +3,8 @@ import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
 import {extendObj} from "$cutils";
 import DateLib from "$date";
-import {getDBName,getDBNamePrefix,actions,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
+import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
+import actions from "$cactions";
 import { sanitizeName,isCommon } from './dataFileManager/utils';
 import { getLoggedUser} from '$cauth/utils';
 import uniqid from "./pouchdb/plugins/uniqid";
