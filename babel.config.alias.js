@@ -82,6 +82,7 @@ module.exports = function(opts){
         "$ftc-expo":"@fto-consulting/expo-ui",
         "$ftc" : "@fto-consult",
         "$cloginComponent":path.resolve(common,"auth","LoginComponent"),
+        "$cgetLoginProps" : path.resolve(common,"auth","getLoginProps"),
     }
     if(!r.$api){
         r.$api = r.$capi;
@@ -117,6 +118,12 @@ module.exports = function(opts){
     }
     if(!r["$database"]){
         r["$database"] = r["$cdatabase"];
+    }
+    /****
+     * permettant de récupérer les props à passer au composant FormData, du composant LoginComponent pour la connexion de l'utilisateur
+     */
+    if(!r["$getLoginProps"]){
+        r["$getLoginProps"] = r["$cgetLoginProps"];
     }
     return r;
 }
