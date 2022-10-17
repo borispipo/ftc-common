@@ -79,7 +79,6 @@ module.exports = function(opts){
         "$base" :base, 
         "$src" : src,
         "$database" : path.resolve(src,"database"),
-        "$active-platform" : path.resolve(common,"active-platform",platform),
         "$datafileManager" : path.resolve(common,"database","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
@@ -103,6 +102,7 @@ module.exports = function(opts){
     if(!r["$signIn2SignOut"]){
         r["$signIn2SignOut"] = path.resolve(common,"auth","signIn2SignOut");
     }
+    r["$active-platform"] = path.resolve(common,"platforms",platform);
     r["$common"] = common;
     r["$react"] = path.resolve(common,"utils","react");
     return r;
