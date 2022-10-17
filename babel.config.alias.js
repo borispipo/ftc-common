@@ -97,15 +97,18 @@ module.exports = function(opts){
     if(!r["$app"]){
         r["$app"] = r["$capp"];
     }
+    /**** cet alias var servir à personnaliser les fonction de connexion signIn et de déconnexion signOut à l'application */
     if(!r["$signIn2SignOut"]){
         r["$signIn2SignOut"] = path.resolve(common,"auth","signIn2SignOut");
     }
+    /*** alias interne utile pour la compilation en fonction de la platform, soi next où expo */
     r["$active-platform"] = path.resolve(common,"platforms",platform);
     r["$common"] = common;
     r["$react"] = path.resolve(common,"utils","react");
     if(!r["$navigation"]){
         r["$navigation"] = r["$cnavigation"];
     }
+    /**** cet alias est utile pour la personnalisation du composant de connexion */
     if(!r["$loginComponent"]){
         r["$loginComponent"] = r["$cloginComponent"];
     }
