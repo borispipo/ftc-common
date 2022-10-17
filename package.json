@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/borispipo/common#readme",
   "dependencies": {
     "@craftzdog/pouchdb-adapter-websql-core": "^7.2.3",
+    "circular-dependency-plugin": "^5.2.2",
     "color": "^4.2.3",
     "invariant": "^2.2.4",
     "js-base64": "^3.7.2",
