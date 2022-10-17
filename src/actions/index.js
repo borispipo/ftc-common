@@ -46,5 +46,5 @@ const allActions = {};
     allActions[action] =   (componentName) => actions(componentName,action);;
 });
 
-export default allActions;
+export { allActions, allActions as all};
 
