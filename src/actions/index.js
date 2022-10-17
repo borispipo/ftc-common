@@ -17,7 +17,7 @@ import defaultStr from "$cutils/defaultStr";
  *  Exemple : actions('structData','show') => SRUCT_DATA_SHOW : pour afficher un composant StructData
  *            actions('productsCategories','upsert') => PRODUCTS_CATEGORIES_UPSERT : appelée lorsqu'une catégorie de produit est mise à jour
  */
-export function actions(componentName,type){
+export default function actions(componentName,type){
     type = defaultStr(type);
     if(type){
         type = "_"+type.toUpperCase().trim().ltrim("_");

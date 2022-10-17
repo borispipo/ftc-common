@@ -5,7 +5,7 @@
 import {isObj,isFunction,extendObj,defaultStr,defaultObj,isNonNullString} from "$cutils";
 import {getURIPathName} from "$cutils/uri";
 import {isWeb,isClientSide} from "$cplatform";
-import actions from "$cactions";
+import actions from "./actions";
 import { navigationRef } from "$active-platform/navigation";
 
 export * from "$active-platform/navigation";
