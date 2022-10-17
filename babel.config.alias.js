@@ -29,7 +29,6 @@ module.exports = function(opts){
     const src = path.resolve(base,"src");
     const databaseIndex = path.resolve(common,"database",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const r = {
-        "$react" : path.resolve(common,"utils","react"),
         "$cmedia" : path.resolve(common,"media"),
         "$capp" : path.resolve(common,"app"),
         "$capi" : path.resolve(common,"api"),
@@ -81,7 +80,6 @@ module.exports = function(opts){
         "$src" : src,
         "$database" : path.resolve(src,"database"),
         "$active-platform" : path.resolve(common,"active-platform",platform),
-        "$common":common,
         "$datafileManager" : path.resolve(common,"database","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
@@ -105,5 +103,7 @@ module.exports = function(opts){
     if(!r["$signIn2SignOut"]){
         r["$signIn2SignOut"] = path.resolve(common,"auth","signIn2SignOut");
     }
+    r["$common"] = common;
+    r["$react"] = path.resolve(common,"utils","react");
     return r;
 }
