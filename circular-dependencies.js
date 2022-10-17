@@ -9,7 +9,7 @@ module.exports = new CircularDependencyPlugin({
     allowAsyncCycles: false,
     // `onStart` is called before the cycle detection starts
     onStart({ compilation }) {
-      console.log('\nstart detecting webpack modules cycles');
+      //console.log('\nstart detecting webpack modules cycles');
     },
     // `onDetected` is called for each module that is cyclical
     onDetected({ module: webpackModuleRecord, paths, compilation }) {
@@ -23,6 +23,6 @@ module.exports = new CircularDependencyPlugin({
     },
     // `onEnd` is called before the cycle detection ends
     onEnd({ compilation }) {
-      console.log('\nend detecting webpack modules cycles');
+      //console.log('\nend detecting webpack modules cycles');
     },
   });
