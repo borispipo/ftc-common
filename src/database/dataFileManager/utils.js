@@ -10,6 +10,7 @@ import table from "./table";
 import isCommon from "./isCommon";
 import docId from "./docId";
 import {structDataDBName} from "./structData";
+import isStructData from "./isStructData";
 
 const dataFilesCounter = {};
 
@@ -17,7 +18,7 @@ const dataFilesCounter = {};
 export {default as dbName} from "./dbName";
 
 const tableName = table;
-export {dataFileText,structDataDBName,docId,tableName,table,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
+export {dataFileText,isStructData,structDataDBName,docId,tableName,table,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
 
 
 export const trimCommonDocId = (docCodeOrId,dbName)=>{
@@ -48,12 +49,6 @@ export const get = (code)=>{
     return ret;
 }
 
-export const isStructData = (dFCode)=>{
-    if(isObj(dFCode)){
-        dFCode = dFCode.code;
-    }
-    return defaultStr(dFCode).toLowerCase().trim() === structDataDBName.toLowerCase().trim();
-}
 export const getLabel = (code)=>{
     let dF = get(code);
     if(dF) return defaultStr(dF.label,dF.code,code);
