@@ -5,7 +5,6 @@
 import {logout,setToken,isLoggedIn} from "./utils";
 import login from "./utils/login";
 import {post} from "$capi";
-import {SIGN_IN} from "$cauth/routes";
 import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
