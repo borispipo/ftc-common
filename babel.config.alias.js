@@ -120,7 +120,7 @@ module.exports = function(opts){
     /*** les indixes des bases de données pouchdb qui doivent automatiquement crée par l'application 
      * doit systématiquement exporté un objet portant pour chacune des base de données, les différents index à créer
     */
-    if(!r["$datableIndexes"]){
+    if(!r["$databaseIndex"]){
         r["$databaseIndex"] = r["$cdatabaseIndex"];
     }
     if(!r["$database"]){

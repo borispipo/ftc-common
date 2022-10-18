@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import DATABASES_INDEXES from "$cdatabase/utils/DATABASES_INDEXES";
+import DATABASES_INDEXES from "../../utils/DATABASES_INDEXES";
 import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
