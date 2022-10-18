@@ -642,6 +642,12 @@ export const isBase64 = function isBase64(str, options) {
     return value.match(re) ? true : false;
 }
 
+/***@function
+ * @alias isValidEmail
+ * alias à la fonction isValidEmail
+ */
+export const isValidMail = isValidEmail;
+
 /**
  * Mask email address with asterisks to comply GDPR
  * john.doe@example.com => j******e@e****e.com
