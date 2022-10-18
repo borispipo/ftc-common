@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import {isClientSide} from "$cplatform";
-import {buildAPIPath} from "$capi/host";
 import {isValidUrl} from "$utils";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;

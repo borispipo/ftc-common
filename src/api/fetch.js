@@ -38,7 +38,7 @@ export const getRequestHeaders = function (opts){
     }
     ret.mode = defaultStr(opts.mode,"cors");
     ret.headers = defaultObj(ret.headers);
-    ret.headers['Access-Control-Allow-Origin'] = defaultStr(ret.headers['Access-Control-Allow-Origin'],'*');
+    //ret.headers['Access-Control-Allow-Origin'] = defaultStr(ret.headers['Access-Control-Allow-Origin'],'*');
     return ret;
 }
 
