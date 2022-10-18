@@ -13,7 +13,7 @@ import {getToken,isValidToken} from "$cauth/utils";
 import APP from "$capp/instance";
 import {timeout} from "./utils";
 import {isClientSide} from "$cplatform";
-import {prefixStrWithAppId} from "$capp/config";
+import appConfig from "$capp/config";
 
 let codeVerifier = null;
 
@@ -21,7 +21,7 @@ export  function setCodeVerifierHeader(verifier) {
   codeVerifier = verifier;
 }
 export const getRequestHeaderKey = x=>{
-  return prefixStrWithAppId(x);
+  return appConfig.prefixWithAppId(x);
 }
 /**** recupère l'ensemble des entêtes par défaut à ajouter au header de la requête. 
  * @namespace api/fetch

@@ -1,5 +1,6 @@
 import getPouchDBNamePrefix from "./getPouchDBNamePrefix";
 import FIXED_CONSTANTS from "../constants";
+import {prefixStrWithAppId} from "$capp/config";
 export default function getDBNamePrefix(isServer){
     let prefix = defaultStr(prefixStrWithAppId());
     if(isNonNullString(FIXED_CONSTANTS.DB_NAME_PREFIX)){
