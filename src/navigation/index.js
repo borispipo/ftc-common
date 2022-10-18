@@ -194,6 +194,7 @@ export const navigate = (toRoute,navigation)=>{
     const currentNavigation = isValidNavigation(navigation) ? navigation : navigationRef;
     const {navigate} = currentNavigation;
     if(typeof navigate === "function"){
+        if(typeof currentNavigation.isReady =='function' && !currentNavigation.isReady()) return;
         params = {...defaultObj(rest),...params};
         ROUTES_CALLBACK[routeName] = {};
         ///on persiste les paramètes de la route
