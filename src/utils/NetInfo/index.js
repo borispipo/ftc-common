@@ -2,21 +2,23 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isWeb,isClientSide} from "$cplatform";
+import {isClientSide} from "$cplatform";
 import {buildAPIPath} from "$capi/host";
+import {isValidUrl} from "$utils";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;
 const init = ()=>{
+    const status = 200;
     if(!NetInfo && isClientSide() && !hasNetInfoIntialized){
-        const path = buildAPIPath("net-info");
+        const fetchUrl = isValidUrl(process.env.NET_INFO_TEST_URL) ? process.env.NET_INFO_TEST_URL : ("http://httpstat.us/"+status);
         NetInfo = require('$active-platform/NetInfo').default;
         NetInfo.configure({
             /**** The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
-            reachabilityUrl: path,
+            reachabilityUrl: fetchUrl,
             /***The HTTP request method to use to call reachabilityUrl URL to call to test if the internet is reachable. Defaults to HEAD. GET is also available */
             reachabilityMethod : "HEAD",
             /***A function which is passed the Response from calling the reachability URL. It should return true if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
-            reachabilityTest: async (response) => response.status === 200,
+            reachabilityTest: async (response) => response.status === 200 || response.status==status,
             /**The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
             reachabilityLongTimeout: 10 * 60 * 1000, // 10min
             /**The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
