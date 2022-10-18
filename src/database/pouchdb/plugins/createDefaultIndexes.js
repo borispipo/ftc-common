@@ -4,7 +4,7 @@
 
 import {isCommon as isCommonDataFile,isStructData,sanitizeName} from "$cdatabase/dataFileManager/utils";
 import DATABASES_INDEXES from "$cdatabase/utils/DATABASES_INDEXES";
-import indexes from "./defaultIndexes";
+import indexes from "$databaseIndex";
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
     if(isArray(idx)){
