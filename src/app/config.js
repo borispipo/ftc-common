@@ -64,8 +64,8 @@ const config = {
     get devWebsite(){
         return getDevWebsite();
     },
-    get copyRight (){
-        return getCopyRight();
+    get copyright (){
+        return getCopyright();
     },
     get author(){
         return getAuthor();
@@ -107,7 +107,7 @@ export const getReleaseDateStr = x=>getConfigValue("realeaseDateStr");
 export const getReleaseDate = x=>getConfigValue("releaseDate");
 export const getDevMail = x=>getConfigValue("devMail");
 export const getDevWebsite = x=>getConfigValue("devWebsite");
-export const getCopyRight = x=>getConfigValue("copyRight");
+export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>getConfigValue("appId");
 export const getAppVersion = x=>getConfigValue("apiVersion");
