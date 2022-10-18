@@ -36,9 +36,6 @@ export const getRequestHeaders = function (opts){
     if(isValidToken(token) && ! ret.Authorization){
        ret.Authorization = "bearer "+token.token;
     }
-    ret.mode = defaultStr(opts.mode,"cors");
-    ret.headers = defaultObj(ret.headers);
-    //ret.headers['Access-Control-Allow-Origin'] = defaultStr(ret.headers['Access-Control-Allow-Origin'],'*');
     return ret;
 }
 
