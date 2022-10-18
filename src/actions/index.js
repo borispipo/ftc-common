@@ -28,7 +28,6 @@ export default function actions(componentName,type){
     }
     return '';
 }
-const allActions = {};
 [
     /*** liste les données d'un tableau avec les paramètres passés en paramètre */
     "list",
@@ -43,8 +42,7 @@ const allActions = {};
     /**** affiche le formulaire d'édition ou d'ajout d'une nouvelle donnée de type tableData */
     'showTableData'
 ].map((action,k)=>{
-    allActions[action] =   (componentName) => actions(componentName,action);;
+    actions[action] =   (componentName) => actions(componentName,action);;
 });
 
-export { allActions, allActions as all};
 
