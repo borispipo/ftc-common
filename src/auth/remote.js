@@ -9,7 +9,7 @@ import {SIGN_IN} from "$cauth/routes";
 import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
-import {SIGNIN_API_PATH,SIGNOUT_API_PATH,} from "./routes";
+import {SIGN_IN,SIGN_OUT,} from "./routes";
 import { getLoggedUser } from "./utils/session";
 import {isObj,defaultObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
@@ -33,7 +33,7 @@ export const signIn = (user,callback)=>{
   }):post({
       isAuth : true,
       json : true,
-      url : SIGNIN_API_PATH,
+      url : SIGN_IN,
       body : user
   })).then(({response,userId,token,...rest})=>{
     if(isCustom || (isObj(response) && response.success)){
@@ -75,7 +75,7 @@ export const signOut = (callback,user)=>{
   return (isCustom?SignIn2SignOut.signOut({
     user : defaultObj(user,getLoggedUser()),
   }):post({
-      url : SIGNOUT_API_PATH
+      url : SIGN_OUT
   })).catch((e)=>{
       return e;
     }).finally(cb);
