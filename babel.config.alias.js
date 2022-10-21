@@ -71,6 +71,8 @@ module.exports = function(opts){
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
         "$uri" : path.resolve(common,"utils","uri"),
+        "$cdatabaseTableData" : path.resolve(common,"database","data","tableData"),
+        "$cdatabaseStructData" : path.resolve(common,"database","data","structData"),
         
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
@@ -131,6 +133,18 @@ module.exports = function(opts){
      */
     if(!r["$getLoginProps"]){
         r["$getLoginProps"] = r["$cgetLoginProps"];
+    }
+    /*** l'ensemble des tables data de l'application */
+    if(!r.$databaseTableData){
+        r.$databaseTableData = r.$cdatabaseTableData;
+    }
+    ///l'ensemble des struct data de l'application
+    if(!r.$databaseStructData){
+        r.$databaseStructData = r.$cdatabaseStructData;
+    }
+    /**** l'alias qui pointe vers un fichier exportant la fonction retournant si l'utilisateur est master admin où non */
+    if(!r.$isMasterAdmin){
+        r.$isMasterAdmin = path.resolve(common,"auth","isMasterAdmin","defaultIsMasterAdmin");
     }
     return r;
 }
