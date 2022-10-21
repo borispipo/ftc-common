@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { getLoggedUser } from "./utils/session";
+import { getLoggedUser } from "../utils/session";
 import isMasterAdmin from "$isMasterAdmin";
 import {defaultObj} from "$utils";
 
