@@ -123,7 +123,7 @@ if (!Array.prototype.findIndex) {
 
 export function cloneObject(source,cloneLevel) {
   let level = 1;
-  if (Object.prototype.toString.call(source) === '[object Array]') {
+  if (Array.isArray(source)) {
       const clone = [];
       for (var i=0; i<source.length; i++) {
           clone[i] = cloneObject(source[i],i+1);
