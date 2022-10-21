@@ -1,10 +1,9 @@
 {
   "name": "@fto-consult/common",
-  "version": "1.1.28",
+  "version": "1.1.29",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
-    "publish": "npm publish --access=public",
     "unpublish": "npm -f unpublish @fto-consult/common",
     "delete-docs": "node ./deleteDocsFolder",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
