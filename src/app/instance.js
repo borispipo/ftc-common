@@ -89,7 +89,7 @@ export const checkOnline = ()=>{
 }
 export const isOnline = x =>{
     const state = getOnlineState();
-    return state.isConnected && typeof state.isInternetReachable =='boolean' ? true : false
+    return state.isConnected && (typeof state.isInternetReachable =='boolean' || state.type) ? true : false
 }
 
 if(!APP_INSTANCE.EVENTS || typeof APP_INSTANCE.EVENTS !=='object'){

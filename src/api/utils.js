@@ -7,6 +7,8 @@ import {extendObj,defaultObj,defaultStr,isObj,isObjOrArray} from "$cutils";
 import React from "$react";
 export * from "./host";
 
+export const canCheckOnline = process.env.CAN_RUN_API_OFFLINE !== "false" && process.env.CAN_RUN_API_OFFLINE !== "0" ? true : false && process.env.CAN_RUN_API_OFFLINE !== false;
+export const canFetchOffline = !canCheckOnline;
 export const parseWhere = (where)=>{
     if(!isObjOrArray(where)) return where;
     const result = Array.isArray(where)? [] : {};
@@ -82,8 +84,9 @@ export const getRequestData = (req,options)=>{
     return ret;
 }
 
-///delay d'attente de connexion
-export const FETCH_DELAY = 30000;
+///delay d'attente de connexion : peut être définie dans la variable d'environnement API_FETCH_TIMEOUT
+const t = process.env.API_FETCH_TIMEOUT && (typeof process.env.API_FETCH_TIMEOUT =='string'? parseInt(process.env.API_FETCH_TIMEOUT):process.env.API_FETCH_TIMEOUT); 
+export const FETCH_DELAY = defaultNumber(t,30000);
 
 export async function timeout(promise,delay,errorArgs) {
   delay = typeof delay =='number' && delay ? delay : FETCH_DELAY;

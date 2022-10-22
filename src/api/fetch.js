@@ -11,7 +11,7 @@
  import notify from "$active-platform/notify";
  import {getToken,isValidToken} from "$cauth/utils";
  import APP from "$capp/instance";
- import {timeout} from "./utils";
+ import {timeout,canCheckOnline} from "./utils";
  import {isClientSide} from "$cplatform";
  import appConfig from "$capp/config";
  
@@ -58,7 +58,7 @@
    const cb = ()=>{
      return timeout(fetcher(u, opts),defaultNumber(opts.delay,opts.timeout))
    }
-   if(isClientSide() && (checkOnline === true || process.env.CAN_RUN_API_OFFLINE !== true) && !APP.isOnline()){
+   if(isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline()){
        return APP.checkOnline().then((state)=>{
           return cb();
        });
