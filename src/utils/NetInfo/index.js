@@ -9,7 +9,7 @@ let hasNetInfoIntialized = false;
 const init = ()=>{
     const status = 200;
     if(!NetInfo && isClientSide() && !hasNetInfoIntialized){
-        const fetchUrl = isValidUrl(process.env.NET_INFO_TEST_URL) ? process.env.NET_INFO_TEST_URL : ("http://httpstat.us/"+status);
+        const fetchUrl = isValidUrl(process.env.NET_INFO_TEST_URL) ? process.env.NET_INFO_TEST_URL : ("https://httpstat.us/"+status);
         NetInfo = require('$active-platform/NetInfo').default;
         NetInfo.configure({
             /**** The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
