@@ -547,25 +547,25 @@
      * @return {Number}
      */
     function getWeek(date) {
-    // Remove time components of date
-    var targetThursday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    
-    // Change date to Thursday same week
-    targetThursday.setDate(targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3);
-    
-    // Take January 4th as it is always in week 1 (see ISO 8601)
-    var firstThursday = new Date(targetThursday.getFullYear(), 0, 4);
-    
-    // Change date to Thursday same week
-    firstThursday.setDate(firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3);
-    
-    // Check if daylight-saving-time-switch occurred and correct for it
-    var ds = targetThursday.getTimezoneOffset() - firstThursday.getTimezoneOffset();
-    targetThursday.setHours(targetThursday.getHours() - ds);
-    
-    // Number of weeks between target Thursday and first Thursday
-    var weekDiff = (targetThursday - firstThursday) / (86400000*7);
-    return 1 + Math.floor(weekDiff);
+        // Remove time components of date
+        var targetThursday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        
+        // Change date to Thursday same week
+        targetThursday.setDate(targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3);
+        
+        // Take January 4th as it is always in week 1 (see ISO 8601)
+        var firstThursday = new Date(targetThursday.getFullYear(), 0, 4);
+        
+        // Change date to Thursday same week
+        firstThursday.setDate(firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3);
+        
+        // Check if daylight-saving-time-switch occurred and correct for it
+        var ds = targetThursday.getTimezoneOffset() - firstThursday.getTimezoneOffset();
+        targetThursday.setHours(targetThursday.getHours() - ds);
+        
+        // Number of weeks between target Thursday and first Thursday
+        var weekDiff = (targetThursday - firstThursday) / (86400000*7);
+        return 1 + Math.floor(weekDiff);
     }
     
     /**
@@ -576,24 +576,24 @@
      * @return {Number}
      */
     function getDayOfWeek(date) {
-    var dow = date.getDay();
-    if(dow === 0) {
-        dow = 7;
-    }
-    return dow;
+        var dow = date.getDay();
+        if(dow === 0) {
+            dow = 7;
+        }
+        return dow;
     }
     
     // return the number of days in a date's month
     var daysInMonth = function ( dt ) {
-    if(isNullOrEmpty(dt)) td = new Date();
-    if(isNonNullString(dt) && isValidDate(dt)){
-        dt = new Date(dt);
-    }
-    if(!isDateObj(dt)) {
-        console.error("could not retrieve days in month of invalid date object ",dt);
-        return 0;
-    }
-    return dt.getDaysInMonth();
+        if(isNullOrEmpty(dt)) td = new Date();
+        if(isNonNullString(dt) && isValidDate(dt)){
+            dt = new Date(dt);
+        }
+        if(!isDateObj(dt)) {
+            console.error("could not retrieve days in month of invalid date object ",dt);
+            return 0;
+        }
+        return dt.getDaysInMonth();
     };
     
     var __addToDate = function(days,date,format,returnDateObj,type) {
@@ -716,11 +716,33 @@
     
         return ret;	
     }
+    /*** retourne la première date courante du mois
+     * @param {int|Date} year, l'année où la date pour laquelle on veut récuperer la date
+     * @param {int} month, le mois pour lequel on veut récupérer la date (valeur comprise entre 0 et 11)
+     */
+    function getFirstDayOfMonth(year, month) {
+        if(year && isDateObj(year)){
+            year = date.getFullYear();
+            month = date.getMonth();
+        } else {
+            if(typeof year =='object') year = undefined;
+            if(!year && typeof year !='number'){
+                year = new Date().getFullYear();
+            }
+            if(!month || typeof month !='number' || month <0 || month>11){
+                month = new Date().getMonth();
+            }
+        }
+        return new Date(year, month, 1);
+    }
     Object.defineProperties(DateLib,{
         daysInMonth : {
             value : daysInMonth,
             override : false,
             writable : false
+        },
+        getFirstDayOfMonth : {
+            value : getFirstDayOfMonth,
         },
         dateDiff : {
             /*** determine difference of from date to toDate 
