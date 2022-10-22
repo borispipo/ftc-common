@@ -1,7 +1,7 @@
 import {isNonNullString,defaultStr} from "$cutils";
 import commonDataFiles from "./commonDataFiles";
 import getCurrentDB from "./getCurrentDB";
-import CONSTANTS from "$cdatabase/constants";
+import CONSTANTS from "$pouchdb/constants";
 
 export default function sanitizeName (dFName,sanitizeDefautName,tableName){
     if(isNonNullString(dFName)){

@@ -8,7 +8,7 @@ import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isValidEmail,isValidDa
 import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
-//import getData from "$cdatabase/getData";
+//import getData from "$pouchdb/getData";
 import {isValidDate} from "$common/lib/date";
 
 export * from "./utils";

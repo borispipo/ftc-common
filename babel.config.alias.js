@@ -27,7 +27,7 @@ module.exports = function(opts){
     const common = path.resolve(rootDir,"src");
     base = base? base : path.resolve(__dirname,"..");
     const src = path.resolve(base,"src");
-    const databaseIndex = path.resolve(common,"database",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
+    const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const r = {
         "$cmedia" : path.resolve(common,"media"),
         "$capp" : path.resolve(common,"app"),
@@ -44,9 +44,9 @@ module.exports = function(opts){
         "$cdate" : path.resolve(common,"lib","date"),
         "$crypto-js" : path.resolve(common,"lib","crypto-js"),
         "$ccountries" : path.resolve(common,"countries"),
-        "$cdbMainDatabaseIndex" : databaseIndex,
-        "$cdatabase" : path.resolve(common,"database"),
-        "$cdatabaseIndex" : path.resolve(common,"database","pouchdb","plugins","defaultIndex"),
+        "$cdbMainDatabaseIndex" : pouchdbIndex,
+        "$pouchdb" : path.resolve(common,"pouchdb"),
+        "$cpouchdbIndex" : path.resolve(common,"pouchdb","pouchdb","plugins","defaultIndex"),
         "$ctheme" : path.resolve(common,"theme"),
         "$cnotify" : path.resolve(common,"notify"),
         "$cutils" : path.resolve(common,"utils"),
@@ -71,15 +71,15 @@ module.exports = function(opts){
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
         "$uri" : path.resolve(common,"utils","uri"),
-        "$cdatabaseTableData" : path.resolve(common,"database","data","tableData"),
-        "$cdatabaseStructData" : path.resolve(common,"database","data","structData"),
+        "$cpouchdbTableData" : path.resolve(common,"pouchdb","data","tableData"),
+        "$cpouchdbStructData" : path.resolve(common,"pouchdb","data","structData"),
         
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
-        "$datafileManager" : path.resolve(common,"database","dataFileManager"),
+        "$datafileManager" : path.resolve(common,"pouchdb","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",
@@ -122,11 +122,8 @@ module.exports = function(opts){
     /*** les indixes des bases de données pouchdb qui doivent automatiquement crée par l'application 
      * doit systématiquement exporté un objet portant pour chacune des base de données, les différents index à créer
     */
-    if(!r["$databaseIndex"]){
-        r["$databaseIndex"] = r["$cdatabaseIndex"];
-    }
-    if(!r["$database"]){
-        r["$database"] = r["$cdatabase"];
+    if(!r["$pouchdbIndex"]){
+        r["$pouchdbIndex"] = r["$cpouchdbIndex"];
     }
     /****
      * permettant de récupérer les props à passer au composant FormData, du composant LoginComponent pour la connexion de l'utilisateur
@@ -135,12 +132,12 @@ module.exports = function(opts){
         r["$getLoginProps"] = r["$cgetLoginProps"];
     }
     /*** l'ensemble des tables data de l'application */
-    if(!r.$databaseTableData){
-        r.$databaseTableData = r.$cdatabaseTableData;
+    if(!r.$pouchdbTableData){
+        r.$pouchdbTableData = r.$cpouchdbTableData;
     }
     ///l'ensemble des struct data de l'application
-    if(!r.$databaseStructData){
-        r.$databaseStructData = r.$cdatabaseStructData;
+    if(!r.$pouchdbStructData){
+        r.$pouchdbStructData = r.$cpouchdbStructData;
     }
     /**** l'alias qui pointe vers un fichier exportant la fonction retournant si l'utilisateur est master admin où non */
     if(!r.$isMasterAdmin){

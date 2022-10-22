@@ -6,7 +6,7 @@ import DATABASES_INDEXES from "../../utils/DATABASES_INDEXES";
 import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
-import indexes from "$databaseIndex";
+import indexes from "$pouchdbIndex";
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
     if(isArray(idx)){

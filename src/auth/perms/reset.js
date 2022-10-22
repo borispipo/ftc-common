@@ -1,9 +1,9 @@
 export const tableDataPerms = {};
 export const structDataPerms = {};
 ////pointe vers l'ensemble des tables data de l'application
-import tablesObj from"$databaseTableData";
+import tablesObj from"$pouchdbTableData";
 ///pointe vers l'ensemble des struct data de l'application
-import  structData from"$databaseStructData";
+import  structData from"$pouchdbStructData";
 
 
 export const resetPerms = ()=>{
