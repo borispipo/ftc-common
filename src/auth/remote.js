@@ -108,7 +108,11 @@ export const signOut = (callback,user)=>{
       if(typeof SignIn2SignOut.upsertUser =='function'){
           promise = SignIn2SignOut.upsertUser({user:u});
       } 
-      const cb = x=> login(u,trigger);
+      const cb = x=> {
+        const lU = defaultObj(getLoggedUser());
+        const user = {...lU,...defaultObj(u)};
+        login(user,trigger)
+      };
       if(isPromise(promise)){
          promise.then(cb).catch((e)=>{
           console.log(e," upsert user");
