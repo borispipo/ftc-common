@@ -5,7 +5,7 @@
 import { USER_SESSION_KEY} from "./session";
 import APP from "$capp/instance";
 import $session from "$session";
-import { updateTheme } from "./session";
+import { updateTheme,getLoggedUser } from "./session";
 import {isObj,isNonNullString} from "$cutils";
 
 /**** connecte l'utilisateur actuel */
@@ -13,6 +13,9 @@ export default function login (user,trigger){
     if(typeof user =='boolean'){
         trigger = user;
         user = trigger;
+    }
+    if(!isObj(user)){
+        user = getLoggedUser();
     }
     try {
         if(isObj(user) && isNonNullString(user.code)){
