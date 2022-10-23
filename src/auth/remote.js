@@ -13,6 +13,7 @@ import { getLoggedUser } from "./utils/session";
 import {isObj,defaultObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import S2Out from "$signIn2SignOut";
+import {isPromise} from "$utils";
 
 
 
@@ -100,9 +101,21 @@ export const signOut = (callback,user)=>{
        return redirectStr;
     });
   }
+  /***permet d'upsert un utilisateur, update ses données*/
   export const upsertUser = (u)=> {
-     if(isObj(u) && isNonNullString(u.email)){
-       login(u);
+     if(isObj(u)){
+      let promise = null;
+      if(typeof SignIn2SignOut.upsertUser =='function'){
+          promise = SignIn2SignOut.upsertUser({user:u});
+      } 
+      const cb = x=> login(u);
+      if(isPromise(promise)){
+         promise.then(cb).catch((e)=>{
+          console.log(e," upsert user");
+         });
+      } else {
+        cb();
+      }
      }
      return Promise.resolve(u);
   };
