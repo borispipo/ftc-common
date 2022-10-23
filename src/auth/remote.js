@@ -102,13 +102,13 @@ export const signOut = (callback,user)=>{
     });
   }
   /***permet d'upsert un utilisateur, update ses données*/
-  export const upsertUser = (u)=> {
+  export const upsertUser = (u,trigger)=> {
      if(isObj(u)){
       let promise = null;
       if(typeof SignIn2SignOut.upsertUser =='function'){
           promise = SignIn2SignOut.upsertUser({user:u});
       } 
-      const cb = x=> login(u);
+      const cb = x=> login(u,trigger);
       if(isPromise(promise)){
          promise.then(cb).catch((e)=>{
           console.log(e," upsert user");
