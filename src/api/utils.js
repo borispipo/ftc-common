@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {getQueryParams} from "$cutils/uri";
-import {extendObj,defaultObj,defaultStr,isObj,isObjOrArray} from "$cutils";
+import {extendObj,defaultObj,defaultNumber,defaultStr,isObj,isObjOrArray} from "$cutils";
 import React from "$react";
 export * from "./host";
 
