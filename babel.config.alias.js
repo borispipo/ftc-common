@@ -32,6 +32,7 @@ module.exports = function(opts){
         "$cmedia" : path.resolve(common,"media"),
         "$capp" : path.resolve(common,"app"),
         "$capi" : path.resolve(common,"api"),
+        "$capiCustom" : path.resolve(common,"api","apiCustom"),
         "$fetch" : path.resolve(common,"api","fetch"),
         "$ci18n" : path.resolve(common,"i18n"),
         "$clib" : path.resolve(common,"lib"),
@@ -143,5 +144,6 @@ module.exports = function(opts){
     if(!r.$isMasterAdmin){
         r.$isMasterAdmin = path.resolve(common,"auth","isMasterAdmin","defaultIsMasterAdmin");
     }
+    r.$apiCustom = r.$apiCustom || r.$capiCustom;
     return r;
 }

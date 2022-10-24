@@ -14,6 +14,11 @@
  import {timeout,canCheckOnline} from "./utils";
  import {isClientSide} from "$cplatform";
  import appConfig from "$capp/config";
+ import apiC from "$apiCustom";
+
+ const apiCustom = isObj(apiC)? apiC : {};
+
+ export {apiCustom};
  
  let codeVerifier = null;
  
@@ -31,10 +36,16 @@
   */
  export const getRequestHeaders = function (opts){
      opts = typeof opts !=="object" || Array.isArray(opts) || !opts ? {} : opts;
-     const ret = {};
-     const token = getToken();
-     if(isValidToken(token) && ! ret.Authorization){
-        ret.Authorization = "bearer "+token.token;
+     let customRequestHeader = null;
+     if(typeof apiCustom.getRequestHeaders =='function'){
+         customRequestHeader = apiCustom.getRequestHeaders(opts);
+     }
+     const ret = {...defaultObj(customRequestHeader)};
+     if(!ret.Authorization){
+        const token = getToken();
+        if(isValidToken(token)){
+            ret.Authorization = "bearer "+token.token;
+        }
      }
      return ret;
  }
@@ -94,11 +105,12 @@
           });
           response.success = response.status === SUCCESS ? true : false;
           const a =  {response,...d};
+          if(d.error && typeof d.error =='string'){
+               a.message = response.message = response.msg = d.error;
+          }
+          if(typeof apiCustom.handleFetchResult =='function' && apiCustom.handleFetchResult({...a,resolve,reject})== false) return;
           if(response.success){
              return resolve(a)
-          }
-          if(d.error && typeof d.error =='string'){
-             a.message = response.message = response.msg = d.error;
           }
           if(showError !== false){
              const message = defaultStr(response.message,response.msg);
@@ -153,6 +165,10 @@
       }
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
+      /** personnaliser la fonction getFetcherOptions */
+      if(typeof apiCustom.getFetcherOptions =='function'){
+         extendObj(opts,apiCustom.getFetcherOptions(opts))
+      }
       return opts;
  }
  
