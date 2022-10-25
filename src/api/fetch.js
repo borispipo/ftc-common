@@ -9,7 +9,7 @@
  import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
  import {NOT_SIGNED_IN,SUCCESS} from "./status";
  import notify from "$active-platform/notify";
- import {getToken,isValidToken} from "$cauth/utils";
+ import {getToken} from "$cauth/utils";
  import APP from "$capp/instance";
  import {timeout,canCheckOnline} from "./utils";
  import {isClientSide} from "$cplatform";
@@ -42,8 +42,8 @@
      const ret = {...defaultObj(customRequestHeader)};
      if(!ret.Authorization){
         const token = getToken();
-        if(isValidToken(token)){
-            ret.Authorization = "bearer "+token.token;
+        if(token){
+            ret.Authorization = "bearer "+token;
         }
      }
      return ret;
@@ -151,19 +151,14 @@
       }
       const requestHeaders = getRequestHeaders();
       opts.headers = extendObj({},opts.headers,requestHeaders)
-      if(isObj(opts.body)){
-         Object.map(requestHeaders,(h,i)=>{
-             if(!opts.body[i]){
-               opts.body[i] = h;
-             }
-         });
-         opts.body  = new URLSearchParams(opts.body);
-      }
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
       /** personnaliser la fonction getFetcherOptions */
       if(typeof apiCustom.getFetcherOptions =='function'){
          extendObj(opts,apiCustom.getFetcherOptions(opts))
+      }
+      if(isObj(opts.body)){
+         opts.body  = new URLSearchParams(opts.body);
       }
       return opts;
  }

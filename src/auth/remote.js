@@ -43,7 +43,7 @@ export const signIn = (user,callback)=>{
       user.code = defaultStr(user.code,user.id,user.email);
       if(token){
         user.token = token;
-        setToken({userId,token});
+        setToken(token);
       }
       delete user.password;
       delete user.pass;

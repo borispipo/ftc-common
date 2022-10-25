@@ -13,15 +13,15 @@ export const USER_SESSION_KEY = "user-session";
 
 export const TOKEN_SESSION_KEY = "user-token-key";
 
-export const getToken = (key)=>{
-    const token = $session.get(TOKEN_SESSION_KEY) || null;
-    return isObj(token) && isNonNullString(key)? token[key] : token;
-  }
+export const getToken = ()=>{
+    const token = $session.get(TOKEN_SESSION_KEY);
+    return isValidToken(token) ? token : null;
+}
   export const setToken = (token)=>{
      return $session.set(TOKEN_SESSION_KEY,token);
   }
   export const isValidToken = (token)=>{
-     return isObj(token) && isNonNullString(token.userId) && isNonNullString(token.token)? true : false;
+     return isNonNullString(token)? true : false;
   }
   export const hasToken = ()=>{
     const token = getToken();
