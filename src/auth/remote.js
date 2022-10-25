@@ -40,7 +40,7 @@ export const signIn = (user,callback)=>{
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
       user.id = defaultStr(userId,user.id,user.code,user.email);
-      user.code = defaultStr(user.code,user.id,user.email);
+      user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
         user.token = token;
         setToken(token);
