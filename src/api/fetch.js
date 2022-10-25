@@ -20,7 +20,6 @@
 
  export {apiCustom};
  
- let codeVerifier = null;
  
  export  function setCodeVerifierHeader(verifier) {
    codeVerifier = verifier;
@@ -158,8 +157,7 @@
                opts.body[i] = h;
              }
          });
-         ///opts.headers [cType] = opts.headers [cType] || 'application/json';
-         opts.body  = JSON.stringify(opts.body)//new URLSearchParams(opts.body);
+         opts.body  = new URLSearchParams(opts.body);
       }
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;

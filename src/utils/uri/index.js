@@ -5,9 +5,10 @@
  * @namespace utils/uri
  * Enseble de fonctions utiles pour la manipulation des url
  */
-import extendObj from "./extendObj";
-import defaultStr from "./defaultStr";
-import  "./extend.prototypes";
+import extendObj from "../extendObj";
+import defaultStr from "../defaultStr";
+import  "../extend.prototypes";
+require("./polyfill");
 const queryString = require('qs');
 /****
  * retourne les paramètres GET passé à une url, paramètre situé après le ? de l'url
