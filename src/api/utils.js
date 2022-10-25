@@ -7,6 +7,28 @@ import {extendObj,defaultObj,defaultNumber,defaultStr,isObj,isObjOrArray} from "
 import React from "$react";
 export * from "./host";
 
+///si l'on fait la requête vers la recherche du token
+export const IS_AUTH_TOKEN = "IS_AUTH_TOKEN";
+
+export const AUTH_TOKEN_PATH = "auth/token";
+
+///la prop permettant d'indiquer s'il s'agit d'une api de type Query
+export const IS_QUERY_API = "IS_QUERY_APID";
+
+
+///vérifie s'il s'agit d'une requête de demande d'un token
+export function isFetchAuthTokenApi(options){
+    return defaultObj(options)[IS_AUTH_TOKEN]? true : false;
+}
+/**
+ * S'il s'agit d'une requête de type Query
+ * @param {*} options 
+ * @returns 
+ */
+export function isFetchQueryApi (options){
+    return defaultObj(options)[IS_QUERY_API]? true : false;
+}
+
 export const canCheckOnline = process.env.CAN_RUN_API_OFFLINE !== "false" && process.env.CAN_RUN_API_OFFLINE !== "0" ? true : false && process.env.CAN_RUN_API_OFFLINE !== false;
 export const canFetchOffline = !canCheckOnline;
 export const parseWhere = (where)=>{
