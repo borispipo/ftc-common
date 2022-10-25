@@ -30,12 +30,12 @@ export const getToken = (key)=>{
 
   export const isLoggedIn = x => {
     const u = getLocalUser();
-    return isObj(u) && typeof u.email ==='string' && u.email && hasToken() ? true : false;
+    return isObj(u) && (hasToken() || isNonNullString(u.code))  ? true : false;
   }
   
 export const getLocalUser = x=> {
     const u = $session.get(USER_SESSION_KEY);
-    return isObj(u) && u.email ? u : null;
+    return isObj(u)  && (hasToken() || isNonNullString(u.code)) ? u : null;
 };
 
 export const getLoggedUser = getLocalUser;
@@ -43,7 +43,7 @@ export const getLoggedUser = getLocalUser;
 export const getLoggedUserCode = ()=>{
   const u = getLocalUser();
   if(u) {
-   return defaultStr(u.pseudo,u.email)
+   return defaultStr(u.code,u.pseudo,u.id,u.email)
   }
   return "";
 }

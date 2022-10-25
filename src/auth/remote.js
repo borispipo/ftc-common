@@ -37,10 +37,10 @@ export const signIn = (user,callback)=>{
       body : user
   })).then((args)=>{
     const {response,userId,token,...rest}=  defaultObj(args);
-    if(isCustom || (isObj(response) && response.success)){
+    if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
       user.id = defaultStr(userId,user.id,user.code,user.email);
-      user.code = defaultStr(user.code,user.email);
+      user.code = defaultStr(user.code,user.id,user.email);
       if(token){
         user.token = token;
         setToken({userId,token});
