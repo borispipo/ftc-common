@@ -35,7 +35,8 @@ export const signIn = (user,callback)=>{
       json : true,
       url : SIGN_IN,
       body : user
-  })).then(({response,userId,token,...rest})=>{
+  })).then((args)=>{
+    const {response,userId,token,...rest}=  defaultObj(args);
     if(isCustom || (isObj(response) && response.success)){
       delete user.password;
       user.id = defaultStr(userId,user.id,user.code,user.email);
