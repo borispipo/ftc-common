@@ -158,9 +158,7 @@
                opts.body[i] = h;
              }
          });
-         if(!opts.headers[cType]){
-             opts.headers [cType] = defaultStr(opts.headers[cType],'application/json')
-         }      
+         opts.headers [cType] = opts.headers [cType] || 'application/json';
          opts.body  = JSON.stringify(opts.body)//new URLSearchParams(opts.body);
       }
       opts.url = buildAPIPath(url,opts.queryParams);
