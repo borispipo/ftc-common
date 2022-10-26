@@ -150,7 +150,6 @@
          mutator(opts)
       }
       const requestHeaders = getRequestHeaders();
-      opts.headers = extendObj({},opts.headers,requestHeaders)
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
       /** personnaliser la fonction getFetcherOptions */
@@ -158,6 +157,7 @@
          extendObj(opts,apiCustom.getFetcherOptions(opts))
       }
       if(isObj(opts.body)){
+         opts.headers = extendObj({},opts.headers,requestHeaders)
          opts.body  = new URLSearchParams(opts.body);
       }
       return opts;
