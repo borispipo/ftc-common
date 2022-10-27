@@ -24,9 +24,16 @@ export const isSignedIn = isLoggedIn;
 
 /***** 
  * authentifie l'utilisateur passé en paramètre
- * 
+ * @param {object} user - les données de l'utilisateur qu'on souhaite authentifier
+ * @param {function|boolean} callback la fonction de rappel où le boolean spécifiant que le trigger relative à l'authentification de l'utilisateur sera déclanché
+ * @param {boolean|function} trigger . si le l'évènement relative à la connexion de l'utilisateur sera déclenché où pas
  */
-export const signIn = (user,callback)=>{
+export const signIn = (user,callback,trigger)=>{
+  if(typeof callback =='function'){
+    const t = trigger;
+    trigger = callback;
+    callback = t;
+  }
   const isCustom = typeof SignIn2SignOut.signIn =='function';
   return (isCustom?SignIn2SignOut.signIn({
     user,
@@ -47,7 +54,7 @@ export const signIn = (user,callback)=>{
       }
       delete user.password;
       delete user.pass;
-      login(user,true);
+      login(user,typeof trigger =='boolean'? trigger : true);
       if(typeof callback ==='function'){
           callback(user);
       }
@@ -56,16 +63,25 @@ export const signIn = (user,callback)=>{
   }).catch((e)=>{
       console.log(e," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
-      logout();
+      //logout();
       throw e;
   })
 }
 
-/**** signOut current user */
-export const signOut = (callback,user)=>{
+/**** signOut current user 
+ * @param {function} callback - la fonction de rappel
+ * @param {object|boolean} user - l'utilisateur où le boolean relative au déclancherment où non de la fonction de rappel
+ * @param {boolean} trigger - si l'évènement relatif à la déconnection de l'utilisateur sera déclenché où pas
+*/
+export const signOut = (callback,user,trigger)=>{
   const isCustom = typeof SignIn2SignOut.signOut =='function';
+  if(typeof user =='boolean'){
+      const t = trigger;
+      trigger = user;
+      user = t;
+  }
   const cb = ()=>{
-    logout(null);
+    logout(null,typeof trigger =='boolean'? trigger : true);
     setToken(null);
     if(typeof callback =='function'){
        callback();
