@@ -29,7 +29,7 @@ export const isSignedIn = isLoggedIn;
  * @param {boolean|function} trigger . si le l'évènement relative à la connexion de l'utilisateur sera déclenché où pas
  */
 export const signIn = (user,callback,trigger)=>{
-  if(typeof callback =='function'){
+  if(typeof callback =='boolean'){
     const t = trigger;
     trigger = callback;
     callback = t;
