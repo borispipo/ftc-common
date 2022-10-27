@@ -158,7 +158,9 @@
          extendObj(opts,apiCustom.getFetcherOptions(opts))
       }
       if(isObj(opts.body)){
-         opts.body  = new URLSearchParams(opts.body);
+         opts.headers["Accept"] = "application/json";
+         opts.headers["Content-Type"] = "application/json";
+         opts.body  = JSON.stringify(opts.body);
       }
       return opts;
  }
