@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 /**@namespace api/host/utils */
 import defaultStr from "$cutils/defaultStr";
+import "$cutils/extend.prototypes";
 
 let localhost = undefined;
 
