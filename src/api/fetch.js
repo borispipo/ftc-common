@@ -6,6 +6,7 @@
  */
  import originalFetch from "unfetch";
  import { buildAPIPath} from "./utils";
+ import {isWeb} from "$cplatform";
  import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
  import {NOT_SIGNED_IN,SUCCESS} from "./status";
  import notify from "$active-platform/notify";
@@ -43,7 +44,7 @@
      if(!ret.Authorization){
         const token = getToken();
         if(token){
-            ret.Authorization = "bearer "+token;
+            ret.Authorization = "Bearer "+token;
         }
      }
      return ret;
@@ -92,7 +93,6 @@
    return fetch(url,options);
  };
  
- const cType = 'Content-Type';
  
  /**** permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch} */
  export const handleFetchResult = ({fetchResult:res,showError,json,isAuth,redirectWhenNoSignin}) =>{
@@ -153,14 +153,19 @@
       opts.headers = extendObj({},opts.headers,requestHeaders)
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
+      if(opts.headers.Authorization || opts.headers.authorization){
+         opts.credentials = "include";
+      }
       /** personnaliser la fonction getFetcherOptions */
       if(typeof apiCustom.getFetcherOptions =='function'){
          extendObj(opts,apiCustom.getFetcherOptions(opts))
       }
       if(isObj(opts.body)){
-         opts.headers["Accept"] = "application/json";
          opts.headers["Content-Type"] = "application/json";
+         opts.headers["Accept"] = "application/json";
          opts.body  = JSON.stringify(opts.body);
+      } else if(!opts.body){
+         opts.headers["Content-Type"] = "text/plain";
       }
       return opts;
  }
