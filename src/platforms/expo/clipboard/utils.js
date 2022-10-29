@@ -3,10 +3,10 @@
 // license that can be found in the LICENSE file.
 
 
-//import * as Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';
 import notify from "$active-platform/notify";
 
-export const readText = x => Promise.reject({});//Clipboard.getStringAsync();
+export const readText = x => Clipboard.getStringAsync();
 
 export const readTextFromClipboard = readText;
 
@@ -14,7 +14,6 @@ export const copyTextToClipboard = (str) => {
     if(typeof str =='number' || typeof str =='boolean'){
         str +="";
     }
-    return;
     if(isNonNullString(str)){
         Clipboard.setString(str);
         let str2 = str.length > 153 ? (str.substring(0,150)+"...") : str
