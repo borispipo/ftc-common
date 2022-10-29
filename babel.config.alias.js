@@ -108,6 +108,8 @@ module.exports = function(opts){
     }
     /*** alias interne utile pour la compilation en fonction de la platform, soi next où expo */
     r["$active-platform"] = path.resolve(common,"platforms",platform);
+    r["$clipboard"] = path.resolve(r["$active-platform"],"clipboard");
+    r["$makePhoneCall"] = path.resolve(r["$active-platform"],"makePhoneCall");
     r["$common"] = common;
     r["$react"] = path.resolve(common,"utils","react");
     if(!r["$navigation"]){
