@@ -399,13 +399,17 @@ export const styles = !StyleSheet? {} : StyleSheet.create({
     },
     noPadding : {
         padding : 0,
-        paddingHorizontal : 0,
-        paddingVertical : 0,
+        paddingLeft : 0,
+        paddingRight : 0,
+        paddingTop : 0,
+        paddingBottom : 0,
     },
     noMargin : {
         margin : 0,
-        marginHorizontal : 0,
-        marginVertical : 0,
+        marginLeft : 0,
+        marginRight : 0,
+        marginTop : 0,
+        marginBottom:0,
     },
     webFontFamilly,
     bold : {
