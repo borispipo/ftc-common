@@ -161,3 +161,5 @@ export const fetchAndMakePhoneCall = (args)=>{
         message : 'La valeur retournée par la fonction fetchAndMakeCall doit être soit un objet où une promesse'
     });
 };
+
+export default makePhoneCall;

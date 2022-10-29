@@ -3,3 +3,5 @@
 // license that can be found in the LICENSE file.
 
 export default x=>x;
+
+export const makePhoneCall = x=>Promise.reject({});
