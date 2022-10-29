@@ -3,9 +3,13 @@
 // license that can be found in the LICENSE file.
 
 import APP from "$capp/instance";
+import config from "$capp/config";
 
 const runBackgroundTasks = APP.runBackgroundTasks = (force)=>{
     return new Promise((resolve,reject)=>{
+        if(!config.canRunBackgroundTasks()){
+            return resolve(true);
+        }
         if(APP.isBackgroundTaskRunning){
             reject({status:false,msg:"Une autre intence des tâches d'arrière plan est en cours"})
             return;

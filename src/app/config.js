@@ -95,7 +95,13 @@ const config = {
     },
     get pouchdbNamePrefix (){
         return getDBNamePrefix();
-    }
+    },
+    get backgroundTasks (){
+        return canRunBackgroundTasks();
+    },
+    get canRunBackgroundTasks (){
+        return canRunBackgroundTasks;
+    },
 }
 
 export const getName = x=>getConfigValue("name");
@@ -113,6 +119,7 @@ export const getAppId = x=>getConfigValue("appId");
 export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
+export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
     if(typeof t =='object' && t && !Array.isArray(t)){
