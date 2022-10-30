@@ -68,6 +68,7 @@ module.exports = function(opts){
         "$validator" : path.resolve(common,"lib","validator"),
         "$crypto" : path.resolve(common,"lib","crypto-js"),
         "$date" : path.resolve(common,"lib","date"),
+        "$cdate" : path.resolve(common,"lib","date"),
         "$notify" : path.resolve(common,"notify"),
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),

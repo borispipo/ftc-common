@@ -11,6 +11,7 @@ import getDB from "./getDB";
 import CONSTANTS from "./constants";
 import getData from "./getData";
 import pouch from "./pouchdb";
+import sync from "./sync";
 
 const PouchDB = pouch.PouchDB;
 
@@ -24,6 +25,7 @@ export {
     getData,
     parseDBName,
     PouchDB,
+    sync,
 }
 
 export default {
@@ -31,5 +33,6 @@ export default {
     CONSTANTS,
     getData,
     parseDBName,
+    sync,
     ...pouch,
 }
