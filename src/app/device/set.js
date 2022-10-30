@@ -18,13 +18,13 @@ export default function setDeviceName(deviceNameOrDeviceNameGetter){
     return new Promise((resolve,reject)=>{
         if(typeof deviceNameOrDeviceNameGetter =='string'){
             session.set(sessionName,deviceNameOrDeviceNameGetter);
-            return resolve(true);
+            return resolve(deviceNameOrDeviceNameGetter);
         } 
         if(isPromise(deviceNameOrDeviceNameGetter)){
             return deviceNameOrDeviceNameGetter.then((name)=>{
                 if(typeof name =='string'){
                     session.set(sessionName,name);
-                    return resolve(true);
+                    return resolve(name);
                 }
                 reject({message:'résultat de la fonction deviceNameOrDeviceNameGetter incorrect. cette fonction doit retourner une chaine de caractère'});
             })
