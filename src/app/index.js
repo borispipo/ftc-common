@@ -9,3 +9,5 @@ export * from "./instance";
 export * from "./config";
 
 export default APP;
+
+export * from "./device";
