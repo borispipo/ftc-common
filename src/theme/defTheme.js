@@ -20,7 +20,6 @@ export default {
   dark: false,
   roundness: 4,
   version: 2,
-  isV3: false,
   colors: {
     primary: "#3D8B5F",
     secondary : "#354448",

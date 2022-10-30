@@ -4,12 +4,9 @@
 
 import Colors from "./colors";
 import {isObj,defaultStr} from "$cutils";
-import APP from "$capp/instance";
-const appName = defaultStr(APP.getName()).toLowerCase();
+import appConfig from "$capp/config";
 import DefaultTheme,{defaultLight,defaultDark} from './defTheme';
 import { ALPHA } from "./alpha";
-
-export const defaultThemeName = appName;
 
 const defaultPrimary = DefaultTheme.colors.primary;
 const defaultSecondary = DefaultTheme.colors.secondary;
@@ -20,7 +17,7 @@ export const white = "white";
 
 export const transparent = "transparent";
 
-
+let colors = {};
 export const lightColors = {
     info : '#1890FF',
     infoText : "white",
@@ -85,127 +82,129 @@ const defaultTheme = {
         primaryOnSurface : defaultPrimary,
         secondary : defaultSecondary,
         secondaryOnSurface : defaultSecondary,
-    }
-}
-
-const t = [
-    appName,
-    {
-        ...lightColors,
-        name : "odoo",
-        primary : "#714B67",
-        secondary : "#017e84",
-        primaryText : "rgba(255, 255, 255, 0.9)",
-        secondaryText : white,
-        surface : "white",
-        disabled : "#8f8f8f",
     },
-    'green-white',
+    get name (){
+        return appConfig.name || '';
+    }
+}
 
-    'indigo-pink',
-    'indigo-dark_orange',
-
-    'dark_blue-white',
-    'dark_blue-pink',
+export const getColors = ()=>{
+    const t = [
+        defaultTheme.name,
+        {
+            ...lightColors,
+            name : "odoo",
+            primary : "#714B67",
+            secondary : "#017e84",
+            primaryText : "rgba(255, 255, 255, 0.9)",
+            secondaryText : white,
+            surface : "white",
+            disabled : "#8f8f8f",
+        },
+        'green-white',
     
-    'dark_blue-deep_purple',
-    'dark_blue1-white',
-
-    'custom_blue-white',
-    'custom_blue-pink',
-    'custom_blue-purple',
-
-    'light_black-white',
-    'light_black-pink',
-
-    'teal-white',
-
-    'purple-white',
-
-    'pink-white',
-    'pink-yellow',
-
-    'light_blue-indigo',
-
-    'custom_purple-white',
-
-    'brown-white',
-    'brown-yellow',
-    'brown-pink',
-
-    'blue_grey-white',
-    'blue_grey-yellow',
-
-    'blue-white',
-    'blue-yellow',
-    'blue-indigo',
-]
-const lColors = {
-    dark_blue : "#0073b1",
-    dark_blue1 : "#124187",
-    dark_orange : '#ff6e40',
-    light_black : '#212121',
-    indigo : '#3f51b5',
-    pink : "#e91e63",
-    purple : "#9c27b0",
-    custom_purple : "#875A7B",
-    amber : "#FFBF00",
-    lime : '#cddc39',
-    deep_purple : '#673ab7',
-    deep_orange : '#ff5722',
-    light_blue : '#03a9f4',
-    custom_blue : '#1976d2',
-    blue_grey : '#607d8b',
-    light_green : '#8bc34a'
+        'indigo-pink',
+        'indigo-dark_orange',
+    
+        'dark_blue-white',
+        'dark_blue-pink',
+        
+        'dark_blue-deep_purple',
+        'dark_blue1-white',
+    
+        'custom_blue-white',
+        'custom_blue-pink',
+        'custom_blue-purple',
+    
+        'light_black-white',
+        'light_black-pink',
+    
+        'teal-white',
+    
+        'purple-white',
+    
+        'pink-white',
+        'pink-yellow',
+    
+        'light_blue-indigo',
+    
+        'custom_purple-white',
+    
+        'brown-white',
+        'brown-yellow',
+        'brown-pink',
+    
+        'blue_grey-white',
+        'blue_grey-yellow',
+    
+        'blue-white',
+        'blue-yellow',
+        'blue-indigo',
+    ]
+    const lColors = {
+        dark_blue : "#0073b1",
+        dark_blue1 : "#124187",
+        dark_orange : '#ff6e40',
+        light_black : '#212121',
+        indigo : '#3f51b5',
+        pink : "#e91e63",
+        purple : "#9c27b0",
+        custom_purple : "#875A7B",
+        amber : "#FFBF00",
+        lime : '#cddc39',
+        deep_purple : '#673ab7',
+        deep_orange : '#ff5722',
+        light_blue : '#03a9f4',
+        custom_blue : '#1976d2',
+        blue_grey : '#607d8b',
+        light_green : '#8bc34a'
+    }
+    function getHexColor(colorStr) {
+        if(lColors[colorStr]) return lColors[colorStr]
+        return Colors.get(colorStr);    
+    }
+    colors = {};
+    for(let i in t){
+        if(isObj(t[i])){
+           const c = t[i];
+           if(c.name && c.primary){
+                colors[c.name] = c;
+           }
+           continue;
+        }
+        const s = t[i].split("-")
+        const primaryName = s[0],secondaryName = defaultStr(s[1]);
+        let primary = getHexColor(primaryName)
+        let secondary = getHexColor(secondaryName);
+        const isMainTheme = t[i] == defaultTheme.name;
+        if(isMainTheme){
+            primary = defaultPrimary; //couleur primaire du logo
+            secondary = defaultSecondary; //couleur secondaire du logo
+        } 
+        if(!primary || !secondary) continue;
+        const c = colors[t[i]] =  {
+            name : t[i], //le nom du thème
+            primaryName,
+            secondaryName,
+            ...defaultTheme.colors,
+            primary,
+            primaryText : Colors.getContrast(primary),
+            secondary,
+            secondaryText : Colors.getContrast(secondary),
+        }
+        if(secondaryName =='white'){
+            c.primaryOnSurface = primary;
+            c.secondaryOnSurface = primary;
+            c.secondaryText = black;
+            c.disabled = Colors.setAlpha(black,0.6);
+        }
+        if(isMainTheme){
+            colors[dark1name] = dark1;
+        }
+    }
+    return colors;    
 }
-function getHexColor(colorStr) {
-    if(lColors[colorStr]) return lColors[colorStr]
-    return Colors.get(colorStr);    
-}
-
-const colors = {};
-for(let i in t){
-    if(isObj(t[i])){
-       const c = t[i];
-       if(c.name && c.primary){
-            colors[c.name] = c;
-       }
-       continue;
-    }
-    const s = t[i].split("-")
-    const primaryName = s[0],secondaryName = defaultStr(s[1]);
-    let primary = getHexColor(primaryName)
-    let secondary = getHexColor(secondaryName);
-    const isMainTheme = t[i] == appName;
-    if(isMainTheme){
-        primary = defaultPrimary; //couleur primaire du logo
-        secondary = defaultSecondary; //couleur secondaire du logo
-    } 
-    if(!primary || !secondary) continue;
-    const c = colors[t[i]] =  {
-        name : t[i], //le nom du thème
-        primaryName,
-        secondaryName,
-        ...defaultTheme.colors,
-        primary,
-        primaryText : Colors.getContrast(primary),
-        secondary,
-        secondaryText : Colors.getContrast(secondary),
-    }
-    if(secondaryName =='white'){
-        c.primaryOnSurface = primary;
-        c.secondaryOnSurface = primary;
-        c.secondaryText = black;
-        c.disabled = Colors.setAlpha(black,0.6);
-    }
-    if(isMainTheme){
-        colors[dark1name] = dark1;
-    }
-}
-
-export {colors}
-
 
 export default defaultTheme;
 
-export {defaultPrimary as primary, defaultSecondary as secondary,appName as name}
+export {defaultPrimary as primary, defaultSecondary as secondary}
