@@ -144,6 +144,37 @@ export const getURIPathName = (uri,useCurrentURI)=>{
     return typeof parsedURI.pathname =="string" ? parsedURI.pathname : "";
 }
 
+/**** 
+ * construit une route/url (url) à partir des paramtères pris dynamiquement 
+ * @param {...({string|object})} - les paramètres devant figurer dans la route à construire
+ * exemple : buildUrl ("app","route","final","settings",{test=2,t1=3}) => appp/route/final/settings?test=2&t1=3
+ * @return {string} url construite à partir des paramètres pris dynamiquement
+ */
+ export const buildUrl = function  (){
+    const args = Array.prototype.slice.call(arguments,0);
+    let path = "", params = {};
+    args.map((p,i)=>{
+        if(p){
+            if(typeof p =="string"){
+                path = path.rtrim("/");
+                path +=(path ? "/":"");
+                path = path+(removeQueryString(p).ltrim(path)).ltrim("/");
+            } else if(typeof p =="object" && !Array.isArray(p)){
+                params = {...params,...p};
+            }
+        }
+    })
+    params = params && typeof params =="object" ? params : {};
+    params = {...getQueryParams(path),...params};
+    let qs = queryString.stringify(params);
+    path = path ? path : "";
+    path = path.split("?")[0].trim().ltrim("/");
+    if (qs.length > 0){
+        qs = qs.trim().ltrim("?"); //chop off last "&"
+        path = path + "?" + qs;
+    }
+    return path;
+}
 export default queryString;
 
 export {queryString};

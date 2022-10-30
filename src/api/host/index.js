@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 /***@namespace api/host */
-import {getQueryParams,removeQueryString,isValidURL,queryString} from "$cutils/uri";
+import {getQueryParams,buildUrl,removeQueryString,isValidURL,queryString} from "$cutils/uri";
 import defaultStr from "$cutils/defaultStr";
 import {getAPIHost} from "./utils";
 
@@ -13,40 +13,17 @@ export * from "./utils";
  * @param {...({string|object})} - les paramètres devant figurer dans la route à construire
  * @return {string} une chaine de caractère préfixée par la constante retournée par getAPIHost @see {@link getAPIHost}
  * @see {getAPIHost}
+ * @see {buildUrl} de $utils/uri
  * exemple : buildAPIPath ("app","route","final","settings",{test=2,t1=3}) => appp/route/final/settings?test=2&t1=3
  */
  export const buildAPIPath = function  (){
-    const args = Array.prototype.slice.call(arguments,0);
-    let path = "", params = {};
-    args.map((p,i)=>{
-        if(p){
-            if(typeof p =="string"){
-                path = path.rtrim("/");
-                path +=(path ? "/":"");
-                path = path+(removeQueryString(p).ltrim(path)).ltrim("/");
-            } else if(typeof p =="object" && !Array.isArray(p)){
-                params = {...params,...p};
-            }
-        }
-    })
-    params = params && typeof params =="object" ? params : {};
-    params = {...getQueryParams(path),...params};
-    let qs = queryString.stringify(params);
-    path = path && typeof path =="string" ? path : "";
-    path = path.split("?")[0];
-    let bPath = path.trim();
-    if(!isValidURL(bPath)){
-        bPath="/"+bPath.ltrim("/");
-    }
+    let path = buildUrl.apply({},Array.prototype.slice.call(arguments,0));
     if(!isValidURL(path)){
-        bPath = getAPIHost().rtrim("/")+"/";
-        bPath = bPath+path.ltrim(bPath).ltrim("/");
+        path="/"+path.ltrim("/");
+        const host = getAPIHost().rtrim("/")+"/";
+        return host+path.ltrim(host).ltrim("/");
     }
-    if (qs.length > 0){
-        qs = qs.trim().ltrim("?"); //chop off last "&"
-        bPath = bPath + "?" + qs;
-    }
-    return bPath;
+    return path;
 }
 /****
  * cette fonction retourne l'url absolue à partir d'un objet NextRequest où options passés en paramètre
