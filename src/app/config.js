@@ -4,6 +4,7 @@
 
 import "$cutils/extend.prototypes";
 import isNonNullString from "$cutils/isNonNullString";
+import device from "./device";
 
 const configRef = {current:null};
 
@@ -102,6 +103,21 @@ const config = {
     get canRunBackgroundTasks (){
         return canRunBackgroundTasks;
     },
+    get device (){
+        return device;
+    },
+    get deviceName (){
+        return device.get();
+    },
+    set deviceName (deviceNameOrDeviceNameGetter){
+        return device.set(deviceNameOrDeviceNameGetter);
+    },
+    get getDeviceName(){
+        return device.get;
+    },
+    get setDeviceName(){
+        return device.set;
+    } 
 }
 
 export const getName = x=>getConfigValue("name");
