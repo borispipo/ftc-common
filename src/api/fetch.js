@@ -70,9 +70,7 @@
      return timeout(fetcher(u, opts),defaultNumber(opts.delay,opts.timeout))
    }
    if(isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline()){
-       return APP.checkOnline().then((state)=>{
-          return cb();
-       });
+       return timeout(APP.checkOnline().then(cb));
    }
    return cb();
  };
