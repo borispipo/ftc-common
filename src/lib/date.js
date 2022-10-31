@@ -1265,3 +1265,22 @@
     
     export default DateLib;
     
+
+    const isNullOrEmpty = function (object){
+        if(isDateObj(object)) return false;
+        if(typeof object == 'number') return false;
+        if(typeof object == 'undefined' || object === null || object === undefined || object === '') return true;
+        if(typeof object == 'string'){
+            return (object == null | object == '');
+        }
+        if(Array.isArray(object)){
+            return object.length ? false : true;
+        }
+        if(typeof object == 'object'){
+            for(let i in object){
+                return false;
+            }
+            return true; 
+        }
+        return false;
+    }
