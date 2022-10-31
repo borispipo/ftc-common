@@ -106,16 +106,16 @@ const config = {
     get device (){
         return device;
     },
-    get deviceName (){
+    get deviceId (){
         return device.get();
     },
-    set deviceName (deviceNameOrDeviceNameGetter){
-        return device.set(deviceNameOrDeviceNameGetter);
+    set deviceId (deviceIdOrDeviceIdGetter){
+        return device.set(deviceIdOrDeviceIdGetter);
     },
-    get getDeviceName(){
+    get getDeviceId(){
         return device.get;
     },
-    get setDeviceName(){
+    get setDeviceId(){
         return device.set;
     } 
 }

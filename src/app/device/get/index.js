@@ -3,6 +3,6 @@ import { sessionName } from "../utils";
 import defaultStr from "$cutils/defaultStr";
 
 /***permet de récupérer la valeur du divice */
-export default function getDeviceName(){
+export default function getDeviceId(){
     return defaultStr(session.get(sessionName));
 };
