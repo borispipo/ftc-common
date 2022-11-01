@@ -81,7 +81,7 @@ import "$active-platform/uri/polyfill";
              });
              return;
          }
-         data.push(path + '=' + encodeURI ? encodeURIComponent(o):o);
+         data.push((encodeURI?encodeURIComponent(path):path) + '=' + (encodeURI ? encodeURIComponent(o):o));
      }
  
      var data = [];
