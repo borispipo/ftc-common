@@ -41,7 +41,7 @@
          customRequestHeader = apiCustom.getRequestHeaders(opts);
      }
      const ret = {...defaultObj(customRequestHeader)};
-     if(!ret.Authorization){
+     if(!ret.Authorization && opts.authorization !== false && opts.Authorization !== false){
         const token = getToken();
         if(token){
             ret.Authorization = "Bearer "+token;
@@ -147,7 +147,7 @@
       if(typeof mutator =='function'){
          mutator(opts)
       }
-      const requestHeaders = getRequestHeaders();
+      const requestHeaders = getRequestHeaders(opts);
       opts.headers = extendObj({},opts.headers,requestHeaders)
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
@@ -165,6 +165,9 @@
       } else if(!opts.body){
          opts.headers["Content-Type"] = "text/plain";
       }
+         
+      delete opts.authorization;
+      delete opts.Authorization;
       return opts;
  }
  
