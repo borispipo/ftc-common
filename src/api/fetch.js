@@ -137,12 +137,6 @@
       fetcher = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
         return originalFetch(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}));
       }
-      if(defaultStr(opts.method).toLowerCase() =='post'){
-         opts.body = defaultObj(opts.body);
-         opts.body = {...defaultObj(rest),...opts.body};
-         delete opts.body.body;
-         delete opts.body.method;
-      }
       opts.queryParams = queryParams;
       if(typeof mutator =='function'){
          mutator(opts)
