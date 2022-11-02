@@ -117,7 +117,13 @@ const config = {
     },
     get setDeviceId(){
         return device.set;
-    } 
+    },
+    get get (){
+        return getConfigValue;
+    },
+    get getValue (){
+        return getConfigValue;
+    }
 }
 
 export const getName = x=>getConfigValue("name");
