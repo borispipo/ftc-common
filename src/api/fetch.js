@@ -95,7 +95,10 @@
  /**** permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch} */
  export const handleFetchResult = ({fetchResult:res,showError,json,isAuth,redirectWhenNoSignin}) =>{
     return new Promise((resolve,reject)=>{
-       return json !== false ? res.json().then((d)=>{
+       const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
+       const isJson = contentType.contains("application/json");
+       return json !== false && isJson ? res.json().then((d)=>{
+          d = defaultObj(d);
           const response = {};
           ['ok','status','statusText','error','headers'].map((v)=>{
             response[v] = res[v];
