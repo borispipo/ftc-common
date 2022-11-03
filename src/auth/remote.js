@@ -14,7 +14,7 @@ import {isObj,defaultObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import S2Out from "$signIn2SignOut";
 import {isPromise} from "$utils";
-import appConfig from "$capp";
+import appConfig from "$capp/config";
 
 
 
