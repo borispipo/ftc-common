@@ -14,6 +14,7 @@ import {isObj,defaultObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import S2Out from "$signIn2SignOut";
 import {isPromise} from "$utils";
+import appConfig from "$capp";
 
 
 
@@ -29,6 +30,10 @@ export const isSignedIn = isLoggedIn;
  * @param {boolean|function} trigger . si le l'évènement relative à la connexion de l'utilisateur sera déclenché où pas
  */
 export const signIn = (user,callback,trigger)=>{
+  const deviceId = defaultStr(appConfig.deviceId);
+  if(deviceId && isObj(user) && !user.deviceId){
+    user.deviceId = deviceId;
+  }
   if(typeof callback =='boolean'){
     const t = trigger;
     trigger = callback;
@@ -80,6 +85,11 @@ export const signOut = (callback,user,trigger)=>{
       trigger = user;
       user = t;
   }
+  user = defaultObj(user,getLoggedUser());
+  const deviceId = defaultStr(appConfig.deviceId);
+  if(deviceId && !user.deviceId){
+    user.deviceId = deviceId;
+  }
   const cb = ()=>{
     logout(null,typeof trigger =='boolean'? trigger : true);
     setToken(null);
@@ -89,9 +99,7 @@ export const signOut = (callback,user,trigger)=>{
     if(callback === false) return;
     notify.success(i18n.lang("you_are_successfull_logged_out"))
   }
-  return (isCustom?SignIn2SignOut.signOut({
-    user : defaultObj(user,getLoggedUser()),
-  }):post({
+  return (isCustom?SignIn2SignOut.signOut({user}):post({
       url : SIGN_OUT
   })).catch((e)=>{
       return e;
