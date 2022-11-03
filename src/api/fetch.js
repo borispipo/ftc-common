@@ -92,13 +92,18 @@
  };
  
  
- /**** permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch} */
+ /**** 
+  *   permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch}
+  *   
+  *   Si le résultat issue de l'api est un objet, alors cet objet est décomposé dans la réponse à retourner à l'utilisateur
+  *   Si le résultat issue de l'api n'est pas un objet, alors celui-ci est transmis dans la variable data qui résolvra la promessage * 
+  */
  export const handleFetchResult = ({fetchResult:res,showError,json,isAuth,redirectWhenNoSignin}) =>{
     return new Promise((resolve,reject)=>{
        const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
        const isJson = contentType.contains("application/json");
        return json !== false && isJson ? res.json().then((d)=>{
-          d = defaultObj(d);
+          d = !isObj(d)? {data:d} : d;
           const response = {};
           ['ok','status','statusText','error','headers'].map((v)=>{
             response[v] = res[v];
