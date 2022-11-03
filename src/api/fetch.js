@@ -40,8 +40,8 @@
      if(typeof apiCustom.getRequestHeaders =='function'){
          customRequestHeader = apiCustom.getRequestHeaders(opts);
      }
-     const ret = {...defaultObj(customRequestHeader)};
-     if(!ret.Authorization && opts.authorization !== false && opts.Authorization !== false){
+     const ret = extendObj({},opts.headers,customRequestHeader);
+     if(!ret.Authorization  && !ret.authorization && opts.authorization !== false && opts.Authorization !== false){
         const token = getToken();
         if(token){
             ret.Authorization = "Bearer "+token;
