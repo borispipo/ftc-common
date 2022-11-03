@@ -115,7 +115,8 @@
                notify.error({...response,position:'top'});
              }
           }
-          if(isAuth !== true && response.status === NOT_SIGNED_IN && redirectWhenNoSignin !== false){
+          response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
+          if(isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
              const hasMessage = defaultStr(response.message,response.msg)? true : false;
              Auth.signOut2Redirect(!hasMessage);
           }
