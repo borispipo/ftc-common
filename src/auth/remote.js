@@ -10,7 +10,7 @@ import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGN_IN,SIGN_OUT,} from "./routes";
 import { getLoggedUser } from "./utils/session";
-import {isObj,defaultObj} from "$cutils";
+import {isObj,defaultObj,extendObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import S2Out from "$signIn2SignOut";
 import {isPromise} from "$utils";
@@ -48,9 +48,10 @@ export const signIn = (user,callback,trigger)=>{
       url : SIGN_IN,
       body : user
   })).then((args)=>{
-    const {response,userId,token,...rest}=  defaultObj(args);
+    const {response,userId,done,token,...rest}=  defaultObj(args);
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
+      extendObj(user,rest);
       user.id = defaultStr(userId,user.id,user.code,user.email);
       user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
