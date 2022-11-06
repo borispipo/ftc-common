@@ -5,7 +5,10 @@
 import {getQueryParams} from "$cutils/uri";
 import {extendObj,defaultObj,defaultNumber,defaultStr,isObj,isObjOrArray} from "$cutils";
 import React from "$react";
+import i18n from "$i18n";
+
 export * from "./host";
+
 
 ///si l'on fait la requête vers la recherche du token
 export const IS_AUTH_TOKEN = "IS_AUTH_TOKEN";
@@ -115,7 +118,7 @@ export async function timeout(promise,delay,errorArgs) {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
       errorArgs = defaultObj(errorArgs);
-        reject({msg:"le temps de réponse expiré!!le serveur où la ressource demandée peut ne pas être disponible",...React.getOnPressArgs(errorArgs)})
+        reject({message:i18n.lang("api_timeout"),...React.getOnPressArgs(errorArgs)})
     }, delay)
     promise.then(resolve, reject);
   })

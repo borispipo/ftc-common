@@ -55,6 +55,8 @@ export const i18nEnLang = {
         refresh : 'Refresh',
         add_new : 'Add new',
         please_check_your_network : 'Ouff!! Internet problems? Your internet connection seems to be unstable. Please check your internet settings before trying to access the requested resource again.',
+        server_not_reachable : "Cannot connect to the server. The Client cannot receive the response within the timeout period. Please check with your administrator if the remote server is started and accessible",
+        api_timeout : "expired response time!! the server where the requested resource may not be available",
     }
 }
 

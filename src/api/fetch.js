@@ -6,7 +6,6 @@
  */
  import originalFetch from "unfetch";
  import { buildAPIPath} from "./utils";
- import {isWeb} from "$cplatform";
  import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
  import {NOT_SIGNED_IN,SUCCESS} from "./status";
  import notify from "$active-platform/notify";
@@ -16,6 +15,7 @@
  import {isClientSide} from "$cplatform";
  import appConfig from "$capp/config";
  import apiC from "$apiCustom";
+ import i18n from "$i18n";
 
  const apiCustom = isObj(apiC)? apiC : {};
 
@@ -98,40 +98,54 @@
   *   Si le résultat issue de l'api est un objet, alors cet objet est décomposé dans la réponse à retourner à l'utilisateur
   *   Si le résultat issue de l'api n'est pas un objet, alors celui-ci est transmis dans la variable data qui résolvra la promessage * 
   */
- export const handleFetchResult = ({fetchResult:res,showError,json,isAuth,redirectWhenNoSignin}) =>{
+ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,isAuth,redirectWhenNoSignin}) =>{
     return new Promise((resolve,reject)=>{
        const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
        const isJson = contentType.contains("application/json");
        return json !== false && isJson ? res.json().then((d)=>{
-          d = !isObj(d)? {data:d} : d;
-          const response = {};
-          ['ok','status','statusText','error','headers'].map((v)=>{
-            response[v] = res[v];
-          });
-          response.success = response.status === SUCCESS ? true : false;
-          const a =  {response,...d};
-          if(d.error && typeof d.error =='string'){
-               a.message = response.message = response.msg = d.error;
-          }
-          if(typeof apiCustom.handleFetchResult =='function' && apiCustom.handleFetchResult({...a,resolve,reject})== false) return;
-          if(response.success){
-             return resolve(a)
-          }
-          if(showError !== false){
-             const message = defaultStr(response.message,response.msg);
-             if(message){
-               notify.error({...response,position:'top'});
-             }
-          }
-          a.userNotSignedIn = a.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
-          if(isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
-             const hasMessage = defaultStr(response.message,response.msg)? true : false;
-             Auth.signOut2Redirect(!hasMessage);
-          }
-          reject(a);
-       }).catch(reject) : resolve(res);
+         d = !isObj(d)? {data:d} : d;
+         const response = {};
+         if(res && typeof res !=='boolean' && typeof res !='string'){
+            ['ok','status','statusText','error','headers'].map((v)=>{
+               response[v] = res[v];
+             });
+         }
+         response.success = response.status === SUCCESS ? true : false;
+         const a =  {response,...d};
+         if(d.error && typeof d.error =='string'){
+              a.message = response.message = response.msg = d.error;
+         }
+         if(typeof apiCustom.handleFetchResult =='function' && apiCustom.handleFetchResult({...a,resolve,reject})== false) return;
+         if(response.success){
+            return resolve(a)
+         }
+         return handleFetchError({isAuth,...a,redirectWhenNoSignin}).catch(reject);
+        }).catch(reject) : resolve(res);
     })
   }
+export const handleFetchError = (opts)=>{
+   let {showError,isAuth,reject,redirectWhenNoSignin,error,response,...rest} = defaultObj(opts);
+   response = defaultObj(response);
+   rest.error = error;
+   if(showError !== false){
+      if(typeof error =='object' && error && error.target){
+         const isXMLHttpRequest = defaultStr(Object.prototype.toString.call(error.target)).contains("XMLHttpRequest");
+         if(isXMLHttpRequest && error.target.status === 0){
+            response.message = defaultStr(response.message,response.msg,i18n.lang("server_not_reachable"))
+         }
+      }
+      const message = defaultStr(response.message,response.msg,error);
+      if(message){
+        notify.error({...response,position:'top'});
+      }
+   }
+   rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
+   if(isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
+      const hasMessage = defaultStr(response.message,response.msg)? true : false;
+      Auth.signOut2Redirect(!hasMessage);
+   }
+   return Promise.reject(rest);
+}
  
  /*** le mutator permet de modifier les options de la recherche dynamiquement */
  export function getFetcherOptions (opts,options){
@@ -144,7 +158,13 @@
       url = defaultStr(url,path);
       queryParams = Object.assign({},queryParams);
       fetcher = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-        return originalFetch(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}));
+        return new Promise((resolve,reject)=>{
+            return originalFetch(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}))
+               .then(resolve)
+               .catch((error)=>{
+                  return handleFetchError({...opts,error}).catch(reject);
+               })
+        });
       }
       opts.queryParams = queryParams;
       if(typeof mutator =='function'){
