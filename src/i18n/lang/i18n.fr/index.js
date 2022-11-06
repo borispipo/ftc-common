@@ -33,7 +33,7 @@ export const i18nFrLang = {
         dashboard : 'Dashboard',
         no_filter : "Aucun Filtre",
         please_check_your_network : "Ouff!! des soucis internet? Votre connexion internet semble être instable. Veuillez s'il vous plait vérifier vos paramètres internet avant d'essayer d'accéder à nouveau à la ressource demandée.",
-        server_not_reachable : "Impossible de se connecter au serveur/ le client ne peut pas recevoir la réponse dans le délai imparti.. Sssurez vous, svp auprès de votre administrateur si le serveur distant est démarré et accessible",
+        server_not_reachable : "Impossible de se connecter au serveur/ le client ne peut pas recevoir la réponse dans le délai imparti.. Assurez vous, svp auprès de votre administrateur si le serveur distant est démarré et accessible",
         api_timeout : "le temps de réponse expiré!!le serveur où la ressource demandée peut ne pas être disponible",
     }
 }

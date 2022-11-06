@@ -55,9 +55,10 @@
      switch(_t.toLowerCase().trim()){
          case TYPES.error:
              message = defaultVal(message,settings.error,settings.errorText)
+             defInterval = 12000;
              break;
          case TYPES.warning:
-             defInterval = 8000;
+             defInterval = 10000;
              break;
      }
      if(!title){
