@@ -134,7 +134,7 @@ export const handleFetchError = (opts)=>{
             response.message = defaultStr(response.message,response.msg,i18n.lang("server_not_reachable"))
          }
       }
-      const message = defaultStr(response.message,response.msg,error);
+      const message = response.message = defaultStr(response.message,response.msg,error,error?.message,error?.Message,error?.MessageDetail);
       if(message){
         notify.error({...response,position:'top'});
       }
