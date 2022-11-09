@@ -564,8 +564,8 @@
             } catch{}
         }
         if(returnValue != NaN && newDate){
-            if(returnObj === true) return {date: newdate, year: year, month: month ,day: date,hour:hh,minute:mm,second:ss,milli:millis};
-            return newdate;
+            if(returnObj === true) return {date: newDate, year: year, month: month ,day: date,hour:hh,minute:mm,second:ss,milli:millis};
+            return newDate;
         }
         if(returnObj === true){
             return NaN;
