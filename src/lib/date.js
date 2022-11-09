@@ -344,6 +344,12 @@
             return NaN;
             //throw new Error("invalid date string to parse",date);
         }
+        try {
+            let d = new Date(val);
+            if(d && d != NaN){
+                return d;
+            }
+        } catch{}
         format = defaultStr(format,DateLib.SQLDateFormat);
         val = val + "";
         var iVal = 0;
