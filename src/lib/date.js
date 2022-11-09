@@ -344,12 +344,6 @@
             return NaN;
             //throw new Error("invalid date string to parse",date);
         }
-        try {
-            let d = new Date(val);
-            if(d && d != NaN){
-                return d;
-            }
-        } catch{}
         format = defaultStr(format,DateLib.SQLDateFormat);
         val = val + "";
         var iVal = 0;
@@ -367,7 +361,7 @@
         var ss = 0;
         var millis = 0;
         var ampm = "";
-    
+        let returnValue = undefined,newDate = null;
         while (iFormat < format.length) {
             // Get next token from format string
             c = format.charAt(iFormat);
@@ -391,7 +385,8 @@
                 }
                 year = getInt(val, iVal, x, y);
                 if (year === null) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += year.length;
                 if (year.length === 2) {
@@ -415,7 +410,8 @@
                     }
                 }
                 if ((month < 1) || (month > 12)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
             } else if (token === "dddd" || token === "ddd") {
                 for (var n = 0; n < DaysAndMonths.dayNames.length; n++) {
@@ -428,62 +424,72 @@
             } else if (token === "m" || token === "mm") {
                 month = getInt(val, iVal, token.length, 2);
                 if (month === null || (month < 1) || (month > 12)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += month.length;
             } else if (token === "dd" || token === "d") {
                 date = getInt(val, iVal, token.length, 2);
                 if (date === null || (date < 1) || (date > 31)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += date.length;
             } else if (token === "hh" || token === "h") {
                 hh = getInt(val, iVal, token.length, 2);
                 if (hh === null || (hh < 1) || (hh > 12)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += hh.length;
             } else if (token === "HH" || token === "H") {
                 hh = getInt(val, iVal, token.length, 2);
                 if (hh === null || (hh < 0) || (hh > 23)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += hh.length;
             } else if (token === "KK" || token === "K") {
                 hh = getInt(val, iVal, token.length, 2);
                 if (hh === null || (hh < 0) || (hh > 11)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += hh.length;
             } else if (token === "kk" || token === "k") {
                 hh = getInt(val, iVal, token.length, 2);
                 if (hh === null || (hh < 1) || (hh > 24)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += hh.length;
                 hh--;
             } else if (token === "MM" || token === "M") {
                 mm = getInt(val, iVal, token.length, 2);
                 if (mm === null || (mm < 0) || (mm > 59)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += mm.length;
             } else if (token === "l") {//Milliseconds; gives 3 digits.
                 millis = getInt(val, iVal, 1, 3);
                 if (millis === null || (millis < 0) || (millis >= 1000)) {
-                    return NaN;
+                    returnValue =  NaN;
+                    break;
                 }
                 iVal += millis.length;
             }  else if (token === "L") {//Milliseconds; gives 2 digits.
                 millis = getInt(val, iVal, 1, 2);
                 if (millis === null || (millis < 0) || (millis >= 100)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += millis.length;
             } else if (token === "ss" || token === "s") {
                 ss = getInt(val, iVal, token.length, 2);
                 if (ss === null || (ss < 0) || (ss > 59)) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += ss.length;
             } else if (token =="tt" | token =='TT') {
@@ -492,7 +498,8 @@
                 } else if (val.substring(iVal, iVal + 2).toLowerCase() === "pm") {
                     ampm = (token === 'tt')? 'pm':"PM";
                 } else {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += 2;
             } else if (token =="t" | token =='T') {
@@ -501,12 +508,14 @@
                 } else if (val.substring(iVal, iVal + 1).toLowerCase() === "p") {
                     ampm = (token === 't')? 'p':"P";
                 } else {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 }
                 iVal += 2;
             } else {
                 if (val.substring(iVal, iVal + token.length) !== token) {
-                    return NaN;
+                    returnValue = NaN;
+                    break;
                 } else {
                     iVal += token.length;
                 }
@@ -514,35 +523,54 @@
         }
         // If there are any trailing characters left in the value, it doesn't match
         if (iVal !== val.length) {
+            returnValue = NaN;
+        }
+        if(returnValue != NaN){
+            // Is date valid for month?
+            if (month === 2) {
+                // Check for leap year
+                if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) { // leap year
+                    if (date > 29) {
+                        returnValue = NaN;
+                    }
+                } else {
+                    if (date > 28) {
+                        returnValue = NaN;
+                    }
+                }
+            }
+            if(returnValue != NaN && (month === 4) || (month === 6) || (month === 9) || (month === 11)){
+                if (date > 30) {
+                    returnValue = NaN;
+                }
+            }
+            if(returnValue != NaN){
+                // Correct hours value
+                if (hh < 12 && ampm && arrayValueExists(ampm,["p","pm","PM"])) {
+                    hh = hh - 0 + 12;
+                } else if (hh > 11 && ampm && arrayValueExists(ampm,["a","am","AM"])) {
+                    hh -= 12;
+                }
+                newDate = new Date(year, month - 1, date, hh, mm, ss,millis);
+            }
+        }
+
+        if(returnValue == NaN){
+            try {
+                let d = new Date(val);
+                if(d && d != NaN){
+                    newDate = d;
+                }
+            } catch{}
+        }
+        if(returnValue != NaN && newDate){
+            if(returnObj === true) return {date: newdate, year: year, month: month ,day: date,hour:hh,minute:mm,second:ss,milli:millis};
+            return newdate;
+        }
+        if(returnObj === true){
             return NaN;
         }
-        // Is date valid for month?
-        if (month === 2) {
-            // Check for leap year
-            if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) { // leap year
-                if (date > 29) {
-                    return NaN;
-                }
-            } else {
-                if (date > 28) {
-                    return NaN;
-                }
-            }
-        }
-        if ((month === 4) || (month === 6) || (month === 9) || (month === 11)) {
-            if (date > 30) {
-                return NaN;
-            }
-        }
-        // Correct hours value
-        if (hh < 12 && ampm && arrayValueExists(ampm,["p","pm","PM"])) {
-            hh = hh - 0 + 12;
-        } else if (hh > 11 && ampm && arrayValueExists(ampm,["a","am","AM"])) {
-            hh -= 12;
-        }
-        var newdate = new Date(year, month - 1, date, hh, mm, ss,millis);
-        if(returnObj === true) return {date: newdate, year: year, month: month ,day: date,hour:hh,minute:mm,second:ss,milli:millis};
-        return newdate;
+        return NaN;
     };
     /**
      * Get the ISO 8601 week number
