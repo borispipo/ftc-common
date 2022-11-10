@@ -34,6 +34,5 @@ export default {
     getData,
     parseDBName,
     sync,
-    device,
     ...pouch,
 }
