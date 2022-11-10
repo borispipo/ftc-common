@@ -1,9 +1,9 @@
-import notify from "$components/Dialog/notify";
-import {getLabel,getAll as getAllDataFiles,sanitizeName,isForUser} from "$dataFileManager/utils";
-import isCommonDataFile from "$dataFileManager/utils/isCommon";
+import notify from "$notify";
+import {getLabel,getAll as getAllDataFiles,sanitizeName,isForUser} from "../../../dataFileManager/utils";
+import isCommonDataFile from "../../../dataFileManager/isCommon";
 import Background from "../../background";
 import {isDesktopMedia} from "$dimensions";
-import {getDB,PouchDB} from "./getDB";
+import getDB,{PouchDB} from "$pouchdb/getDB";
 import APP from "$app/instance";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";

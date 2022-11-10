@@ -11,6 +11,7 @@ import isCommon from "./isCommon";
 import docId from "./docId";
 import {structDataDBName} from "./structData";
 import isStructData from "./isStructData";
+import {getLoggedUser} from "$cauth/utils/session";
 
 const dataFilesCounter = {};
 
@@ -96,3 +97,13 @@ export const isArchived = (dFCode)=>{
     return true;
 }
 
+export const isForUser = (dF,user)=>{
+    //if(isMasterAdmin()) return true;
+    if(!isObj(dF) || !isArray(dF.users)) return false;
+    if(isNonNullString(user)){
+        user = {code:user};
+    }
+    user = isObj(user)? user : defaultObj(getLoggedUser());
+    if(!isNonNullString(user.code)) return false;
+    return arrayValueExists(dF.users,user.code)
+}
