@@ -120,7 +120,7 @@ export async function timeout(promise,delay,errorArgs) {
       errorArgs = defaultObj(errorArgs);
         reject({message:i18n.lang("api_timeout"),...React.getOnPressArgs(errorArgs)})
     }, delay)
-    promise.then(resolve, reject);
+    promise.then(resolve).catch(reject);
   })
 }
 

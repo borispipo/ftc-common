@@ -92,6 +92,9 @@ module.exports = function(opts){
     if(!r.$api){
         r.$api = r.$capi;
     }
+    if(!r.$appConfig){
+        r.$appConfig = path.resolve(r.$capp,"config");
+    }
     if(assets){
         r["$assets"] = assets;
         r["$images"] = path.resolve(assets,"images");

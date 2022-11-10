@@ -65,14 +65,8 @@
   * @param {fetchOptions}, les options supplémentaires à passer à la fonction fetch
   */
  export default function fetch (url, options = {}) {
-   const {fetcher,checkOnline,url:u,path,...opts} = getFetcherOptions(url,options);
-   const cb = ()=>{
-     return timeout(fetcher(u, opts),defaultNumber(opts.delay,opts.timeout))
-   }
-   if(isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline()){
-       return timeout(APP.checkOnline().then(cb));
-   }
-   return cb();
+   const {fetcher,url:u,path,...opts} = getFetcherOptions(url,options);
+   return fetcher(u, opts);
  };
  /***@function
   * @namespace api/fetch
@@ -134,17 +128,19 @@ export const handleFetchError = (opts)=>{
             response.message = defaultStr(response.message,response.msg,i18n.lang("server_not_reachable"))
          }
       }
-      const message = response.message = defaultStr(response.message,response.msg,error,error?.message,error?.Message,error?.MessageDetail);
+      const errorM = typeof error =='object' && error ? defaultStr(error.message,error.Message,error.MessageDetail,error.msg) : null;
+      const message = response.message = rest.message = defaultStr(response.message,response.msg,error,errorM,rest.message);
       if(message){
         notify.error({...response,position:'top'});
       }
+      rest.response = response;
    }
    rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
    if(isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
       const hasMessage = defaultStr(response.message,response.msg)? true : false;
       Auth.signOut2Redirect(!hasMessage);
    }
-   return Promise.reject(rest);
+  throw(rest);
 }
  
  /*** le mutator permet de modifier les options de la recherche dynamiquement */
@@ -153,18 +149,27 @@ export const handleFetchError = (opts)=>{
          opts = {path:opts};
       }
       opts = extendObj(true,{},opts,options);
-      let {path,url,fetcher,auth,isAuth,showError,json,redirectWhenNoSignin,queryParams,mutator,...rest} = opts;
+      let {path,url,fetcher,auth,isAuth,queryParams,mutator,checkOnline} = opts;
       isAuth = isAuth || auth;
       url = defaultStr(url,path);
       queryParams = Object.assign({},queryParams);
-      fetcher = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-        return new Promise((resolve,reject)=>{
-            return originalFetch(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}))
-               .then(resolve)
-               .catch((error)=>{
-                  return handleFetchError({...opts,error}).catch(reject);
-               })
-        });
+      const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
+         return originalFetch(url,opts2)
+            .then(res=>handleFetchResult({...opts,fetchResult:res}))
+            .catch((error)=>{
+               return handleFetchError({...opts,error});
+         });
+      }
+      fetcher = (url,opts2)=>{
+         const delay = defaultNumber(opts.delay,opts.timeout);
+         const p = isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline() ? 
+               APP.checkOnline().then(()=>{
+                  return fetcher2(url,opts2);
+               }) : fetcher2(url,opts2);
+
+         return timeout(p,delay).catch((error)=>{
+            return handleFetchError({...opts,error})
+         });
       }
       opts.queryParams = queryParams;
       if(typeof mutator =='function'){
