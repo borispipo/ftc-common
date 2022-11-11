@@ -12,7 +12,7 @@ import {modes} from "../TextField";
 import {isMobileMedia} from "$cplatform/dimensions";
 import * as React from "react";
 import { isComponent } from "$react/isComponent";
-import defTheme,{white,black,lightColors,darkColors} from "./defaultTheme";
+import defTheme,{white,black,lightColors,darkColors,getColors as initColors} from "./defaultTheme";
 import { getStyleSheet,themeRef } from "./utils";
 
 import APP from "$capp/instance";
@@ -114,7 +114,6 @@ export const getTheme = x => Theme.current ? Theme.current : defaultTheme;
 
 export const getColors  =  x => getTheme().colors;
 
-
 /**** permet de mettre à jour le thème courant : 
  *  @voir : https://callstack.github.io/react-native-paper/theming.html
  *  @paramètre de l'objet Theme : {
@@ -132,7 +131,12 @@ export const getColors  =  x => getTheme().colors;
  * 
  */
 
+let initializeColorCounter = 0;
 export const updateTheme = (theme)=>{
+    if(initializeColorCounter <= 1){
+        initializeColorCounter++;
+        initColors();
+    }
     theme = updateColors(theme);
     if(isValid(theme)){
         Object.map(defaultTheme,(v,i)=>{

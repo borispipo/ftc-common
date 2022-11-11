@@ -3,19 +3,17 @@
 // license that can be found in the LICENSE file.
 
 import Colors from "./colors";
-import {isObj,defaultStr} from "$cutils";
+import {isObj,defaultStr,defaultObj,extendObj} from "$cutils";
 import appConfig from "$capp/config";
-import DefaultTheme,{defaultLight,defaultDark} from './defTheme';
+import DefaultTheme,{getDefaultLight,getDefaultDark} from './defTheme';
 import { ALPHA } from "./alpha";
-
-const defaultPrimary = DefaultTheme.colors.primary;
-const defaultSecondary = DefaultTheme.colors.secondary;
 
 export const black = "black";
 
 export const white = "white";
 
 export const transparent = "transparent";
+
 
 let colors = {};
 export const lightColors = {
@@ -34,7 +32,7 @@ export const lightColors = {
     placeholder: Colors.setAlpha(black,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(black,0.18),
-    ...defaultLight,
+    ...getDefaultLight(),
 }
 export const darkColors = {
     info : '#39c0ed',
@@ -54,34 +52,17 @@ export const darkColors = {
     placeholder: Colors.setAlpha(white,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(white,0.18),
-    ...defaultDark,
+    ...getDefaultDark(),
     //divider : "#dee2e6"
 }
 const dark1name = "Sombre|Dark";
-const dark1 = {
-    ...darkColors,
-    name : dark1name,
-    primaryName : dark1name,
-    dark: true,
-    primary: "#bcab95",
-    primaryOnSurface: "#bcab95",
-    primaryText: "white",
-    secondary: "#fbcfe8",
-    secondaryOnSurface: "#fbcfe8",
-    secondaryText: "black",
-    successText: "black",
-    surface: "#202c33",
-    surfaceText: "#FFFFFF",
-}
+
 const defaultTheme = {
     ...DefaultTheme,
     colors : {
         ...DefaultTheme.colors,
         ...lightColors,
-        primary : defaultPrimary,
-        primaryOnSurface : defaultPrimary,
-        secondary : defaultSecondary,
-        secondaryOnSurface : defaultSecondary,
+        ...getDefaultLight(),
     },
     get name (){
         return appConfig.name || '';
@@ -89,6 +70,10 @@ const defaultTheme = {
 }
 
 export const getColors = ()=>{
+    extendObj(lightColors,getDefaultLight());
+    extendObj(darkColors,getDefaultDark());
+    extendObj(DefaultTheme.colors,getDefaultLight());
+    extendObj(defaultTheme.colors,getDefaultLight());
     const t = [
         defaultTheme.name,
         {
@@ -141,6 +126,21 @@ export const getColors = ()=>{
         'blue-yellow',
         'blue-indigo',
     ]
+    const dark1 = {
+        ...darkColors,
+        name : dark1name,
+        primaryName : dark1name,
+        dark: true,
+        primary: "#bcab95",
+        primaryOnSurface: "#bcab95",
+        primaryText: "white",
+        secondary: "#fbcfe8",
+        secondaryOnSurface: "#fbcfe8",
+        secondaryText: "black",
+        successText: "black",
+        surface: "#202c33",
+        surfaceText: "#FFFFFF",
+    }
     const lColors = {
         dark_blue : "#0073b1",
         dark_blue1 : "#124187",
@@ -178,10 +178,12 @@ export const getColors = ()=>{
         let secondary = getHexColor(secondaryName);
         const isMainTheme = t[i] == defaultTheme.name;
         if(isMainTheme){
-            primary = defaultPrimary; //couleur primaire du logo
-            secondary = defaultSecondary; //couleur secondaire du logo
+            primary = defaultTheme.colors.primary; //couleur primaire du logo
+            secondary = defaultTheme.colors.secondary; //couleur secondaire du logo
         } 
-        if(!primary || !secondary) continue;
+        if(!primary || !secondary) {
+            continue;
+        }
         const c = colors[t[i]] =  {
             name : t[i], //le nom du thème
             primaryName,
@@ -206,5 +208,3 @@ export const getColors = ()=>{
 }
 
 export default defaultTheme;
-
-export {defaultPrimary as primary, defaultSecondary as secondary}
