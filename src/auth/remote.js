@@ -146,7 +146,7 @@ export const signOut = (callback,user,trigger)=>{
         login(u,trigger)
       };
       if(isPromise(promise)){
-         promise.then(cb).catch((e)=>{
+         return promise.then(cb).catch((e)=>{
           console.log(e," upsert user");
          });
       } else {
