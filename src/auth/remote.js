@@ -131,6 +131,12 @@ export const signOut = (callback,user,trigger)=>{
   export const upsertUser = (u,trigger)=> {
      if(isObj(u)){
       let promise = null;
+      const logU = defaultObj(getLoggedUser());
+      Object.map(logU,(v,i)=>{
+        if(!(i in u)){
+           u [i] = v;
+        }
+      });
       if(typeof SignIn2SignOut.upsertUser =='function'){
           promise = SignIn2SignOut.upsertUser({user:u});
       } 
