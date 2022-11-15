@@ -48,10 +48,10 @@ export const signIn = (user,callback,trigger)=>{
       url : SIGN_IN,
       body : user
   })).then((args)=>{
-    const {response,userId,done,token,...rest}=  defaultObj(args);
+    const {response,userId,done,token,preferences,...rest}=  defaultObj(args);
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
-      extendObj(user,rest);
+      extendObj(user,rest,preferences);
       user.id = defaultStr(userId,user.id,user.code,user.email);
       user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
