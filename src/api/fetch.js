@@ -179,7 +179,8 @@ export const handleFetchError = (opts)=>{
       opts.headers = extendObj({},opts.headers,requestHeaders)
       opts.url = buildAPIPath(url,opts.queryParams);
       opts.fetcher = fetcher;
-      if(opts.headers.Authorization || opts.headers.authorization){
+      ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
+      if(appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization || opts.headers.authorization)){
          opts.credentials = "include";
       }
       /** personnaliser la fonction getFetcherOptions */
