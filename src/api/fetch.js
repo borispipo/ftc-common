@@ -85,6 +85,19 @@
    return fetch(url,options);
  };
  
+ export const put = (url, options = {})=> {
+   options = defaultObj(options);
+   options.method = 'PUT';
+   return fetch(url,options);
+ };
+
+ const deleteApi = (url, options = {})=> {
+   options = defaultObj(options);
+   options.method = 'delete';
+   return fetch(url,options);
+ };
+
+ export {deleteApi as delete};
  
  /**** 
   *   permet de traiter le resultat d'une requête ajax effectuée via la méthode {@link fetch}

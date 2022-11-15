@@ -11,4 +11,6 @@ export * from "./fetch";
 
 export {default as fetch} from "./fetch";
 
+export {default} from "./fetch";
+
 export * from "./host";
