@@ -884,7 +884,7 @@
         },
         formatPeriod : {
             value : formatDatePeriod, override : false, writable : false,
-        }
+        },
         /*** parse une chaine de caractère de type date passée en paramètre issue du format fromFormat et le formate
          *    en la date parsée au forma toFormat
          *  @param : string : la date passé en paramètre au format formFormat
