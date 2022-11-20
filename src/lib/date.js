@@ -687,9 +687,14 @@
         }
         format = defaultStr(format,SQLDateFormat);
         const isDateTime = isValidSQLDateTime(date);
+        if(isNonNullString(date)){
+            date = date.trim();
+        }
         if((isDateTime || isValidSQLDate(date))){
-            if(isDateTime){
-                format = SQLDateTimeFormat;
+            format = SQLDateTimeFormat;
+            ///on ramène au format SQLDateTime
+            if(!isDateTime){
+                date += " 00:00:00";
             }
             return parse(new Date(date),format,returnObj)
         }
