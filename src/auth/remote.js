@@ -13,7 +13,7 @@ import { getLoggedUser } from "./utils/session";
 import {isObj,defaultObj,extendObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import S2Out from "$signIn2SignOut";
-import {isPromise} from "$utils";
+import {isPromise,isNonNullString} from "$utils";
 import appConfig from "$capp/config";
 
 
@@ -183,4 +183,22 @@ export const getUserLastName = (user)=>{
 
 export const getUserSurname = (user)=>{
   return getUProps(user,"getUserSurname","surname");
+}
+
+export const getUserFullName = (user)=>{
+  const fullName = getUProps(user,"getUserFullName","fullName");
+  if(!fullName){
+    const firstName = getUserFirstName(), lastName = getUserLastName();
+    if(isNonNullString(firstName)){
+       return firstName + (isNonNullString(lastName)?(" "+lastName):"");
+    }
+  }
+  return fullName;
+}
+
+export const getUserEmail = (user)=>{
+  return getUProps(user,"getUserEmail","email");
+}
+export const getUserCode = (user)=>{
+  return getUProps(user,"getUserCode","code");
 }
