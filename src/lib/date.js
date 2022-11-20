@@ -101,19 +101,16 @@
         return dateFormat(this.valueOf(),DateLib.defaultDateTimeFormat);
     }
     Date.prototype.resetHours = function(){
-        const date = this.valueOf();
-        date.setHours(0);
-        return date;
+        this.setHours(0);
+        return this;
     }
     Date.prototype.resetMinutes = function(){
-        const date = this.valueOf();
-        date.setMinutes(0);
-        return date;
+        this.setMinutes(0);
+        return this;
     }
     Date.prototype.resetSeconds = function(){
-        const date = this.valueOf();
-        date.setSeconds(0);
-        return date;
+        this.setSeconds(0);
+        return this;
     }
     var dateFormat = (function() {
         var timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
