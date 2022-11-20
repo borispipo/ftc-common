@@ -1252,7 +1252,7 @@
         previousWeekDaysLimits : {
             ///retourne les dates limites de la semaine passée 
             value : (date)=>{
-                let cDate = isValidDate(date)? date : new Date();
+                let cDate = isValidDate(date)? new Date(date) : new Date();
                 var beforeOneWeek = new Date(cDate.getTime() - 60 * 60 * 24 * 7 * 1000)
                 var beforeOneWeek2 = new Date(beforeOneWeek);
                 let day = beforeOneWeek.getDay()
@@ -1261,19 +1261,19 @@
             },override : false
         },
         currentWeekDaysLimits : {
-        ///retourne les dates limites de la semaine courante 
-        value : (date)=>{
-            let currentDate = isValidDate(date)? date : new Date();
-            let day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-                return {first:new Date(currentDate.setDate(diff)),last:isValidDate(date)? new Date(date) : new Date()}
-        },override : false
+            ///retourne les dates limites de la semaine courante 
+            value : (date)=>{
+                const currentDate = isValidDate(date)? new Date(date) : new Date();
+                const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+                return {first:new Date(currentDate.setDate(diff)),last:currentDate}
+            },override : false
         },
         currentMonthDaysLimits : {
-        ///retourne les dates limites de la semaine courante 
-        value : (date)=>{
-            let currentDate = isValidDate(date)? date : new Date();
-            return {first:new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),last:currentDate}
-        },override : false
+            ///retourne les dates limites de la semaine courante 
+            value : (date)=>{
+                const currentDate = isValidDate(date)? new Date(date) : new Date();
+                return {first:new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),last:currentDate}
+            },override : false
         },
         /***** retourne la date calculée depuis le nombre count et selon l'intervale since
          * @param {number}: count : le nombre à additionner à la date courante selon l'intervale interval
