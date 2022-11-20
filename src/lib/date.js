@@ -100,7 +100,21 @@
     Date.prototype.toDefaultDateTimeFormat = function(){
         return dateFormat(this.valueOf(),DateLib.defaultDateTimeFormat);
     }
-    
+    Date.prototype.resetHours = function(){
+        const date = this.valueOf();
+        date.setHours(0);
+        return date;
+    }
+    Date.prototype.resetMinutes = function(){
+        const date = this.valueOf();
+        date.setMinutes(0);
+        return date;
+    }
+    Date.prototype.resetSeconds = function(){
+        const date = this.valueOf();
+        date.setSeconds(0);
+        return date;
+    }
     var dateFormat = (function() {
         var timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
         var timezoneClip = /[^-+\dA-Z]/g;
@@ -1238,7 +1252,7 @@
         previousWeekDaysLimits : {
             ///retourne les dates limites de la semaine passée 
             value : (date)=>{
-                let cDate = isValidDate(date)? new Date(date) : new Date();
+                let cDate = isValidDate(date)? date : new Date();
                 var beforeOneWeek = new Date(cDate.getTime() - 60 * 60 * 24 * 7 * 1000)
                 var beforeOneWeek2 = new Date(beforeOneWeek);
                 let day = beforeOneWeek.getDay()
@@ -1249,7 +1263,7 @@
         currentWeekDaysLimits : {
         ///retourne les dates limites de la semaine courante 
         value : (date)=>{
-            let currentDate = isValidDate(date)? new Date(date) : new Date();
+            let currentDate = isValidDate(date)? date : new Date();
             let day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
                 return {first:new Date(currentDate.setDate(diff)),last:isValidDate(date)? new Date(date) : new Date()}
         },override : false
@@ -1257,7 +1271,7 @@
         currentMonthDaysLimits : {
         ///retourne les dates limites de la semaine courante 
         value : (date)=>{
-            let currentDate = isValidDate(date)? new Date(date) : new Date();
+            let currentDate = isValidDate(date)? date : new Date();
             return {first:new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),last:currentDate}
         },override : false
         },
