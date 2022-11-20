@@ -245,6 +245,8 @@
     export const SQLDateFormat = "yyyy-mm-dd";
     export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
     export const SQLTimeFormat = "HH:MM:ss";
+    export const defaultDateTimeFormat = dateFormat.masks.default;
+    export const defaultDateFormat = dateFormat.masks.defaultDate;
     
     //const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss";
     var defaultD = null;
@@ -1136,7 +1138,7 @@
             value : dateFormat.masks.defaultTime,override:false,writable:false
         },
         defaultDateTimeFormat : {
-            value : dateFormat.masks.default,override:false,writable:false
+            value : defaultDateTimeFormat,override:false,writable:false
         },
         SQLDateTimeFormat : {
             value : SQLDateTimeFormat,override:false,writable:false
