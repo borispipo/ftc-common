@@ -796,15 +796,15 @@
             let from = split[0], to = split[1];
             if(isValidSQLDateTime(from)){
                 isDateTime = true;
-                from = parse(from,defaultSQLDateTimeFormat);
+                from = parse(from,SQLDateTimeFormat);
             } else if(isValidSQLDate(from)){
-                from = parse(from,defaultSQLDateFormat);
+                from = parse(from,SQLDateFormat);
             }
             if(isValidSQLDateTime(to)){
                 isDateTime = true;
-                to = parse(to,defaultSQLDateTimeFormat);
+                to = parse(to,SQLDateTimeFormat);
             } else if(isValidSQLDate(from)){
-                to = parse(to,defaultSQLDateFormat);
+                to = parse(to,SQLDateFormat);
             }
             const dateFormat = isDateTime ? (isFR?defaultDateTimeFormat:SQLDateTimeFormat) : (isFR?defaultDateFormat:SQLDateFormat);
             if(isValidDate(from) && isValidDate(to)){
