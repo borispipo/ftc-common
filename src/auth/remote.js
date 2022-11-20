@@ -178,7 +178,7 @@ export const getUserFirstName = (user)=>{
 }
 
 export const getUserLastName = (user)=>{
-  return getUProps(user,"getUserLastName","LastName");
+  return getUProps(user,"getUserLastName","lastName");
 }
 
 export const getUserSurname = (user)=>{
@@ -188,10 +188,13 @@ export const getUserSurname = (user)=>{
 export const getUserFullName = (user)=>{
   const fullName = getUProps(user,"getUserFullName","fullName");
   if(!fullName){
-    const firstName = getUserFirstName(), lastName = getUserLastName();
-    if(isNonNullString(firstName)){
-       return firstName + (isNonNullString(lastName)?(" "+lastName):"");
+    let firstName = getUserFirstName(), lastName = getUserLastName();
+    if(isNonNullString(firstName) && isNonNullString(lastName)){
+       if(firstName.toLowerCase() != lastName.toLowerCase()){
+         return firstName +" "+lastName;
+       }
     }
+    return firstName;
   }
   return fullName;
 }
