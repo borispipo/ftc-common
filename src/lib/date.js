@@ -73,7 +73,7 @@
         return DateLib.SQLTime(this.valueOf());
     }
     /*** formate la date passé en paramètre à un format spécifique */
-    Date.prototype.format = Date.prototype.toFormat = function(format){
+    Date.prototype.format = Date.prototype.toFormat = Date.prototype.toDateFormat = function(format){
         return dateFormat(this.valueOf(),format);
     }
     
@@ -783,6 +783,36 @@
         }
         return new Date(year, month, 1);
     }
+    /**** prend en paramètre une date au format from =>to et formatte au format français par défaut
+     * @param {string} periodDate, la date au format [from] => [to] où from est soit au format SQLDateTime|SQLDate et to est soit au format SQLDateTime|SQLTime
+     * @param {boolean} {isDateTime} si la date est au format dateTime où non
+     * @return {string} chaine de caractère au format parsé
+     */
+    function formatDatePeriod(periodDate,isDateTime){
+        if(isNonNullString(periodDate)){
+            const lang = i18n.getLang();
+            const isFR = lang && typeof lang =="string" && lang.toLowerCase() == 'fr';
+            const split = periodDate.split("=>");
+            let from = split[0], to = split[1];
+            if(isValidSQLDateTime(from)){
+                isDateTime = true;
+                from = parse(from,defaultSQLDateTimeFormat);
+            } else if(isValidSQLDate(from)){
+                from = parse(from,defaultSQLDateFormat);
+            }
+            if(isValidSQLDateTime(to)){
+                isDateTime = true;
+                to = parse(to,defaultSQLDateTimeFormat);
+            } else if(isValidSQLDate(from)){
+                to = parse(to,defaultSQLDateFormat);
+            }
+            const dateFormat = isDateTime ? (isFR?defaultDateTimeFormat:SQLDateTimeFormat) : (isFR?defaultDateFormat:SQLDateFormat);
+            if(isValidDate(from) && isValidDate(to)){
+                return "{0} {1} {2} {3}".sprintf(isFR?"Du":"From",from.toFormat(dateFormat),isFR?"au":"to",to.toFormat(dateFormat));
+            }
+        }
+        return "";
+    }
     Object.defineProperties(DateLib,{
         daysInMonth : {
             value : daysInMonth,
@@ -849,6 +879,12 @@
             value : parse,
             override : false, writable : false
         },
+        formatDatePeriod : {
+            value : formatDatePeriod,override : false, writable :false
+        },
+        formatPeriod : {
+            value : formatDatePeriod, override : false, writable : false,
+        }
         /*** parse une chaine de caractère de type date passée en paramètre issue du format fromFormat et le formate
          *    en la date parsée au forma toFormat
          *  @param : string : la date passé en paramètre au format formFormat
