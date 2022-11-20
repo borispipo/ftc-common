@@ -341,7 +341,7 @@
      * @param {boolelan} returnObj - check if object containaing date,hour,minute,
      * @returns {Object} || NaN the constructed date
      */
-    var parse = function (val, format,returnObj) {
+    export const parse = function (val, format,returnObj) {
         if(isNullOrEmpty(val)){
             val = new Date();
         }
@@ -686,6 +686,13 @@
             format = t;
         }
         format = defaultStr(format,SQLDateFormat);
+        const isDateTime = isValidSQLDateTime(date);
+        if((isDateTime || isValidSQLDate(date))){
+            if(isDateTime){
+                format = SQLDateTimeFormat;
+            }
+            return parse(new Date(date),format,returnObj)
+        }
         if(isDateObj(date)) {
             return parse(date,format,returnObj)
         }
