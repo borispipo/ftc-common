@@ -78,7 +78,7 @@
     }
     
     /*** formate la date passé en paramètre à un format spécifique */
-    Date.prototype.toSQLFormat = function(){
+    Date.prototype.toSQLFormat = Date.prototype.toSQLDateFormat = function(){
         return dateFormat(this.valueOf(),DateLib.SQLDateFormat);
     }
     

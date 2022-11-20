@@ -155,3 +155,32 @@ export const signOut = (callback,user,trigger)=>{
      }
      return Promise.resolve(u);
   };
+
+  const getUProps = (user,functionName,propsName)=>{
+    user = defaultObj(user,getLoggedUser());
+    if(typeof SignIn2SignOut[functionName] =='function'){
+       return SignIn2SignOut[functionName](user);
+    }
+    return user[propsName];
+  }
+
+/*** retourne le username de l'utilsateur passé en paramètre */
+export const getUserName = (user)=>{
+     return getUProps(user,"getUserName","userName");
+}
+/*** retourne le pseudo de l'utilisateur passé en paramètre */
+export const getUserPseudo = (user)=>{
+    return getUProps(user,"getUserPseudo","pseudo");
+}
+
+export const getUserFirstName = (user)=>{
+  return getUProps(user,"getUserFirstName","firstName");
+}
+
+export const getUserLastName = (user)=>{
+  return getUProps(user,"getUserLastName","LastName");
+}
+
+export const getUserSurname = (user)=>{
+  return getUProps(user,"getUserSurname","surname");
+}
