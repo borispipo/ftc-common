@@ -5,6 +5,7 @@
 import "$cutils/extend.prototypes";
 import isNonNullString from "$cutils/isNonNullString";
 import device from "./device";
+import session from "$session";
 
 const configRef = {current:null};
 
@@ -123,6 +124,15 @@ const config = {
     },
     get getValue (){
         return getConfigValue;
+    },
+    get currency(){
+        return getCurrency();
+    },
+    set currency(currency){
+        setCurrency(currency);
+    },
+    get setCurrency(){
+        return setCurrency;
     }
 }
 
@@ -142,6 +152,10 @@ export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
+export const getCurrency = ()=> Object.assign({},session.get("appConfigCurrency"));
+export const setCurrency = (currency)=>{
+    return session.set("appConfigCurrency",Object.assign({},currency));
+}
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
     if(typeof t =='object' && t && !Array.isArray(t)){

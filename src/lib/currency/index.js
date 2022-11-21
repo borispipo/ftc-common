@@ -3,6 +3,7 @@ import currencies from "./currencies";
 import isString from "$cutils/isString";
 import defaultStr from "$cutils/defaultStr";
 const isObj = x => x && typeof x =='object';
+import appConfig from "$capp/config";
 const defaultObj = function() {
     var args = Array.prototype.slice.call(arguments,0);
     if(args.length === 1 && isObj(args[0])) return args[0];
@@ -23,20 +24,23 @@ const lib = {};
 // The library's settings configuration object. Contains default parameters for
 // currency and number formatting
 lib.settings = {
-		currency: defaultObj(//currencies.XAF,
-		{
-			symbol : "€",        // default currency symbol is '$'
-			format : "%v%s",    // controls output: %s = symbol, %v = value (can be object, see docs)
-			decimal : ".",        // decimal point separator
-			thousand : " ",        // thousands separator
-			decimal_digits : 2,        // decimal places
-			grouping : 3        // digit grouping (not implemented yet)
-		}),number: {
-		decimal_digits : 0,		// default decimal_digits on numbers is 0
-		grouping : 3,		// digit grouping (not implemented yet)
-		thousand : " ",
-		decimal : "."
-	}
+		get currency(){
+			return {
+				symbol : "€",        // default currency symbol is '$'
+				format : "%v%s",    // controls output: %s = symbol, %v = value (can be object, see docs)
+				decimal : ".",        // decimal point separator
+				thousand : " ",        // thousands separator
+				decimal_digits : 2,        // decimal places
+				grouping : 3,        // digit grouping (not implemented yet)
+				...Object.assign({},appConfig.currency)
+			}
+		},
+		number: {
+			decimal_digits : 0,		// default decimal_digits on numbers is 0
+			grouping : 3,		// digit grouping (not implemented yet)
+			thousand : " ",
+			decimal : "."
+		}
 };
 
 /* --- Internal Helper Methods --- */
