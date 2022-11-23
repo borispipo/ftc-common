@@ -25,6 +25,9 @@
     import defaultStr from "$cutils/defaultStr";
     import isDateObj from "$cutils/isDateObj";
     
+    export const SQLDateFormat = "yyyy-mm-dd";
+    export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
+    export const SQLTimeFormat = "HH:MM:ss";
     
     const isNonNullString = x => x && typeof x =="string";
     
@@ -239,7 +242,7 @@
         }
         return newArr;
     }
-
+    
     
     //const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss";
     var defaultD = null;
@@ -280,9 +283,6 @@
         monthNames: []
     };
     
-    export const SQLDateFormat = "yyyy-mm-dd";
-    export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
-    export const SQLTimeFormat = "HH:MM:ss";
     export const defaultDateTimeFormat = dateFormat.masks.default;
     export const defaultDateFormat = dateFormat.masks.defaultDate;
 
