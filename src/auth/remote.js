@@ -16,6 +16,8 @@ import {isPromise,isNonNullString} from "$utils";
 import appConfig from "$capp/config";
 import SignIn2SignOut from "./$authSignIn2SignOut";
 
+export {SignIn2SignOut};
+
 export const isSignedIn = isLoggedIn;
 
 /***** 
