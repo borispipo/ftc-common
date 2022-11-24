@@ -12,14 +12,9 @@ import {SIGN_IN,SIGN_OUT,} from "./routes";
 import { getLoggedUser } from "./utils/session";
 import {isObj,defaultObj,extendObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
-import S2Out from "$signIn2SignOut";
 import {isPromise,isNonNullString} from "$utils";
 import appConfig from "$capp/config";
-
-
-
-/*** cette variable sert à personnaliser les fonction d'authentification/connexion signIn et de déconnexion signOut d'un utilisateur côté client */
-export const SignIn2SignOut = typeof S2Out =='object' && S2Out ? S2Out : {};
+import SignIn2SignOut from "./$authSignIn2SignOut";
 
 export const isSignedIn = isLoggedIn;
 

@@ -7,6 +7,8 @@ import {tableDataPerms,structDataPerms,resetPerms} from "./reset";
 import {getLoggedUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";
 
+export {isMasterAdmin};
+
 export * from "./reset";
 
 /*** si l'utilisateur a accès à la permission lorsque la permission est définie via une chaine de caractère

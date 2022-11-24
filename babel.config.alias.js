@@ -146,10 +146,6 @@ module.exports = function(opts){
     if(!r.$pouchdbStructData){
         r.$pouchdbStructData = r.$cpouchdbStructData;
     }
-    /**** l'alias qui pointe vers un fichier exportant la fonction retournant si l'utilisateur est master admin où non */
-    if(!r.$isMasterAdmin){
-        r.$isMasterAdmin = path.resolve(common,"auth","isMasterAdmin","defaultIsMasterAdmin");
-    }
     r.$apiCustom = r.$apiCustom || r.$capiCustom;
     return r;
 }
