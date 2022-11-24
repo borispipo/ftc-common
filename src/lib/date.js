@@ -1314,7 +1314,8 @@
             value : (date)=>{
                 const currentDate = isValidDate(date)? new Date(date) : new Date();
                 const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-                return {first:new Date(currentDate.setDate(diff)),last:currentDate}
+                const last = new Date(currentDate);
+                return {first:new Date(currentDate.setDate(diff)),last}
             },override : false
         },
         currentMonthDaysLimits : {
