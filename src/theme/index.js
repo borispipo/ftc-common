@@ -196,6 +196,7 @@ const theme = {
     get textFieldMode () {return getTextFieldMode()},
     get webFontFamilly () {return  webFontFamilly;},
     get withStyles (){ return withStyles},
+    get flattenStyle(){return flattenStyle},
     get styles (){return styles},
     /*** si la couleur du status bar est sombre */
     get isStatusBarColorDarken (){ return isStatusBarColorDarken; },
@@ -335,7 +336,8 @@ a.map((v)=>{
 export const webFontFamilly =  isWeb() ? {
     fontFamily : '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","Fira Sans",Ubuntu,Oxygen,"Oxygen Sans",Cantarell,"Droid Sans","Apple Color Emoji","Segoe UI Emoji","Segoe UI Emoji","Segoe UI Symbol","Lucida Grande",Helvetica,Arial,sans-serif',
 } : null;
-export const styles = !StyleSheet? {} : StyleSheet.create({
+const createStyleSheet = StyleSheet && StyleSheet.create ? StyleSheet.create.bind(StyleSheet) : x=>x;
+export const styles = createStyleSheet({
     shadow : {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -422,7 +424,7 @@ export const styles = !StyleSheet? {} : StyleSheet.create({
     label: {fontWeight:'normal'},
     bold : {fontWeight:'bold'},
     ...stylesShortcuts,
-    absoluteFill : StyleSheet.absoluteFillObject,
+    absoluteFill : StyleSheet && StyleSheet.absoluteFillObject || {},
 });
 
 export const disabledStyle = styles.disabled;
@@ -444,12 +446,20 @@ export const StyleProps  = StylePropsTypes;
 export const StyleProp = StylePropsTypes;
 
 
-export function flattenStyle(style) {
-    if (style === null || typeof style !== 'object') {
+export function flattenStyle(...styles) {
+    if (styles == null || typeof styles !== 'object') {
       return  {};
     }
-    if(typeof StyleSheet.flatten !='function') return style;
-    return Object.assign({},StyleSheet.flatten(style));
+    if(StyleSheet && typeof StyleSheet.flatten =='function' ) return Object.assign({},StyleSheet.flatten(style));
+    const flatArray = styles.flat(Infinity);
+    const result = {};
+    for (let i = 0; i < flatArray.length; i++) {
+      const style = flatArray[i];
+      if (style != null && typeof style === 'object') {
+        Object.assign(result, style);
+      }
+    }
+    return result;
 }
 
 /** retourne un  */
