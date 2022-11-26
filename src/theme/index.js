@@ -197,6 +197,9 @@ const theme = {
     get webFontFamilly () {return  webFontFamilly;},
     get withStyles (){ return withStyles},
     get flattenStyle(){return flattenStyle},
+    get StyleProp (){return StyleProp},
+    get StyleProps () {return StyleProp},
+    get Colors (){return Colors},
     get styles (){return styles},
     /*** si la couleur du status bar est sombre */
     get isStatusBarColorDarken (){ return isStatusBarColorDarken; },
