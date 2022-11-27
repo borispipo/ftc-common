@@ -453,7 +453,7 @@ export function flattenStyle(...styles) {
     if (styles == null || typeof styles !== 'object') {
       return  {};
     }
-    if(StyleSheet && typeof StyleSheet.flatten =='function' ) return Object.assign({},StyleSheet.flatten(style));
+    if(StyleSheet && typeof StyleSheet.flatten =='function' ) return Object.assign({},StyleSheet.flatten(styles));
     const flatArray = styles.flat(Infinity);
     const result = {};
     for (let i = 0; i < flatArray.length; i++) {
