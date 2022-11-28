@@ -412,11 +412,6 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
     return convToSQL ? convertToSQL(filters) : filters;
 }
 
-/*** la liste des actions supportés par les filtres 
- * @see : https://github.com/cloudant/mango from mango query mapping
- *  
-*/
-export const actions = ["$lt", "$gt", "$lte", "$gte", "$eq", "$exists", "$type", "$in", "$nin", "$all", "$size", "$or", "$nor", "$not", "$mod", "$regex", "$elemMatch"]
 
 export default utils;
 
@@ -611,4 +606,39 @@ export const setSessionData = (key,value)=>{
     return session.set(getSessionKey(),data);
   }
   return false;
+}
+
+/*** la liste des actions supportés par les filtres 
+ * @see : https://github.com/cloudant/mango from mango query mapping
+ *  
+*/
+//export const actions = ["$lt", "$gt", "$lte", "$gte", "$eq", "$exists", "$type", "$in", "$nin", "$all", "$size", "$or", "$nor", "$not", "$mod", "$regex", "$elemMatch"]
+
+export const actions = {
+    get $eq () {return i18n.lang("filter_equals")},
+    get $ne () {return i18n.lang("filter_notequals")},
+    get $gt () {return i18n.lang("filter_greater_than")},
+    get $gte () {return i18n.lang("filter_greater_than_or_equals")},
+    get $lt () {return i18n.lang("filter_less_than")},
+    get $lte () {return i18n.la("filter_less_than_or_equals")},
+  }
+  
+export const inActions = {
+    get $in () {return i18n.lang("filter_in")}, //Array of JSON values	The document field must exist in the list provided.
+    get $nin () {return i18n.lang("filter_not_in")}, //Array of JSON values	The document field not must exist in the list provided.
+  }
+   
+  
+export const operators = {
+     get $and (){ return i18n.lang("filter_and")}, //Array	Matches if all the selectors in the array match.
+     get $or (){return i18n.lang("filter_or")}, //Array	Matches if any of the selectors in the array match. All selectors must use the same index.
+}
+  
+export const periodActions = {
+    get $yesterday(){return i18n.lang("filter_yesterday")},
+    get $today() {return i18n.lang("filter_today")},
+    get $prevWeek(){return i18n.lang("filter_prevWeek")},
+    get $week() {return i18n.lang("filter_week")},
+    get $month (){return i18n.lang("filter_month");},
+    get $period (){return i18n.lang("filter_period");}
 }
