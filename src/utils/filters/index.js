@@ -3,10 +3,12 @@
 // license that can be found in the LICENSE file.
 
 /**** utilitaire de filtre de requêtes, ensemble de fonctions utiles pour l'implémentationd 'un composant Filter */
-import {isNonNullString,defaultStr,defaultNumber,defaultArray,isObjOrArray,isObj} from "$cutils";
+import {isNonNullString,defaultStr,defaultNumber,defaultObj,defaultArray,isObjOrArray,isObj} from "$cutils";
 import DateLib from "$lib/date";
 import mangoParser from "mongo-parse";
 import "./i18n";
+import session from "$session";
+import {getLoggedUserCode} from "$cauth";
 
 export const filterTextTypes = ['text','number','email','search','tel','url','password',"id","idfield",'piecefield','piece'];
 
@@ -592,3 +594,21 @@ export const getTyppedOperand = (operand, operator, field,statementsParams) => {
        return prev;
     }, []).join(' AND ');
   }
+
+const sKey = "FILTER-ITEM-KEY";
+
+export const getSessionKey = ()=> defaultStr(getLoggedUserCode())+"-"+sKey;
+
+export const getSessionData = (key)=>{
+  const data = defaultObj(session.get(getSessionKey()));
+  return isNonNullString(key)? data [key] : data;
+}
+
+export const setSessionData = (key,value)=>{
+  const data = getSessionData();
+  if(isNonNullString(key)){
+    data[key] = value;
+    return session.set(getSessionKey(),data);
+  }
+  return false;
+}
