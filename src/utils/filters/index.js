@@ -621,7 +621,7 @@ export const actions = {
     get $gt () {return i18n.lang("filter_greater_than")},
     get $gte () {return i18n.lang("filter_greater_than_or_equals")},
     get $lt () {return i18n.lang("filter_less_than")},
-    get $lte () {return i18n.la("filter_less_than_or_equals")},
+    get $lte () {return i18n.lang("filter_less_than_or_equals")},
   }
   
 export const inActions = {
