@@ -576,7 +576,7 @@ const operatorsMap = {
    */
   export const buildWhereElement = (elem,statementsParams,fields) => {
     if(!elem || typeof elem !=='object' || Array.isArray(elem)) return "";
-    const { field, operator, operand } = elem
+    let { field, operator, operand } = elem
     if (!isNonNullString(operator)) return "";
     const op = getTyppedOperand(operand, operator, field,statementsParams,fields);
     if(!isNonNullString(op)) return "";
