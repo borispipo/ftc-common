@@ -10,6 +10,7 @@ import mangoParser from "mongo-parse";
 import "./i18n";
 import session from "$session";
 import {getLoggedUserCode} from "$cauth";
+import { escapeSQLQuotes } from "../extend.prototypes";
 
 export const filterTextTypes = ['text','number','email','search','tel','url','password',"id","idfield",'piecefield','piece'];
 
@@ -515,7 +516,7 @@ const operatorsMap = {
         statementParamsCounterRef.current++
         field = getField(field,fields);
         const _field = field+statementParamsCounterRef.current;
-        statementsParams[_field] = operand;
+        statementsParams[_field] = oprand;
         return ":{0}".sprintf(_field);
     }
     if (typeof operand === 'string') { // wrap strings in double quots
@@ -523,7 +524,7 @@ const operatorsMap = {
       if(hasStamentsParms){
         return getStatement();
       }
-      return "'" +(operand) + "'"
+      return escapeSQLQuotes(operand)
     } else if (operator === 'IN' || operator =='NOT IN') { // wrap IN arguments in brackers
         operand = Object.toArray(operand);
         if(hasStamentsParms){
@@ -531,12 +532,10 @@ const operatorsMap = {
         }
         const oprand = [];
         operand.map(op => {
-            const vv = getTyppedOperand(op, null, null,statementsParams,fields);
-            if(isNonNullString(vv)){
-                oprand.push(vv);
-            }
+            oprand.push(escapeSQLQuotes(op));
         });
-        return '(' + oprand.join(', ') + ')';
+        const opRand = oprand.join(', ');
+        return isNonNullString(opRand)? ('(' + opRand + ')') : "";
     } else if (!isNonNullString(field) && Array.isArray(operand)) { // AND or OR elements
       // recursively call 'buildWhereElement' for nested elements
       // join each element with operator AND or OR

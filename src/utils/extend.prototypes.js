@@ -1,10 +1,8 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+import isDateObj from "./isDateObj";
 
-const isString = function(str){
-  return typeof str === "string";
-}
 export const ltrim = function(current,str) {
     if(typeof current !=="string") return "";
     if (!(str) || typeof str !=="string") {
@@ -222,3 +220,67 @@ String.prototype.sprintf = function(){
   return sprintf(arg);
 }
 String.sprintf = sprintf;
+
+const isNonNullString = x=>x && typeof x=='string';
+/*** escape les quôtes sur la chaine de caractère string
+ * @param {string} la chaine de caractère à ecaper
+ * @param {string} toEscape la chaine à eschaper
+ * @param {string} replacement la chaine de remplacement
+ */
+ export const escapeQuote = (string,toEscape,replacement)=>{
+  if(!isNonNullString(string)) return "";
+  if(!isNonNullString(toEscape) || !isNonNullString(replacement)){
+      return string;
+  }
+  return string.replaceAll(toEscape,replacement)
+}
+
+/*** escape les signle quotes sur une chaine de caractère */
+export const escapeSingleQuotes = (string,withSingleQuotesClaues = true)=>{
+  if(!isNonNullString(string)) return "";
+  string = string.trim().ltrim("'").rtrim("'").trim();
+  const str = string.replace(/'/g, "\\'");
+  return withSingleQuotesClaues ? ("'"+str+"'") : str;
+}
+if(!string.prototype.escapeSingleQuotes){
+  string.prototype.escapeSingleQuotes = function(withSingleQuotesClaues = true){
+      return escapeSingleQuotes(this.toString(),withSingleQuotesClaues);
+  }
+}
+
+export const escapeDoubleQuotes = (string,withDoubleQuotesClaues = true)=>{
+  if(!isNonNullString(string)) return "";
+  string = string.ltrim('"').rtrim('"').trim();
+  const str = string.replace(/"/g, '\\"');
+  return withDoubleQuotesClaues ? ('"'+str+'"') : str;
+}
+
+if(!string.prototype.escapeDoubleQuotes){
+  string.prototype.escapeDoubleQuotes = function(withDoubleQuotesClaues = true){
+      return escapeDoubleQuotes(this.toString(),withDoubleQuotesClaues);
+  }
+}
+
+/*** escape les quôtes SQL */
+export const escapeSQLQuotes = (object)=>{
+  if(typeof object =='string'){
+      object = object.trim().ltrim("'").rtrim("'");
+      return "'"+object.replace(/'/g, "''")+"'";
+  }
+  if(typeof object =='boolean'){
+     return object ? 1 : 0;
+  }
+  if(typeof object =='number') return object;
+  if(isDateObj(object)){
+     return "'"+new Date(object).toISOString().split('T').join(' ').split('Z').join('')+"'";
+  }
+  return "'"+object.toString()+"'";
+}
+export const toSQLString = escapeSQLQuotes;
+
+
+if(!string.prototype.escapeSingleQuotes){
+  string.prototype.escapeSingleQuotes = function(){
+      return escapeSingleQuotes(this.toString());
+  }
+}
