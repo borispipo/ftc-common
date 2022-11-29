@@ -242,8 +242,8 @@ export const escapeSingleQuotes = (string,withSingleQuotesClaues = true)=>{
   const str = string.replace(/'/g, "\\'");
   return withSingleQuotesClaues ? ("'"+str+"'") : str;
 }
-if(!string.prototype.escapeSingleQuotes){
-  string.prototype.escapeSingleQuotes = function(withSingleQuotesClaues = true){
+if(!String.prototype.escapeSingleQuotes){
+  String.prototype.escapeSingleQuotes = function(withSingleQuotesClaues = true){
       return escapeSingleQuotes(this.toString(),withSingleQuotesClaues);
   }
 }
@@ -255,8 +255,8 @@ export const escapeDoubleQuotes = (string,withDoubleQuotesClaues = true)=>{
   return withDoubleQuotesClaues ? ('"'+str+'"') : str;
 }
 
-if(!string.prototype.escapeDoubleQuotes){
-  string.prototype.escapeDoubleQuotes = function(withDoubleQuotesClaues = true){
+if(!String.prototype.escapeDoubleQuotes){
+  String.prototype.escapeDoubleQuotes = function(withDoubleQuotesClaues = true){
       return escapeDoubleQuotes(this.toString(),withDoubleQuotesClaues);
   }
 }
@@ -279,8 +279,8 @@ export const escapeSQLQuotes = (object)=>{
 export const toSQLString = escapeSQLQuotes;
 
 
-if(!string.prototype.escapeSingleQuotes){
-  string.prototype.escapeSingleQuotes = function(){
+if(!String.prototype.escapeSingleQuotes){
+  String.prototype.escapeSingleQuotes = function(){
       return escapeSingleQuotes(this.toString());
   }
 }
