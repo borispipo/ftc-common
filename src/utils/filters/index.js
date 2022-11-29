@@ -500,6 +500,7 @@ const operatorsMap = {
     $regex : "LIKE"
   }
 
+  const statementParamsCounterRef = {current:0};
  /**
  *
  * @param {*} operand
@@ -511,16 +512,10 @@ const operatorsMap = {
   export const getTyppedOperand = (operand, operator, field,statementsParams,fields) => {
     const hasStamentsParms = isObj(statementsParams);
     const getStatement = ()=>{
-        if(typeof statementsParams.counter =='number'){
-            statementsParams.counter++;
-        } else {
-            statementsParams.counter = 0;
-        }
+        statementParamsCounterRef.current++
         field = getField(field,fields);
-        statementsParams.fields = defaultObj(statementsParams.fields);
-        
-        const _field = field+"_"+statementsParams.counter;
-        statementsParams.fields[_field] = operand;
+        const _field = field+"_"+statementParamsCounterRef.current;
+        statementsParams[_field] = operand;
         return ":{0}".sprintf(_field);
     }
     if (typeof operand === 'string') { // wrap strings in double quots
@@ -587,13 +582,14 @@ const operatorsMap = {
   /**** construit une requête Where à partir des filtres préparé dans le tableau whereClausePrepared
    * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
    * @parm {array} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction convertToSQL
-     @param {bool} withStatementsParams si le contenu de la requête utilisera les query builder params
+     @param {bool || object} withStatementsParams si le contenu de la requête utilisera les query builder params
      @param {object} fields les alias aux colonnes
      @return {string}, la requête Where correspondante
   */
   export const buildWhere = (whereClausePrepared,withStatementsParams,fields)=>{
     if(!Array.isArray(whereClausePrepared)) return null;
-    const statementsParams = withStatementsParams ? {} : null;
+    statementParamsCounterRef.current = -1;
+    const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
        const bb = buildWhereElement(curr,statementsParams,fields);
