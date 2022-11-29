@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /**** utilitaire de filtre de requêtes, ensemble de fonctions utiles pour l'implémentationd 'un composant Filter */
-import {isNonNullString,defaultStr,defaultNumber,defaultObj,defaultArray,isObjOrArray,isObj} from "$cutils";
+import {isNonNullString,defaultStr,defaultNumber,extendObj,defaultObj,defaultArray,isObjOrArray,isObj} from "$cutils";
 import i18n from "$i18n";
 import DateLib from "$lib/date";
 import mangoParser from "mongo-parse";
