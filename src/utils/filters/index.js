@@ -514,7 +514,7 @@ const operatorsMap = {
     const getStatement = ()=>{
         statementParamsCounterRef.current++
         field = getField(field,fields);
-        const _field = field+"_"+statementParamsCounterRef.current;
+        const _field = field+statementParamsCounterRef.current;
         statementsParams[_field] = operand;
         return ":{0}".sprintf(_field);
     }
