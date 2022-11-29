@@ -182,7 +182,7 @@ export const matchPouchDBOperator = (operator,value)=>{
 let Operators = {
     NONE: null,
     MATCH: {
-        name: i18n.lang(filter_regex_contains).toLowerCase(),
+        name: i18n.lang("filter_regex_contains").toLowerCase(),
         func: function(value, term) {
             if(value) {
                 return value.toString().search(utils.isRegExp(term) ? term : new RegExp(term, 'i')) >= 0;
