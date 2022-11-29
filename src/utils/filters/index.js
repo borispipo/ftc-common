@@ -500,7 +500,7 @@ const operatorsMap = {
     $regex : "LIKE"
   }
 
-  /**
+ /**
  *
  * @param {*} operand
  * @param {*} operator
@@ -508,7 +508,7 @@ const operatorsMap = {
  * @param {object} statementsParams, les paramètres des statements au cas où on utilisera des requêtes paramétrées
  * Return the operand in right format
  */
-export const getTyppedOperand = (operand, operator, field,statementsParams) => {
+  export const getTyppedOperand = (operand, operator, field,statementsParams,fields) => {
     const hasStamentsParms = isObj(statementsParams);
     const getStatement = ()=>{
         if(typeof statementsParams.counter =='number'){
@@ -516,11 +516,12 @@ export const getTyppedOperand = (operand, operator, field,statementsParams) => {
         } else {
             statementsParams.counter = 0;
         }
+        field = getField(field,fields);
         statementsParams.fields = defaultObj(statementsParams.fields);
+        
         const _field = field+"_"+statementsParams.counter;
         statementsParams.fields[_field] = operand;
         return ":{0}".sprintf(_field);
-        return {field : _field,counter:statementsParams.counter}
     }
     if (typeof operand === 'string') { // wrap strings in double quots
       if(!isNonNullString(field)) return null;
@@ -535,7 +536,7 @@ export const getTyppedOperand = (operand, operator, field,statementsParams) => {
         }
         const oprand = [];
         operand.map(op => {
-            const vv = getTyppedOperand(op, null, null,statementsParams);
+            const vv = getTyppedOperand(op, null, null,statementsParams,fields);
             if(isNonNullString(vv)){
                 oprand.push(vv);
             }
@@ -545,7 +546,7 @@ export const getTyppedOperand = (operand, operator, field,statementsParams) => {
       // recursively call 'buildWhereElement' for nested elements
       // join each element with operator AND or OR
       return operand.reduce((prev, curr) => {
-        const bb = buildWhereElement(curr,statementsParams);
+        const bb = buildWhereElement(curr,statementsParams,fields);
         if(bb !== null){
             prev.push(bb);
         }
@@ -556,34 +557,46 @@ export const getTyppedOperand = (operand, operator, field,statementsParams) => {
     }
     return null;
 }
-  
+  const getField = (field,fields) =>{
+     field = defaultStr(field).trim();
+     if(!(field) || !isObj(fields)) return field;
+     const f = fields[field];
+     if(isNonNullString(f)) return f.trim();
+     if(isObj(f)){
+        return defaultStr(f.dabaseColumnName,f.dbColumnName,f.name,field).trim();
+     }
+     return field;
+  }
   /**
    *
    * @param {*} elem
    * @param {object} statementsParams en cas d'utilisation des requêtes sql avec les statement parameters
+   * @param {object} les champs, le mappage des colonnes en bd, à utiliser pour effectuer la requête
    * Return element of WHERE clause
    */
-  export const buildWhereElement = (elem,statementsParams) => {
+  export const buildWhereElement = (elem,statementsParams,fields) => {
+    if(!elem || typeof elem !=='object' || Array.isArray(elem)) return "";
     const { field, operator, operand } = elem
-    if (!isNonNullString(field)) { // nested WHERE element
-      return '(' + getTyppedOperand(operand, operator, field,statementsParams) + ')'
-    } else { // simple WHERE element
-      return field + ' ' + operator + ' ' + getTyppedOperand(operand, operator, field,statementsParams)
-    }
+    if (!isNonNullString(operator)) return "";
+    const op = getTyppedOperand(operand, operator, field,statementsParams,fields);
+    if(!isNonNullString(op)) return "";
+    field = getField(field,fields);
+    return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
   }
   
   /**** construit une requête Where à partir des filtres préparé dans le tableau whereClausePrepared
    * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
    * @parm {array} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction convertToSQL
      @param {bool} withStatementsParams si le contenu de la requête utilisera les query builder params
+     @param {object} fields les alias aux colonnes
      @return {string}, la requête Where correspondante
   */
-  export const buildWhere = (whereClausePrepared,withStatementsParams)=>{
+  export const buildWhere = (whereClausePrepared,withStatementsParams,fields)=>{
     if(!Array.isArray(whereClausePrepared)) return null;
     const statementsParams = withStatementsParams ? {} : null;
-    // build WHERE string clause by adding each element of array to it, separated with AND
+    // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
-       const bb = buildWhereElement(curr,statementsParams);
+       const bb = buildWhereElement(curr,statementsParams,fields);
        if(bb !== null){
             prev.push(bb);
        }
