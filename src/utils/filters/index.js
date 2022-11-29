@@ -643,3 +643,29 @@ export const periodActions = {
     get $month (){return i18n.lang("filter_month");},
     get $period (){return i18n.lang("filter_period");}
 }
+
+/**** retourne les options à utiliser pour effectuer une requête fetch */
+export const getFetchOptions = (opts,options)=>{
+    if(opts && typeof opts =="string"){
+        opts = {path:opts};
+    }
+    opts = extendObj(true,{},opts,options);
+    opts.queryParams = Object.clone(opts.queryParams);
+    if(opts.selector || opts.queryParams.where){
+        const fOptions = extendObj(opts.queryParams.fetchOptions,{
+            where : extendObj(true,true,opts.selector,opts.queryParams.where),
+            fields : defaultVal(opts.queryParams.fields,opts.fields),
+        });
+        if(isObj(opts.sort) && isNonNullString(opts.sort.column)){
+            fOptions.sort = opts.sort;
+        }
+        if(!fOptions.limit && typeof opts.limit =='number' && opts.limit){
+            fOptions.limit = opts.limit;
+        } 
+        if(!fOptions.page && typeof opts.page =='number' && opts.page){
+            fOptions.page = opts.page;
+        }
+        opts.queryParams = extendObj({},opts.queryParams,fOptions);
+    }
+    return opts;
+}
