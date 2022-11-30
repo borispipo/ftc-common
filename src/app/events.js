@@ -39,6 +39,10 @@ export const TOGGLE_MINIMIZE_DRAWER = "TOGGLE_MINIMIZE_DRAWER";
 
 export const REMOVE_DATABASE = "REMOVE_DATABASE";
 
+export const SCREEN_FOCUS = "SCREEN_FOCUS";
+
+export const SCREEN_BLUR = "SCREEN_BLUR";
+
 export default {
     REMOVE_DATABASE,
     STATE_CHANGE,
