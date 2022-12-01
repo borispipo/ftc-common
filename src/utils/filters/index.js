@@ -652,7 +652,9 @@ export const periodActions = {
     get $period (){return i18n.lang("filter_period");}
 }
 
-/**** retourne les options à utiliser pour effectuer une requête fetch */
+/**** retourne les options à utiliser pour effectuer une requête fetch
+ * 
+ */
 export const getFetchOptions = (opts,options)=>{
     if(opts && typeof opts =="string"){
         opts = {path:opts};
