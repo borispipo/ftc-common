@@ -18,7 +18,15 @@ export const setConfig = configValue=> {
         isInitializedRef.current = true;
     }
 }
-
+const countryCodeSessionKey = "countryCodeSessionKey";
+export const getCountryCode = ()=>{
+    const s = session.get(countryCodeSessionKey);
+    return s && typeof s =='string'? s.trim() : "";
+}
+export const setCountryCode = (code)=>{
+    session.get(countryCodeSessionKey,code && typeof code=='string'&& code || '');
+    return code;
+}
 export const getConfigValue = function(){
     const conf = getConfig();
     const args = Array.prototype.slice.call(arguments,0);
@@ -146,6 +154,15 @@ const config = {
     },
     get isInitialized(){
         return isInitialized();
+    },
+    get countryCode(){
+        return getCountryCode();
+    },
+    set countryCode(code){
+        return setCountryCode(code);
+    },
+    get setCountryCode(){
+        return setCountryCode;
     }
 }
 
