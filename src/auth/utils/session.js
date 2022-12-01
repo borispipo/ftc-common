@@ -7,7 +7,6 @@ import {isObj,extendObj,isNonNullString,defaultStr,defaultObj} from "$cutils";
 import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
-import theme,{defaultDarkTheme,defaultLightTheme} from "$theme";
 
 export const USER_SESSION_KEY = "user-session";
 
@@ -96,7 +95,6 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
 
 /*** déconnecte l'utilisateur actuel */
 export const logout = () =>{
-    updateTheme(theme.dark?defaultDarkTheme:defaultLightTheme);
     $session.set(USER_SESSION_KEY,"");
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
     return true;

@@ -10,9 +10,12 @@ import session from "$session";
 const configRef = {current:null};
 
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
+
+const isInitializedRef = {current:false};
 export const setConfig = configValue=> {
     if(typeof configValue =="object" && configValue && !Array.isArray(configValue)){
         configRef.current = configValue;
+        isInitializedRef.current = true;
     }
 }
 
@@ -133,6 +136,16 @@ const config = {
     },
     get setCurrency(){
         return setCurrency;
+    },
+    get init (){
+        return getInit();
+    },
+    /*** si le fichier de configuration a déjà été initialié */
+    get initialized (){
+        return isInitialized();
+    },
+    get isInitialized(){
+        return isInitialized();
     }
 }
 
@@ -153,6 +166,12 @@ export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
 export const getCurrency = ()=> Object.assign({},session.get("appConfigCurrency"));
+export const getInit = ()=>{
+    return getConfigValue("init");
+}
+export const isInitialized = ()=>{
+    return isInitializedRef.current;;
+}
 export const setCurrency = (currency)=>{
     return session.set("appConfigCurrency",Object.assign({},currency));
 }

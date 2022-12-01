@@ -43,6 +43,8 @@ export const SCREEN_FOCUS = "SCREEN_FOCUS";
 
 export const SCREEN_BLUR = "SCREEN_BLUR";
 
+export const INITIALIZED = "INITIALIZED";
+
 export default {
     REMOVE_DATABASE,
     STATE_CHANGE,
@@ -61,5 +63,8 @@ export default {
     TOGGLE_MINIMIZE_DRAWER,
     NAVIGATION_SESSION_STATE_CHANGED,
     BACK_BUTTON,
+    SCREEN_FOCUS,
+    INITIALIZED,
+    SCREEN_BLUR,
     ...appEvents,
 }
