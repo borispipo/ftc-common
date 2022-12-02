@@ -5,7 +5,7 @@
 
 import useSWR from 'swr';
 import { getFetcherOptions } from '$capi';
-import {defaultObj} from "$cutils";
+import {defaultObj ,extendObj} from "$cutils";
 
 /****
  * Cette fonction est une abstraction au hook useSWR de @https://swr.vercel.app/docs/with-nextjs
@@ -26,7 +26,9 @@ import {defaultObj} from "$cutils";
  */
 export default function useSwr (path,opts) {
     const {fetcher,url,...options} = getFetcherOptions(path,opts);
-    const { data, error,...rest } = useSWR(url, fetcher,options)
+    const { data, error,...rest } = useSWR(url,(url)=>{
+      return fetcher(url,options);
+    },options)
     return {
       ...defaultObj(rest),
       data,
