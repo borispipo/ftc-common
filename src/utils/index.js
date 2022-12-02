@@ -15,6 +15,7 @@ import base64 from "$base64";
 export {sprintf};
 export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
+export {default as StringBuilder} from "./StringBuilder";
 
 export const uniqid = _uniqid;
 export const parseJSON = pJSON;
