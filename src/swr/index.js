@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 
-import useSWR from 'swr';
+import useSWR,{mutate} from 'swr';
 import { getFetcherOptions } from '$capi';
 import {defaultObj ,extendObj} from "$cutils";
 
@@ -38,3 +38,7 @@ export default function useSwr (path,opts) {
       error,
     }
   }
+
+  export * from "swr";
+
+  export {mutate as refresh};
