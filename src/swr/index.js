@@ -40,5 +40,3 @@ export default function useSwr (path,opts) {
   }
 
   export * from "swr";
-
-  export {mutate as refresh};
