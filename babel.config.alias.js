@@ -89,6 +89,8 @@ module.exports = function(opts){
         "$ftc" : "@fto-consult",
         "$cloginComponent":path.resolve(common,"auth","LoginComponent"),
         "$cgetLoginProps" : path.resolve(common,"auth","getLoginProps"),
+        $swr : path.resolve(common,"swr"),
+        $useSWR : path.resolve(common,"swr"),
     }
     if(!r.$api){
         r.$api = r.$capi;

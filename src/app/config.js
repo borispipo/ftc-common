@@ -9,6 +9,8 @@ import session from "$session";
 
 const configRef = {current:null};
 
+const sessionDatatKey = "app-config-session-data-key";
+
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
 
 const isInitializedRef = {current:false};
@@ -22,6 +24,22 @@ const countryCodeSessionKey = "countryCodeSessionKey";
 export const getCountryCode = ()=>{
     const s = session.get(countryCodeSessionKey);
     return s && typeof s =='string'? s.trim() : "";
+}
+export const getSessionData = (key)=>{
+    const d = session.get(sessionDatatKey);
+    const sData = d && typeof d =='object' && !Array.isArray(d) ? d : {};
+    if(isNonNullString(key)) return sData[key];
+    return sData;
+}
+export const setSessionData = (key,value)=>{
+    let data = getSessionData();
+    if(key && typeof key =='object' && !Array.isArray(key)){
+        data = {...data,...key};
+    } else if(isNonNullString(key)){
+        data [key] = value;
+    }
+    session.set(sessionDatatKey,data);
+    return data;
 }
 export const setCountryCode = (code)=>{
     session.get(countryCodeSessionKey,code && typeof code=='string'&& code || '');
@@ -163,6 +181,12 @@ const config = {
     },
     get setCountryCode(){
         return setCountryCode;
+    },
+    get getSessionData(){
+        return getSessionData;
+    },
+    get setSessionData(){
+        return setSessionData;
     }
 }
 

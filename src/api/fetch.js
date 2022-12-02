@@ -6,7 +6,7 @@
  */
  import originalFetch from "unfetch";
  import { buildAPIPath} from "./utils";
- import { isObj,defaultNumber,defaultObj,extendObj,defaultStr} from "$cutils";
+ import { isObj,defaultNumber,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
  import {NOT_SIGNED_IN,SUCCESS} from "./status";
  import notify from "$active-platform/notify";
  import {getToken} from "$cauth/utils";
@@ -156,13 +156,16 @@ export const handleFetchError = (opts)=>{
   throw(rest);
 }
  
- /*** le mutator permet de modifier les options de la recherche dynamiquement */
+ /*** le mutator permet de modifier les options de la recherche dynamiquement 
+  * ajout de la props fetchOptionsMutator : permettant d'être en mesure de muter les fetchOptions de la requête envoie l'envoie vers le serveur
+  * si la fonction fetchOptionsMutator retourne un objet contenant la props url valide alors c'est cet url qui sera utilisée pour effectuer la requête fetch    
+ */
  export function getFetcherOptions (opts,options){
      if(opts && typeof opts =="string"){
          opts = {path:opts};
       }
       opts = extendObj(true,{},opts,options);
-      let {path,url,fetcher,auth,isAuth,queryParams,mutator,checkOnline} = opts;
+      let {path,url,fetcher,auth,isAuth,queryParams,mutator,fetchOptionsMutator,checkOnline} = opts;
       isAuth = isAuth || auth;
       url = defaultStr(url,path);
       queryParams = Object.assign({},queryParams);
@@ -174,6 +177,12 @@ export const handleFetchError = (opts)=>{
          });
       }
       fetcher = (url,opts2)=>{
+         if(typeof fetchOptionsMutator =='function'){
+            const r = fetchOptionsMutator({...opts2,url,path:url});
+            if(isObj(r) && isValidURL(r.url)){
+               url = r.url;
+            }
+         } 
          const delay = defaultNumber(opts.delay,opts.timeout);
          const p = isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline() ? 
                APP.checkOnline().then(()=>{
@@ -207,7 +216,6 @@ export const handleFetchError = (opts)=>{
       } else if(!opts.body){
          opts.headers["Content-Type"] = "text/plain";
       }
-         
       delete opts.authorization;
       delete opts.Authorization;
       return opts;
