@@ -6,10 +6,12 @@ import "$cutils/extend.prototypes";
 import isNonNullString from "$cutils/isNonNullString";
 import device from "./device";
 import session from "$session";
+import { isValidURL } from "$cutils/uri";
 
 const configRef = {current:null};
 
 const sessionDatatKey = "app-config-session-data-key";
+const sessionAPIHostKey = "app-config-session-api-host";
 
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
 
@@ -60,7 +62,17 @@ export const getConfigValue = function(){
     }
     return hasKey ? undefined : conf;
 }
-
+/** récupère le lien api host définie dans les configurations de l'application */
+export const getAPIHost = ()=>{
+    const host = session.get(sessionAPIHostKey);
+    return isValidURL(host)? host : null; 
+}
+///Spécifie le lien apihost
+export const setAPIHost = (newAPIHost)=>{
+    newAPIHost = isValidURL(newAPIHost)? newAPIHost : "";
+    session.set(sessionAPIHostKey,newAPIHost);
+    return true;
+}
 const config = {
     get current(){
         return getConfig();
@@ -187,6 +199,13 @@ const config = {
     },
     get setSessionData(){
         return setSessionData;
+    },
+    /*** retourne l'api host */
+    get API_HOST (){ 
+        return getAPIHost();
+    },
+    set API_HOST (newAPIHost){
+        return setAPIHost(newAPIHost);
     }
 }
 

@@ -4,6 +4,7 @@
 /**@namespace api/host/utils */
 import defaultStr from "$cutils/defaultStr";
 import "$cutils/extend.prototypes";
+import appConfig from "$capp/config";
 
 let localhost = undefined;
 
@@ -24,7 +25,7 @@ export const getLocalHost =  () =>{
  * @return {string} l'url racine pour les requêtes vers l'api
  */
 export const getBaseHost = x=>{
-    return defaultStr(process.env.API_HOST,getLocalHost());
+    return defaultStr(process.env.API_HOST,appConfig.API_HOST,getLocalHost());
 }
 
 /****
