@@ -73,6 +73,14 @@ export const setAPIHost = (newAPIHost)=>{
     session.set(sessionAPIHostKey,newAPIHost);
     return true;
 }
+export const getSWR = ()=>{
+    const swr = getSessionData("swr");
+    return swr && typeof swr =='object' && !Array.isArray(swr)? swr : {};
+}
+export const setSWR = (swr)=>{
+    swr = swr && typeof swr =='object' && !Array.isArray(swr)? swr : {};
+    return setSessionData('swr',swr);
+}
 const config = {
     get current(){
         return getConfig();
@@ -206,6 +214,12 @@ const config = {
     },
     set API_HOST (newAPIHost){
         return setAPIHost(newAPIHost);
+    },
+    get swr (){
+        return getSWR();
+    },
+    set swr(value){
+        return setSWR(value);
     }
 }
 

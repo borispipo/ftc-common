@@ -3,9 +3,11 @@
 // license that can be found in the LICENSE file.
 
 
-import useSWR,{mutate} from 'swr';
-import { getFetcherOptions } from '$capi';
-import {defaultObj ,extendObj,isObj} from "$cutils";
+import useSWR from 'swr';
+import { getFetcherOptions as apiGetFetcherOptions } from '$capi';
+import {defaultStr ,extendObj,isObj} from "$cutils";
+import appConfig from "$capp/config";
+import useNativeSWRInfinite from 'swr/infinite'
 
 /****
  * Cette fonction est une abstraction au hook useSWR de https://swr.vercel.app
@@ -26,18 +28,34 @@ import {defaultObj ,extendObj,isObj} from "$cutils";
  * 
  */
 export default function useSwr (path,opts) {
-    const {fetcher,url,swrOptions,...options} = getFetcherOptions(path,opts);
-    const { data, error,...rest } = useSWR(url,(url)=>{
-      return fetcher(url,options);
-    },isObj(swrOptions) && Object.size(swrOptions,true) && swrOptions ||options);
-    return {
-      ...defaultObj(rest),
-      data,
-      isLoading: !error && !data,
-      isError: error,
-      hasError : error,
-      error,
-    }
+    return _useSWR(path,opts,useSWR)
+}
+export const useSWRInfinite = (path,opts)=>{
+  return _useSWR(path,opts,useNativeSWRInfinite);
+}
+export const useInfinite = useSWRInfinite;
+
+const _useSWR = (path,opts,method)=>{
+  const {fetcher,url,swrOptions,...options} = getFetcherOptions(path,opts);
+  const { data, error,mutate,...rest } = method(url,(url)=>{
+    return fetcher(url,options);
+  },swrOptions);
+  return {
+    ...rest,
+    mutate,
+    refresh : (key, data, options)=>{
+       return mutate(defaultStr(key,path),data,options);
+    },
+    data,
+    isLoading: !error && !data,
+    isError: error,
+    hasError : error,
+    error,
+  }
+}
+  export const getFetcherOptions = (path,opts)=>{
+    const {swrOptions,...rest} = apiGetFetcherOptions(path,opts);
+    return {...rest,swrOptions :extendObj(true,swrOptions,appConfig.swr)};
   }
 
   export * from "swr";
