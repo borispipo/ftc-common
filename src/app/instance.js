@@ -113,8 +113,8 @@ if(!APP_INSTANCE.EVENTS || typeof APP_INSTANCE.EVENTS !=='object'){
                     } else {
                         APP_INSTANCE.trigger(EVENTS.GO_OFFLINE,newOnlineState);
                     }
-                    if(appConfig.getConfigValue("notifyOnOnlineStateChange") !== false){
-                        notify[isOn?'warning':'success'](i18n.lang(isOn?"network_connection_restaured":"network_connection_lost"))
+                    if(appConfig.initialized && appConfig.getConfigValue("notifyOnOnlineStateChange") !== false){
+                        notify[!isOn?'warning':'success'](i18n.lang(isOn?"network_connection_restaured":"network_connection_lost"))
                     }
                 }
             }
