@@ -220,6 +220,9 @@ const config = {
     },
     set swr(value){
         return setSWR(value);
+    },
+    get getConfigValue(){
+        return getConfigValue;
     }
 }
 

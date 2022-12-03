@@ -19,6 +19,7 @@ import Platform from "$cplatform";
 import EVENTS from "./events";
 import { observable,addObserver } from "$clib/observable";
 import NetInfo from '$cutils/NetInfo';
+import notify from "$cnotify";
 
 
 let APP_INSTANCE = {
@@ -106,10 +107,14 @@ if(!APP_INSTANCE.EVENTS || typeof APP_INSTANCE.EVENTS !=='object'){
                 const prevState = APP_INSTANCE.getOnlineState();
                 APP_INSTANCE.___onlineNetworkState = newOnlineState;
                 if(newOnlineState &&  prevState.isConnected !== newOnlineState.isConnected){
-                    if(APP_INSTANCE.isOnline()){
+                    const isOn = APP_INSTANCE.isOnline();
+                    if(isOn){
                         APP_INSTANCE.trigger(EVENTS.GO_ONLINE,newOnlineState)
                     } else {
                         APP_INSTANCE.trigger(EVENTS.GO_OFFLINE,newOnlineState);
+                    }
+                    if(appConfig.getConfigValue("notifyOnOnlineStateChange") !== false){
+                        notify[isOn?'warning':'success'](i18n.lang(isOn?"network_connection_restaured":"network_connection_lost"))
                     }
                 }
             }

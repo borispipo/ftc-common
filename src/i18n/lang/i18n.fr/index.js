@@ -32,6 +32,8 @@ export const i18nFrLang = {
         coutries : 'Pays',
         dashboard : 'Dashboard',
         no_filter : "Aucun Filtre",
+        network_connection_restaured : "Votre connexion internet a été restaurée, vous êtes maintenant connecté!!",
+        network_connection_lost : "Vous avez perdue de connexion internet, vous être à présent hors ligne!!",
         please_check_your_network : "Ouff!! des soucis internet? Votre connexion internet semble être instable. Veuillez s'il vous plait vérifier vos paramètres internet avant d'essayer d'accéder à nouveau à la ressource demandée.",
         server_not_reachable : "Impossible de se connecter au serveur/ le client ne peut pas recevoir la réponse dans le délai imparti.. Assurez vous, svp auprès de votre administrateur si le serveur distant est démarré et accessible",
         api_timeout : "le temps de réponse expiré!!le serveur où la ressource demandée peut ne pas être disponible",

@@ -32,6 +32,8 @@ export const i18nEnLang = {
         disabled : 'Disabled',
         msg_box : 'Message Box',
         
+        network_connection_restaured : "Your internet connection has been restored, you are now online!!",
+        network_connection_lost : "You have lost your internet connection, you are now offline!!",
         dashboard : 'Dashboard',
         country : 'Country',
         countries : 'Countries',

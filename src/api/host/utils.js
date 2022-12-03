@@ -5,6 +5,7 @@
 import defaultStr from "$cutils/defaultStr";
 import "$cutils/extend.prototypes";
 import appConfig from "$capp/config";
+import {isValidURL} from "$cutils/uri";
 
 let localhost = undefined;
 
@@ -25,7 +26,7 @@ export const getLocalHost =  () =>{
  * @return {string} l'url racine pour les requêtes vers l'api
  */
 export const getBaseHost = x=>{
-    return defaultStr(process.env.API_HOST,appConfig.API_HOST,getLocalHost());
+    return isValidURL(appConfig.API_HOST)? appConfig.API_HOST : isValidURL(process.env.API_HOST)? process.env.API_HOST : defaultStr(getLocalHost())
 }
 
 /****

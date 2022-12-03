@@ -1,0 +1,10 @@
+// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+///les paramètres de configuration à exploiter : 
+{
+    notifyOnOnlineStateChange : {boolean} ///si différent de false, lorsque l'application va en offline où online, un messsage de notification est envoyé à l'utilisateur
+    includeCredentialsOnApiFetch : {boolean}, ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
+    API_HOST : {string|validURL} ///l'adresse url par défaut es apiFetch
+}
