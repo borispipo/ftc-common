@@ -17,8 +17,6 @@ const PouchDB = pouch.PouchDB;
 
 export * from "./getDB";
 
-export {default as useSWR} from "./useSWR";
-
 export {
     getDB,
     CONSTANTS,
