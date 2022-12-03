@@ -533,7 +533,13 @@ export const isValidImageSrc = src => {
     }
     return isDataURL(src) || isValidUrl(src) || src.startsWith("data:image/");
 }
-
+export const isBlob = (blob) =>{
+    if(!blob) return false;
+    try {
+        if(blob instanceof Blob) return true;
+    } catch{}
+    return false;
+}
 export const isBase64 = function isBase64(str, options) {
     options = defaultObj(options);
     options.urlSafe = defaultBool(options.urlSafe,false);
