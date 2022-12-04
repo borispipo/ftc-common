@@ -4,12 +4,12 @@
 
 import {observable,isObservable,addObserver } from "../observable";
 import i18n from "$ci18n";
-import {isNonNullString,isNullOrEmpty,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
+import {isNonNullString,isNullOrEmpty,extendObj,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
 import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
-//import getData from "$pouchdb/getData";
 import {isValidDate} from "$common/lib/date";
+import appConfig from "$app/config";
 
 export * from "./utils";
 
@@ -101,6 +101,9 @@ export const getValidatorRules = ()=>{
         },
         minLength: {
             validator: function(value, param){
+                if(value === null){
+                    value = "";
+                }
                 if(typeof value === 'object') {return false;}
                 if(value == undefined) value = "";
                 value = value.toString();
@@ -110,6 +113,9 @@ export const getValidatorRules = ()=>{
         },
         maxLength: {
             validator: function(value, param){
+                if(value === null){
+                    value = "";
+                }
                 if(typeof value === 'object') {return false;}
                 if(value == undefined) value = "";
                 value = value.toString();
@@ -501,6 +507,7 @@ export const getValidatorRules = ()=>{
         }
     };
     _validRules.equalsTo = _validRules.equalTo;
+    extendObj(_validRules,appConfig.get("validatorRules"));
     return _validRules;
 }
 const APP_Validator = {
