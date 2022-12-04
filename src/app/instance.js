@@ -116,7 +116,7 @@ if(!APP_INSTANCE.EVENTS || typeof APP_INSTANCE.EVENTS !=='object'){
                         APP_INSTANCE.trigger(EVENTS.GO_OFFLINE,newOnlineState);
                         appWasOfflineRef.current = true;
                     }
-                    if(appWasOfflineRef.current && appConfig.initialized && appConfig.getConfigValue("notifyOnOnlineStateChange") !== false){
+                    if(appWasOfflineRef.current && appConfig.initialized && appConfig.getConfigValue("notifyOnOnlineStateChange")){
                         notify[!isOn?'warning':'success'](i18n.lang(isOn?"network_connection_restaured":"network_connection_lost"))
                     }
                 }
