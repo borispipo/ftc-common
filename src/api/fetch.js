@@ -126,7 +126,7 @@
          if(response.success){
             return resolve(a)
          }
-         return handleFetchError({isAuth,...a,redirectWhenNoSignin}).catch(reject);
+         return handleFetchError({isAuth,...a,showError,handleError,redirectWhenNoSignin}).catch(reject);
         }).catch(reject) : resolve(res);
     })
   }
