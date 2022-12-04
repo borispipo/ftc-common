@@ -55,7 +55,7 @@ const _useSWR = (path,opts,method)=>{
 }
   export const getFetcherOptions = (path,opts)=>{
     const {swrOptions,...rest} = apiGetFetcherOptions(path,opts);
-    return {...rest,swrOptions :extendObj(true,swrOptions,appConfig.swr)};
+    return {...rest,swrOptions :extendObj(true,{},appConfig.swr,swrOptions)};
   }
 
   export * from "swr";
