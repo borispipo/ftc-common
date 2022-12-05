@@ -9,7 +9,7 @@ import DateLib from "$lib/date";
 import mangoParser from "mongo-parse";
 import "./i18n";
 import session from "$session";
-import {getLoggedUserCode} from "$cauth";
+import {getLoggedUserCode} from "$cauth/utils/session";
 import { escapeSQLQuotes } from "../extend.prototypes";
 
 export const filterTextTypes = ['text','number','email','search','tel','url','password',"id","idfield",'piecefield','piece'];
