@@ -8,4 +8,5 @@
     includeCredentialsOnApiFetch : {boolean}, ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
     API_HOST : {string|validURL} ///l'adresse url par défaut es apiFetch
     validatorRules : {object} // pour étendre les règles de validation du composant $lib/validator
+    apiFetchDelay | apiFetchTimeout {number} : le délai d'attente des requêtes d'API
 }

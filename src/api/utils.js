@@ -6,6 +6,7 @@ import {getQueryParams} from "$cutils/uri";
 import {extendObj,defaultObj,defaultNumber,defaultStr,isObj,isObjOrArray} from "$cutils";
 import React from "$react";
 import i18n from "$i18n";
+import appConfig from "$capp/config";
 
 export * from "./host";
 
@@ -111,10 +112,10 @@ export const getRequestData = (req,options)=>{
 
 ///delay d'attente de connexion : peut être définie dans la variable d'environnement API_FETCH_TIMEOUT
 const t = process.env.API_FETCH_TIMEOUT && (typeof process.env.API_FETCH_TIMEOUT =='string'? parseInt(process.env.API_FETCH_TIMEOUT):process.env.API_FETCH_TIMEOUT); 
-export const FETCH_DELAY = defaultNumber(t,30000);
+export const getFetchDelay = x=> defaultNumber(appConfig.get("apiFetchDelay","apiFetchTimeout"),t,30000);
 
 export async function timeout(promise,delay,errorArgs) {
-  delay = typeof delay =='number' && delay ? delay : FETCH_DELAY;
+  delay = typeof delay =='number' && delay ? delay : getFetchDelay();
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
       errorArgs = defaultObj(errorArgs);
