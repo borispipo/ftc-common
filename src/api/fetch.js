@@ -6,7 +6,7 @@
  */
  import originalFetch from "unfetch";
  import { buildAPIPath} from "./utils";
- import { isObj,defaultNumber,defaultObj,isBlob,extendObj,isValidURL,defaultStr} from "$cutils";
+ import { isObj,defaultNumber,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
  import {NOT_SIGNED_IN,SUCCESS} from "./status";
  import notify from "$active-platform/notify";
  import {getToken} from "$cauth/utils";
@@ -110,7 +110,7 @@
        const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
        const isJson = contentType.contains("application/json");
        return json !== false && isJson ? res.json().then((d)=>{
-         d = isBlob(d) ? {blob:d} : !isObj(d)? {data:d} : d;
+         d = !isObj(d)? {data:d} : d;
          const response = {};
          if(res && typeof res !=='boolean' && typeof res !='string'){
             ['ok','status','statusText','error','headers'].map((v)=>{
