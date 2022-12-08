@@ -1016,8 +1016,14 @@ export const getFileDirectory = (filePath) => {
 */
 export const getFileName = (filePath,withoutExtension)=>{
     if(!isNonNullString(filePath)) return "";
-    filePath = filePath.replace(/^.*(\\|\/|\:)/, '');
+    const isNotPath = !filePath.contains("/") && !filePath.contains("\\");
+    if(!isNotPath){
+        filePath.rtrim("/").rtrim("\\").ltrim("/").ltrim("\\").trim();
+        if(!filePath) return filePath;
+        filePath = filePath.replace(/^.*(\\|\/|\:)/, '');
+    }
     if(withoutExtension){
+        //return filePath.replace(/(\.[^.]*)$/, '');
         let er = filePath.split(".");
         let e = er[er.length-1];
         return filePath.rtrim("."+e).rtrim(".");
