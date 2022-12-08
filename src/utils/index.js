@@ -12,6 +12,8 @@ import isDateObj from "./isDateObj";
 import sprintf  from "./sprintf";
 import base64 from "$base64";
 
+const sanitize = require("sanitize-filename");
+
 export {sprintf};
 export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
