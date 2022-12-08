@@ -112,7 +112,7 @@ export const getRequestData = (req,options)=>{
 
 ///delay d'attente de connexion : peut être définie dans la variable d'environnement API_FETCH_TIMEOUT
 const t = process.env.API_FETCH_TIMEOUT && (typeof process.env.API_FETCH_TIMEOUT =='string'? parseInt(process.env.API_FETCH_TIMEOUT):process.env.API_FETCH_TIMEOUT); 
-export const getFetchDelay = x=> defaultNumber(appConfig.get("apiFetchDelay","apiFetchTimeout"),t,30000);
+export const getFetchDelay = x=> defaultNumber(appConfig.get("apiFetchDelay","apiFetchTimeout"),t,60000);
 
 export async function timeout(promise,delay,errorArgs) {
   delay = typeof delay =='number' && delay ? delay : getFetchDelay();

@@ -5,8 +5,10 @@
 
 import useSWR from 'swr';
 import { getFetcherOptions as apiGetFetcherOptions } from '$capi';
-import {defaultStr ,extendObj,isObj} from "$cutils";
+import {defaultStr ,extendObj,isNonNullString,isObj} from "$cutils";
+import {setQueryParams} from "$utils/uri";
 import appConfig from "$capp/config";
+import React from 'react';
 import useNativeSWRInfinite from 'swr/infinite'
 
 /****
@@ -28,17 +30,10 @@ import useNativeSWRInfinite from 'swr/infinite'
  * 
  */
 export default function useSwr (path,opts) {
-    return _useSWR(path,opts,useSWR)
-}
-export const useSWRInfinite = (path,opts)=>{
-  return _useSWR(path,opts,useNativeSWRInfinite);
-}
-export const useInfinite = useSWRInfinite;
-
-const _useSWR = (path,opts,method)=>{
-  const {fetcher,url,swrOptions,...options} = getFetcherOptions(path,opts);
-  const { data, error,mutate,...rest } = method(url,(url)=>{
-    return fetcher(url,options);
+  const {swrOptions,fetcher,...options} = defaultObj(opts);
+  const { data, error,mutate,...rest } = useSWR(path,typeof fetcher =='function'?fetcher : (url)=>{
+    const {url:fUrl,fetcher:cFetcher,...rest} = getFetcherOptions(url,options);
+    return cFetcher(fUrl,rest);
   },swrOptions);
   return {
     ...rest,
@@ -53,6 +48,43 @@ const _useSWR = (path,opts,method)=>{
     error,
   }
 }
+/***
+ * @see : https://swr.vercel.app/docs/pagination#infinite-loading
+ * @param {function|string} la fonction permettant de construire l'url à effectuer la requête, où le chemin de base de l'url
+ * @param {object} les options supplémentaires à passer à la fonction fetch
+ */
+export const useSWRInfinite = (getKey,opts)=>{
+  const {swrOptions,fetcher,...options} = defaultObj(opts);
+  const pageRef = React.useRef(null);
+  const urlRef = React.useRef(null);
+  const { data, error,mutate,...rest } = useNativeSWRInfinite((pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.length) return null // reached the end
+    pageRef.current = pageIndex;
+    const fetchUrl = typeof getKey =='function'? getKey({page:pageIndex,previousData:previousPageData,prevData:previousPageData}) : typeof getKey =='string' ? getKey : undefined;
+    if(!isNonNullString(fetchUrl)){
+       console.warn("l'url à utiliser pour la récupération des données useInfinieSWR ne doit pas être null",options);
+       return null;
+    }
+    return setQueryParams(fetchUrl,{page:pageIndex});
+  },typeof fetcher =='function'?fetcher : (url)=>{
+    const {url: fUrl,fetcher:cFetcher,...opts2} = getFetcherOptions(url,options);
+    return cFetcher(fUrl,opts2);
+  },swrOptions);
+  return {
+    ...rest,
+    mutate,
+    refresh : (key, data, options)=>{
+       return mutate(urlRef.current,data,options);
+    },
+    data,
+    isLoading: !error && !data,
+    isError: error,
+    hasError : error,
+    error,
+  }
+}
+export const useInfinite = useSWRInfinite;
+
   export const getFetcherOptions = (path,opts)=>{
     const {swrOptions,...rest} = apiGetFetcherOptions(path,opts);
     return {...rest,swrOptions :extendObj(true,{},appConfig.swr,swrOptions)};

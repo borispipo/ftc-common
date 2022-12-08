@@ -159,6 +159,7 @@ export const handleFetchError = (opts)=>{
  /*** le mutator permet de modifier les options de la recherche dynamiquement 
   * ajout de la props fetchOptionsMutator : permettant d'être en mesure de muter les fetchOptions de la requête envoie l'envoie vers le serveur
   * si la fonction fetchOptionsMutator retourne un objet contenant la props url valide alors c'est cet url qui sera utilisée pour effectuer la requête fetch    
+    la fonction fetchOptionsMutator, lorsqu'elle retourne un objet, les propriétés dudit objet permettent d'override les propriétés à passer à la fonction handleFetchResult
  */
  export function getFetcherOptions (opts,options){
      if(opts && typeof opts =="string"){
@@ -177,20 +178,24 @@ export const handleFetchError = (opts)=>{
          });
       }
       fetcher = (url,opts2)=>{
+         let customOpts = {};
          if(typeof fetchOptionsMutator =='function'){
             const r = fetchOptionsMutator({...opts2,url,path:url});
-            if(isObj(r) && isValidURL(r.url)){
-               url = r.url;
+            if(isObj(r)){
+               if(isValidURL(r.url)){
+                  url = r.url;
+               }
+               customOpts = r;
             }
          } 
-         const delay = defaultNumber(opts.delay,opts.timeout);
+         const delay = defaultNumber(customOpts.delay,customOpts.timeout,opts.delay,opts.timeout);
          const p = isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline() ? 
                APP.checkOnline().then(()=>{
                   return fetcher2(url,opts2);
                }) : fetcher2(url,opts2);
 
          return timeout(p,delay).catch((error)=>{
-            return handleFetchError({...opts,error})
+            return handleFetchError({...opts,...customOpts,error})
          });
       }
       opts.queryParams = queryParams;
