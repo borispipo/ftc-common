@@ -4,7 +4,7 @@
 
 import {observable,isObservable,addObserver } from "../observable";
 import i18n from "$ci18n";
-import {isNonNullString,isNullOrEmpty,extendObj,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
+import {isNonNullString,isPromise,isNullOrEmpty,extendObj,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
 import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
@@ -544,17 +544,27 @@ const APP_Validator = {
                     if(result[t] === false) return context;
                 }
                 validParams = validParams || []// || validParams;
+                const handleResult = (r)=>{
+                    if(isNonNullString(r)){
+                        return context.trigger('validatorNoValid',{...rest,event,msg:r,message:r,value,context,validParams,extra});
+                    } else if(isObj(r)){
+                        let d_r = defaultStr(r.msg,r.message);
+                        if(isNonNullString(d_r)){
+                            return context.trigger('validatorNoValid',{...rest,event,msg:d_r,message:d_r,value,context,validParams,extra});
+                        }
+                    }
+                    return context.trigger('validatorValid',{...rest,value,context,extra,event,validRule,validType:validRule,extra});
+                }
                 if(isNullOrEmpty(validRule)){
                     ///ajout de la fonction validationCheck, qui permet de vérifier à nouveau la validation une fois les critères précédents accomplis
                     if(isFunction(rest.onValidatorValid)){
                         let __r = rest.onValidatorValid.call(context,{value,event,context,validType,validRule,validParams,extra,...rest});
-                        if(isNonNullString(__r)){
-                            return context.trigger('validatorNoValid',{...rest,event,msg:__r,message:__r,value,context,validParams,extra});
-                        } else if(isObj(__r)){
-                            let d_r = defaultStr(__r.msg,__r.message);
-                            if(isNonNullString(d_r)){
-                                return context.trigger('validatorNoValid',{...rest,event,msg:d_r,message:d_r,value,context,validParams,extra});
-                            }
+                        if(isPromise(__r)){
+                            __r.then(handleResult).catch((e)=>{
+                                handleResult({error:e,message:e.message});
+                            })
+                        } else {
+                            return handleResult(__r);
                         }
                     }
                     //console.warn(" ms-validator invalid rule ",validRule);
@@ -568,14 +578,13 @@ const APP_Validator = {
                         if(i > countEl) {
                             ///ajout de la fonction validationCheck, qui permet de vérifier à nouveau la validation une fois les critères précédents accomplis
                             if(isFunction(rest.onValidatorValid)){
-                                let __r = rest.onValidatorValid.call(context,{value,event,context,validType,validRule,validParams,extra,...rest});
-                                if(isNonNullString(__r)){
-                                    return context.trigger('validatorNoValid',{...rest,event,msg:__r,message:__r,value,context,validParams,extra});
-                                } else if(isObj(__r)){
-                                    let d_r = defaultStr(__r.msg,__r.message);
-                                    if(isNonNullString(d_r)){
-                                        return context.trigger('validatorNoValid',{...rest,event,msg:d_r,message:d_r,value,context,validParams,extra});
-                                    }
+                                const __r = rest.onValidatorValid.call(context,{value,event,context,validType,validRule,validParams,extra,...rest});
+                                if(isPromise(__r)){
+                                    __r.then(handleResult).catch((e)=>{
+                                        handleResult({error:e,message:e.message});
+                                    })
+                                } else {
+                                    return handleResult(__r);
                                 }
                             }
                             return context.trigger('validatorValid',{...rest,value,context,extra,event,validRule,validType:validRule,extra});
