@@ -277,6 +277,7 @@ export const getValidatorRules = ()=>{
         [UPPER_CASE] : {
             validator : function(value) {
                 if(typeof value !== 'string') return false;
+                if(!value) return true;
                 return value.toUpperCase() === value ? true : false;
             },
             message : 'Entrer une chaine de caractère en majuscule s\'il vous plait'
@@ -284,6 +285,7 @@ export const getValidatorRules = ()=>{
         [LOWER_CASE] : {
             validator : function(value) {
                 if(typeof value !== 'string') return false;
+                if(!value) return true;
                 return value.toLowerCase() === value ? true : false;
             },
             message : 'Entrer une chaine de caractère en minuscule s\'il vous plait'

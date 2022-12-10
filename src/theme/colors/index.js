@@ -107,7 +107,7 @@ Colors.isLight = Colors.isWhite = (color,mesure)=> {
 *  @param : numeric, l'indice de la couleur recherchée
 * 
 */
-export const getColorSuffix = Colors.getColorSuffix =  Colors.getSuffix= function(suffix){
+export const getColorSuffix = Colors.getColorSuffix = Colors.suffix =  Colors.getSuffix= function(suffix){
   suffix = defaultDecimal(suffix);
   if(suffix <0){
       suffix = 0;
