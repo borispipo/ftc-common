@@ -6,6 +6,7 @@ import {uniqid} from "$cutils";
 import { isWeb } from "$cplatform";
 import { TIPPY_THEME } from "./utils";
 const themeDomId = uniqid("web-theme-id");
+import {Colors} from "$theme";
 
 /*** met à jour le theme en environnement web */
 export default function updateWebTheme(theme){
@@ -21,12 +22,12 @@ export default function updateWebTheme(theme){
     const trackBG = theme.colors.surface//isWhite ? "#F5F5F5" : "#121212";
     let scrollbarColor = theme.colors.primary;
     if(theme.dark){
-        if(theme.Colors.isDark(scrollbarColor)){
-            scrollbarColor = theme.Colors.isWhite(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
+        if(Colors.isDark(scrollbarColor)){
+            scrollbarColor = Colors.isWhite(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
         }
     } else {
-        if(theme.Colors.isWhite(scrollbarColor)){
-            scrollbarColor = theme.Colors.isDark(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
+        if(Colors.isWhite(scrollbarColor)){
+            scrollbarColor = Colors.isDark(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
         }
     }
     style.textContent = `
