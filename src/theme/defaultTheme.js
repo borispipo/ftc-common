@@ -99,6 +99,7 @@ export const getColors = ()=>{
             secondaryOnSurface : "#3f6ad8",
             secondaryText : "#fff",
             suface : "#fff",
+            surfaceText : "#495057",
             error : "#d92550",
             errorText : "white",
             warning : "#f7b924",
