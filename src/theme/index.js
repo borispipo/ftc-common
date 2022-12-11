@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isObj,defaultNumber,extendObj,defaultObj,defaultStr} from "$cutils";
+import {isObj,defaultNumber,extendObj,defaultObj,defaultVal,defaultStr} from "$cutils";
 import Colors from "./colors";
 import {isWeb,isIos} from "$cplatform";
 import PropTypes from "prop-types";
@@ -181,7 +181,23 @@ export const getTextFieldMode = x=> {
     }
     return isMobileMedia()? modes.shadow : modes.flat;
 }
-
+/*** récupère une propriétée associée au theme courant */
+export const getProperty = function(){
+    const args = Array.prototype.slice.call(arguments,0);
+    for(let i in args){
+        const key = args[i];
+        if(typeof key =='string' && key){
+            key = key.trim();
+            const v = Theme.current[key];
+            if(v !== undefined && v !== null) return v;
+        }
+    }
+    return undefined;
+}
+///récupère la position du profil avatar
+export const getProfilAvatarPosition = x=>{
+    return defaultStr(Theme.current.profilAvatarPosition,"drawer").trim();
+}
 const theme = {
     get ALPHA () {return ALPHA},
     get ALPHA_OPACITY () {return ALPHA_OPACITY},
@@ -194,6 +210,16 @@ const theme = {
     get roundness () { return Theme.current.roundness},
     get animation () { return Theme.current.animation;},
     get textFieldMode () {return getTextFieldMode()},
+    get profilAvatarPosition (){
+        return  getProfilAvatarPosition();
+    },
+    get profilAvatarPos(){
+        return getProfilAvatarPosition();
+    },
+    /*** si le profil avatar de l'utilisateur sera affiché sur le drawer */
+    get showAvatarProfilOnDrawer (){
+        return getProfilAvatarPosition().toLowerCase() === 'drawer'? true : false;
+    },
     get webFontFamilly () {return  webFontFamilly;},
     get withStyles (){ return withStyles},
     get flattenStyle(){return flattenStyle},
@@ -206,6 +232,12 @@ const theme = {
     /**** la couleur de surface dynamique fonction du thème dark où non */
     get surfaceBackgroundColor (){ return isDark()? theme.colors.background : theme.colors.surface},
     //get surfaceTextColor (){ return isDark()? theme.colors.background : theme.colors.surface},
+    get get (){
+        return getProperty;
+    },
+    get getProperty(){
+        return getProperty;
+    }
 }
 
 
