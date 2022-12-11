@@ -202,7 +202,7 @@ export const getProperty = function(){
     return undefined;
 }
 ///récupère la position du profil avatar
-export const getProfilAvatarPosition = x=>{
+export const getAvatarProfilePosition = x=>{
     if(isNonNullString(Theme.current.profilAvatarPosition)){
         return Theme.current.profilAvatarPosition.trim();
     }
@@ -222,14 +222,14 @@ const theme = {
     get animation () { return Theme.current.animation;},
     get textFieldMode () {return getTextFieldMode()},
     get profilAvatarPosition (){
-        return  getProfilAvatarPosition();
+        return  getAvatarProfilePosition();
     },
     get profilAvatarPos(){
-        return getProfilAvatarPosition();
+        return getAvatarProfilePosition();
     },
     /*** si le profil avatar de l'utilisateur sera affiché sur le drawer */
     get showAvatarProfileOnDrawer (){
-        return getProfilAvatarPosition().toLowerCase() === 'drawer'? true : false;
+        return getAvatarProfilePosition().toLowerCase() === 'drawer'? true : false;
     },
     get webFontFamilly () {return  webFontFamilly;},
     get withStyles (){ return withStyles},
