@@ -62,6 +62,8 @@ if(!window.hasSetPouchEventsGetDB){
             }
             DATABASES[dbName] = db.changes = null;
             db = null;
+        }
+        if(typeof gc !=='undefined' && typeof gc =='function'){
             gc();
         }
     });
