@@ -6,6 +6,9 @@ import {isClientSide} from "$cplatform";
 import {isValidUrl} from "$utils";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;
+import appConfig from "$appConfig";
+import {defaultNumber} from "$utils";
+
 const init = ()=>{
     const status = 200;
     if(!NetInfo && isClientSide() && !hasNetInfoIntialized){
@@ -19,9 +22,9 @@ const init = ()=>{
             /***A function which is passed the Response from calling the reachability URL. It should return true if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
             reachabilityTest: async (response) => response.status === 200 || response.status==status,
             /**The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
-            reachabilityLongTimeout: 10 * 60 * 1000, // 10min
+            reachabilityLongTimeout: defaultNumber(appConfig.get("netInfoReachabilityLongTimeout"),10 * 60 * 1000), // 10min
             /**The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
-            reachabilityShortTimeout: 5 * 60 * 1000, // 5min
+            reachabilityShortTimeout: defaultNumber(appConfig.get("netInfoReachabilityShortTimeout"),5 * 60 * 1000), // 5min
             /***The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false.*/
             reachabilityRequestTimeout: 15 * 1000, // 15s
             /***A function which returns a boolean to determine if checkInternetReachability should be run. */

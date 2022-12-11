@@ -10,4 +10,12 @@
     validatorRules : {object} // pour étendre les règles de validation du composant $lib/validator
     apiFetchDelay | apiFetchTimeout {number} : le délai d'attente des requêtes d'API
     showProfilAvatarOnDrawer : {boolean} si false alors le profil utilisateur ne sera pas affiché sur le drawer principal de l'application, mais plutôt sur l'AppBar des écrans de type non modal
+
+    /**The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
+    netInfoReachabilityLongTimeout : {number}
+
+    /**The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
+    netInfoReachabilityShortTimeout : {number}
+
+    
 }
