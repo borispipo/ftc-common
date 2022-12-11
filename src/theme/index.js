@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isObj,defaultNumber,extendObj,defaultObj,defaultVal,defaultStr} from "$cutils";
+import {isObj,defaultNumber,extendObj,defaultObj,isNonNullString,defaultVal,defaultStr} from "$cutils";
 import Colors from "./colors";
 import {isWeb,isIos} from "$cplatform";
 import PropTypes from "prop-types";
@@ -14,6 +14,7 @@ import * as React from "react";
 import { isComponent } from "$react/isComponent";
 import defTheme,{white,black,lightColors,darkColors,getColors as initColors} from "./defaultTheme";
 import { getStyleSheet,themeRef } from "./utils";
+import appConfig from "$capp/config";
 
 import APP from "$capp/instance";
 const StyleSheet = getStyleSheet();
@@ -196,7 +197,11 @@ export const getProperty = function(){
 }
 ///récupère la position du profil avatar
 export const getProfilAvatarPosition = x=>{
-    return defaultStr(Theme.current.profilAvatarPosition,"drawer").trim();
+    if(isNonNullString(Theme.current.profilAvatarPosition)){
+        return Theme.current.profilAvatarPosition.trim();
+    }
+    if(appConfig.get("showProfilAvatarOnDrawer") === false) return "appBar";
+    return "drawer";
 }
 const theme = {
     get ALPHA () {return ALPHA},
