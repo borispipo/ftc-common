@@ -56,6 +56,12 @@ export const updateColors  = (theme,force)=>{
     colors.warning = Colors.isValid(colors.warning)? colors.warning : lightColors.warning;
     colors.error = Colors.isValid(colors.error)? colors.error : lightColors.error;
     colors.success = Colors.isValid(colors.success)? colors.success : lightColors.success;
+    if(Colors.getContrast(colors.primary) === Colors.getContrast(colors.primaryText)){
+        colors.primaryText = Colors.getContrast(colors.primary);
+    }
+    if(Colors.getContrast(colors.secondary) === Colors.getContrast(colors.secondaryText)){
+        colors.secondaryText = Colors.getContrast(colors.secondary);
+    }
     ['error','success','info','warning'].map((c)=>{
         const key = c+"Text";
         colors[key] = Colors.isValid(colors[key])? colors[key] : Colors.getContrast(colors[c])

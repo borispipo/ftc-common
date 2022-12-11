@@ -19,6 +19,17 @@ export default function updateWebTheme(theme){
     const primary = theme.colors.primary;
     //const isWhite = Colors.getContrast(primary) =="white"? true : false;
     const trackBG = theme.colors.surface//isWhite ? "#F5F5F5" : "#121212";
+    let scrollbarColor = theme.colors.primary;
+    let  primaryText = theme.colors.primaryText;
+    if(theme.isDark()){
+        if(theme.Colors.isDark(scrollbarColor)){
+            scrollbarColor = theme.Colors.isWhite(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
+        }
+    } else {
+        if(theme.Colors.isWhite(scrollbarColor)){
+            scrollbarColor = theme.Colors.isDark(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
+        }
+    }
     style.textContent = `
         body,html { 
             -ms-overflow-style: none !important; 
@@ -93,13 +104,9 @@ export default function updateWebTheme(theme){
 
         body.not-touch-device ::-webkit-scrollbar-thumb
         {
-            background-color: ${theme.colors.primary};
+            background-color: ${scrollbarColor};
         }
 
-        body.not-touch-device.theme-primary-white ::-webkit-scrollbar-thumb
-        {
-            background-color: ${theme.colors.secondary};
-        }
         .tippy-box[data-theme~='${TIPPY_THEME}'] {
             background-color: ${theme.colors.primary};
             color: ${theme.colors.primaryText};

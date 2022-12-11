@@ -92,6 +92,7 @@ export const getColors = ()=>{
             profilAvatarPosition : "appBar",
             textFieldMode : "normal",
             primary : "#fafbfc",
+            text : "#495057",
             secondary : "#3f6ad8",
             primaryText : "#495057",
             secondaryText : "#fff",
