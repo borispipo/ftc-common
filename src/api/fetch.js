@@ -214,11 +214,20 @@ export const handleFetchError = (opts)=>{
       if(typeof apiCustom.getFetcherOptions =='function'){
          extendObj(opts,apiCustom.getFetcherOptions(opts))
       }
+      let hasContentType = false;
+      for(let i in opts.headers){
+         if(i.toLowerCase() === 'content-type'){
+            hasContentType = true;
+            break;
+         }
+      }
       if(isObj(opts.body)){
-         opts.headers["Content-Type"] = "application/json";
-         opts.headers["Accept"] = "application/json";
+         if(!hasContentType){
+            opts.headers["Content-Type"] = "application/json";
+            opts.headers["Accept"] = "application/json";
+         }
          opts.body  = JSON.stringify(opts.body);
-      } else if(!opts.body){
+      } else if(!opts.body && !hasContentType){
          opts.headers["Content-Type"] = "text/plain";
       }
       delete opts.authorization;
