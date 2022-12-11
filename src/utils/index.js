@@ -658,7 +658,7 @@ export const isBase64 = function isBase64(str, options) {
     }
     return new Blob(byteArrays, { type: contentType });
 }
-
+export const base64ToBlob = base64toBlob;
  /**** convertis une chaine de caractère data-url en objet blob */
  export function dataURLToBase64(dataURLStr){
     if(!isDataURL(dataURLStr)) return undefined;
