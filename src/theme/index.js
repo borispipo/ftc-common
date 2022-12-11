@@ -217,7 +217,7 @@ const theme = {
         return getProfilAvatarPosition();
     },
     /*** si le profil avatar de l'utilisateur sera affiché sur le drawer */
-    get showAvatarProfilOnDrawer (){
+    get showAvatarProfileOnDrawer (){
         return getProfilAvatarPosition().toLowerCase() === 'drawer'? true : false;
     },
     get webFontFamilly () {return  webFontFamilly;},
