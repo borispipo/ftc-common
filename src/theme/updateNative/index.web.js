@@ -20,8 +20,7 @@ export default function updateWebTheme(theme){
     //const isWhite = Colors.getContrast(primary) =="white"? true : false;
     const trackBG = theme.colors.surface//isWhite ? "#F5F5F5" : "#121212";
     let scrollbarColor = theme.colors.primary;
-    let  primaryText = theme.colors.primaryText;
-    if(theme.isDark()){
+    if(theme.dark){
         if(theme.Colors.isDark(scrollbarColor)){
             scrollbarColor = theme.Colors.isWhite(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
         }
