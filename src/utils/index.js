@@ -633,6 +633,32 @@ export const isBase64 = function isBase64(str, options) {
     return new Blob([new Uint8Array(array)], { type: mediaType });
  }
 
+ /*** converti un contenu base 64 en blob
+  * @see : https://stackoverflow.com/questions/34993292/how-to-save-xlsx-data-to-file-as-a-blob/35713609#35713609
+  * @param {string} base64Data la chaine a convertir 
+  * @return {null || Blob} null si le contenu base64Data est invalide
+  */
+ export function base64toBlob(base64Data, contentType) {
+    if(!isBase64(base64Data)) return null;
+    contentType = defaultStr(contentType);
+    let sliceSize = 1024;
+    let byteCharacters = atob(base64Data);
+    let bytesLength = byteCharacters.length;
+    let slicesCount = Math.ceil(bytesLength / sliceSize);
+    let byteArrays = new Array(slicesCount);
+    for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+        let begin = sliceIndex * sliceSize;
+        let end = Math.min(begin + sliceSize, bytesLength);
+
+        let bytes = new Array(end - begin);
+        for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+            bytes[i] = byteCharacters[offset].charCodeAt(0);
+        }
+        byteArrays[sliceIndex] = new Uint8Array(bytes);
+    }
+    return new Blob(byteArrays, { type: contentType });
+}
+
  /**** convertis une chaine de caractère data-url en objet blob */
  export function dataURLToBase64(dataURLStr){
     if(!isDataURL(dataURLStr)) return undefined;
