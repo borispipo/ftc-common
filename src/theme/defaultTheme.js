@@ -95,6 +95,8 @@ export const getColors = ()=>{
             text : "#495057",
             secondary : "#3f6ad8",
             primaryText : "#495057",
+            primaryOnSurface : "#495057",
+            secondaryOnSurface : "#3f6ad8",
             secondaryText : "#fff",
             suface : "#fff",
             error : "#d92550",
