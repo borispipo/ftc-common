@@ -275,10 +275,15 @@
         'complet':              'dddd, mmmm d, yyyy',
         'ISO':                   SQLDateFormat,
         'UTC':        'UTC:yyyy-mm-dd',
-        };
+    };
     
+    /*** la liste des formats de type date, avec possibilité de produire un exemple, utile si l'on veut par exemple
+     * demander à l'utilisateur via un FormDataProvider, de sélectionner un format pour le formattage d'une date
+     */
+    export const formatsObjects = {}
+
     // Internationalization strings
-    let DaysAndMonths = {
+    const DaysAndMonths = {
         dayNames: [],
         monthNames: []
     };
