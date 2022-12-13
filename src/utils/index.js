@@ -1057,12 +1057,8 @@ export const getFileName = (filePath,withoutExtension)=>{
     return filePath;
 }
 
-export function isFunction(function_name,checkFunctionString){
-    if(typeof function_name == 'undefined' |  function_name =='' | function_name == null) return false;
-    if(typeof function_name == 'function'){
-        return true;
-    } 
-    return false;
+export function isFunction(function_name){
+    return typeof function_name == 'function' && true || false;
 }
 
 /****
