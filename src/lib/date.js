@@ -247,11 +247,22 @@
     //const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss";
     var defaultD = null;
     dateFormat.masks = {
+        "day1" : "dd",
+        "shortDay1" : "ddd",
+        "longDay2":"dddd",
+        "long1" : "ddd dd",
+        "long2" : "ddd dd mmm yy",
+        "long3"  : "ddd dd mmm yyyy",
+        "long4" : "ddd dd mmm yyyy",
         'default': isNonNullString(defaultD)? defaultD : 'dd/mm/yyyy HH:MM:ss',
         'defaultDate' : 'dd/mm/yyyy',
         'defaultTime' : 'HH:MM:ss',
         'shortDate':   'm/d/yy',
         'mediumDate': 'mmm d, yyyy',
+        'mediumDate1': 'dd mmm yyyy',
+        'mediumDate2': 'dd mmm',
+        "month1" : "mmm",
+        "year1" : "yyyy",
         'longDate':    'mmmm d, yyyy',
         'fullDate':     'dddd, mmmm d, yyyy',
         'shortTime':    'h:MM TT',
