@@ -304,7 +304,7 @@
         "variantF10" : "dd-mmm-yyyy",
     };
     /*** la liste des formats ordonnés parmis ceux ci */
-    export const sortedFormats = Object.keys(dateFormat.dateFormat.masks)
+    export const sortedFormats = Object.keys(dateFormat.masks)
       .sort((a, b) => dateFormat.masks[a] - dateFormat.masks[b])
       .reduce(
         (_sortedObj, key) => ({
