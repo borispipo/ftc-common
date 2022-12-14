@@ -4,22 +4,6 @@
 
 /**
  *  @see : https://www.npmjs.com/package/dateformat
- *  dateFormat.masks = {
-      'default':               'ddd mmm dd yyyy HH:MM:ss',
-      'ordinalDate'            'ddd S mmmm yyyy'
-      'shortDate':             'm/d/yy',
-      'mediumDate':            'mmm d, yyyy',
-      'longDate':              'mmmm d, yyyy',
-      'fullDate':              'dddd, mmmm d, yyyy',
-      'shortTime':             'h:MM TT',
-      'mediumTime':            'h:MM:ss TT',
-      'longTime':              'h:MM:ss TT Z',
-      'isoDate':               'yyyy-mm-dd',
-      'isoTime':               'HH:MM:ss',
-      'isoDateTime':           'yyyy-mm-dd\'T\'HH:MM:sso',
-      'isoUtcDateTime':        'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'',
-      'expiresHeaderFormat':   'ddd, dd mmm yyyy HH:MM:ss Z'
-    }
  */
     import i18n from "../i18n";
     import defaultStr from "$cutils/defaultStr";
@@ -254,9 +238,7 @@
         "shortDay1" : "ddd",
         "longDay2":"dddd",
         "long1" : "ddd dd",
-        "long2" : "ddd dd mmm yy",
         "long3"  : "ddd dd mmm yyyy",
-        "long4" : "ddd dd mmm yyyy",
          month1 : "mmm",
          month2 : "mmmm",
          month3 : "mm",
@@ -267,7 +249,6 @@
         'mediumDate': 'mmm d, yyyy',
         'mediumDate1': 'dd mmm yyyy',
         'mediumDate2': 'dd mmm',
-        "month1" : "mmm",
         "year1" : "yyyy",
         "year2" : "yy",
         'longDate':    'mmmm d, yyyy',
@@ -291,13 +272,11 @@
         "variantF4" : "mm/dd/yy",
         "variantF5" : "dd-mmm",
         "variantF6" : "dd-mmm-yy",
-        "variant1" : "dd mmm",
         "variant2" : "dd mmm yy",
         "variant3" : "ddd dd mmm",
         "variant4" : "ddd dd mmmm",
         "variant5" : "ddd dd mmm yy",
-        "variant5" : "ddd dd mmm yyyy",
-        "variant5" : "ddd dd mmmm yy",
+        "variant6" : "ddd dd mmmm yy",
         "variantF7" : "mmm-dd",
         "variantF8" : "mmm-dd, yyyy",
         "variantF9" : "m/dd/yyyy HH:MM",
