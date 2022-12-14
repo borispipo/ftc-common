@@ -315,7 +315,7 @@
     sValues.map((v,i)=>{
         sortedFormats[i] = v;
     });
-    dateFormat.mask.isoUtcDateTime = sortedFormats.isoUtcDateTime =  'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'';
+    dateFormat.masks.isoUtcDateTime = sortedFormats.isoUtcDateTime =  'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'';
     /*** la liste des formats de type date, avec possibilité de produire un exemple, utile si l'on veut par exemple
      * demander à l'utilisateur via un FormDataProvider, de sélectionner un format pour le formattage d'une date
      */
