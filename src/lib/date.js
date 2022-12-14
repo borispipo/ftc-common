@@ -304,8 +304,8 @@
         "variantF10" : "dd-mmm-yyyy",
     };
     /*** la liste des formats ordonnés parmis ceux ci */
-    const keys = Object.keys(DateLib.formats);
-    const sValues = keys.map(key=>DateLib.formats[key])
+    const keys = Object.keys(dateFormat.masks);
+    const sValues = keys.map(key=>dateFormat.masks[key])
         .sort((a, b) => {
             a = a.replaceAll(":","").replaceAll("/","-")
             b = b.replaceAll(":","").replaceAll("/","-")
@@ -1265,7 +1265,7 @@
             if(dateStr){
                 let date = DateLib.toObj(dateStr,true);
                 if(isObj(date) && isNonNullString(date.day)){
-                    dateStr = DateLib.format(date.date,defaultStr(format,DateLib.formats.defaultDate));
+                    dateStr = DateLib.format(date.date,defaultStr(format,dateFormat.masks.defaultDate));
                     date.shortMonth = "";
                     if(isObj(DaysAndMonths) && isArray(DaysAndMonths.monthNames)){
                         let m = parseInt(date.month)-1;
