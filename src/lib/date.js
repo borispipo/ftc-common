@@ -248,6 +248,9 @@
     var defaultD = null;
     dateFormat.masks = {
         "day1" : "dd",
+        hour1 : "HH:MM",
+        hour2 : "HH",
+        hour3 : "MM",
         "shortDay1" : "ddd",
         "longDay2":"dddd",
         "long1" : "ddd dd",
@@ -300,7 +303,16 @@
         "variantF9" : "m/dd/yyyy HH:MM",
         "variantF10" : "dd-mmm-yyyy",
     };
-    
+    /*** la liste des formats ordonnés parmis ceux ci */
+    export const sortedFormats = Object.keys(dateFormat.dateFormat.masks)
+      .sort((a, b) => dateFormat.masks[a] - dateFormat.masks[b])
+      .reduce(
+        (_sortedObj, key) => ({
+          ..._sortedObj,
+          [key]: dateFormat.masks[key]
+        }),
+        {}
+    );
     /*** la liste des formats de type date, avec possibilité de produire un exemple, utile si l'on veut par exemple
      * demander à l'utilisateur via un FormDataProvider, de sélectionner un format pour le formattage d'une date
      */
@@ -947,6 +959,9 @@
         },
         formats : {
             value : dateFormat.masks,override:false,writable:false
+        },
+        sortedFormats : {
+            value : sortedFormats,override:false,writable:false
         },
         masks : {
             value : dateFormat.masks,
