@@ -257,8 +257,9 @@
         "long2" : "ddd dd mmm yy",
         "long3"  : "ddd dd mmm yyyy",
         "long4" : "ddd dd mmm yyyy",
-        month1 : "mmm",
-        month2 : "mmmm",
+         month1 : "mmm",
+         month2 : "mmmm",
+         month3 : "mm",
         'default': isNonNullString(defaultD)? defaultD : 'dd/mm/yyyy HH:MM:ss',
         'defaultDate' : 'dd/mm/yyyy',
         'defaultTime' : 'HH:MM:ss',
@@ -277,7 +278,6 @@
         'isoDate':   SQLDateFormat,
         'isoTime':   SQLTimeFormat,
         'isoDateTime': SQLDateTimeFormat,
-        'isoUtcDateTime': 'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'',
         'expiresHeaderFormat':'ddd, dd mmm yyyy HH:MM:ss Z',
 
         //format personalisés, qui ont été ajoutés
@@ -304,15 +304,18 @@
         "variantF10" : "dd-mmm-yyyy",
     };
     /*** la liste des formats ordonnés parmis ceux ci */
-    export const sortedFormats = Object.keys(dateFormat.masks)
-      .sort((a, b) => dateFormat.masks[a] - dateFormat.masks[b])
-      .reduce(
-        (_sortedObj, key) => ({
-          ..._sortedObj,
-          [key]: dateFormat.masks[key]
-        }),
-        {}
-    );
+    const keys = Object.keys(DateLib.formats);
+    const sValues = keys.map(key=>DateLib.formats[key])
+        .sort((a, b) => {
+            a = a.replaceAll(":","").replaceAll("/","-")
+            b = b.replaceAll(":","").replaceAll("/","-")
+            return (a < b ? -1 : +(a > b))
+        });
+    export const sortedFormats = {};
+    sValues.map((v,i)=>{
+        sortedFormats[i] = v;
+    });
+    dateFormat.mask.isoUtcDateTime = sortedFormats.isoUtcDateTime =  'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'';
     /*** la liste des formats de type date, avec possibilité de produire un exemple, utile si l'on veut par exemple
      * demander à l'utilisateur via un FormDataProvider, de sélectionner un format pour le formattage d'une date
      */
