@@ -14,6 +14,7 @@ const defaultObj = function() {
     return {};
 };
 
+export * from "./utils";
 
 // Create the local library object, to be exported or referenced globally later
 const lib = {};
