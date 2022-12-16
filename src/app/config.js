@@ -8,7 +8,7 @@ import device from "./device";
 import session from "$session";
 import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
-import {isValidCurrency} from "$ccurency/utils";
+import {isValidCurrency} from "$ccurrency/utils";
 
 const configRef = {current:null};
 
