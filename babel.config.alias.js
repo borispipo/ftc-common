@@ -93,6 +93,7 @@ module.exports = function(opts){
         $swr : path.resolve(common,"swr"),
         $useSWR : path.resolve(common,"swr"),
     }
+    r.currencies = r[$ccurrency];
     if(!r.$api){
         r.$api = r.$capi;
     }

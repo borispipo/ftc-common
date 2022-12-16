@@ -7,6 +7,8 @@ import isNonNullString from "$cutils/isNonNullString";
 import device from "./device";
 import session from "$session";
 import { isValidURL } from "$cutils/uri";
+import currencies from "$ccurrency/currencies";
+import {isValidCurrency} from "$ccurency/utils";
 
 const configRef = {current:null};
 
@@ -250,6 +252,20 @@ export const isInitialized = ()=>{
     return isInitializedRef.current;;
 }
 export const setCurrency = (currency)=>{
+    if(!isValidCurrency(currency)){
+        let cCode = typeof currency =="object" && currency && !Array.isArray(currency) ? currency.code : undefined;
+        if(cCode){
+            cCode = cCode.trim().toUpperCase();
+        }
+        if(cCode && isValidCurrency(currencies[cCode])){
+            currency = currencies[cCode];
+        } else if(typeof currency =='string') {
+            cCode = currency.trim().toUpperCase();
+            if(isValidCurrency(currencies[cCode])){
+                currency = currencies[cCode];
+            }
+        }
+    }
     return session.set("appConfigCurrency",Object.assign({},currency));
 }
 export const getTheme  =x=>{

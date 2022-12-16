@@ -411,3 +411,5 @@ const CurrenCy =  {
 }
 
 export default CurrenCy;
+
+export {currencies};
