@@ -250,7 +250,14 @@ export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
-export const getCurrency = ()=> Object.assign({},session.get("appConfigCurrency"));
+export const getCurrency = ()=> {
+    const currency = Object.assign({},session.get("appConfigCurrency"));
+    const format = getCurrencyFormat();
+    if(format){
+        currency.format = format;
+    }
+    return currency;
+};
 export const getInit = ()=>{
     return getConfigValue("init");
 }
@@ -280,7 +287,12 @@ export const setCurrency = (currency)=>{
             }
         }
     }
-    return session.set("appConfigCurrency",Object.assign({},currency));
+    currency = Object.assign({},currency);
+    const format = getCurrencyFormat();
+    if(format){
+        currency.format = format;
+    }
+    return session.set("appConfigCurrency",currency);
 }
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
