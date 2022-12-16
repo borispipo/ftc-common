@@ -179,6 +179,12 @@ const config = {
     get currency(){
         return getCurrency();
     },
+    get currencyFormat(){
+        return getCurrencyFormat();
+    },
+    set currencyFormat(value){
+        return setCurrencyFormat(value);
+    },
     set currency(currency){
         setCurrency(currency);
     },
@@ -250,6 +256,14 @@ export const getInit = ()=>{
 }
 export const isInitialized = ()=>{
     return isInitializedRef.current;;
+}
+export const getCurrencyFormat = ()=>{
+    const r = session.get("appConfigCurrencyFormat");
+    return r && typeof r =="string"? r : "";
+}
+export const setCurrencyFormat = (format)=>{
+    format = format && typeof format =="string"? format.trim() : "";
+    return session.set("appConfigCurrencyFormat",format);
 }
 export const setCurrency = (currency)=>{
     if(!isValidCurrency(currency)){
