@@ -25,7 +25,7 @@ export const setConfig = configValue=> {
     }
 }
 export const setConfigValue = (key,value)=>{
-    const conf = getConfig();
+    const conf = configRef.current =="object" && configRef.current? configRef.current : {};
     if(isNonNullString(key)){
         if(key in config && key !=='current'){
             config[key] = value;
@@ -70,8 +70,6 @@ export const getConfigValue = function(){
             hasKey = true;
             if(conf.hasOwnProperty(a)){
                 return conf[a];
-            } else if(config.hasOwnProperty(a) && typeof config[a] !=='function'){
-                return config[a];
             }
         }
     }
@@ -246,6 +244,9 @@ const config = {
         return getConfigValue;
     },
     get set (){
+        return setConfigValue;
+    },
+    get setValue (){
         return setConfigValue;
     }
 }
