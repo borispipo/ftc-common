@@ -25,7 +25,7 @@ export const setConfig = configValue=> {
     }
 }
 export const setConfigValue = (key,value)=>{
-    const conf = configRef.current =="object" && configRef.current? configRef.current : {};
+    const conf = getConfig();
     if(isNonNullString(key)){
         if(key in config && key !=='current'){
             config[key] = value;
