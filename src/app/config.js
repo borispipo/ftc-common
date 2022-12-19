@@ -24,6 +24,17 @@ export const setConfig = configValue=> {
         isInitializedRef.current = true;
     }
 }
+export const setConfigValue = (key,value)=>{
+    const conf = getConfig();
+    if(isNonNullString(key)){
+        if(key in config && key !=='current'){
+            config[key] = value;
+        } else {
+            conf[key] = value;
+        }
+    }
+    return conf;
+}
 const countryCodeSessionKey = "countryCodeSessionKey";
 export const getCountryCode = ()=>{
     const s = session.get(countryCodeSessionKey);
@@ -59,6 +70,8 @@ export const getConfigValue = function(){
             hasKey = true;
             if(conf.hasOwnProperty(a)){
                 return conf[a];
+            } else if(config.hasOwnProperty(a) && typeof config[a] !=='function'){
+                return config[a];
             }
         }
     }
@@ -233,7 +246,7 @@ const config = {
         return getConfigValue;
     },
     get set (){
-        return setConfig;
+        return setConfigValue;
     }
 }
 
