@@ -231,6 +231,9 @@ const config = {
     },
     get getConfigValue(){
         return getConfigValue;
+    },
+    get set (){
+        return setConfig;
     }
 }
 
