@@ -57,7 +57,7 @@ export const setSessionData = (key,value)=>{
     return data;
 }
 export const setCountryCode = (code)=>{
-    session.get(countryCodeSessionKey,code && typeof code=='string'&& code || '');
+    session.set(countryCodeSessionKey,code && typeof code=='string'&& code || '');
     return code;
 }
 export const getConfigValue = function(){
