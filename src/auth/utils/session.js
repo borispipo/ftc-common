@@ -4,6 +4,7 @@
 
 import $session from "$session";
 import {isObj,extendObj,isNonNullString,defaultStr,defaultObj} from "$cutils";
+import {isClientSide} from "$platform";
 import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
@@ -13,10 +14,12 @@ export const USER_SESSION_KEY = "user-session";
 export const TOKEN_SESSION_KEY = "user-token-key";
 
 export const getToken = ()=>{
+    if(!isClientSide()) return null;
     const token = $session.get(TOKEN_SESSION_KEY);
     return isValidToken(token) ? token : null;
 }
   export const setToken = (token)=>{
+     if(!isClientSide()) return null;
      return $session.set(TOKEN_SESSION_KEY,token);
   }
   export const isValidToken = (token)=>{
@@ -33,6 +36,7 @@ export const getToken = ()=>{
   }
   
 export const getLocalUser = x=> {
+    if(!isClientSide()) return null;
     const u = $session.get(USER_SESSION_KEY);
     return isObj(u)  && (hasToken() || isNonNullString(u.code)) ? u : null;
 };
@@ -55,7 +59,7 @@ export const getLoggedUserId = ()=>{
   return "";
 }
 
-export const setLocalUser = u => $session.set(USER_SESSION_KEY,u || null);
+export const setLocalUser = u => !isClientSide()?null: $session.set(USER_SESSION_KEY,u || null);
 
 export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
 
@@ -67,6 +71,9 @@ export const getSessionKey = (sessionName)=>{
 }
 
 export const getSessionData = (sessionKey,sessionName)=>{
+  if(!isClientSide()){
+    return isNonNullString(sessionKey)? undefined : {};
+  }
   const key = getSessionKey(sessionName);
   const dat = isNonNullString(key)? defaultObj($session.get(key)) : {};
   if(isNonNullString(sessionKey)){
@@ -76,6 +83,7 @@ export const getSessionData = (sessionKey,sessionName)=>{
 }
 
 export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
+  if(!isClientSide()) return null;
   if(isObj(sessionKey)){
     sessionName = defaultStr(sessionName,sessionValue);
   }
@@ -95,6 +103,7 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
 
 /*** déconnecte l'utilisateur actuel */
 export const logout = () =>{
+    if(!isClientSide()) return null;
     $session.set(USER_SESSION_KEY,"");
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
     return true;

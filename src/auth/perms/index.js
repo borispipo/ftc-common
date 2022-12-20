@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isObj,defaultStr,isBool,defaultBool,isNonNullString} from "$utils";
+import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultBool,isNonNullString} from "$utils";
 import {tableDataPerms,structDataPerms,resetPerms} from "./reset";
 import {getLoggedUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";
@@ -269,7 +269,7 @@ export const isAllowed = function(args){
  *   @param _action {string|object} : l'action qu'à l'utilisateur sur la table de structure de données
      @return {object:{read,create,update,delete}} : les différentes permissions qu'a l'utilisateur sur la table de données
 */
-export const isStructDataAllowed = (_table,action)=>{
+export const isStructDataAllowed = (_table,action,user)=>{
     if(isNonNullString(_table)){
         _table = {
             table : _table
@@ -301,7 +301,7 @@ export const isStructDataAllowed = (_table,action)=>{
                     let act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
-                        b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),action:act})
+                        b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),user,action:act})
                     }
                     p[action[k]] = b;
                 }
@@ -311,7 +311,7 @@ export const isStructDataAllowed = (_table,action)=>{
             action = defaultStr(action,'read').toLowerCase();
             let b = p[action];
             if(!isBool(b)){
-                b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),action})
+                b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),user,action})
             }
             p[action] = b;
             return p[action] || false;
@@ -326,7 +326,7 @@ export const isStructDataAllowed = (_table,action)=>{
  *   @param _action {string|object} : l'action qu'à l'utilisateur sur la table de structure de données
      @return {object:{read,create,update,delete}} : les différentes permissions qu'a l'utilisateur sur la table de données
 */
-export const isTableDataAllowed = (_table,action)=>{
+export const isTableDataAllowed = (_table,action,user)=>{
     if(isNonNullString(_table)){
         _table = {
             table : _table
@@ -358,7 +358,7 @@ export const isTableDataAllowed = (_table,action)=>{
                     let act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
-                        b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),action:act})
+                        b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),user,action:act})
                     }
                     p[action[k]] = b;
                 }
@@ -368,7 +368,7 @@ export const isTableDataAllowed = (_table,action)=>{
             action = defaultStr(action,'read').toLowerCase();
             let b = p[action];
             if(!isBool(b)){
-                b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),action})
+                b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),user,action})
             }
             p[action] = b;
             return p[action] || false;
