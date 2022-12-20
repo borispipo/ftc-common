@@ -62,6 +62,8 @@ export * from "./reset";
     return result;
 }
 
+export const isAllowedFromString = isAllowedFromStr;
+
 const checkPSingle = ({user_perm,action})=>{
     if(user_perm == action) return true;
     if(user_perm =="all") return true;
