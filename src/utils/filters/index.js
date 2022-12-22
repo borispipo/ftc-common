@@ -665,6 +665,10 @@ export const periodActions = {
     get $period (){return i18n.lang("filter_period");}
 }
 
+export const betweenActions = {
+    get $between(){return i18n.lang("filter_between")},
+}
+
 /**** retourne les options à utiliser pour effectuer une requête fetch
  * 
  */

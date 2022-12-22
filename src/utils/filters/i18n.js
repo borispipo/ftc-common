@@ -29,7 +29,8 @@ i18n.dictionary({
         filter_prevWeek:"Semaine passée",
         filter_week:'Cette semaine',
         filter_month:'Ce mois',
-        filter_period:"Période"
+        filter_period:"Période",
+        filter_between : "Compris entre",
     },
     en : {
         filter_regex_equals : 'Equals to',
@@ -55,6 +56,7 @@ i18n.dictionary({
         filter_prevWeek:"Prev week",
         filter_week:'This Week',
         filter_month:'This month',
-        filter_period:"Period"
+        filter_period:"Period",
+        filter_between : "Between",
     }
 })
