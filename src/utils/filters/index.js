@@ -406,6 +406,19 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
                     })        
                 }
             }
+        } else if(f.action === "$between"){
+            let sp = defaultStr(f.value?.toString());
+            if(sp){
+                sp = sp.split("=>");
+                if(sp.length === 2 && sp[0] && sp[1]){
+                    filters[f.operator].push({
+                        [f.field] : {$gte:sp[0].trim()}
+                    })
+                    filters[f.operator].push({
+                        [f.field] : {$lte:sp[1].trim()}
+                    });
+                }
+            }
         } else {
             ob[f.field][f.action] = f.value;
             filters[f.operator].push(ob)
