@@ -70,6 +70,7 @@ module.exports = function(opts){
         "$date" : path.resolve(common,"lib","date"),
         "$cdate" : path.resolve(common,"lib","date"),
         "$cfilters" : path.resolve(common,"utils","filters"),
+        "$cdatabaseUtils" : path.resolve(common,"utils","database"),
         "$notify" : path.resolve(common,"notify"),
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),

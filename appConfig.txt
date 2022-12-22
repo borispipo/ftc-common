@@ -17,5 +17,6 @@
     /**The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
     netInfoReachabilityShortTimeout : {number}
 
+    pieceIdSuffixDateFormat : {string}, default : "ddmmyy-HHMMssl" : le format de sufixe à ajouter aux pièces générées automatiquement
     
 }

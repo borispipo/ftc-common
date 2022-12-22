@@ -1,4 +1,4 @@
-import {isNonNullString,defaultStr} from "$cutils";
+import {isNonNullString,defaultStr,sanitizeFileName} from "$cutils";
 import commonDataFiles from "./commonDataFiles";
 import getCurrentDB from "./getCurrentDB";
 import CONSTANTS from "$pouchdb/constants";
@@ -18,7 +18,7 @@ export default function sanitizeName (dFName,sanitizeDefautName,tableName){
         } else if(dFName =="default" && sanitizeDefautName !== false){
             dFName = defaultStr(getCurrentDB()).toLowerCase().trim();
         }
-        return dFName.toLowerCase();
+        return sanitizeFileName(dFName).toLowerCase();
     }
     return "";
 }

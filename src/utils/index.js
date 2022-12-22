@@ -12,8 +12,6 @@ import isDateObj from "./isDateObj";
 import sprintf  from "./sprintf";
 import base64 from "$base64";
 
-const sanitize = require("sanitize-filename");
-
 export {sprintf};
 export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
@@ -40,6 +38,8 @@ if(typeof __DEV__ == 'undefined'){
 }
 
 export * from "./uri";
+
+export * from "./sanitizeName";
 
 export const arrayValueExists = function(array,value,ignoreCase,compare) {
     if(isFunction(ignoreCase)){
@@ -413,32 +413,6 @@ require("./dom")
 
 require("./polyfill");
 
-
-export const sanitizeSheetName = function(sheetName){
-    if(!isNonNullString(sheetName)) return "";
-    sheetName = sheetName.replaceAll("/","-").replaceAll("\\","-").sanitizeFileName().replaceAll("[","<").replaceAll("]","")
-    //let badchars = "][*?\/\\".split("");
-    if(sheetName.length > 31){
-        sheetName = sheetName.substring(0,28)+"..."
-    }
-    return sheetName;
-}
-
-export const sanitizeFileName  = (str,escapeSpaces)=>{
-    escapeSpaces = isBool(escapeSpaces)? escapeSpaces : true;
-    if(isNonNullString(str)){
-        if(escapeSpaces) str = str.removeSpecialChars().replaceAll(" ","-").replaceAll("[","(").replaceAll("]",")")
-        return sanitize(sprintf(str).replaceAll("/","-"));
-    }
-    return "";
-}
-
-String.prototype.sanitizeFileName = function(escapeSpaces){
-    return sanitizeFileName(this.toString(),escapeSpaces);
-}
-String.prototype.sanitizeSheetName = function(){
-    return sanitizeSheetName(this.toString(),false);
-}
 
 /*****
  *  ucfirstUnderground : change the string  from camel case into  snake case 
