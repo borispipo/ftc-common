@@ -244,6 +244,8 @@ dateFormat.masks = {
      month3 : "mm",
     'default': isNonNullString(defaultD)? defaultD : 'dd/mm/yyyy HH:MM:ss',
     'defaultDate' : 'dd/mm/yyyy',
+    'defaultDat1' : "dd/mm",
+    'defaultDat1' : "dd mm",
     'defaultTime' : 'HH:MM:ss',
     'shortDate':   'm/d/yy',
     "monthO1" : "mm/yyyy",
