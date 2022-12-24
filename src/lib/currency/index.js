@@ -91,7 +91,7 @@ function checkCurrencyFormat(format) {
 
 	// Allow function as format parameter (should return string or object):
 	if ( typeof format === "function" ) format = format();
-
+	if(typeof format ==="string") format = format.toLowerCase();
 	// Format can be a string, in which case `value` ("%v") must be present:
 	if ( isString( format ) && format.match("%v") ) {
 

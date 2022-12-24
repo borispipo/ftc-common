@@ -271,7 +271,7 @@ export const getCurrency = ()=> {
     const currency = Object.assign({},session.get("appConfigCurrency"));
     const format = getCurrencyFormat();
     if(format){
-        currency.format = format;
+        currency.format = typeof currency.format =="string" && currency.format.toLowerCase().trim() || format;
     }
     return currency;
 };
@@ -283,7 +283,7 @@ export const isInitialized = ()=>{
 }
 export const getCurrencyFormat = ()=>{
     const r = session.get("appConfigCurrencyFormat");
-    return r && typeof r =="string"? r : "";
+    return r && typeof r =="string" && r.toLowerCase().contains("%v")? r.toLowerCase() : "%v %s";
 }
 export const setCurrencyFormat = (format)=>{
     format = format && typeof format =="string"? format.trim() : "";
