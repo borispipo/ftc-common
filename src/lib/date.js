@@ -311,7 +311,7 @@ dateFormat.masks.isoUtcDateTime = sortedFormats.isoUtcDateTime =  'UTC:yyyy-mm-d
 export const formatsObjects = {}
 
 // Internationalization strings
-const DaysAndMonths = {
+export const DaysAndMonths = {
     dayNames: [],
     monthNames: []
 };
@@ -356,7 +356,7 @@ const resetDaysAndMonth = ()=>{
 export const sort = (values)=>{
     if(!Array.isArray(values)) return values;
     //on cherche le nom de colonne correspondante au type de données recherché
-    var keyName = null;
+    let keyName = null;
     for(let i in values){
         const v = values[i]?.toString()?.toUpperCase();
         if(v){
@@ -366,13 +366,14 @@ export const sort = (values)=>{
                     break;
                 }
             }
+            break;
         }
     }
     if(keyName){
         const keys = DaysAndMonthsObject[keyName];
         return values.sort((a,b)=>{
-            a = keys[a.toUpperCase()];
-            b = keys[b.toUpperCase()];
+            a = keys[a.toString().toUpperCase().trim()];
+            b = keys[b.toString().toUpperCase().trim()];
             return a < b ? -1 : +(a > b);
         })
     }
@@ -1276,6 +1277,8 @@ Object.defineProperties(DateLib,{
     DAYS_AND_MONTHS : {
         value : DaysAndMonths,override:false, writable : false,
     },
+    DaysAndMonths : {value : DaysAndMonths},
+    DaysAndMonthsObject : {value : DaysAndMonthsObject},
     decompose : {
     /*** prend en paramètre une date de type chaine de caractère puis retourne un objet contenant : 
      *  {
