@@ -110,7 +110,7 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
       const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
       const isJson = contentType.contains("application/json");
       const cb = (d)=>{
-        d = isJson ?  (!isObj(d)? {data:d} : d) : d;
+        d = isJson ?  (!isObj(d)? {data:d,result:d} : d) : d;
         const response = {};
         if(res && typeof res !=='boolean' && typeof res !='string'){
            ['ok','status','statusText','error','headers'].map((v)=>{
