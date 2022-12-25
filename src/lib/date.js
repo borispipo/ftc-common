@@ -99,7 +99,7 @@ Date.prototype.resetSeconds = function(){
     this.setSeconds(0);
     return this;
 }
-var dateFormat = (function() {
+const dateFormat = (function() {
     var timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
     var timezoneClip = /[^-+\dA-Z]/g;
 
@@ -316,14 +316,16 @@ const DaysAndMonths = {
     monthNames: []
 };
 
+export const DaysAndMonthsObject = {};
+
 export const defaultDateTimeFormat = dateFormat.masks.default;
 export const defaultDateFormat = dateFormat.masks.defaultDate;
 
-let resetDaysAndMonth = ()=>{
-    var dayNames = i18n.lang("ms_date_daynames");
-    var monthNames = i18n.lang("ms_date_monthnames");
-    var monthNamesShort = shorten(monthNames, 3);
-    var dayNamesShort = shorten(dayNames, 3);
+const resetDaysAndMonth = ()=>{
+    const dayNames = i18n.lang("ms_date_daynames");
+    const monthNames = i18n.lang("ms_date_monthnames");
+    const monthNamesShort = shorten(monthNames, 3);
+    const dayNamesShort = shorten(dayNames, 3);
 
     DaysAndMonths.dayNames = dayNamesShort;
     DaysAndMonths.monthNames = monthNamesShort;
@@ -337,6 +339,44 @@ let resetDaysAndMonth = ()=>{
     for(var i in monthNames){
         DaysAndMonths.monthNames.push(monthNames[i]);
     }
+
+    ///on initialise les dates objects
+    for(let i in DaysAndMonths){
+        const dates = DaysAndMonths[i];
+        if(Array.isArray(dates)){
+            dates.map((value,index)=>{
+                if(typeof value !=='string' || !value) return;
+                DaysAndMonthsObject[i] = typeof DaysAndMonthsObject[i] ==='object' && DaysAndMonthsObject[i]? DaysAndMonthsObject[i] : {}; 
+                DaysAndMonthsObject[i][value.toUpperCase().trim()] = index;
+            });
+        }
+    }
+}
+
+export const sort = (values)=>{
+    if(!Array.isArray(values)) return values;
+    //on cherche le nom de colonne correspondante au type de données recherché
+    var keyName = null;
+    for(let i in values){
+        const v = values[i]?.toString()?.toUpperCase();
+        if(v){
+            for(let key in DaysAndMonthsObject){
+                if(v in DaysAndMonthsObject[key]){
+                    keyName = key;
+                    break;
+                }
+            }
+        }
+    }
+    if(keyName){
+        const keys = DaysAndMonthsObject[keyName];
+        return values.sort((a,b)=>{
+            a = keys[a.toUpperCase()];
+            b = keys[b.toUpperCase()];
+            return a < b ? -1 : +(a > b);
+        })
+    }
+    return values.sort();
 }
 
 function pad(val, len) {
@@ -1329,6 +1369,9 @@ Object.defineProperties(DateLib,{
         value : token,
         override:false,
         writable : false
+    },
+    sort : {
+        value : sort,
     },
     previousWeekDaysLimits : {
         ///retourne les dates limites de la semaine passée 
