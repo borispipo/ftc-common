@@ -329,10 +329,9 @@ const resetDaysAndMonth = ()=>{
 
     DaysAndMonths.dayNames = dayNamesShort;
     DaysAndMonths.monthNames = monthNamesShort;
-    DaysAndMonths.monthNamesShort = {};
-    /*for(let i in monthNamesShort){
-        DaysAndMonths.monthNamesShort[monthNamesShort[i]] = monthNamesShort[i];
-    }*/
+    DaysAndMonths.dayNamesLong = dayNames;
+    DaysAndMonths.monthNamesLong = monthNames;
+
     for(var i in dayNames){
         DaysAndMonths.dayNames.push(dayNames[i]);
     }
@@ -345,10 +344,22 @@ const resetDaysAndMonth = ()=>{
         const dates = DaysAndMonths[i];
         if(Array.isArray(dates)){
             dates.map((value,index)=>{
-                if(typeof value !=='string' || !value) return;
+                if(typeof value !=='string' || !value) {
+                    return;
+                }
                 DaysAndMonthsObject[i] = typeof DaysAndMonthsObject[i] ==='object' && DaysAndMonthsObject[i]? DaysAndMonthsObject[i] : {}; 
                 DaysAndMonthsObject[i][value.toUpperCase().trim()] = index;
             });
+            if(Array.isArray(DaysAndMonths[i])){
+                //on permute les dates de fin et de début
+                const first = DaysAndMonths[i][0].toUpperCase();
+                const last = DaysAndMonths[i][1].toUpperCase();
+                const length = DaysAndMonths[i].length;
+                if(first && last && ((first.startsWith("SUN") || first.startsWith("LUN")) || (last.startsWith("LUN") || last.startsWith("MON")))){
+                    DaysAndMonthsObject[i][first] = length;
+                    DaysAndMonthsObject[i][last] = 0;
+                }
+            }
         }
     }
 }
@@ -372,8 +383,8 @@ export const sort = (values)=>{
     if(keyName){
         const keys = DaysAndMonthsObject[keyName];
         return values.sort((a,b)=>{
-            a = keys[a.toString().toUpperCase().trim()];
-            b = keys[b.toString().toUpperCase().trim()];
+            a = keys[a?.toString().toUpperCase().trim()];
+            b = keys[b?.toString().toUpperCase().trim()];
             return a < b ? -1 : +(a > b);
         })
     }
