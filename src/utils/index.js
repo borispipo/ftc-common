@@ -11,6 +11,7 @@ import { parseJSON as pJSON, isJSON as isJ } from "./json";
 import isDateObj from "./isDateObj";
 import sprintf  from "./sprintf";
 import base64 from "$base64";
+import "./object.filter";
 
 export {sprintf};
 export {default as LorenIpsum} from "./loremIpsum";
