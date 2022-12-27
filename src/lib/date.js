@@ -99,6 +99,13 @@ Date.prototype.resetSeconds = function(){
     this.setSeconds(0);
     return this;
 }
+Date.prototype.resetHours2Minutes2Seconds = Date.prototype.resetHoursMinutesSeconds =function(){
+    this.setHours(0);
+    this.setMinutes(0);
+    this.setSeconds(0);
+    this.setMilliseconds(0);
+    return this;
+}
 const dateFormat = (function() {
     var timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g;
     var timezoneClip = /[^-+\dA-Z]/g;
