@@ -873,7 +873,7 @@ export const isSQLDate = function isISODate(value){
  * @param {int|Date} year, l'année où la date pour laquelle on veut récuperer la date
  * @param {int} month, le mois pour lequel on veut récupérer la date (valeur comprise entre 0 et 11)
  */
-function getFirstDayOfMonth(year, month) {
+export function getFirstDayOfMonth(year, month) {
     if(year && isDateObj(year)){
         year = date.getFullYear();
         month = date.getMonth();
@@ -893,7 +893,7 @@ function getFirstDayOfMonth(year, month) {
  * @param {boolean} {isDateTime} si la date est au format dateTime où non
  * @return {string} chaine de caractère au format parsé
  */
-function formatDatePeriod(periodDate,isDateTime){
+export function formatDatePeriod(periodDate,isDateTime){
     if(isNonNullString(periodDate)){
         const lang = i18n.getLang();
         const isFR = lang && typeof lang =="string" && lang.toLowerCase() == 'fr';
@@ -914,6 +914,59 @@ function formatDatePeriod(periodDate,isDateTime){
     }
     return "";
 }
+export const parseFromToDate = formatDatePeriod;
+
+/***
+ * retourne les dates limites de la semaine courante à partir de la date passée en paramètre
+ * @param {date}, l'objet date à partir duquel retourner les limites
+ * @param {string} format le format de données de la valeur résultat
+ */
+export const currentWeekDaysLimits = (date,format)=>{
+    const currentDate = isValidDate(date)? new Date(date) : new Date();
+    const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    const first = new Date(currentDate.setDate(diff));
+    const last = new Date(currentDate);
+    if(isNonNullString(format)){
+        format = format.trim();
+        return first.toDateFormat(format) +"=>"+last.toDateFormat(format);
+    }
+    return {first,last}
+}
+/***
+ * retourne les dates limites du mois  courant 
+ * @param {date}, l'objet date à partir duquel retourner les limites
+ * @param {string} format le format de données de la valeur résultat
+ */
+export const currentMonthDaysLimits = (date,format)=>{
+    const currentDate = isValidDate(date)? new Date(date) : new Date();
+    const first = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const last = currentDate;
+    if(isNonNullString(format)){
+        format = format.trim();
+        return first.toDateFormat(format) +"=>"+last.toDateFormat(format);
+    }
+    return {first,last}
+}
+
+/***
+ * retourne les dates limites de la semaine passée à partir de la date passées en une semaine
+ * @param {date}, l'objet date à partir duquel retourner les limites
+ * @param {string} format le format de données de la valeur résultat
+ */
+export const previousWeekDaysLimits = (date,format)=>{
+    let cDate = isValidDate(date)? new Date(date) : new Date();
+    var beforeOneWeek = new Date(cDate.getTime() - 60 * 60 * 24 * 7 * 1000)
+    var beforeOneWeek2 = new Date(beforeOneWeek);
+    let day = beforeOneWeek.getDay()
+    let diffToMonday = beforeOneWeek.getDate() - day + (day === 0 ? -6 : 1)
+    const first = new Date(beforeOneWeek.setDate(diffToMonday));
+    const last = new Date(beforeOneWeek2.setDate(diffToMonday + 6));
+    if(isNonNullString(format)){
+        format = format.trim();
+        return first.toDateFormat(format) +"=>"+last.toDateFormat(format);
+    }
+    return {first,last}
+};
 Object.defineProperties(DateLib,{
     daysInMonth : {
         value : daysInMonth,
@@ -980,6 +1033,7 @@ Object.defineProperties(DateLib,{
         value : parse,
         override : false, writable : false
     },
+    parseFromToDate : {value : parseFromToDate},
     formatDatePeriod : {
         value : formatDatePeriod,override : false, writable :false
     },
@@ -1395,31 +1449,13 @@ Object.defineProperties(DateLib,{
         value : sort,
     },
     previousWeekDaysLimits : {
-        ///retourne les dates limites de la semaine passée 
-        value : (date)=>{
-            let cDate = isValidDate(date)? new Date(date) : new Date();
-            var beforeOneWeek = new Date(cDate.getTime() - 60 * 60 * 24 * 7 * 1000)
-            var beforeOneWeek2 = new Date(beforeOneWeek);
-            let day = beforeOneWeek.getDay()
-            let diffToMonday = beforeOneWeek.getDate() - day + (day === 0 ? -6 : 1)
-            return {first:new Date(beforeOneWeek.setDate(diffToMonday)),last:new Date(beforeOneWeek2.setDate(diffToMonday + 6))}
-        },override : false
+        value : previousWeekDaysLimits,override : false
     },
     currentWeekDaysLimits : {
-        ///retourne les dates limites de la semaine courante 
-        value : (date)=>{
-            const currentDate = isValidDate(date)? new Date(date) : new Date();
-            const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-            const last = new Date(currentDate);
-            return {first:new Date(currentDate.setDate(diff)),last}
-        },override : false
+        value : currentWeekDaysLimits,override : false
     },
     currentMonthDaysLimits : {
-        ///retourne les dates limites de la semaine courante 
-        value : (date)=>{
-            const currentDate = isValidDate(date)? new Date(date) : new Date();
-            return {first:new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),last:currentDate}
-        },override : false
+        value : currentMonthDaysLimits,override : false
     },
     /***** retourne la date calculée depuis le nombre count et selon l'intervale since
      * @param {number}: count : le nombre à additionner à la date courante selon l'intervale interval
