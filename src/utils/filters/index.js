@@ -384,9 +384,13 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
         }
         f.field = defaultStr(f.field,i).trim();
         f.action = defaultStr(f.action).toLowerCase().trim();
-        if(f.action =="$today"){
-            f.operator = "$and";
+        if(f.action =="$today" || f.action == "$yesterday"){
+            if(!f.operator){
+                f.operator = "$and";
+            }
             f.action = "$eq"
+        } else if(f.action in  periodActions){
+            f.action = "$period";
         }
         filters[f.operator] = defaultArray(filters[f.operator]);
         const ob = {};
