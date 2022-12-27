@@ -592,7 +592,7 @@ export const isBase64 = function isBase64(str, options) {
  /*** retoune le type d'une chaine dataURl */
  export const getTypeFromDataURL = (dataURL)=>{
     if(!isDataURL(dataURL)) return null;
-    return dataURL[0].split(':')[1].split(';')[0];
+    return dataURL.split(',')[0].split(':')[1].split(';')[0]
  }
 
  export const getMimeTypeFromDataURL = getTypeFromDataURL;
