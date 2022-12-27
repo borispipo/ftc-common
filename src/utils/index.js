@@ -589,6 +589,14 @@ export const isBase64 = function isBase64(str, options) {
     return parsed;
  }
 
+ /*** retoune le type d'une chaine dataURl */
+ export const getTypeFromDataURL = (dataURL)=>{
+    if(!isDataURL(dataURL)) return null;
+    return dataURI[0].split(':')[1].split(';')[0];
+ }
+
+ export const getMimeTypeFromDataURL = getTypeFromDataURL;
+
  /**** convertis une chaine de caractère data-url en objet blob
   * @see : https://stackoverflow.com/questions/12168909/blob-from-dataurl
   */
