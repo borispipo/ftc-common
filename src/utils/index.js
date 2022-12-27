@@ -589,24 +589,33 @@ export const isBase64 = function isBase64(str, options) {
     return parsed;
  }
 
- /**** convertis une chaine de caractère data-url en objet blob */
- export function dataURLToBlob(dataURLStr){
-    let cvr = dataURLDecoder(dataURLStr);
-    if(!isObj(cvr) || !isNonNullString(cvr.data)) return undefined;
-    let {isBase64,data} = cvr;
-    var byteString = isBase64
-        // convert base64 to raw binary data held in a string
-        ? atob(data)
-        // convert base64/URLEncoded data component to raw binary
-        : decodeURIComponent(data);
+ /**** convertis une chaine de caractère data-url en objet blob
+  * @see : https://stackoverflow.com/questions/12168909/blob-from-dataurl
+  */
 
-    var array = [];
+ export function dataURLToBlob(dataURI) {
+    if(!isDataURL(dataURI)) return null;
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = base64.encode(dataURI.split(',')[1]);
+  
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+  
+    // create a view into the buffer
+    var ia = new Uint8Array(ab);
+  
+    // set the bytes of the buffer to the correct values
     for (var i = 0; i < byteString.length; i++) {
-        array.push(byteString.charCodeAt(i));
+        ia[i] = byteString.charCodeAt(i);
     }
-
-    return new Blob([new Uint8Array(array)], { type: mediaType });
- }
+  
+    // write the ArrayBuffer to a blob, and you're done
+    return  new Blob([ab], {type: mimeString});
+  }
 
  /*** converti un contenu base 64 en blob
   * @see : https://stackoverflow.com/questions/34993292/how-to-save-xlsx-data-to-file-as-a-blob/35713609#35713609
