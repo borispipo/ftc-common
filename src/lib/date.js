@@ -922,7 +922,7 @@ export const parseFromToDate = formatDatePeriod;
  * @param {string} format le format de données de la valeur résultat
  */
 export const currentWeekDaysLimits = (date,format)=>{
-    const currentDate = isValidDate(date)? new Date(date) : new Date();
+    const currentDate = isValidDate(date)? new Date(date) : new Date().resetHoursMinutesSeconds();
     const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
     const first = new Date(currentDate.setDate(diff));
     const last = new Date(currentDate);
@@ -938,7 +938,7 @@ export const currentWeekDaysLimits = (date,format)=>{
  * @param {string} format le format de données de la valeur résultat
  */
 export const currentMonthDaysLimits = (date,format)=>{
-    const currentDate = isValidDate(date)? new Date(date) : new Date();
+    const currentDate = isValidDate(date)? new Date(date) : new Date().resetHoursMinutesSeconds();
     const first = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const last = currentDate;
     if(isNonNullString(format)){
@@ -954,7 +954,7 @@ export const currentMonthDaysLimits = (date,format)=>{
  * @param {string} format le format de données de la valeur résultat
  */
 export const previousWeekDaysLimits = (date,format)=>{
-    let cDate = isValidDate(date)? new Date(date) : new Date();
+    let cDate = isValidDate(date)? new Date(date) : new Date().resetHoursMinutesSeconds();
     var beforeOneWeek = new Date(cDate.getTime() - 60 * 60 * 24 * 7 * 1000)
     var beforeOneWeek2 = new Date(beforeOneWeek);
     let day = beforeOneWeek.getDay()
