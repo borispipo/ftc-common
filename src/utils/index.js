@@ -601,30 +601,21 @@ export const isBase64 = function isBase64(str, options) {
   * @see : https://stackoverflow.com/questions/12168909/blob-from-dataurl
   */
 
- export function dataURLToBlob(dataURI) {
-    if(!isDataURL(dataURI)) return null;
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    var byteString = base64.encode(dataURI.split(',')[1]);
-  
-    // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-  
-    // write the bytes of the string to an ArrayBuffer
-    var ab = new ArrayBuffer(byteString.length);
-  
-    // create a view into the buffer
-    var ia = new Uint8Array(ab);
-  
-    // set the bytes of the buffer to the correct values
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-  
-    // write the ArrayBuffer to a blob, and you're done
-    return  new Blob([ab], {type: mimeString});
-  }
+ export function dataURLToBlob(dataurl) {
+    if(!isDataURL(dataurl)) return null;
+    var parts = dataurl.split(','), mime = parts[0].match(/:(.*?);/)[1]
+    if(parts[0].indexOf('base64') !== -1) {
+        var bstr = base64.encode(parts[1]), n = bstr.length, u8arr = new Uint8Array(n)
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n)
+        }
 
+        return new Blob([u8arr], {type:mime})
+    } else {
+        var raw = decodeURIComponent(parts[1])
+        return new Blob([raw], {type: mime})
+    }
+}
  /*** converti un contenu base 64 en blob
   * @see : https://stackoverflow.com/questions/34993292/how-to-save-xlsx-data-to-file-as-a-blob/35713609#35713609
   * @param {string} base64Data la chaine a convertir 
