@@ -924,8 +924,8 @@ export const parseFromToDate = formatDatePeriod;
 export const currentWeekDaysLimits = (date,format)=>{
     const currentDate = isValidDate(date)? new Date(date) : new Date().resetHoursMinutesSeconds();
     const day = currentDate.getDay(), diff = currentDate.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-    const first = new Date(currentDate.setDate(diff));
     const last = new Date(currentDate);
+    const first = new Date(currentDate.setDate(diff));
     if(isNonNullString(format)){
         format = format.trim();
         return first.toDateFormat(format) +"=>"+last.toDateFormat(format);
