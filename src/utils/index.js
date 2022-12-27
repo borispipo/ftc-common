@@ -605,7 +605,7 @@ export const isBase64 = function isBase64(str, options) {
     if(!isDataURL(dataurl)) return null;
     var parts = dataurl.split(','), mime = parts[0].match(/:(.*?);/)[1]
     if(parts[0].indexOf('base64') !== -1) {
-        var bstr = base64.encode(parts[1]), n = bstr.length, u8arr = new Uint8Array(n)
+        var bstr = base64.decode(parts[1]), n = bstr.length, u8arr = new Uint8Array(n)
         while(n--){
             u8arr[n] = bstr.charCodeAt(n)
         }
