@@ -121,6 +121,7 @@ const checkPAction = ({action,user_perm})=>{
         action1|action2|action3 signifie que l'une des actions est valide pour la permission.
             exemple action = "read|write|edit|delete" : signifie l'une des actions valide la permission en lecture
         si action est un objet alors, le résultat est un objet, contenant comme clé, la valeur de chaque action
+        si la ressource est masterAdmin ou isMasterAdmin, alors l'utilisateur à accès à la permission s'il est masterAdmin uniquement
     */
 const checkPerm = ({perms,resource,action}) =>{
     let result = false;
@@ -137,6 +138,10 @@ const checkPerm = ({perms,resource,action}) =>{
         return false;
     }
     resource = resource.trim().toLowerCase();
+    const isMasterAdminRessource = resource ==="masteradmin" || resource =='ismasteradmin';
+    if(isMasterAdminRessource){
+        return isMasterAdmin();
+    }
     let isOA = isObjectOrArray(action);
     let r2 = false;
     for (let perm_resource in perms){
