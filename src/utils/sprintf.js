@@ -16,6 +16,8 @@ export default function sprintf(string,patterns){
      '&date&' : (str) => new Date().format("dd/mm/yyyy"),
      '&heure&' : (str) => new Date().format("HH:MM:ss"),  
      '&dateheure&' :  dateTime,
+     '&jour&' : day,
+     '&mois&' : month,
     },patterns);
     Object.map(_partterns,(p,i)=>{
          let idx = i;
@@ -26,3 +28,5 @@ export default function sprintf(string,patterns){
  }
 
  const dateTime = (str)=> new Date().format("dd/mm/yyyy HH:MM:ss");
+ const day = ()=>new Date().format("dd");
+ const month = ()=>new Date().format("dd");
