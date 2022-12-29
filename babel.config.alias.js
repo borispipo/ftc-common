@@ -75,14 +75,13 @@ module.exports = function(opts){
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
         "$uri" : path.resolve(common,"utils","uri"),
-        "$cpouchdbTableData" : path.resolve(common,"pouchdb","data","tableData"),
-        "$cpouchdbStructData" : path.resolve(common,"pouchdb","data","structData"),
-        
+
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
+        
         "$datafileManager" : path.resolve(common,"pouchdb","dataFileManager"),
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
@@ -144,14 +143,6 @@ module.exports = function(opts){
      */
     if(!r["$getLoginProps"]){
         r["$getLoginProps"] = r["$cgetLoginProps"];
-    }
-    /*** l'ensemble des tables data de l'application */
-    if(!r.$pouchdbTableData){
-        r.$pouchdbTableData = r.$cpouchdbTableData;
-    }
-    ///l'ensemble des struct data de l'application
-    if(!r.$pouchdbStructData){
-        r.$pouchdbStructData = r.$cpouchdbStructData;
     }
     r.$apiCustom = r.$apiCustom || r.$capiCustom;
     return r;

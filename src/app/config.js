@@ -12,6 +12,14 @@ import {isValidCurrency} from "$ccurrency/utils";
 
 const configRef = {current:null};
 
+/**** l'ensemble des tables de la base de données */
+const databaseTablesDataRef = {current:null};
+
+const databaseStructsDataRef = {current : {}};
+
+const getTableDataRef = {current : {}};
+const getStructDataRef = {current : {}};
+
 const sessionDatatKey = "app-config-session-data-key";
 const sessionAPIHostKey = "app-config-session-api-host";
 
@@ -248,6 +256,37 @@ const config = {
     },
     get setValue (){
         return setConfigValue;
+    },
+    /**** les tables data sont les tables de données de la bd */
+    get databaseTablesData (){
+        return getDatabaseTablesData();
+    },
+    set databaseTablesData(value){
+        return setDatabaseTablesData(value)
+    },
+    get databaseStructsData (){
+        return getDatabaseStructsData();
+    },
+    set databaseStructsData(value){
+        return setDatabaseStructsData(value);
+    },
+    get databaseTableData (){
+        return getDatabaseTableData;
+    },
+    get databaseStructData (){
+        return getDatabaseStructData;
+    },
+    set getDatabaseTableData (value){
+        if(typeof value =='function'){
+            getTableDataRef.current = value;
+        }
+        return getTableDataRef.current;
+    },
+    set getDatabaseStructData (value){
+        if(typeof getStructDataRef.current =='function'){
+            getStructDataRef.current = value;
+        }
+        return getStructDataRef.current;
     }
 }
 
@@ -327,5 +366,56 @@ export const prefixStrWithAppId = (text,sep)=>{
     return r+text.ltrim(r); 
 }
 export const prefixWithAppId = prefixStrWithAppId;
+
+export const getDatabaseTablesData  = ()=>{
+    if(databaseTablesDataRef.current && typeof databaseTablesDataRef.current =='object') return databaseTablesDataRef.current;
+    return {};
+}
+
+export const getDatabaseStructsData  = ()=>{
+    if(databaseStructsDataRef.current && typeof databaseStructsDataRef.current =='object') return databaseStructsDataRef.current;
+    return {};
+}
+
+export const setDatabaseStructsData = (value)=>{
+    if(value && typeof value =='object'){
+        databaseStructsDataRef.current = value;
+    }
+    return databaseStructsDataRef.current;
+}
+export const setDatabaseTablesData = ()=>{
+    if(value && typeof value =='object'){
+        databaseTablesDataRef.current = value;
+    }
+    return databaseTablesDataRef.current;
+}
+
+const getDBTableOrStructData = (tableName,tables)=>{
+    if(!isNonNullString(tableName)) return null;
+    if(typeof tables !== 'object' || !tables) return null;
+    for(let i in tables){
+        const table = tables[i];
+        if(!table || typeof table !=='object') return null;
+        const name = typeof table.table =='string' && table.tableName || typeof table.tableName =='string' && table.tableName || '';
+        if(name && name.trim().toLowerCase() === tableName.toLowerCase()){
+            return table;
+        }
+    }
+    return null;
+}
+/****recupère la structData dont le nom est passée en paramètre */
+export const getDatabaseStructData = (tableName,table)=>{
+    if(typeof getStructDataRef.current =='function'){
+        return getStructDataRef.current(tableName,table);
+    }
+    return getDBTableOrStructData(tableName,config.databaseStructsData);
+}
+/****recupère la tableData dont le nom est passée en paramètre */
+export const getDatabaseTableData = (tableName,table)=>{
+    if(typeof getTableDataRef.current =='function'){
+        return getTableDataRef.current (tableName,table);
+    }
+    return getDBTableOrStructData(tableName,config.databaseTablesData);
+}
 
 export default config;
