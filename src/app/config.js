@@ -383,7 +383,7 @@ export const setDatabaseStructsData = (value)=>{
     }
     return databaseStructsDataRef.current;
 }
-export const setDatabaseTablesData = ()=>{
+export const setDatabaseTablesData = (value)=>{
     if(value && typeof value =='object'){
         databaseTablesDataRef.current = value;
     }

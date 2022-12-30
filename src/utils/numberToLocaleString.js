@@ -406,6 +406,6 @@ export const abreviate2FormatMoney = (number)=>{
     const {formattedValue:fVal} =  Currency.formatMoney(value,undefined, undefined, undefined, undefined, undefined,true);
     return fVal.replace('%v',value.formatNumber()+format);
 }
-Number.prototype.abreviate2FormatMoney = function(){
+Number.prototype.abreviate2FormatMoney = Number.prototype.abreviate2formatMoney = function(){
     return abreviate2FormatMoney(this.valueOf());
 }
