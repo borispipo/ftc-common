@@ -377,17 +377,17 @@ const _abreviateNumber = (num, returnObject) =>{
         d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
         e = d; // append power
     const suffix = ['', 'K', 'M', 'B', 'T'][k];
-    const formattedResult = e+suffix;
+    const value = parseFloat(e) ||0;
     if(returnObject ===true){
         return {
             formattedValue : e,
-            value : parseFloat(e) ||0,
+            value,
             suffix,
             format : suffix,
-            formattedResult
+            formattedResult : e+suffix,
         }
     }
-    return formattedResult;
+    return (value).formatNumber()+suffix;
 };
 export const abreviateNumber = (num)=>{
     return _abreviateNumber(num,false);
