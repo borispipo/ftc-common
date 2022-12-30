@@ -1176,8 +1176,8 @@ export const incrementAlphanumericStr = function incrementAlphanumericStr (str){
     return prefix+increment_string_num(numeric);
 }
 
-require("./numberToWords")
-require("./numberToLocaleString")
+export * from "./numberToWords"
+export * from "./numberToLocaleString";
 
 /*** randomise l'alphabet */
 export function randomAlphabet() {

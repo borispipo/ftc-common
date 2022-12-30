@@ -259,11 +259,11 @@ function commafy( number,separator,decimal ) {
  *
  * To do: tidy up the parameters
  */
-var formatMoney = lib.formatMoney = function(number, symbol, decimal_digits, thousand, decimal, format) {
+export const formatMoney = lib.formatMoney = function(number, symbol, decimal_digits, thousand, decimal, format,returnObject) {
 	// Resursively format arrays:
 	if ((number) && typeof number === 'object') {
 		return Object.mapToArray(number, function(val){
-			return formatMoney(val, symbol, decimal_digits, thousand, decimal, format);
+			return formatMoney(val, symbol, decimal_digits, thousand, decimal, format,returnObject);
 		});
 	}
 
@@ -271,7 +271,7 @@ var formatMoney = lib.formatMoney = function(number, symbol, decimal_digits, tho
 	number = unformat(number);
 
 	// Build options object from second param (if object) or all params, extending defaults:
-	var opts = defaults(
+	const opts = defaults(
 			(isObj(symbol) ? symbol: {
 				symbol : symbol,
 				decimal_digits : decimal_digits,
@@ -287,9 +287,20 @@ var formatMoney = lib.formatMoney = function(number, symbol, decimal_digits, tho
 
 		// Choose which format to use for this value:
 		useFormat = defaultStr(number > 0 ? formats.pos : number < 0 ? formats.neg : formats.zero);
-
+    const formattedValue = useFormat.replace('%s', opts.symbol);
+	const formattedNumber =  formatNumber(Math.abs(number), checkPrecision(opts.decimal_digits), opts.thousand, opts.decimal);
+	const formattedResult = formattedValue.replace('%v',formattedNumber);
+	if(returnObject ===true){
+		return {
+			formattedValue,
+			formattedNumber,
+			symbol : opts.symbol,
+			useFormat,
+			formattedResult,
+		}
+	}
 	// Return with currency symbol added:
-	return useFormat.replace('%s', opts.symbol).replace('%v', formatNumber(Math.abs(number), checkPrecision(opts.decimal_digits), opts.thousand, opts.decimal));
+	return formattedResult;
 };
 
 

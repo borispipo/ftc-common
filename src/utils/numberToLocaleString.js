@@ -4,7 +4,7 @@
 
 import defaultStr from "$cutils/defaultStr";
 import fNumber from "./formatNumber";
-import Currency from "$ccurrency";
+import Currency,{getDefaultCurrency} from "$ccurrency";
 
 // Got this from MDN:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString#Example:_Checking_for_support_for_locales_and_options_arguments
@@ -142,7 +142,7 @@ if (!toLocaleStringSupportsLocales()) {
         "nb-NO": "post"
     };
 
-    var currencySymbols = {
+    const currencySymbols = {
         "afn": "؋",
         "ars": "$",
         "awg": "ƒ",
@@ -260,7 +260,7 @@ if (!toLocaleStringSupportsLocales()) {
         "zwd": "Z$"
     };
 
-    var currencyFormats = {
+    const currencyFormats = {
         pre: "{{code}}{{num}}",
         post: "{{num}} {{code}}",
         prespace: "{{code}} {{num}}"
@@ -299,6 +299,7 @@ if (!toLocaleStringSupportsLocales()) {
         return sNum;
     };
 }
+/*** compte le nombre de décimales sur le nombre passé en paramètre */
 Number.prototype.countDecimals = function () {
     if(Math.floor(this.valueOf()) === this.valueOf()) return 0;
     let str = this.toString().split(".")[1];
@@ -344,11 +345,67 @@ String.prototype.parseToDecimal = function(){
     return v;
 }
 
-
+/*** 
+ * formate un nombre en devise : symbol, decimal_digits, thousand, decimal, format
+ */
 Number.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format){
     return Currency.formatMoney(this.valueOf(),symbol, decimal_digits, thousand, decimal, format);
 }
 
 String.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format){
     return Currency.formatMoney((this.toString().replaceAll(" ",'')),symbol, decimal_digits, thousand, decimal, format);
+}
+
+/**** @see : https://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn */
+const _abreviateNumber = (num, returnObject) =>{
+    if (num === null || typeof num !=='number') { returnObject === true ? {} : null} // terminate early
+    if (num === 0) { 
+        return returnObject === true ? {
+            formattedResult :'0',
+            value : 0,
+            format : '',
+            suffix : '',
+            formattedValue : '0',
+        } : '0'; 
+    } // terminate early
+    const decimals = num.countDecimals();
+    let fixed = Math.min(decimals,5);
+    fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
+    var b = (num).toPrecision(2).split("e"), // get power
+        k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
+        c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), // divide by power
+        d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
+        e = d; // append power
+    const suffix = ['', 'K', 'M', 'B', 'T'][k];
+    const formattedResult = e+suffix;
+    if(returnObject ===true){
+        return {
+            formattedValue : e,
+            value : parseFloat(e) ||0,
+            suffix,
+            format : suffix,
+            formattedResult
+        }
+    }
+    return formattedResult;
+};
+export const abreviateNumber = (num)=>{
+    return _abreviateNumber(num,false);
+}
+
+/*** permet d'abréger un nombre en kilo, ainsi de suite */
+Number.prototype.abreviate = function(){
+    return abreviateNumber(this.valueOf());
+}
+/****abbrège un nombre et le formate en devise
+ * @param {number} number le nombre a formatter et abréger
+ */
+export const abreviate2FormatMoney = (number)=>{
+    const {value,format,formattedValue} = _abreviateNumber(number,true);
+    if(typeof value !='number' || !format) return formattedValue;
+    const {formattedValue:fVal} =  Currency.formatMoney(value,undefined, undefined, undefined, undefined, undefined,true);
+    return fVal.replace('%v',value.formatNumber()+format);
+}
+Number.prototype.abreviate2FormatMoney = function(){
+    return abreviate2FormatMoney(this.valueOf());
 }
