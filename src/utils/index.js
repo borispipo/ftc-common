@@ -518,6 +518,7 @@ export const isBlob = (blob) =>{
     return false;
 }
 export const isBase64 = function isBase64(str, options) {
+    if(!isNonNullString(str)) return false;
     options = defaultObj(options);
     options.urlSafe = defaultBool(options.urlSafe,false);
     const len = str.length;
