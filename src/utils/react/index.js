@@ -259,18 +259,17 @@ export const useDidMount = React.useDidMount = function useDidMount(callback) {
         }
     }, []);
 }
-
+export const useOnRenderTimeout = React.useOnRenderTimeout = 500;
 /**
  * useOnRender hook
  * Calls a function on every render
  *
  * @param {Function} callback Callback function to be called on mount
  */
-export const useOnRender = React.useOnRender = function useOnRender(callback) {
+export const useOnRender = React.useOnRender = function useOnRender(callback,timeout) {
     React.useEffect(() => {
-        if (typeof callback === 'function') {
-            callback();
-        }
+        callback = typeof callback =='function'? callback : x=>true;
+        setTimeout(callback,typeof timeout =='number'? timeout : React.useOnRenderTimeout);
     });
 }
 
