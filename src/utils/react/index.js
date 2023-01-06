@@ -261,6 +261,20 @@ export const useDidMount = React.useDidMount = function useDidMount(callback) {
 }
 
 /**
+ * useOnRender hook
+ * Calls a function on every render
+ *
+ * @param {Function} callback Callback function to be called on mount
+ */
+export const useOnRender = function useOnRender(callback) {
+    React.useEffect(() => {
+        if (typeof callback === 'function') {
+            callback();
+        }
+    });
+}
+
+/**
  * useWillUnmount hook
  * Fires a callback just before component unmounts
  *
