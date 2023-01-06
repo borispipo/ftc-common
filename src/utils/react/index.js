@@ -266,7 +266,7 @@ export const useDidMount = React.useDidMount = function useDidMount(callback) {
  *
  * @param {Function} callback Callback function to be called on mount
  */
-export const useOnRender = function useOnRender(callback) {
+export const useOnRender = React.useOnRender = function useOnRender(callback) {
     React.useEffect(() => {
         if (typeof callback === 'function') {
             callback();
