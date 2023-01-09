@@ -19,4 +19,6 @@
 
     pieceIdSuffixDateFormat : {string}, default : "ddmmyy-HHMMssl" : le format de sufixe à ajouter aux pièces générées automatiquement
     
+    /*** cette fonction est appelée pour récupérer la piece associée à l'utilisateur connecté, afin de généré l'id d'un élément donné*/
+    getUserPieceId : (user)=> {string}
 }
