@@ -64,7 +64,7 @@ export const signIn = (user,callback,trigger)=>{
     }
     return {response,user,userId,token,...rest};
   }).catch((e)=>{
-      console.log(e," unable to signIn user")
+      console.log(e.stackTrace|| e.message || e.msg," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
       //logout();
       throw e;
@@ -144,7 +144,7 @@ export const signOut = (callback,user,trigger)=>{
       };
       if(isPromise(promise)){
          return promise.then(cb).catch((e)=>{
-          console.log(e," upsert user");
+          console.log(e.message || e.stackTrace || e.msg," upsert user");
          });
       } else {
         cb();
