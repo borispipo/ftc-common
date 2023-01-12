@@ -1,12 +1,12 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+import isNStr from "./isNonNullString";
+export const isNonNullString = isNStr;
 import _uniqid from "./uniqid";
 import _isDomElement from "./dom/isDOMElement";
 import { isPlainObject as _isPlainObject} from "./extendObj";
 import defStr from "./defaultStr"
-import isNStr from "./isNonNullString";
 import { parseJSON as pJSON, isJSON as isJ } from "./json";
 import isDateObj from "./isDateObj";
 import sprintf  from "./sprintf";
@@ -24,7 +24,7 @@ export const isJSON = isJ;
 export const isDOMElement = _isDomElement;
 export {default as extendObj } from "./extendObj"
 export const defaultStr = defStr;
-export const isNonNullString = isNStr;
+
 
 
 
