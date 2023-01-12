@@ -186,7 +186,7 @@ export const getTextFieldMode = x=> {
 export const getProperty = function(){
     const args = Array.prototype.slice.call(arguments,0);
     for(let i in args){
-        const key = args[i];
+        let key = args[i];
         if(typeof key =='string' && key){
             key = key.trim();
             const v = Theme.current[key];
