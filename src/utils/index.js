@@ -1,8 +1,7 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import isNStr from "./isNonNullString";
-export const isNonNullString = isNStr;
+import isNonNullString from "./isNonNullString";
 import _uniqid from "./uniqid";
 import _isDomElement from "./dom/isDOMElement";
 import { isPlainObject as _isPlainObject} from "./extendObj";
@@ -13,7 +12,7 @@ import sprintf  from "./sprintf";
 import base64 from "$base64";
 import "./object.filter";
 
-export {sprintf};
+export {sprintf,isNonNullString};
 export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
 export {default as StringBuilder} from "./StringBuilder";
