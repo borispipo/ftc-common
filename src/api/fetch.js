@@ -206,6 +206,15 @@ export function getFetcherOptions (opts,options){
         });
      }
      opts.queryParams = queryParams;
+     const method = defaultStr(opts.method).toLowerCase();
+     if((method ==='get' | method =='post') && (isObj(opts.fetchOptions))){
+         if(method =='get'){
+            opts.queryParams = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions,queryParams);
+         } else {
+            opts.body = defaultObj(opts.body);
+            opts.body.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.body.fetchOptions);
+         }
+     }
      if(typeof mutator =='function'){
         mutator(opts)
      }

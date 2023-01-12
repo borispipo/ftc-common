@@ -681,13 +681,13 @@ export const getFetchOptions = (opts,options)=>{
         opts = {path:opts};
     }
     opts = extendObj(true,{},opts,options);
-    opts.queryParams = Object.clone(opts.queryParams);
-    if(opts.selector || opts.queryParams.where){
-        const fOptions = extendObj(opts.queryParams.fetchOptions,{
-            where : extendObj(true,true,opts.selector,opts.queryParams.where),
-            fields : defaultVal(opts.queryParams.fields,opts.fields),
+    opts.fetchOptions = isObj(opts.fetchOptions) ? Object.clone(opts.fetchOptions) : {};
+    if(opts.selector || opts.fetchOptions.where){
+        const fOptions = extendObj(opts.fetchOptions,{
+            where : extendObj(true,true,opts.selector,opts.fetchOptions.where),
+            fields : defaultVal(opts.fetchOptions.fields,opts.fields),
         });
-        if(isObj(opts.sort) && isNonNullString(opts.sort.column)){
+        if(!isObj(fOptions.sort) && isObj(opts.sort) && isNonNullString(opts.sort.column)){
             fOptions.sort = opts.sort;
         }
         if(!fOptions.limit && typeof opts.limit =='number' && opts.limit){
@@ -696,7 +696,7 @@ export const getFetchOptions = (opts,options)=>{
         if(!fOptions.page && typeof opts.page =='number' && opts.page){
             fOptions.page = opts.page;
         }
-        opts.queryParams = extendObj({},opts.queryParams,fOptions);
+        opts.fetchOptions = fOptions;
     }
     return opts;
 }
