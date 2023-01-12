@@ -5,7 +5,7 @@
 import storage from "./storage";
 import {isJSON, parseJSON,stringify} from "$cutils/json"
 import isNonNullString from "$cutils/isNonNullString";
-import {prefixStrWithAppId} from "$capp/config";
+import {sanitizeKey} from "../utils";
 import isDateObj from "$cutils/isDateObj";
 function extend () {
     var i = 0;
@@ -31,7 +31,7 @@ function init (converter) {
      * @param expire : la durée de la session en milliseconds
      */
     function set (key, value, attributes,success) {
-        key = prefixStrWithAppId (key);
+        key = sanitizeKey (key);
         var oldValue = value,oldKey = key;
         if(typeof attributes === 'function'){
             if(success && typeof success == 'object'){
@@ -131,7 +131,7 @@ function init (converter) {
         return r;
     }
     function get (key,success) {
-        key = prefixStrWithAppId (key);
+        key = sanitizeKey (key);
         success = typeof success =='function'? success : function(){};
         const g = storage.get(key,(v)=>{
             success.call(api,_handleRetrievedCookie(key,v));

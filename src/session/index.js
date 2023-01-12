@@ -8,7 +8,7 @@
 import storage from "./web/storage";
 import {isJSON, parseJSON,stringify} from "$cutils/json"
 import {isNonNullString} from "$cutils";
-import {prefixStrWithAppId} from "$capp/config";
+import { sanitizeKey } from "./utils";
 import isDateObj from "$cutils/isDateObj";
 function extend () {
     var i = 0;
@@ -33,7 +33,7 @@ function init (converter) {
      * @param expire : la durée de la session en milliseconds
      */
     function set (key, value, attributes,success) {
-        key = prefixStrWithAppId (key);
+        key = sanitizeKey(key)
         var oldValue = value,oldKey = key;
         if(typeof attributes === 'function'){
             if(success && typeof success == 'object'){
@@ -92,9 +92,6 @@ function init (converter) {
             // ...
             stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
         }
-        if(key =="com.ftc.apps.salite1-CURRUSERSESSIONNAME"){
-            console.log("will set ",value)
-        }
         return storage.set(key,value + stringifiedAttributes,(val)=>{
             success.call(api,oldValue,oldKey);
         })
@@ -136,14 +133,11 @@ function init (converter) {
         return r;
     }
     function get (key,success) {
-        key = prefixStrWithAppId (key);
+        key = sanitizeKey(key)
         success = typeof success =='function'? success : function(){};
         let g = storage.get(key,(v)=>{
             success.call(api,_handleRetrievedCookie(key,v));
         });
-        if(key =="com.ftc.apps.salite1-CURRUSERSESSIONNAME"){
-            console.log("has set ",key,_handleRetrievedCookie(key,g));
-        }
         return _handleRetrievedCookie(key,g)
     }
 

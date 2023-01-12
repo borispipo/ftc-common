@@ -301,7 +301,7 @@ export const getDevMail = x=>getConfigValue("devMail");
 export const getDevWebsite = x=>getConfigValue("devWebsite");
 export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
-export const getAppId = x=>getConfigValue("appId");
+export const getAppId = x=>getConfigValue("appId","id");
 export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
@@ -360,10 +360,13 @@ export const getTheme  =x=>{
 
 export const prefixStrWithAppId = (text,sep)=>{
     const appId = getAppId();
+    if(!isNonNullString(appId)){
+        console.error("Id de l'application non définie dans le fichier de configuration. vous devez le définir comme chaine de caractère non nulle dans la propriété appId ou id de ce même fichier");
+    }
     if(typeof text !=="string") return appId;
     sep = typeof sep =="string"? sep : "-";
-    let r = appId+sep;
-    return r+text.ltrim(r); 
+    const r = appId+sep;
+    return r+text.trim().ltrim(r); 
 }
 export const prefixWithAppId = prefixStrWithAppId;
 

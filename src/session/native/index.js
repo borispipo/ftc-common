@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import isPromise from "$cutils/isPromise";
 import {handleError} from './helpers';
 import {stringify} from "$cutils/json";
+import { sanitizeKey } from './utils';
 
 let currentInitSession = undefined;
 
@@ -31,10 +32,11 @@ class SyncStorage {
   }
 
   get(key) {
-    return this.data.get(key);
+    return this.data.get(sanitizeKey(key));
   }
 
   set(key, value) {
+    key = sanitizeKey(key);
     if (!key) return handleError('set', 'a key');
     this.data.set(key, value);
     value = stringify(value);
@@ -42,6 +44,7 @@ class SyncStorage {
   }
 
   remove(key) {
+    key = sanitizeKey(key);
     if (!key) return handleError('remove', 'a key');
 
     this.data.delete(key);
