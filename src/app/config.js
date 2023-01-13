@@ -13,9 +13,9 @@ import {isValidCurrency} from "$ccurrency/utils";
 const configRef = {current:null};
 
 /**** l'ensemble des tables de la base de données */
-const databaseTablesDataRef = {current:null};
+const tablesDataRef = {current:null};
 
-const databaseStructsDataRef = {current : {}};
+const structsDataRef = {current : {}};
 
 const getTableDataRef = {current : {}};
 const getStructDataRef = {current : {}};
@@ -258,31 +258,37 @@ const config = {
         return setConfigValue;
     },
     /**** les tables data sont les tables de données de la bd */
-    get databaseTablesData (){
-        return getDatabaseTablesData();
+    get tablesData (){
+        return getTablesData();
     },
-    set databaseTablesData(value){
-        return setDatabaseTablesData(value)
+    get getTablesData(){
+        return getTablesData;
     },
-    get databaseStructsData (){
-        return getDatabaseStructsData();
+    set tablesData(value){
+        return setTablesData(value)
     },
-    set databaseStructsData(value){
-        return setDatabaseStructsData(value);
+    get structsData (){
+        return getStructsData();
     },
-    get databaseTableData (){
-        return getDatabaseTableData;
+    get getStructsData(){
+        return getStructsData;
     },
-    get databaseStructData (){
-        return getDatabaseStructData;
+    set structsData(value){
+        return setStructsData(value);
     },
-    set getDatabaseTableData (value){
+    get getTableData (){
+        return getTableData;
+    },
+    get getStructData (){
+        return getStructData;
+    },
+    set getTableData (value){
         if(typeof value =='function'){
             getTableDataRef.current = value;
         }
         return getTableDataRef.current;
     },
-    set getDatabaseStructData (value){
+    set getStructData (value){
         if(typeof getStructDataRef.current =='function'){
             getStructDataRef.current = value;
         }
@@ -370,27 +376,27 @@ export const prefixStrWithAppId = (text,sep)=>{
 }
 export const prefixWithAppId = prefixStrWithAppId;
 
-export const getDatabaseTablesData  = ()=>{
-    if(databaseTablesDataRef.current && typeof databaseTablesDataRef.current =='object') return databaseTablesDataRef.current;
+export const getTablesData  = ()=>{
+    if(tablesDataRef.current && typeof tablesDataRef.current =='object') return tablesDataRef.current;
     return {};
 }
 
-export const getDatabaseStructsData  = ()=>{
-    if(databaseStructsDataRef.current && typeof databaseStructsDataRef.current =='object') return databaseStructsDataRef.current;
+export const getStructsData  = ()=>{
+    if(structsDataRef.current && typeof structsDataRef.current =='object') return structsDataRef.current;
     return {};
 }
 
-export const setDatabaseStructsData = (value)=>{
+export const setStructsData = (value)=>{
     if(value && typeof value =='object'){
-        databaseStructsDataRef.current = value;
+        structsDataRef.current = value;
     }
-    return databaseStructsDataRef.current;
+    return structsDataRef.current;
 }
-export const setDatabaseTablesData = (value)=>{
+export const setTablesData = (value)=>{
     if(value && typeof value =='object'){
-        databaseTablesDataRef.current = value;
+        tablesDataRef.current = value;
     }
-    return databaseTablesDataRef.current;
+    return tablesDataRef.current;
 }
 
 const getDBTableOrStructData = (tableName,tables)=>{
@@ -407,18 +413,18 @@ const getDBTableOrStructData = (tableName,tables)=>{
     return null;
 }
 /****recupère la structData dont le nom est passée en paramètre */
-export const getDatabaseStructData = (tableName,table)=>{
+export const getStructData = (tableName,table)=>{
     if(typeof getStructDataRef.current =='function'){
         return getStructDataRef.current(tableName,table);
     }
-    return getDBTableOrStructData(tableName,config.databaseStructsData);
+    return getDBTableOrStructData(tableName,config.structsData);
 }
 /****recupère la tableData dont le nom est passée en paramètre */
-export const getDatabaseTableData = (tableName,table)=>{
+export const getTableData = (tableName,table)=>{
     if(typeof getTableDataRef.current =='function'){
         return getTableDataRef.current (tableName,table);
     }
-    return getDBTableOrStructData(tableName,config.databaseTablesData);
+    return getDBTableOrStructData(tableName,config.tablesData);
 }
 
 export default config;
