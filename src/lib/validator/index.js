@@ -4,7 +4,7 @@
 
 import {observable,isObservable,addObserver } from "../observable";
 import i18n from "$ci18n";
-import {isNonNullString,isPromise,isNullOrEmpty,extendObj,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
+import {isNonNullString,isPromise,defaultObj,isNullOrEmpty,extendObj,defaultStr,isNumber,isFunction,isValidEmail,isValidDataFileName} from "$cutils";
 import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
