@@ -259,6 +259,8 @@ dateFormat.masks = {
     "monthO2" : "mm/yy",
     "monthO3" : "mm-yyyy",
     "monthO4" : "mm-yy",
+    "month3333" : "mm yyyy",
+    "month3332" : "mm yy",
     "monthO5" : "mmm yyyy",
     "monthO6" : "mmm yy",
     "monthO7" : "mmmm yyyy",
@@ -300,8 +302,17 @@ dateFormat.masks = {
     "variantF10" : "dd-mmm-yyyy",
 };
 /*** la liste des formats ordonnés parmis ceux ci */
-const keys = Object.keys(dateFormat.masks);
-const sValues = keys.map(key=>dateFormat.masks[key])
+const keys = [];
+const values = {};
+const dFormats = {};
+Object.map(dateFormat.mask,(value,key)=>{
+    if(!values[value]){
+        keys.push(key);
+        dFormats[key] = value;
+        values [value] = true;
+    }
+})
+const sValues = keys.map(key=>dFormats[key])
     .sort((a, b) => {
         a = a.replaceAll(":","").replaceAll("/","-")
         b = b.replaceAll(":","").replaceAll("/","-")
