@@ -293,6 +293,15 @@ const config = {
             getStructDataRef.current = value;
         }
         return getStructDataRef.current;
+    },
+    get runBackgroundTasks(){
+        if(typeof runBackgroundTasksRef.current =='function'){
+            return runBackgroundTasksRef.current;
+        }
+        return undefined;
+    },
+    set runBackgroundTasks(value){
+        runBackgroundTasksRef.current = value;
     }
 }
 
@@ -312,6 +321,7 @@ export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
+const runBackgroundTasksRef = {current:null};
 export const getCurrency = ()=> {
     const currency = Object.assign({},session.get("appConfigCurrency"));
     const format = getCurrencyFormat();

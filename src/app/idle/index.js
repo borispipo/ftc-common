@@ -5,7 +5,10 @@
 export {default as AppStateService} from "./AppStateService";
 import APP from "$capp/instance";
 import runBackgroundTasks from "$capp/runBackgroundTasks";
+import appConfig from "../config";
+import {defaultNumber} from "$cutils";
 
+/**** l'intervalle d'attente pour l'exécution des tâches d'arrières plans */
 let idleTime = 10000;
 let isIDLRunning = false;
 let inactiveLastTime = undefined;
@@ -17,6 +20,14 @@ export const canRun = ()=>{
         return resetDate() - inactiveLastTime > idleTime ? true : false;
     }
     return false;
+}
+
+/*** reset idle timeout */
+export const resetTimeout = (timeout)=>{
+    timeout = typeof timeout =='number' && timeout || appConfig.get("idleTimeout");
+    if(typeof timeout =='number' && timeout){
+        idleTime = timeout;
+    } 
 }
 
 export function run(force) {
@@ -52,6 +63,7 @@ export const trackIDLE = (forceRun,clearEvents) =>{
 export {stop as stopIDLE};
 
 const onAppStateChange = (nState)=>{
+    resetTimeout();
     let {isActive} = nState;
     let cRun = canRun();
     if(isActive){
@@ -76,7 +88,22 @@ if(typeof APP.stopIDLE !=='function'){
         trackIDLE : {
             value : trackIDLE, override : false, writable : false
         },
-    })
+        onScreenFocus :{
+            value :  ()=>{
+                onAppStateChange({isActive:true});
+            }
+        },
+        onScreenBlur : {
+            value : ()=>{
+                onAppStateChange({isActive:false});
+            }
+        },
+        resetTimeout : {value : resetTimeout}
+    });
+    APP.off(APP.EVENTS.SCREEN_FOCUS,APP.onScreenFocus);
+    APP.off(APP.EVENTS.SCREEN_BLUR,APP.onScreenBlur);
+    APP.ON(APP.EVENTS.SCREEN_FOCUS,APP.onScreenFocus);
+    APP.ON(APP.EVENTS.SCREEN_BLUR,APP.onScreenBlur);
 }
 
 

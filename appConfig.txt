@@ -11,6 +11,14 @@
     apiFetchDelay | apiFetchTimeout {number} : le délai d'attente des requêtes d'API
     showProfilAvatarOnDrawer : {boolean} si false alors le profil utilisateur ne sera pas affiché sur le drawer principal de l'application, mais plutôt sur l'AppBar des écrans de type non modal
 
+    /**si l'application prendra en charge les tâches d'arrière plan*/
+    runBackgroundTasks |canRunBackgroundTasks | backgroundTasks {boolean}
+
+    /*** le délai d'attente après lequel, si la promesse liée à l'exécution des tâches d'arrière plan n'est pas resolue, alors
+        la promesse des tâches d'arrière plan est résolue automatiquement
+    */
+    backgroundTasksDelai | backgroundTasksTimeout {number}
+
     /**The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
     netInfoReachabilityLongTimeout : {number}
 
@@ -21,4 +29,12 @@
     
     /*** cette fonction est appelée pour récupérer la piece associée à l'utilisateur connecté, afin de généré l'id d'un élément donné*/
     getUserPieceId : (user)=> {string}
+
+    /*** spécifie l'intervale de temps d'attente pour l'exécution des tâches d'arrière plan*/
+    idleTimeout {number}
+
+    /**permet de spécifier la fonction qui sera appelée pour l'exécution des tâches d'arrière plan. cette fonction doit retourner une promesse
+    
+    **/
+    runBackgroundTasks : ({isOnline})=><Promise>
 }
