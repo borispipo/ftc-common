@@ -102,8 +102,8 @@ if(typeof APP.stopIDLE !=='function'){
     });
     APP.off(APP.EVENTS.SCREEN_FOCUS,APP.onScreenFocus);
     APP.off(APP.EVENTS.SCREEN_BLUR,APP.onScreenBlur);
-    APP.ON(APP.EVENTS.SCREEN_FOCUS,APP.onScreenFocus);
-    APP.ON(APP.EVENTS.SCREEN_BLUR,APP.onScreenBlur);
+    APP.on(APP.EVENTS.SCREEN_FOCUS,APP.onScreenFocus);
+    APP.on(APP.EVENTS.SCREEN_BLUR,APP.onScreenBlur);
 }
 
 
