@@ -5,7 +5,7 @@
  * @namespace notify
  * permet de gérer les différentes notifications de l'application
  */
- import React from "react";
+ import React from "$react";
  import {isNonNullString,defaultNumber,defaultObj,defaultVal,isObj,defaultStr} from "$cutils";
  export const TYPES = {
      info : "info",
@@ -68,7 +68,14 @@
              title = "Alerte";
          } else title = defaultStr(TYPES[type]).toUpperCase();
      }
-     const interval = defaultNumber(settings.interval,settings.timeout,defInterval)
+     let interval = defaultNumber(settings.interval,settings.timeout,defInterval);
+     if(Math.abs(interval,defInterval)<=200){
+        //on définit l'intervalle par défaut en fonction de la longueur du message
+        const ccc = React.getTextContent(message);
+        if(ccc){
+            interval = Math.max(defInterval,(ccc.length*100));
+        }
+     }
      const payload = isObj(settings.payload)? settings.payload : undefined;
      const options = {...settings,type, title, message, payload, interval};
      return notifyRef.current(options);
