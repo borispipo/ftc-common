@@ -17,6 +17,8 @@ export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
 export {default as StringBuilder} from "./StringBuilder";
 
+export * from "./compare";
+
 export const uniqid = _uniqid;
 export const parseJSON = pJSON;
 export const isJSON = isJ;
@@ -24,8 +26,9 @@ export const isDOMElement = _isDomElement;
 export {default as extendObj } from "./extendObj"
 export const defaultStr = defStr;
 
-
-
+export function isFunction(function_name){
+    return typeof function_name == 'function' && true || false;
+}
 
 export const isWindowClient = x=> typeof window !== "undefined" && typeof (window) =="object" ? true : false;
 
@@ -697,63 +700,6 @@ export const maskPhoneNumber = function(number){
 }
 
 
-/**** détermine si les tableaux passés en paramètre sont égaux ou pas */
-export const areArraysEquals = function (a1,a2,compare) {
-    if(!Array.isArray(a1) || !isArray(a2) || a1.length != a2.length) return false;
-    compare = typeof compare =='function'? compare : (a,b)=> a === b;
-    for (var i = 0, l=a1.length; i < l; i++) {
-        // Check if we have nested arrays
-        if (Array.isArray(a1[i]) && Array.isArray(a2[i])) {
-            // recurse into the nested arrays
-            if (!areArraysEquals(a1[i],a2[i],compare)) return false;       
-        }           
-        else if (!compare(a1[i],a2[i])) { 
-            return false;   
-        }           
-    }       
-    return true;
-}
-
-export function objectAreEquals( x, y ) {
-    if ( x === y ) return true;
-      // if both x and y are null or undefined and exactly the same
-  
-    if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) return false;
-      // if they are not strictly equal, they both need to be Objects
-  
-    if ( x.constructor !== y.constructor ) return false;
-      // they must have the exact same prototype chain, the closest we can do is
-      // test there constructor.
-  
-    for ( var p in x ) {
-      if ( ! x.hasOwnProperty( p ) ) continue;
-        // other properties were tested using x.constructor === y.constructor
-  
-      if ( ! y.hasOwnProperty( p ) ) return false;
-        // allows to compare x[ p ] and y[ p ] when set to undefined
-  
-      if ( x[ p ] === y[ p ] ) continue;
-        // if they have the same strict value or identity then they are equal
-  
-      if ( typeof( x[ p ] ) !== "object" ) return false;
-        // Numbers, Strings, Functions, Booleans must be strictly equal
-  
-      if ( ! objectAreEquals( x[ p ],  y[ p ] ) ) return false;
-        // Objects and Arrays must be tested recursively
-    }
-  
-    for ( p in y )
-      if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) )
-        return false;
-          // allows x[ p ] to be set to undefined
-  
-    return true;
-}
-if(!isFunction(Object.areEquals)){
-    Object.defineProperties(Object,{
-        areEquals : {value : objectAreEquals,override:false}
-    })
-} 
 export const typeOf = function (obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
@@ -1040,9 +986,6 @@ export const getFileName = (filePath,withoutExtension)=>{
     return filePath;
 }
 
-export function isFunction(function_name){
-    return typeof function_name == 'function' && true || false;
-}
 
 /****
  * exécute la fonction dont la chaine de caractèr est passée en paramètre comme nom
@@ -1263,3 +1206,4 @@ export const toFormData = Object.toFormData = (data)=>{
     buildFormData(formData, data);
     return formData;
 }
+

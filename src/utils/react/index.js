@@ -20,6 +20,15 @@ import useStableMemo from "./useStableMemo";
 import useMediaQueryUpdateStyle from "./useMediaQueryUpdateStyle";
 import {isClientSide} from "$cplatform";
 import memoize from "./memoize";
+import isEquals from "../compare";
+import usePrevious,{usePreviousDifferent} from "./usePrevious";
+
+React.usePrevious = usePrevious;
+React.usePreviousDifferent = usePreviousDifferent;
+
+React.isEquals = React.areEquals = React.compare = isEquals;
+
+export {isEquals};
 
 export {memoize};
 
@@ -297,40 +306,6 @@ export const useStateIfMounted = React.useStateIfMounted = function(initialValue
     }
     return [state, newSetState]
 }
-
-
-
-const refEquality = (a, b) => a === b;
-export const usePrevious = React.usePrevious = function usePrevious(value,compareFn) {
-    const ref = React.useRef(value);
-    const fn = typeof compareFn =='function' ? compareFn :  refEquality;
-    React.useEffect(() => {
-        if (!fn(ref.current, value)) {
-            ref.current = value;
-        }
-    }, [value]); // Only re-run if value changes
-    return ref.current;
-}
-
-/**
- * usePreviousDifferent hook for React
- * It returns the past value which was different from the current one.
- *
- * @param currentValue The value whose previously different value is to be tracked
- * @returns The previous value
- */
- export const usePreviousDifferent = React.usePreviousDifferent = function usePreviousDifferent(currentValue,compareFn){
-    const previousRef = React.useRef(currentValue);
-    const previousRef2 = React.useRef(currentValue);
-    const fn = typeof compareFn =='function' ? compareFn :  refEquality;
-    React.useEffect(() => {
-      previousRef2.current = previousRef.current;
-      previousRef.current = currentValue;
-    }, [currentValue]);
-  
-    return fn(currentValue,previousRef.current) ? previousRef2.current : previousRef.current;
-  }
-
 
 export default React;
 

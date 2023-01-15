@@ -2,9 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import stableHash from 'stable-hash';
-import { useMemo } from 'react';
+import areEquals from '../compare';
+import { useMemo,useEffect, useRef } from "react";
 
 export default function useStableMemo(factory, deps){
-    return useMemo(factory, [stableHash(deps)]);
+    const ref = useRef(null);
+    const areDifferents = !areEquals(ref.current,deps);
+    if(areDifferents){
+        ref.current = deps;
+    }
+    return useMemo(factory, [areDifferents]);
 }
