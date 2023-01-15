@@ -305,13 +305,15 @@ dateFormat.masks = {
 const keys = [];
 const values = {};
 const dFormats = {};
-Object.map(dateFormat.masks,(value,key)=>{
+for(let key in dateFormat.masks){
+    const value = dateFormat.masks[key];
     if(!values[value]){
         keys.push(key);
         dFormats[key] = value;
         values [value] = true;
     }
-});
+}
+
 
 const sValues = keys.map(key=>dFormats[key])
     .sort((a, b) => {
