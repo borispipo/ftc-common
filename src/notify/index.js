@@ -7,6 +7,7 @@
  */
  import React from "$react";
  import {isNonNullString,defaultNumber,defaultObj,defaultVal,isObj,defaultStr} from "$cutils";
+ import getTextContent from "../utils/react/getTextContent";
  export const TYPES = {
      info : "info",
      error : "error",
@@ -71,7 +72,7 @@
      let interval = defaultNumber(settings.interval,settings.timeout,defInterval);
      if(Math.abs(interval,defInterval)<=200){
         //on définit l'intervalle par défaut en fonction de la longueur du message
-        const ccc = React.getTextContent(message);
+        const ccc = getTextContent(message);
         if(ccc){
             interval = Math.max(defInterval,(ccc.length*100));
         }
