@@ -5,7 +5,7 @@
  * @namespace notify
  * permet de gérer les différentes notifications de l'application
  */
- import React from "$react";
+ import React from "react";
  import {isNonNullString,defaultNumber,defaultObj,defaultVal,isObj,defaultStr} from "$cutils";
  import getTextContent from "../utils/react/getTextContent";
  export const TYPES = {
