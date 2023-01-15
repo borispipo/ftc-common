@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import Dimensions from '$active-platform/dimensions';
-import breakpoints, {initBreakPoints} from '../breakpoints';
+import breakpoints, {initBreakPoints} from './breakpoints';
 import {isObj,defaultStr} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";

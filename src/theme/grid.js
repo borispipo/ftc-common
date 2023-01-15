@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import Dimensions, {useWindowDimensions} from '$cdimensions';
-import breakpoints from "$cplatform/breakpoints";
+import breakpoints from "$cplatform/dimensions/breakpoints";
 import {isNumber,parseDecimal,defaultStr,isFunction,isNonNullString,defaultVal,isObj,defaultObj} from "$cutils";
 import {canBeNumber} from "./utils";
 
