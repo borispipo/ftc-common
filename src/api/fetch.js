@@ -173,7 +173,7 @@ export function getFetcherOptions (opts,options){
         opts = {path:opts};
      }
      opts = extendObj(true,{},opts,options);
-     let {path,url,fetcher,auth,isAuth,queryParams,mutator,fetchOptionsMutator,offlineMode,onlineMode,checkOnline} = opts;
+     let {path,url,fetcher,auth,isAuth,includeCredentials,queryParams,mutator,fetchOptionsMutator,offlineMode,onlineMode,checkOnline} = opts;
      isAuth = isAuth || auth;
      url = defaultStr(url,path);
      queryParams = Object.assign({},queryParams);
@@ -224,7 +224,7 @@ export function getFetcherOptions (opts,options){
      opts.url = buildAPIPath(url,opts.queryParams);
      opts.fetcher = fetcher;
      ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
-     if(appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization || opts.headers.authorization)){
+     if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization || opts.headers.authorization)){
         opts.credentials = "include";
      }
      /** personnaliser la fonction getFetcherOptions */
