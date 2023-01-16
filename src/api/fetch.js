@@ -173,7 +173,7 @@ export function getFetcherOptions (opts,options){
         opts = {path:opts};
      }
      opts = extendObj(true,{},opts,options);
-     let {path,url,fetcher,auth,isAuth,queryParams,mutator,fetchOptionsMutator,checkOnline} = opts;
+     let {path,url,fetcher,auth,isAuth,queryParams,mutator,fetchOptionsMutator,offlineMode,onlineMode,checkOnline} = opts;
      isAuth = isAuth || auth;
      url = defaultStr(url,path);
      queryParams = Object.assign({},queryParams);
@@ -196,7 +196,8 @@ export function getFetcherOptions (opts,options){
            }
         } 
         const delay = defaultNumber(customOpts.delay,customOpts.timeout,opts.delay,opts.timeout);
-        const p = isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline() ? 
+        const canRunOffline = onlineMode !== false && offlineMode !== true && true || false;
+        const p = (!canRunOffline && isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline())? 
               APP.checkOnline().then(()=>{
                  return fetcher2(url,opts2);
               }) : fetcher2(url,opts2);
@@ -252,4 +253,6 @@ export function getFetcherOptions (opts,options){
 }
 
 export const getFetcher = getFetcherOptions;
+
+export const getFetchOptions = getFetcher;
 
