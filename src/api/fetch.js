@@ -207,7 +207,7 @@ export function getFetcherOptions (opts,options){
         });
      }
      opts.queryParams = queryParams;
-     const method = defaultStr(opts.method).toLowerCase();
+     const method = defaultStr(opts.method,"get").toLowerCase();
      if((method ==='get' | method =='post') && (isObj(opts.fetchOptions))){
          if(method =='get'){
             opts.queryParams = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions,queryParams);
