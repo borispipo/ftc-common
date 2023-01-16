@@ -687,6 +687,18 @@ export const getFetchOptions = (opts,options)=>{
             where : extendObj(true,true,opts.selector,opts.fetchOptions.where),
             fields : defaultVal(opts.fetchOptions.fields,opts.fields),
         });
+        const fields = [];
+        Object.map(fOptions.fields,(field,f)=>{
+            if(isNonNullString(field) && field.trim()){
+                fields.push(field.trim());
+            } else if(isObj(field)){
+                const ff = defaultStr(field.field,f).trim();
+                if(ff){
+                    fields.push(ff);
+                }
+            }
+        });
+        fOptions.fields = fields;
         if(!isObj(fOptions.sort) && isObj(opts.sort) && isNonNullString(opts.sort.column)){
             fOptions.sort = opts.sort;
         }
