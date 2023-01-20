@@ -11,13 +11,13 @@ export const sanitizeKey = (key)=>{
   return appConfig.prefixWithAppId(key);
 }
 export const handleSetValue = (value,decycle) => {
-  value = value && typeof value =="object" ? stringify(value,decycle) : value;
-  if(value ===null) value = "";
+  value = value ? stringify(value,decycle) : value;
+  if(value ===null || value ===undefined) value = "";
   return value;
 }
 export const handleGetValue = value => {
-  if(value !== null) {
-    return isJSON(value) ? parseJSON(value) : value;
+  if(value !== null && value !== undefined) {
+    return parseJSON(value);
   }
   return undefined;
 }

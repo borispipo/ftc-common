@@ -10,7 +10,7 @@ import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGN_IN,SIGN_OUT,} from "./routes";
 import { getLoggedUser } from "./utils/session";
-import {isObj,defaultObj,extendObj} from "$cutils";
+import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import {isPromise,isNonNullString} from "$utils";
 import appConfig from "$capp/config";
@@ -45,10 +45,16 @@ export const signIn = (user,callback,trigger)=>{
       url : SIGN_IN,
       body : user
   })).then((args)=>{
-    const {response,userId,done,token,preferences,...rest}=  defaultObj(args);
+    const {response,userId,done,token,preferences,fetchResponse,res,status,...rest}=  defaultObj(args);
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
-      extendObj(user,rest,preferences);
+      Object.map(rest,(v,i)=>{
+        if(!(i in user) && typeof v !=='function' && !i.toLowerCase().contains("password")){
+          if(typeof v =='object' && !isPlainObject(v)) return;
+          user[i] = v;
+        }
+      });
+      extendObj(user,preferences);
       user.id = defaultStr(userId,user.id,user.code,user.email);
       user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
