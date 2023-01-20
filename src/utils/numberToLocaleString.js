@@ -362,7 +362,7 @@ const _abreviateNumber = (num, returnObject) =>{
     const decimals = num.countDecimals();
     let fixed = Math.min(decimals,5);
     fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
-    if (num <1000) { 
+    if (num == 0) { 
         num = num != 0 ? parseFloat(num.toFixed(0 + fixed)) || 0 : 0;
         const nString = num.toString();
         return returnObject === true ? {
@@ -405,7 +405,7 @@ Number.prototype.abreviate = function(){
  */
 export const abreviate2FormatMoney = (number)=>{
     const {value,format,formattedValue} = _abreviateNumber(number,true);
-    if(typeof value !='number' || !format) return formattedValue;
+    if(typeof value !='number') return formattedValue;
     const {formattedValue:fVal} =  Currency.formatMoney(value,undefined, undefined, undefined, undefined, undefined,true);
     return fVal.replace('%v',Math.abs(value).formatNumber()+format);
 }
