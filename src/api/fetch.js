@@ -210,7 +210,7 @@ export function getFetcherOptions (opts,options){
      const method = defaultStr(opts.method,"get").toLowerCase();
      if((method ==='get' | method =='post') && (isObj(opts.fetchOptions))){
          if(method =='get'){
-            opts.queryParams = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions,queryParams);
+            opts.queryParams.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions);
          } else {
             opts.body = defaultObj(opts.body);
             opts.body.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.body.fetchOptions);
