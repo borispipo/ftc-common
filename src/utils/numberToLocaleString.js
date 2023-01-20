@@ -362,8 +362,8 @@ const _abreviateNumber = (num, returnObject) =>{
     const decimals = num.countDecimals();
     let fixed = Math.min(decimals,5);
     fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
-    if (num<1000) { 
-        num = num != 0 ? num.toFixed(0 + fixed) : 0;
+    if (num <1000) { 
+        num = num != 0 ? parseFloat(num.toFixed(0 + fixed)) || 0 : 0;
         const nString = num.toString();
         return returnObject === true ? {
             formattedResult :nString,
