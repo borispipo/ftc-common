@@ -359,18 +359,21 @@ String.prototype.formatMoney = function(symbol, decimal_digits, thousand, decima
 /**** @see : https://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn */
 const _abreviateNumber = (num, returnObject) =>{
     if (num === null || typeof num !=='number') { returnObject === true ? {} : null} // terminate early
-    if (num === 0) { 
-        return returnObject === true ? {
-            formattedResult :'0',
-            value : 0,
-            format : '',
-            suffix : '',
-            formattedValue : '0',
-        } : '0'; 
-    } // terminate early
     const decimals = num.countDecimals();
     let fixed = Math.min(decimals,5);
     fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
+    if (num<1000) { 
+        num = num != 0 ? num.toFixed(0 + fixed) : 0;
+        const nString = num.toString();
+        return returnObject === true ? {
+            formattedResult :nString,
+            value : num,
+            format : '',
+            suffix : '',
+            formattedValue : nString,
+        } : nString; 
+    } // terminate early
+    
     var b = (num).toPrecision(2).split("e"), // get power
         k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
         c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), // divide by power
