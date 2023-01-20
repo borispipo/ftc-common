@@ -684,7 +684,7 @@ export const getFetchOptions = (opts,options)=>{
     opts.fetchOptions = isObj(opts.fetchOptions) ? Object.clone(opts.fetchOptions) : {};
     if(opts.selector || opts.fetchOptions.where){
         const fOptions = extendObj(opts.fetchOptions,{
-            where : extendObj(true,true,opts.selector,opts.fetchOptions.where),
+            where : extendObj(true,true,defaultArray(opts.selector),defaultArray(opts.fetchOptions.where)),
             fields : defaultVal(opts.fetchOptions.fields,opts.fields),
         });
         const fields = [];
