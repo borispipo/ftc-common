@@ -4,7 +4,7 @@
 /*** @namespace api/fetch
  * Ensemble des fonctions utiles pour l'exécution des requêtes distantes (ajax)
  */
-import originalFetch from "$original-fetch";
+import originalFetch from "$unfetch";
 import { buildAPIPath} from "./utils";
 import { isObj,defaultNumber,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
 import {NOT_SIGNED_IN,SUCCESS} from "./status";

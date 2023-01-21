@@ -34,7 +34,7 @@ module.exports = function(opts){
         "$capi" : path.resolve(common,"api"),
         "$capiCustom" : path.resolve(common,"api","apiCustom"),
         "$fetch" : path.resolve(common,"api","fetch"),
-        "$coriginal-fetch" : path.resolve(common,"api","fetch"),
+        "$cunfetch" : path.resolve(common,"api","fetch"),
         "$ci18n" : path.resolve(common,"i18n"),
         "$clib" : path.resolve(common,"lib"),
         "$cauth":path.resolve(common,"auth"),
@@ -145,7 +145,7 @@ module.exports = function(opts){
     if(!r["$getLoginProps"]){
         r["$getLoginProps"] = r["$cgetLoginProps"];
     }
-    r["$original-fetch"] = r["$original-fetch"] || r["$coriginal-fetch"];
+    r["$unfetch"] = r["$unfetch"] || r["$cunfetch"];
     r.$apiCustom = r.$apiCustom || r.$capiCustom;
     return r;
 }
