@@ -196,7 +196,7 @@ export function getFetcherOptions (opts,options){
            }
         } 
         const delay = defaultNumber(customOpts.delay,customOpts.timeout,opts.delay,opts.timeout);
-        const canRunOffline = onlineMode !== false && offlineMode !== true && true || false;
+        const canRunOffline = onlineMode === false || offlineMode === true && true || false;
         const p = (!canRunOffline && isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline())? 
               APP.checkOnline().then(()=>{
                  return fetcher2(url,opts2);
