@@ -6,7 +6,7 @@
  */
 import originalFetch from "./unfetch";
 import { buildAPIPath} from "./utils";
-import { isObj,defaultNumber,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
+import { isObj,defaultNumber,isNonNullString,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
 import {NOT_SIGNED_IN,SUCCESS} from "./status";
 import notify from "$active-platform/notify";
 import {getToken} from "$cauth/utils";
@@ -141,26 +141,55 @@ export const handleFetchError = (opts)=>{
   let {showError,isAuth,reject,redirectWhenNoSignin,error,response,...rest} = defaultObj(opts);
   response = defaultObj(response);
   rest.error = error;
-  if(showError !== false){
-     if(typeof error =='object' && error && error.target){
-        const isXMLHttpRequest = defaultStr(Object.prototype.toString.call(error.target)).contains("XMLHttpRequest");
-        if(isXMLHttpRequest && error.target.status === 0){
-           response.message = defaultStr(response.message,response.msg,i18n.lang("server_not_reachable"))
-        }
-     }
-     const errorM = typeof error =='object' && error ? defaultStr(error.message,error.ExceptionMessage,error.Message,error.MessageDetail,error.msg) : null;
-     const message = response.message = rest.message = defaultStr(response.message,response.msg,error,errorM,rest.message);
+  const isClient = typeof window !='undefined' && window;
+  const errorM = typeof error =='object' && error ? defaultStr(error.message,error.ExceptionMessage,error.Message,error.MessageDetail,error.msg) : null;
+  let message = defaultStr(response.message,response.msg,error,errorM,rest.message);
+  if(!message && error && typeof error =='object'){
+      let eM = defaultStr(error.message,error.msg);
+      let sep = "";
+      if(!eM){
+         const errors = Array.isArray(error.errors) && error.errors.length ? error.errors : Array.isArray(error.messages) && error.messages.length ? error.messages : 
+            Array.isArray(rest.errors) && rest.errors.length ? rest.errors :  [];
+         errors.map((e)=>{
+            let ee = undefined;
+            console.log(e," found fetch error ",e?.message,e?.code);
+            if(e && (e.message || e.msg || e.code)){
+               ee = defaultStr(e.message,e.msg);
+               if(isNonNullString(e.code) || typeof e.code ==='number'){
+                  ee = "[{0}] {1}".sprintf(e.code+"",ee);
+               }
+            } else if(isNonNullString(e)){
+               ee = e;
+            }
+            if(ee){
+               eM+=(sep+ee);
+               sep = ", ";
+            }
+         });
+      }
+      if(eM){
+         message = eM;
+      }
+      if(!message && isClient){
+         const isXMLHttpRequest = defaultStr(Object.prototype.toString.call(error.target)).contains("XMLHttpRequest");
+         if(isXMLHttpRequest && error.target.status === 0){
+            message = defaultStr(error.message,error.msg,i18n.lang("server_not_reachable"));
+         }
+      }
+  }
+  response.message = rest.message = message;
+  if(showError !== false && isClient){
      if(message){
        notify.error({...response,position:'top'});
      }
-     rest.response = response;
   }
+  rest.response = response;
   rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
-  if(isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
+  if(isClient && isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
      const hasMessage = defaultStr(response.message,response.msg)? true : false;
      Auth.signOut2Redirect(!hasMessage);
   }
- throw(rest);
+  throw(rest);
 }
 
 /*** le mutator permet de modifier les options de la recherche dynamiquement 
