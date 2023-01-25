@@ -75,7 +75,7 @@ module.exports = function(opts){
         "$theme" : path.resolve(common,"theme"),
         "$utils" : path.resolve(common,"utils"),
         "$uri" : path.resolve(common,"utils","uri"),
-
+        "$cprint" : path.resolve(common,"print"),
         "$currency" : path.resolve(common,"lib","currency"),
         "$session" : path.resolve(common,"session"),
         "$actions" : path.resolve(common,"actions"),
@@ -145,5 +145,6 @@ module.exports = function(opts){
         r["$getLoginProps"] = r["$cgetLoginProps"];
     }
     r.$apiCustom = r.$apiCustom || r.$capiCustom;
+    r.$print = r.$print || r["$cprint"];
     return r;
 }

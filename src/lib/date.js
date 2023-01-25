@@ -13,6 +13,7 @@ export const SQLDateFormat = "yyyy-mm-dd";
 export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
 export const SQLTimeFormat = "HH:MM:ss";
 
+const isBool = x=> typeof x=='boolean';
 const isNonNullString = x => x && typeof x =="string";
 
 let global = typeof window =='object' && window ? window : {}

@@ -37,6 +37,9 @@ let APP_INSTANCE = {
     get getName (){
         return x=> appConfig.name;
     },
+    get getDevWebsite(){
+        return appConfig.get("devWebsite","website")
+    },
     get getVersion (){
         return x=> appConfig.version;
     },
