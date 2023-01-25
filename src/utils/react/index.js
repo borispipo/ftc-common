@@ -245,7 +245,7 @@ export const useDidMount = React.useDidMount = function useDidMount(callback) {
         }
     }, []);
 }
-export const useOnRenderTimeout = React.useOnRenderTimeout = 100;
+export const useOnRenderTimeout = React.useOnRenderTimeout = 0;
 /**
  * useOnRender hook
  * Calls a function on every render
