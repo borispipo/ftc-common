@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import * as Utils from "$cutils";
-import {isClientSide} from "$cplatform/utils";
+import {isClientSide,isElectron} from "$cplatform/utils";
 if(isClientSide()){
     Object.map(Utils,(u,i)=>{
         if(typeof u =="function" && !window[i]){
@@ -157,3 +157,10 @@ observable(APP_INSTANCE);
 addObserver(APP_INSTANCE);
 
 export default APP_INSTANCE;
+
+if(isElectron() && window.ELECTRON && (typeof ELECTRON.APP !='object' || !ELECTRON.APP)){
+    Object.defineProperties(ELECTRON,{
+        APP : {value : APP_INSTANCE,overide:false},
+        notify : {value : notify},
+    })
+}
