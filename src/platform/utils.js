@@ -18,6 +18,9 @@ export const isElectron = function() {
       if(typeof window.isElectron =="function"){
           return window.isElectron();
       }
+      if(typeof window.isElectron =='boolean' && window.isElectron){
+          return true;
+      }
       if(typeof window.process === 'object' && window.process.type === 'renderer') {
           return true;
       }
