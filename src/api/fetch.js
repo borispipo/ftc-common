@@ -117,6 +117,7 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
               response[v] = res[v];
             });
         }
+        response.status = response.status || res?.status;
         response.success = response.status === SUCCESS ? true : false;
         if(!isJson && !isObj(d)){
            d = {};
@@ -132,7 +133,7 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
         if(response.success){
            return resolve(d)
         }
-        return handleFetchError({isAuth,...d,showError,handleError,redirectWhenNoSignin}).catch(reject);
+        return handleFetchError({isAuth,...d,response,showError,handleError,redirectWhenNoSignin}).catch(reject);
        };
       return json !== false && isJson ? res.json().then(cb).catch(reject) : resolve(cb(res));
    })
@@ -184,7 +185,7 @@ export const handleFetchError = (opts)=>{
      }
   }
   rest.response = response;
-  rest.status = response.status;
+  rest.status = response.status || error && typeof error !='boolean' && error?.status;
   rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
   if(isClient && isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
      const hasMessage = defaultStr(response.message,response.msg)? true : false;
@@ -208,11 +209,13 @@ export function getFetcherOptions (opts,options){
      url = defaultStr(url,path);
      queryParams = Object.assign({},queryParams);
      const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-        return originalFetch(url,opts2)
-           .then(res=>handleFetchResult({...opts,fetchResult:res}))
-           .catch((error)=>{
-              return handleFetchError({...opts,error});
-        });
+        return new Promise((resolve,reject)=>{
+            return originalFetch(url,opts2).then(res=>{
+               return handleFetchResult({...opts,fetchResult:res}).then(resolve).catch(reject);
+            }).catch((error)=>{
+               return handleFetchError({...opts,error}).catch(reject);
+            });
+        })
      }
      fetcher = (url,opts2)=>{
         let customOpts = {};
