@@ -184,6 +184,7 @@ export const handleFetchError = (opts)=>{
      }
   }
   rest.response = response;
+  rest.status = response.status;
   rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
   if(isClient && isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
      const hasMessage = defaultStr(response.message,response.msg)? true : false;
