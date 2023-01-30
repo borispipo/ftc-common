@@ -209,13 +209,11 @@ export function getFetcherOptions (opts,options){
      url = defaultStr(url,path);
      queryParams = Object.assign({},queryParams);
      const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-        return new Promise((resolve,reject)=>{
-            return originalFetch(url,opts2).then(res=>{
-               return handleFetchResult({...opts,fetchResult:res}).then(resolve).catch(reject);
-            }).catch((error)=>{
-               return handleFetchError({...opts,error}).catch(reject);
-            });
-        })
+         return originalFetch(url,opts2)
+            .then(res=>handleFetchResult({...opts,fetchResult:res}))
+            .catch((error)=>{
+               return handleFetchError({...opts,error});
+         });
      }
      fetcher = (url,opts2)=>{
         let customOpts = {};
