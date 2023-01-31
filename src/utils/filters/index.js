@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /**** utilitaire de filtre de requêtes, ensemble de fonctions utiles pour l'implémentationd 'un composant Filter */
-import {isNonNullString,defaultStr,defaultNumber,extendObj,defaultObj,defaultArray,isObjOrArray,isObj} from "$cutils";
+import {isNonNullString,defaultStr,defaultNumber,defaultBool,extendObj,defaultObj,defaultArray,isObjOrArray,isObj} from "$cutils";
 import i18n from "$i18n";
 import DateLib from "$lib/date";
 import mangoParser from "mongo-parse";
@@ -708,6 +708,7 @@ export const getFetchOptions = (opts,options)=>{
         if(!fOptions.page && typeof opts.page =='number' && opts.page){
             fOptions.page = opts.page;
         }
+        fOptions.withTotal = defaultBool(fOptions.withTotal,opts.withTotal,true);
         opts.fetchOptions = fOptions;
     }
     return opts;
