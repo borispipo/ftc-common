@@ -5,12 +5,8 @@
 import  PouchDB from "pouchdb";
 import {isElectron} from "$cplatform";
 import {defaultObj} from "$cutils";
-import R from "./sqlitePouch";
-let extra = {};
-if(isElectron()){
-    extra = defaultObj(window.getPouchdbElectron(PouchDB,window,R));
-}
+import sqlPouch from "./sqlitePouch";
 export default   {
     PouchDB,
-    ...extra,
+    ...(isElectron() && window.ELECTRON && defaultObj(ELECTRON.getPouchdb({PouchDB,sqlPouch})) || {}),
 }
