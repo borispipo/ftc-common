@@ -15,7 +15,7 @@ if(isElectron() && window.ELECTRON && typeof ELECTRON.SESSION=="object" && ELECT
         }
     }
     if(typeof ELECTRON.SESSION.get =="function"){
-        get = key => handleGetValue(ELECTRON.get(sanitizeKey(key)));
+        get = key => handleGetValue(ELECTRON.SESSION.get(sanitizeKey(key)));
     }
 }
 

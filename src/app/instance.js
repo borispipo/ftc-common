@@ -160,18 +160,13 @@ addObserver(APP_INSTANCE);
 export default APP_INSTANCE;
 
 if(isElectron() && window.ELECTRON){
-    if( (typeof ELECTRON.APP !='object' || !ELECTRON.APP)){
-        Object.defineProperties(ELECTRON,{
-            APP : {value : APP_INSTANCE,overide:false},
-            notify : {value : notify},
-        })
-    }
-    if(isObj(ELECTRON.APP)) {
+    if(isObj(ELECTRON.APP)){
         for(var i in APP_INSTANCE){
             if(!(i in ELECTRON.APP)){
                 ELECTRON.APP[i] = APP_INSTANCE[i];
             }
         }
+        ELECTRON.APP.notify = notify;
         if(!isObj(ELECTRON.APP)){ 
             observable(ELECTRON.APP);
             addObserver(ELECTRON.APP);
