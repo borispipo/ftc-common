@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import * as Utils from "$cutils";
+import {extendObj,isObj} from "$cutils";
 import {isClientSide,isElectron} from "$cplatform/utils";
 if(isClientSide()){
     Object.map(Utils,(u,i)=>{
@@ -17,7 +18,7 @@ import {defaultObj} from "$cutils";
 import appConfig from "./config";
 import Platform from "$cplatform";
 import EVENTS from "./events";
-import { observable,addObserver } from "$clib/observable";
+import { observable,addObserver,isObservable,removeObserver } from "$clib/observable";
 import NetInfo from '$cutils/NetInfo';
 import notify from "$cnotify";
 
@@ -158,9 +159,22 @@ addObserver(APP_INSTANCE);
 
 export default APP_INSTANCE;
 
-if(isElectron() && window.ELECTRON && (typeof ELECTRON.APP !='object' || !ELECTRON.APP)){
-    Object.defineProperties(ELECTRON,{
-        APP : {value : APP_INSTANCE,overide:false},
-        notify : {value : notify},
-    })
+if(isElectron() && window.ELECTRON){
+    if( (typeof ELECTRON.APP !='object' || !ELECTRON.APP)){
+        Object.defineProperties(ELECTRON,{
+            APP : {value : APP_INSTANCE,overide:false},
+            notify : {value : notify},
+        })
+    }
+    if(isObj(ELECTRON.APP)) {
+        for(var i in APP_INSTANCE){
+            if(!(i in ELECTRON.APP)){
+                ELECTRON.APP[i] = APP_INSTANCE[i];
+            }
+        }
+        if(!isObj(ELECTRON.APP)){ 
+            observable(ELECTRON.APP);
+            addObserver(ELECTRON.APP);
+        }
+    }
 }
