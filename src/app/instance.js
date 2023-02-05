@@ -200,6 +200,13 @@ if(electronMessageApi){
                 const message = cMessage.trim().ltrim("ELECTRON_MESSAGE/");
                 const params = Array.isArray(cParams)? cParams : [];
                 params.unshift(message);
+                switch(message){
+                    case "GET_APP_INSTANCE" :
+                        if(typeof ELECTRON.onGetAppInstance =="function"){
+                            return ELECTRON.onGetAppInstance(APP_INSTANCE);
+                        } 
+                        break;
+                }
                 if(typeof electronMessageApi.trigger =='function'){
                     electronMessageApi.trigger.call(electronMessageApi,params);
                 }   
