@@ -51,7 +51,14 @@ export const KEYBOARD_DID_HIDE = "KEYBOARD_DID_HIDE";
 
 export const KEYBOARD_DID_TOGGLE = "KEYBOARD_DID_TOGGLE";
 
+export const BEFORE_EXIT = "BEFORE_EXIT";
+
+export const EXIT = "EXIT";
+
+export const RESTART = "RESTART";
+
 export default {
+    RESTART,
     KEYBOARD_DID_SHOW,
     KEYBOARD_DID_HIDE,
     KEYBOARD_DID_TOGGLE,
@@ -75,5 +82,7 @@ export default {
     SCREEN_FOCUS,
     INITIALIZED,
     SCREEN_BLUR,
+    BEFORE_EXIT,
+    EXIT,
     ...appEvents,
 }
