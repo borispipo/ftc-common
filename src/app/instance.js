@@ -192,7 +192,7 @@ if(electronMessageApi){
         window.addEventListener("message", function(event) {
             // event.source === window means the message is coming from the preload
             // script, as opposed to from an <iframe> or other source
-            if (event.origin === "file://" && event.source === window) {
+            if (/*event.origin === "file://" &&*/ event.source === window) {
                 if(!isObj(event.data) || !event.data.message || typeof event.data.message !=='string' || !event.data.message.startsWith("ELECTRON_MESSAGE/")){
                     return ;
                 }
