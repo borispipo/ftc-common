@@ -8,6 +8,7 @@ import {isClientSide} from "$platform";
 import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
+import { resetPerms } from "../perms/reset";
 
 export const USER_SESSION_KEY = "user-session";
 
@@ -104,6 +105,7 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
 /*** déconnecte l'utilisateur actuel */
 export const logout = () =>{
     if(!isClientSide()) return null;
+    resetPerms();
     $session.set(USER_SESSION_KEY,"");
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
     return true;

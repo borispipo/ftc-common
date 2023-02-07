@@ -7,6 +7,7 @@ import APP from "$capp/instance";
 import $session from "$session";
 import { updateTheme,getLoggedUser } from "./session";
 import {isObj,isNonNullString} from "$cutils";
+import { resetPerms } from "../perms/reset";
 
 /**** connecte l'utilisateur actuel */
 export default function login (user,trigger){
@@ -22,6 +23,7 @@ export default function login (user,trigger){
             $session.set(USER_SESSION_KEY,user);
             updateTheme(user);
             if(trigger !== false){
+                resetPerms();
                 APP.trigger(APP.EVENTS.AUTH_LOGIN_USER,user);
             }
             return true;
