@@ -12,7 +12,7 @@ import {modes} from "../TextField";
 import {isMobileMedia} from "$cplatform/dimensions";
 import * as React from "react";
 import { isComponent } from "$react/isComponent";
-import defTheme,{white,black,lightColors,darkColors,getColors as initColors} from "./defaultTheme";
+import defTheme,{white,black,lightColors,darkColors} from "./defaultTheme";
 import { getStyleSheet,themeRef } from "./utils";
 import appConfig from "$capp/config";
 
@@ -132,12 +132,7 @@ export const getColors  =  x => getTheme().colors;
  * 
  */
 
-let initializeColorCounter = 0;
 export const updateTheme = (theme)=>{
-    if(initializeColorCounter <= 1){
-        initializeColorCounter++;
-        initColors();
-    }
     theme = updateColors(theme);
     if(isValid(theme)){
         Object.map(defaultTheme,(v,i)=>{
