@@ -9,8 +9,6 @@ import { ALPHA } from "./alpha";
 import configureFonts from './fonts';
 import { black, pinkA400, white } from './colors';
 
-const isObj = x => x && typeof x =="object" && !Array.isArray(x);
-
 export const black = "black";
 
 export const white = "white";
