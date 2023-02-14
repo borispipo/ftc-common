@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const platforms = require("./src/platforms");
 const getPlatform = (platform)=>{
     platform = (typeof platform =='string'? platform : "web").toLowerCase();
@@ -9,6 +10,7 @@ const getPlatform = (platform)=>{
     }
     return "web";
 }
+
 /*** 
  * @param {object}, les options du resolver, objet de la forme : 
  * {
@@ -20,16 +22,33 @@ const getPlatform = (platform)=>{
  * 
 */
 module.exports = function(opts){
+    /***** faire une copie du fichier package.json, situé à la racine du projet */
+    const rootDir = path.resolve(__dirname);
+    const common = path.resolve(rootDir,"src");
+    const packagePath = path.resolve(process.cwd(),"package.json");
+    const configPath = path.resolve(common,"app","config.json");
+    if(fs.existsSync(packagePath)){
+        try {
+            const packageObj = require(`${packagePath}`);
+            if(packageObj){
+                ["scripts","private","main","repository","keywords","bugs","dependencies","devDependencies"].map(v=>{
+                    delete packageObj[v];
+                })
+                fs.writeFileSync(configPath,JSON.stringify(packageObj,null,"\t"));
+            }
+        } catch{}
+    }
     let {base,withPouchdb,withPouchDB,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
     withPouchDB = withPouchDB || withPouchdb;
-    const rootDir = path.resolve(__dirname);
-    const common = path.resolve(rootDir,"src");
     base = base? base : process.cwd();;
     const src = path.resolve(base,"src");
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
+    const $packageJSON = fs.existsSync(configPath) && configPath || path.resolve(common,"app","config.default.json");
     const r = {
         "$cmedia" : path.resolve(common,"media"),
+        $packageJSON,
+        "$package.json" : $packageJSON,
         "$capp" : path.resolve(common,"app"),
         "$capi" : path.resolve(common,"api"),
         "$capiCustom" : path.resolve(common,"api","apiCustom"),

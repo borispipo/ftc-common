@@ -9,8 +9,11 @@ import session from "$session";
 import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
+const pJson = require("$package.json");
 
-const configRef = {current:null};
+const packageJSON = pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
+
+const configRef = {current:packageJSON};
 
 /**** l'ensemble des tables de la base de données */
 const tablesDataRef = {current:null};
@@ -25,10 +28,14 @@ const sessionAPIHostKey = "app-config-session-api-host";
 
 export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
 
-const isInitializedRef = {current:false};
+const isInitializedRef = {current:null};
+
 export const setConfig = configValue=> {
     if(typeof configValue =="object" && configValue && !Array.isArray(configValue)){
-        configRef.current = configValue;
+        configRef.current = {
+            ...packageJSON,
+            ...configValue,
+        };
         isInitializedRef.current = true;
     }
 }

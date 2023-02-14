@@ -3,16 +3,32 @@
 // license that can be found in the LICENSE file.
 
 import Colors from "./colors";
-import {isObj,defaultStr,defaultObj,extendObj} from "$cutils";
+import {isObj,defaultStr,extendObj} from "$cutils";
 import appConfig from "$capp/config";
-import DefaultTheme,{getDefaultLight,getDefaultDark} from './defTheme';
 import { ALPHA } from "./alpha";
+import configureFonts from './fonts';
+import { black, pinkA400, white } from './colors';
+import appConfig from "$capp/config";
+
+const isObj = x => x && typeof x =="object" && !Array.isArray(x);
 
 export const black = "black";
 
 export const white = "white";
 
 export const transparent = "transparent";
+
+///les couleurs du theme light par défaut, définit dans les configurations
+export const getDefaultLight = x=>{
+    const t = appConfig.theme;
+    return isObj(t.light) && Colors.isValid(t.light.primary) ? t.light : t;
+};
+  
+///les couleurs du theme dark par défaut, définit dans les configurations
+export const getDefaultDark = x=>{
+    const t = appConfig.theme;
+    return isObj(t.dark) && t.dark.primary ? t.dark : {};
+};
 
 
 let colors = {};
@@ -47,20 +63,35 @@ export const darkColors = {
     surface : "#202c33",
     surfaceText: '#FFFFFF',
     text: white,
-    //primaryText : "#aebac1",
     disabled: Colors.setAlpha(white,0.5),
     placeholder: Colors.setAlpha(white,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(white,0.18),
     ...getDefaultDark(),
-    //divider : "#dee2e6"
 }
 const dark1name = "Sombre|Dark";
 
 const defaultTheme = {
-    ...DefaultTheme,
+    dark: false,
+    roundness: 4,
+    version: 2,
+    fonts: configureFonts(),
+    animation: {
+        scale: 1.0,
+    },
     colors : {
-        ...DefaultTheme.colors,
+        primary: "#3D8B5F",
+        secondary : "#354448",
+        accent: '#03dac4',
+        background: '#f6f6f6',
+        surface: white,
+        error: '#B00020',
+        text: black,
+        onSurface: '#000000',
+        disabled: Colors.setAlpha(black,0.26),
+        placeholder: Colors.setAlpha(black,0.54),
+        backdrop: Colors.setAlpha(black,0.5),
+        notification: pinkA400,
         ...lightColors,
         ...getDefaultLight(),
     },
@@ -72,7 +103,6 @@ const defaultTheme = {
 export const getColors = ()=>{
     extendObj(lightColors,getDefaultLight());
     extendObj(darkColors,getDefaultDark());
-    extendObj(DefaultTheme.colors,getDefaultLight());
     extendObj(defaultTheme.colors,getDefaultLight());
     const t = [
         defaultTheme.name,
