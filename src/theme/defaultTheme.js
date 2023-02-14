@@ -8,7 +8,6 @@ import appConfig from "$capp/config";
 import { ALPHA } from "./alpha";
 import configureFonts from './fonts';
 import { black, pinkA400, white } from './colors';
-import appConfig from "$capp/config";
 
 const isObj = x => x && typeof x =="object" && !Array.isArray(x);
 
