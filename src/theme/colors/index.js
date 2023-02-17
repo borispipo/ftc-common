@@ -68,8 +68,8 @@ let stringMethods = [
 ]
 
 stringMethods.map((m,i)=>{
-  Colors[m] = (color,v1,v2)=> tinyColor(color,v1,v2)[m]().toString();
-})
+  Colors[m] = (...args)=> tinyColor(...args)[m]().toString();
+});
 
 Colors.toRgbObj = Colors.toRgbObject = (color)=>tinyColor(color).toRgb();
 
@@ -99,7 +99,7 @@ Colors.isDark = (color,mesure)=> {
 }
 Colors.isLight = Colors.isWhite = (color,mesure)=> {
   let cont = Colors.getBrightness(color);
-  mesure = isDecimal(mesure) && mesure > 128 ? mesure : 128; 
+  mesure = isDecimal(mesure) && mesure > 10 ? mesure : 128; 
   return (isDecimal(cont) && cont >= mesure) ? true : false;
 }
 
