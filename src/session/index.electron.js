@@ -4,7 +4,7 @@
 
 import {handleGetValue,handleSetValue} from "./utils";
 import {isElectron} from "$cplatform";
-import web from "./web/session.localstorage";
+import web from "./localstorage";
 import { sanitizeKey } from "./utils";
 let get = web.get, set = web.set;
 if(isElectron() && window.ELECTRON && typeof ELECTRON.SESSION=="object" && ELECTRON.SESSION){
