@@ -1,4 +1,4 @@
-import {sanitizeKey,handleGetValue,handleSetValue} from "../utils";
+import {sanitizeKey,handleGetValue,handleSetValue} from "./utils";
 const storage = typeof window !='undefined' && window && window.localStorage || undefined;
 export const set = (key,value,decycle)=>{
     if(!storage) return Promise.reject({message:'Unable to store session data, localstorage not available on client'});
