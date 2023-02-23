@@ -7,7 +7,7 @@ import {isObj,defaultStr,extendObj} from "$cutils";
 import appConfig from "$capp/config";
 import { ALPHA } from "./alpha";
 import configureFonts from './fonts';
-import { black, pinkA400, white } from './colors';
+import { pinkA400 } from './colors';
 
 export const black = "black";
 
