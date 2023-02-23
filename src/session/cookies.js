@@ -5,10 +5,10 @@
  * @namespace session
  * Permet de gérer les différentes sessions de l'application
  */
-import storage from "./storage";
+import storage from "./web/storage";
 import {isJSON, parseJSON,stringify} from "$cutils/json"
 import {isNonNullString} from "$cutils";
-import { sanitizeKey } from "../utils";
+import { sanitizeKey } from "./utils";
 import isDateObj from "$cutils/isDateObj";
 function extend () {
     var i = 0;
