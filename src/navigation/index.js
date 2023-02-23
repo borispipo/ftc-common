@@ -113,16 +113,17 @@ export const getRouteOptions = (opts)=>{
 
 export const getRouteOpts = getRouteOptions;
 
-
 export const buildScreenRoute = function(tableName,parent){
+    if(isObj(tableName)){
+        tableName = defaultStr(tableName.tableName,tableName.table);
+    }
     if(!isNonNullString(tableName)) return undefined;
-    parent = defaultStr(parent);
+    parent = defaultStr(parent,tableDataRouteName);
     if(parent){
         parent= parent.rtrim("/")+"/";
     }
     return sanitizeName(parent+tableName);
 }
-
 
 
 /*** permet de garder les options de l'écran courant */

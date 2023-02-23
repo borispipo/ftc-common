@@ -4,7 +4,8 @@
 
 import React from "$react";
 import { signIn as signInUser,signOut } from "./remote";
-import { isLoggedIn,isSignedIn,signOut2Redirect,getLoggedUser } from "./instance";
+import {isSignedIn,signOut2Redirect } from "./instance";
+import {getLoggedUser,isLoggedIn} from "./utils/session";
 
 
 const AuthContext = React.createContext(null);
