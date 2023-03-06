@@ -50,7 +50,9 @@ const errorF = ({msg,error,reject})=>{
     setInfo(false);
     return reject(msg);
 }
-/*** args.forceSync : si la synchronisation sera forcée ou pas */
+/*** args.forceSync : si la synchronisation sera forcée ou pas 
+ * 
+*/
 export const sync = (args)=>{
     if(isBool(args)){
         args = {cancel:args};

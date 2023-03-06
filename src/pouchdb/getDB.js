@@ -54,7 +54,7 @@ if(!window.hasSetPouchEventsGetDB){
         // called whenever a db is destroyed.
         dbName = sanitizeName(dbName.ltrim(getDBNamePrefix()));
         const DATABASES = POUCH_DATABASES.get();
-        APP.trigger(APP.EVENTS.REMOVE_DATABASE,dbName);
+        APP.trigger(APP.EVENTS.REMOVE_POUCHDB_DATABASE,dbName);
         if(DATABASES[dbName]){
             let db = DATABASES[dbName];
             if(db.changesResult && isFunction(db.changesResult.cancel)){
