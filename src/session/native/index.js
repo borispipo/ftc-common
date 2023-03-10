@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import isPromise from "$cutils/isPromise";
 import {handleError} from './helpers';
 import {stringify} from "$cutils/json";
-import { sanitizeKey } from './utils';
+import { sanitizeKey } from '../utils';
 
 let currentInitSession = undefined;
 
