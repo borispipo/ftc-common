@@ -42,10 +42,14 @@ export const setConfig = configValue=> {
 export const setConfigValue = (key,value)=>{
     const conf = getConfig();
     if(isNonNullString(key)){
-        if(key in config && key !=='current'){
-            config[key] = value;
-        } else {
-            conf[key] = value;
+        try {
+            if(key in config && key !=='current'){
+                config[key] = value;
+            } else {
+                conf[key] = value;
+            }
+        } catch(e){
+            console.log(e," setting config value ",key,value);
         }
     }
     return conf;
@@ -219,6 +223,11 @@ const config = {
     },
     get init (){
         return getInit();
+    },
+    set init(init){
+        if(typeof init =="function"){
+            configRef.current.init == init;
+        };
     },
     /*** si le fichier de configuration a déjà été initialié */
     get initialized (){
