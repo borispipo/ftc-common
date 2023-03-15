@@ -53,4 +53,9 @@
     pouchdbInitialStructDatas {function|object} => {
         [structDataTableName] {object} : [{datas}]
     }
+
+    /************************* Auth settings              */
+    /tell if application is singleUserAllowed and must get the default user
+    isAuthSingleUserAllowed {boolean|number},
+    authDefaultUser {object} => {[code],[label]} //the default connectedUser to use whent isAuthSingleUserAllowed is set to true
 }

@@ -9,6 +9,7 @@ import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
 import { resetPerms } from "../perms/reset";
+import appConfig from "$app/config";
 
 export const USER_SESSION_KEY = "user-session";
 
@@ -39,7 +40,14 @@ export const getToken = ()=>{
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
     const u = $session.get(USER_SESSION_KEY);
-    return isObj(u)  && (hasToken() || isNonNullString(u.code)) ? u : null;
+    if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
+       return u;
+    }
+    if(!!appConfig.isAuthSingleUserAllowed){
+      const defUser = appConfig.authDefaultUser;
+      return isObj(defUser) && defUser || null;
+    }
+    return null;
 };
 
 export const getLoggedUser = getLocalUser;
