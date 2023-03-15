@@ -1,7 +1,7 @@
 import CONSTANTS from "../constants";
 import appConfig from "$capp/config";
 import {defaultObj} from "$cutils";
-import {getDB} from "./getDB";
+import {getDB} from "../getDB";
 import {isObj,isNonNullString,isFunction,defaultStr,defaultArray} from "$cutils";
 import getStructDataDB from "../getStructDataDB";
 
