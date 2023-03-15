@@ -26,7 +26,11 @@ const getStructDataRef = {current : {}};
 const sessionDatatKey = "app-config-session-data-key";
 const sessionAPIHostKey = "app-config-session-api-host";
 
-export const getConfig = x=>typeof configRef.current =="object" && configRef.current? configRef.current : {};
+export const getConfig = x=>{
+    if(typeof configRef.current =="object" && configRef.current && !Array.isArray(configRef.current) ) return configRef.current;
+    configRef.current = {};
+    return configRef.current;
+};
 
 const isInitializedRef = {current:null};
 
