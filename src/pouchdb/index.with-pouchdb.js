@@ -12,6 +12,14 @@ import CONSTANTS from "./constants";
 import getData from "./getData";
 import pouch from "./pouchdb";
 import sync from "./sync";
+import common from "./common";
+import getAllData from "./getAllData";
+import servers from "./sync/servers";
+import {get as getIndexes, set as setIndexes} from "./utils/pouchdbIndexes";
+
+export * from "./utils";
+
+export {default as dataFileManager} from "./dataFileManager";
 
 const PouchDB = pouch.PouchDB;
 
@@ -19,18 +27,27 @@ export * from "./getDB";
 
 export {
     getDB,
+    servers,
+    getIndexes,
+    setIndexes,
+    common,
     CONSTANTS,
     getData,
     parseDBName,
     PouchDB,
     sync,
+    getAllData,
 }
 
 export default {
     getDB,
+    servers,
+    getIndexes,
+    setIndexes,
+    common,
     CONSTANTS,
     getData,
     parseDBName,
     sync,
-    ...pouch,
+    getAllData,
 }

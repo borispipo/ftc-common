@@ -37,4 +37,20 @@
     
     **/
     runBackgroundTasks : ({isOnline})=><Promise>
+
+    /***Pouchdb settings */
+    //retrieve common datata files
+    pouchDBCommonDataFiles {object} :{
+        [dbName] : {
+            code{string} : [dbNameCode],
+            label{string} : [dbNameLabel],
+            archivale{boolean}:, //if db is archivable
+            removable : {boolean}
+        }
+    } 
+
+    ///retrieve initial struct datas 
+    pouchdbInitialStructDatas {function|object} => {
+        [structDataTableName] {object} : [{datas}]
+    }
 }

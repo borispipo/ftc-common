@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import DATABASES_INDEXES from "../../utils/DATABASES_INDEXES";
+import pouchdbIndexes from "../../utils/pouchdbIndexes";
 import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import indexes from "$pouchdbIndex";
+
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
     if(isArray(idx)){
@@ -25,7 +26,7 @@ const getIndexToCreateOrDelete = (idx)=>{
 
 const createIndex = (db,idx,dbName)=>{
     let promises = [];
-    const DB_INDEXES = DATABASES_INDEXES.get();
+    const DB_INDEXES = pouchdbIndexes.get();
     let indexToCreate = getIndexToCreateOrDelete(idx);
     for(let name in indexToCreate){
         let index = indexToCreate[name];
@@ -84,7 +85,7 @@ export default function createDefaultPouchDBIndexes(force,rest){
     if(reset === true || views === true){
         force = true;
     }
-    const DB_INDEXES = DATABASES_INDEXES.get();
+    const DB_INDEXES = pouchdbIndexes.get();
     let dbName = sanitizeName(this.realName);///les indices sont stockés dans les nom de base de données en majuscule
     if(force !== true && DB_INDEXES[dbName]){
         return Promise.resolve(context);

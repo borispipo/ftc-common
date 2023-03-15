@@ -14,7 +14,7 @@ import isValid from "./isValidDataFile";
 export default function fetchDataFiles(){
     const dataFiles = getAllDefault();
     return getDB(dbName).then(({db})=>{
-        APP.DEVICE.pouchdbAdapter = db.adapter
+        APP.DEVICE?.pouchdbAdapter = db.adapter
         return db.get(docId).then((dFiles)=>{
             Object.map(dFiles,(dF,i)=>{
                 if(isValid(dF,i)){

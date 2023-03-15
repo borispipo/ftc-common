@@ -4,14 +4,16 @@
 
 import {isNativeDesktop} from "$cplatform";
 import POUCH_DATABASES  from "./pouchdbDatabases";
+
+const compactedDBRefs = {};
+
 export const compactDB = (db,force) =>{
     if(!force && !isNativeDesktop()) return Promise.resolve();
-    window.__allCompactingDBS = defaultObj(window.__allCompactingDBS);
     let dbN = db.getName()+(db.isRemoteServer?"-true":"-false");
-    if(!window.__allCompactingDBS[dbN]){
-        window.__allCompactingDBS[dbN] = true;
+    if(!compactedDBRefs[dbN]){
+        compactedDBRefs[dbN] = true;
         return db.compact().catch((e)=>e).finally(x=>{
-            delete window.__allCompactingDBS[dbN];
+            delete compactedDBRefs[dbN];
             return x;
         });
     }

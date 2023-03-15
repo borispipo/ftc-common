@@ -1,8 +1,9 @@
 import {isElectron} from "$cplatform";
+import {isNonNullString,defaultStr} from "$cutils";
 
 export default function getPouchDBNamePrefix(x){
     let pref = "";
-    if(isElectron() && window.ELECTRON){
+    if(isElectron() && typeof ELECTRON !=='object' && ELECTRON && isNonNullString(ELECTRON.databasePath)){
         pref = ELECTRON.databasePath;
     }
     if(typeof(pref) =="function") pref = pref();

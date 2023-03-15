@@ -1,6 +1,8 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+import appConfig from "$capp/config";
+import {defaultObj} from "$cutils";
 
 export default {
     common_db : {
@@ -23,4 +25,5 @@ export default {
         system : true, //si c'est un fichier de données système
         desc : "Permet de stocker toutes les données de structures de la société, notemment : les modes de règlements, les conditions de règlements, les civilités, les villes,..."
     },
+    ...defaultObj(appConfig.pouchDBCommonDataFiles)
 }

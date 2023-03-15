@@ -1,6 +1,6 @@
 import CONSTANTS from "../constants";
+import localSession from "$session";
 
-let DB_NAME = CONSTANTS.COMMON_DB;
 /****** cette fonction prend en parmètre une chaine de caractère 
  *  et retourne le nom base de données correspondant à ce nom
  *  @pram : le nom de la bd à rechercher,
@@ -13,7 +13,7 @@ export default function getDBName (dbName){
     if(isNonNullString(dbName) && arrayValueExists(["default","current"],dbName.trim().toLowerCase())){
         dbName = "";
     } else if(isNonNullString(dbName) && arrayValueExists(dbName.toLowerCase().trim(),['common','commondb'])){
-        dbName = DB_NAME
+        dbName = CONSTANTS.COMMON_DB;
     }
-    return defaultStr(dbName);
+    return defaultStr(dbName,localSession.get("currentDB"));
 }

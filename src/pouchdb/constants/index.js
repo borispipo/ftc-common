@@ -13,4 +13,11 @@ export default {
     get SETTINGS (){
         return 'SETTINGS_DBS_ID';
     }, 
+    //l'id des paramètres de la société dans
+    get COMPANY_ID_SETTING (){
+        return 'DB_COMPANY_ID_SETTINGS';
+    }, 
+    get PIECES_TABLE_ID (){
+        return 'DB_PIECES_IDS';//l'id de la table des numéros de 
+    }
 }

@@ -1,12 +1,12 @@
 /*** fix IE 11 : fetch  is undefined with fetch polyfill @see : https://github.com/github/fetch */
 import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
-import {extendObj} from "$cutils";
+import {extendObj,isNonNullString,defaultStr,isObj,defaultObj} from "$cutils";
 import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
 import actions from "$cactions";
 import { sanitizeName,isCommon } from './dataFileManager/utils';
-import { getLoggedUser} from '$cauth/utils';
+import { getLoggedUser} from '$cauth/utils/session';
 import uniqid from "./pouchdb/plugins/uniqid";
 import createDefaultIndexes from "./pouchdb/plugins/createDefaultIndexes";
 import getRealName from "./pouchdb/plugins/getRealName";
@@ -224,7 +224,7 @@ export const trimIDField = function(value,table){
     return value;
 }
 
-if(!isFunction(window.trimIdField)){
+if(typeof window !=='undefined' && window && !isFunction(window.trimIdField)){
     Object.defineProperties(window,{
         trimIdField : {value:trimIDField,override:false,writable:false},
         trimIDField : {value:trimIDField,override:false,writable:false},

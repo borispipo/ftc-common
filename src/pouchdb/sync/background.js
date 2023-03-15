@@ -1,18 +1,20 @@
-let background = false;
+import {isBool,isNonNullString,defaultVal} from "$cutils";
+
 const syncManagers = {};
+const backgroundRef = {current:false};
 
 export const setBackground = (rest)=>{
     if(isBool(rest)){
-        background = rest;
+        backgroundRef.current = rest;
     } else if(isObj(rest)) {
-        background = defaultVal(rest.background,false)?true : false;
+        backgroundRef.current = defaultVal(rest.background,false)?true : false;
     }
-    return background;
+    return backgroundRef.current;
 }
 
-export const isDBSyncBackground = x=>background;
+export const isDBSyncBackground = x=>backgroundRef.current;
 export const setDBSyncBackground = setBackground;
-export const isNotDBSyncBackground = ()=> !background;
+export const isNotDBSyncBackground = ()=> !backgroundRef.current;
 export const getDBSyncManager = x=> syncManagers;
 export default {
     isDBSyncBackground,

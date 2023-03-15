@@ -3,6 +3,8 @@
 // license that can be found in the LICENSE file.
 
 import getDB from "./getDB";
+import { dbName as structDataDBName } from "./getStructDataDB";
+import commonDB from "./common";
 
 export const getDataSuccessCB = ({findOptions,resolve,reject,successCb,db,errorCb},checkIndex) =>{
     db.find(findOptions).then(({docs})=>{
@@ -25,12 +27,35 @@ export const getDataSuccessCB = ({findOptions,resolve,reject,successCb,db,errorC
         }
     });
 };
+
+const structDBName = structDataDBName.trim().toLowerCase().remplaceAll("_","");
+/********
+    cette fonction prend en paramètre une chaine de caractère et retourne une fonction qui lorsqu'elle est appelée
+    devra retourner des données
+    ////dataStr doit toujours avoir au moins un argument, le premier représente le nom de la table dans la base
+    /// si un seul arguemnt est passé en paramètres, alors on récupère toutes les données dont la table match la valeur passée en paramtère
+    ///  à plus de deux arguments, l'on considère qu'il s'agit de retourner les enfants dont l'id(table) est passé en paramètre
+    ///  exemple dataStr :
+                - structData[tableName] : pour récupérer les données de structure de table 'tableName'
+                - common[tableName] ou commonDB[tableName]
+                - dbName[tableName] : retourne un tableau contenant toutes les données dont la prop table match tablename
+                - dbName[_id,field1,subsubField,.....] : récupère progréssivement les enfants de l'id table, pour récupérer intégralement 
+                l'élément d'_id, il suffit d'attribuer une valeur non string à field1
+                - dbName[_id,null|undefined||true||false], retourne l'élément Id dans la base
+                /// les données sont récupérer de manière hiérarchique jusqu'au dernier enfant
+                /// si le nom de la bd est omis, alors c'est la base par défaut qui est utilisée
+        En somme, pour écupérer toutes les données qui match la table, alors préciser un seul argument : le nom de la table
+                  pour récupérer l'élément d'id passé en paramètre, préciser au moins 2 arguments, avec comme deuxième une valeur null ou on string
+                  pour récupérer progréssivement les enfants de l'élément dont l'id est passé en paramètre, préciser au moins deux arguments avec le deuxième,troisième, .....nième  obligatoirement non null
+    Lorsqu'il s'agit des données de la table passée en paramètre à récupérer, l'on peut passer dans la variable 
+    findOptions, les options supplémentaires à appliquer au plugin find de pouchDB. voir pouchdb-find pour en savoir plus
+*/
 export const getDataFunc = (dataStr,findOptions)=>{
     if(!isNonNullString(dataStr)) return null;
     findOptions = defaultObj(findOptions);
     let {server} = findOptions;
     let _sp,dbName,args;
-    if(dataStr.indexOf("[") > -1){
+    if(dataStr.indexOf("[") > -1 || dataStr.remplaceAll("-","").remplaceAll("_","").trim().toLowerCase() === structDBName){
         _sp = dataStr.split("[")
         dbName = isNonNullString(_sp[0])?_sp[0].trim():'';
         args = _sp[1]?_sp[1].split(",") : []
@@ -42,6 +67,21 @@ export const getDataFunc = (dataStr,findOptions)=>{
             let table = args[0];
             args.shift(); //on élimnine le nom de la table dans la liste des arguments
             switch (defaultStr(dbName).toLowerCase()) {
+                case 'structdata': //si c'est une données de structure
+                    return (successCb,errorCb)=>{
+                        return new Promise((resolve,reject)=>{
+                        commonDB.getStructData(table).then(({data,allData})=>{
+                            let d = data;
+                            for(let k in args){
+                                if(isObj(d) && isNonNullString(args[k]) && !arrayValueExists(['null','true','false'],args[k]+''.trim().toLowerCase())){
+                                    d = d[args[k]];
+                                } else break;
+                            }
+                            if(isFunction(successCb)) successCb(d,data,allData)
+                            else resolve(d);
+                        }).catch(e=>{if(isFunction(errorCb))errorCb(e);else reject(e);})
+                    })
+                } 
                 default:
                     //if(!isNonNullString(table)) return null;
                     return (successCb,errorCb) =>{

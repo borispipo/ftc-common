@@ -2,17 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-let __DB_INDEXES = {};
+///used to set indexes of pouchdb database
+const indexRef = {current:{}};
 
 export const get = () =>{
-    return __DB_INDEXES;
+    return indexRef.current;
 }
 
 export const set = (databases) =>{
     if(typeof databases =='object' && databases){
-        __DB_INDEXES = databases;
+        indexRef.current = databases;
     }
-    return __DB_INDEXES;
+    return indexRef.current;
 }
 
 export default {

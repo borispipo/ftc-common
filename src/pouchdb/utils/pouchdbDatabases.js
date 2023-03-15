@@ -1,14 +1,14 @@
-let __POUCHDBDatabases = {};
+const databasesRef = {current:{}};
 
 export const get = () =>{
-    return __POUCHDBDatabases;
+    return databasesRef.current;
 }
 
 export const set = (databases) =>{
     if(typeof databases =='object' && databases){
-        __POUCHDBDatabases = databases;
+        databasesRef.current = databases;
     }
-    return __POUCHDBDatabases;
+    return databasesRef.current;
 }
 
 export default {

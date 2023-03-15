@@ -11,6 +11,8 @@ import BG_TASK_MANAGER from "./bakgroundTaskManager";
 import isRunning from "./isRunning";
 import {isObjOrArray} from "$utils";
 
+export {default as servers} from "./servers";
+
 ///retourne les infos liées à la synchronisation des données
 export const getInfo = ($key)=>{
     let ret = defaultObj($session.get($sessionKey));

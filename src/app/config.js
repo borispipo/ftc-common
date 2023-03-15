@@ -326,7 +326,7 @@ export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>getConfigValue("appId","id");
 export const getAppVersion = x=>getConfigValue("apiVersion");
 export const getFeeds = x=>getConfigValue("feeds");
-export const getDBNamePrefix = x=> getConfigValue("dbNamePrefix","pouchdbPrefix","pouchdbNamePrefix") || getAppId();
+export const getDBNamePrefix = x=> getConfigValue("pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
 const runBackgroundTasksRef = {current:null};
 export const getCurrency = ()=> {

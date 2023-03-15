@@ -31,3 +31,10 @@ export const toggleAllStatus = toggle;
 export {
     getAllServers as getAll,
 }
+
+export default {
+    getAll : getAllServers,
+    disableAll,
+    enableAll,
+    toggleAllStatus,
+}
