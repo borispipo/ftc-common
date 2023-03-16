@@ -37,17 +37,33 @@ export const getToken = ()=>{
     return isObj(u) && (hasToken() || isNonNullString(u.code))  ? true : false;
   }
   
+/*** check wheater the singleUserAllowed mode is enabled
+ * 
+ */
+export const isSingleUserAllowed = ()=>{
+  return (!!appConfig.isAuthSingleUserAllowed && isObj(appConfig.authDefaultUser)) && true || false;
+}
+/*** check wheater the multi user is allowed on application */
+export const isMultiUsersAllowed = ()=>{
+  return !isSingleUserAllowed();
+}
+/*** return the default single user
+ * when multiuser not allowed
+ */
+export const getDefaultSingleUser = ()=>{
+  if(isSingleUserAllowed()){
+    const defUser = appConfig.authDefaultUser;
+    return isObj(defUser) && defUser || null;
+  }
+  return null;
+}
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
     const u = $session.get(USER_SESSION_KEY);
     if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
        return u;
     }
-    if(!!appConfig.isAuthSingleUserAllowed){
-      const defUser = appConfig.authDefaultUser;
-      return isObj(defUser) && defUser || null;
-    }
-    return null;
+    return getDefaultSingleUser();
 };
 
 export const getLoggedUser = getLocalUser;
