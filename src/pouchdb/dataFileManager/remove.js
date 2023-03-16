@@ -9,7 +9,7 @@ import getDB  from "./getDB";
 
 const hasHandleRemove = {current:false};
 
-export const remove = (dF)=>{
+const remove = (dF)=>{
     const code = isObj(dF) && isNonNullString(dF.code)? dF.code : isNonNullString(dF)? dF : undefined;
     return getDB().then(({db})=>{
         return db.remove(code).then((c)=>{
@@ -25,3 +25,5 @@ if(!hasHandleRemove.current){
         remove(dbName).then(fetch);
     });
 }
+
+export default remove;
