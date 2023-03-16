@@ -426,7 +426,7 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
  */
 const newPouchDB = (options)=>{
     options = defaultObj(options);
-    let settings = {auto_compaction: true,isDataFileManager,size:10000000,revs_limit1:100,...options};
+    let settings = {auto_compaction: true,size:10000000,revs_limit1:100,...options};
     let pDBName = defaultStr(options.dbName,options.name);
     options.dbName = pDBName;
     const {realName} = options;
@@ -458,7 +458,7 @@ const newPouchDB = (options)=>{
     args.isServer = isServer;
     args.skipSetup = willSkip;
     args.realName = realName;
-    args.isDataFileManager = isDataFileManager || isDataFileDBName(pDBName);
+    args.isDataFileManager = options.isDataFileManager || isDataFileDBName(pDBName);
     return initDB(args);
 }   
 
