@@ -6,6 +6,7 @@ import getAllDefault from "./getAllDefault";
 import APP from "$capp/instance";
 import {set as setDataFiles} from "./DATA_FILES";
 import isValid from "./isValidDataFile";
+import getDB from "./getDB";
 
 /**** actualise la liste des fichiers de données pris en compte par l'application et la stocke en memoire */
 export default function fetchDataFiles(){
