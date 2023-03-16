@@ -6,20 +6,27 @@ import getAllDefault from "./getAllDefault";
 import prepareFilter from "./prepareFilter";
 import getCurrentDB from "./getCurrentDB";
 import setCurrentDB from "./setCurrentDB";
-import table from "./table";
 import isCommon from "./isCommon";
-import docId from "./docId";
 import {structDataDBName} from "./structData";
 import isStructData from "./isStructData";
+import isMasterAdmin from "$cauth/isMasterAdmin";
 import {getLoggedUser} from "$cauth/utils/session";
+import DATA_FILES from "./DATA_FILES";
+
+export {extendDefaultDataFiles} from "./defaultDataFiles";
 
 const dataFilesCounter = {};
 
-
 export {default as dbName} from "./dbName";
 
-const tableName = table;
-export {dataFileText,isStructData,structDataDBName,docId,tableName,table,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
+export {default as types} from "./types";
+
+export {default as fields} from "./fields";
+
+///check wheater the given name is supposed to be dataFile Name
+export {default as isDBName} from "./isDataFileDBName";
+
+export {dataFileText,isStructData,structDataDBName,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
 
 
 export const trimCommonDocId = (docCodeOrId,dbName)=>{
@@ -57,7 +64,7 @@ export const getLabel = (code)=>{
 };
 
 export const getAll = (filter,returnArray)=>{
-    let all = extendObj(true,{},getAllDefault(),getDataFiles());
+    let all = {...getAllDefault(),...DATA_FILES.get()};
     filter = prepareFilter(filter);
     dataFilesCounter = {};
     let allDBToReturn = returnArray ? [] : {};
@@ -98,12 +105,12 @@ export const isArchived = (dFCode)=>{
 }
 
 export const isForUser = (dF,user)=>{
-    //if(isMasterAdmin()) return true;
+    if(isMasterAdmin()) return true;
     if(!isObj(dF) || !isArray(dF.users)) return false;
     if(isNonNullString(user)){
         user = {code:user};
     }
     user = isObj(user)? user : defaultObj(getLoggedUser());
     if(!isNonNullString(user.code)) return false;
-    return arrayValueExists(dF.users,user.code)
+    return dF.users.includes(user.code);
 }

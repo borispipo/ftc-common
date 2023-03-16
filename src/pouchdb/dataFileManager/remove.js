@@ -2,24 +2,26 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import _upsert from "./upsert";
 import {isObj,isNonNullString} from "$cutils";
 import APP from "$app/instance";
 import fetch from "./fetch";
+import getDB  from "./getDB";
+
+const hasHandleRemove = {current:false};
 
 export const remove = (dF)=>{
-    let code = isObj(dF) && isNonNullString(dF.code)? dF.code : isNonNullString(dF)? dF : undefined;
-    return _upsert((dataFiles)=>{
-        if(isNonNullString(code)){
-            delete dataFiles[code.toLowerCase().trim()];
-        }
-        return dataFiles;
-    });
+    const code = isObj(dF) && isNonNullString(dF.code)? dF.code : isNonNullString(dF)? dF : undefined;
+    return getDB().then(({db})=>{
+        return db.remove(code).then((c)=>{
+            fetch().catch(x=>x).finally();
+            return c;
+        });
+    })
 };
 
-if(!APP.hasHandleRemoveEvents){
-    APP.hasHandleRemoveEvents = true;
-    APP.on(APP.EVENTS.REMOVE_DATABASE,(dbName)=>{
+if(!hasHandleRemove.current){
+    hasHandleRemove.current = true;
+    APP.on(APP.EVENTS.REMOVE_POUCHDB_DATABASE,(dbName)=>{
         remove(dbName).then(fetch);
     });
 }

@@ -1,1 +1,1 @@
-export default "common";
+export default "pouchdb-data-files-manager";

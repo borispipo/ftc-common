@@ -14,6 +14,7 @@ import toJSON from "./pouchdb/plugins/toJSON";
 import {structDataDBName } from "./dataFileManager/structData";
 import {triggerEventTableName} from "./dataFileManager/structData";
 import canOverrideRemove from "./pouchdb/plugins/canOverrideRemove";
+import isDataFileDBName from './dataFileManager/isDataFileDBName';
 import "./polyfill";
 
 import PouchObj from "./pouchdb";
@@ -39,8 +40,6 @@ PouchDB.plugin({
     getRealName,
     toJSON,
 });
-
-let hasInitAppEvents = false;
 
 if(!isObj(window.___TRIGGER_CHANGES_DBS)){
     Object.defineProperties(window,{
@@ -342,16 +341,19 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
         if(DATABASES[sDBName]){
             return Promise.resolve(DATABASES[sDBName]);
         }
+        const isDataFileManager = settings.isDataFileManager;
         const _remove = function({context,doc,force}){
             if(!isBool(force)){
                 ///par défaut, toutes les documents du fichier de données communes sont supprimées
-                force = isCommon(context.getName());
+                force = isCommon(context.getName()) || isDataFileManager;
             }
             const sCB = (deleted)=>{
                 if(!isObj(doc) || !isNonNullString(doc._id)){
                     doc = deleted;
                 }
-                triggerDB({db,deleted,doc,isDelete:true});
+                if(!isDataFileManager){
+                    triggerDB({db,deleted,doc,isDelete:true});
+                }
                 return deleted;
             }
             if(force !== true && isObj(doc) && isNonNullString(doc._id)){
@@ -407,7 +409,7 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
             db.createDefaultIndexes({dbName:sDBName}).finally(()=>{
                 resolve(db);
             })
-        })
+        });
     }
     return Promise.resolve(db);
 }
@@ -424,7 +426,7 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
  */
 const newPouchDB = (options)=>{
     options = defaultObj(options);
-    let settings = {auto_compaction: true,size:10000000,revs_limit1:100,...options};
+    let settings = {auto_compaction: true,isDataFileManager,size:10000000,revs_limit1:100,...options};
     let pDBName = defaultStr(options.dbName,options.name);
     options.dbName = pDBName;
     const {realName} = options;
@@ -456,6 +458,7 @@ const newPouchDB = (options)=>{
     args.isServer = isServer;
     args.skipSetup = willSkip;
     args.realName = realName;
+    args.isDataFileManager = isDataFileManager || isDataFileDBName(pDBName);
     return initDB(args);
 }   
 
@@ -522,7 +525,6 @@ const resolveDBWithPromise = (dbName,callback,realName,options) =>{
 } 
 
 /*** retourne la base de données
-    @param : callback : la fonction de rappel
     @param : dbName : le nom de la bd
     @param : options : les options supplémentaires à appliquer
 
@@ -531,42 +533,22 @@ const resolveDBWithPromise = (dbName,callback,realName,options) =>{
         callback || success : la fonction de rappel en cas de succès
         error || la fonction de rappel en cas d'erreur
         adapter : le nom de l'adapter,
+        isDataFileManager : //si c'est le gestion de base de données des sources de données
         ...rest
     }
     */
-export default function getDB (callback,dbName,options1){
-    if(!hasInitAppEvents && window.APP && isFunction(APP.off)){
-        hasInitAppEvents = true;
-    }
-    let dbOpts = {};
-    if(isObj(callback)){
-        dbOpts = callback;
-    } else if(isFunction(callback)){
-        dbOpts = {
-            callback
+export default function getDB (dbName,opts){
+    const dbOpts = isObj(dbName)? dbName : isNonNullString(dbName)? {dbName} : {};
+    opts = extendObj({},dbOpts,opts);
+    dbOpts.dbName = dbOpts.name = defaultStr(dbOpts.dbName,dbOpts.name);
+    let {dbName:sDBName,callback,name,success,error,...options} = dbOpts;
+    callback = defaultFunc(callback,success);
+    dbName = defaultStr(dbName,sDBName,name).trim();
+    if(!dbName){
+        const tbl = defaultStr(dbOpts.table,dbOpts.tableName);
+        if(tbl){
+            dbName = sanitizeName(dbName,tbl);
         }
-        callback = undefined;
-    } 
-    
-    dbOpts = {...defaultObj(dbOpts),...defaultObj(options1)};
-    if(isNonNullString(callback)){
-        dbOpts.dbName = callback;
-    } else if(isFunction(callback)){
-        dbOpts.callback = callback;
-    }
-    
-    if(isNonNullString(dbName)){
-        dbOpts.dbName = dbName;
-    } else if(isFunction(dbName)){
-        dbOpts.callback = dbName;
-    }
-    dbOpts.dbName = defaultStr(dbOpts.dbName,dbOpts.name);
-    let {db,name,success,error,...options} = dbOpts;
-    callback = isFunction(dbOpts.callback)? dbOpts.callback : defaultVal(success,callback);
-    dbName = defaultStr(dbName,dbOpts.dbName,db,name);
-    let tbl = defaultStr(dbOpts.table,dbOpts.tableName);
-    if(tbl){
-        dbName = sanitizeName(dbName,tbl);
     }
     delete dbOpts.dbName;
     options = defaultObj(options);

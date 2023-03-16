@@ -12,7 +12,12 @@ export default {
         label : 'Données communes'
     },
     projects : {
-        type : 'projects',
+        code : 'projects',
         label : 'Projets'
+    },
+    store : {
+        code : "store",
+        type : "store",
+        label : "Chaines de magasin",
     },
 }

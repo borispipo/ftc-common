@@ -6,6 +6,7 @@ import * as dataFileManager from "./utils";
 import fetch from "./fetch";
 import upsert from "./upsert";
 import remove from "./remove";
+import getDB from "./getDB";
 
 export * from "./utils";
 
@@ -13,6 +14,7 @@ const df = {
     ...dataFileManager,
     fetch,
     upsert,
+    getDB,
     remove
 }
 export default df;
