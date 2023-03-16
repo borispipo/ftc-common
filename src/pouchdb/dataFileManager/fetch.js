@@ -27,6 +27,8 @@ export default function fetchDataFiles(){
                 rows.map(({doc})=>{
                     if(!isValid(doc)) return;
                     const code = doc._id;
+                    ///all data-file must be in lower case
+                    if(code.toUpperCase()==code) return db.remove(doc);
                     if(code in removableDataFiles){
                         foundedDF[code] = true;
                     }

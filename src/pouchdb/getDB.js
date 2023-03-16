@@ -179,7 +179,6 @@ upsertVar.upsert = function upsert(docId, diffFun, cb,options) {
         let msg = "Upsertvar : impossible d'insérer la valer en base car la fonction diffFunc du plugin upsertVar est non définit ou l'id de la données est invalide";
         throw msg;
     }
-    docId = docId.toUpperCase();
     if(isObj(cb)){
         options = isObj(options)? options : cb;
         cb = null;
@@ -316,10 +315,16 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
     db.localName = localName;
     db.isRemoteServer = db.isRemote = isServer ? true : false;
     const DATABASES = POUCH_DATABASES.get();
+    const isDataFileManager = settings.isDataFileManager;
     if(isNonNullString(realName) && !db.realName) {
         realName = realName.ltrim(getDBNamePrefix());
         Object.defineProperties(db,{
             realName : {value:realName,override:false,writable:false}
+        });
+    }
+    if("isDataFileManager" in db){
+        Object.defineProperties(db,{
+            isDataFileManager : {value:isDataFileManager}
         });
     }
     if(settings.willSkip){
@@ -341,7 +346,6 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
         if(DATABASES[sDBName]){
             return Promise.resolve(DATABASES[sDBName]);
         }
-        const isDataFileManager = settings.isDataFileManager;
         const _remove = function({context,doc,force}){
             if(!isBool(force)){
                 ///par défaut, toutes les documents du fichier de données communes sont supprimées
