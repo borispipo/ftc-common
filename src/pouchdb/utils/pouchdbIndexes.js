@@ -4,8 +4,14 @@
 
 ///used to set indexes of pouchdb database
 const indexRef = {current:{}};
+import dbName from "../dataFileManager/dbName";
+import dataFileIndexes from "../dataFileManager/indexes";
+import {isObj} from "$utils";
 
 export const get = () =>{
+    if(!isObj(indexRef.current[dbName])){
+        indexRef.current[dbName] = dataFileIndexes;
+    }
     return indexRef.current;
 }
 

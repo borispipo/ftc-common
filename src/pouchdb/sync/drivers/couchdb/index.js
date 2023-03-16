@@ -1,5 +1,5 @@
 import notify from "$notify";
-import {getLabel,getAll as getAllDataFiles,sanitizeName,isForUser} from "../../../dataFileManager/utils";
+import {getLabel,getAll as getAllDataFiles,sanitizeName,isValid} from "../../../dataFileManager/utils";
 import isCommonDataFile from "../../../dataFileManager/isCommon";
 import Background from "../../background";
 import {isDesktopMedia} from "$dimensions";
@@ -7,6 +7,9 @@ import getDB,{PouchDB} from "$pouchdb/getDB";
 import APP from "$app/instance";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";
+import {getLoggedUser} from "$cauth/session";
+import isMasterAdmin from "$cauth/isMasterAdmin";
+import isCommon from "../../../dataFileManager/isCommon";
 const uDBName = "users";
 /*** retourne une base de données couchdb :
  * @param : {mixted : string | object}
@@ -157,8 +160,8 @@ let cMsg = (d,title,db)=>{
     return str;
 }
 
-let syncDB = (args)=>{
-    let {code,_id,changedDatabases,syncID,syncFilter,local,url,dbName,dbNameStr,syncType,allDatabasesSync,...rest} = args;
+export const syncDB = (args)=>{
+    let {code,_id,changedDatabases,syncID,syncFilter,isCommon,local,url,dbName,dbNameStr,syncType,allDatabasesSync,...rest} = args;
     rest = defaultObj(rest)
     let remoteDB = undefined;
     let localDB = undefined;
@@ -183,7 +186,7 @@ let syncDB = (args)=>{
     return new Promise((_resolve,_reject)=>{
         let timeout = undefined;
         let syncContext = undefined;
-        let errorF = (err)=>{
+        const errorF = (err)=>{
             clearTimeout(timeout);
             if(err){
                 if(Background.isNotDBSyncBackground() && !dbSyncManager[syncID] && (isNonNullString(err) || (isObj(err) && (isNonNullString(err.msg) || isNonNullString(err.message))))){
@@ -202,7 +205,7 @@ let syncDB = (args)=>{
             errorF("Veuillez vérifier votre connexion internet car celle-ci semble être instable")
             return;
         }
-        let successF = (info)=>{
+        const successF = (info)=>{
             clearTimeout(timeout);
             _resolve(info);
             if(isObj(allDatabasesSync)){
@@ -212,6 +215,12 @@ let syncDB = (args)=>{
             if(syncContext && isFunction(syncContext.cancel)){
                 syncContext.cancel();
             }
+            APP.trigger(APP.EVENTS.SYNC_POUCHDB_DATABASE,{
+                isCommon,
+                dbNameStr,
+                ...defaultObj(info),
+                dbName,
+            });
         }
         getCouchDB({dbName,server:url,serverCode:defaultStr(code,_id),serverSettings:rest,local,...rest}).then(({db})=>{
             remoteDB = db;
@@ -250,19 +259,12 @@ let syncDB = (args)=>{
                     let target = remoteDB, source = localDB, 
                     filter = undefined;
                     syncFilter = defaultFunc(syncFilter,x=>true)
-                    if(isCommonDataFile(dbName)){
-                        filter = (doc)=>{
-                            if(!doc || doc._id == "ONLINES_DEVIES_ID") return false;
-                            return syncFilter(doc);
-                        }
+                    if(syncType =="desc"){
+                        filter = syncFilter;
                     } else {
-                        if(syncType =="desc"){
-                            filter = syncFilter;
-                        } else {
-                            filter = (doc,req)=>{
-                                if(!doc._deleted) return syncFilter(doc,req);
-                                return doc.table || doc.uuid || doc.createdBy || doc.createdDate? syncFilter(doc,req) : false;
-                            }
+                        filter = (doc,req)=>{
+                            if(!doc._deleted) return syncFilter(doc,req);
+                            return doc.table || doc.uuid || doc.createdBy || doc.createdDate? syncFilter(doc,req) : false;
                         }
                     }
                     let syncTypeText = "Complète";
@@ -323,63 +325,44 @@ export default {
         syncDatabases = defaultArray(syncDatabases);
         let promises = [];
         arg.syncID = uniqid("database-syncId")
-        let sellersDF = {}, otherDBS = {}
-        let u = Auth.getLoggedUser();
-        let isMasterAdmin = Auth.isMasterAdmin();
+        const allExistingDataFiles = {},commonDataFiles = {};
+        let u = getLoggedUser();
+        const isMasterA = isMasterAdmin();
+        const dataFilesByTypes = {};
         getAllDataFiles((dF)=>{
-            if(syncDatabases.length > 0 && !arrayValueExists(syncDatabases,dF.code)){
-                return;
+            if(syncDatabases.length > 0 && syncDatabases.includes(dF.code)){
+                return true;
             }
-            if(dF.type == 'seller'){
-                if(!isMasterAdmin && !syncDatabases.length && !isForUser(dF,u)){
-                    return;
-                }
-                sellersDF[dF.code] = dF;
-            } else  {
-                otherDBS[dF.code] = dF;
+            if(!isCommon(dF.code) && !isMasterA && !syncDatabases.length && !isForUser(dF,u)){
+                return false;
+            }
+            const type = defaultStr(dF.type);
+            dataFilesByTypes[type] = defaultObj(dataFilesByTypes[type]);
+            dataFilesByTypes[type][dF.code] = dF;
+            allExistingDataFiles[dF.code] = dF;
+            if(isCommonDataFile(dF)){
+                commonDataFiles[dF.code] = dF;
             }
             return true;
         });
         const changedDatabases = allDatabasesSync.changes = {};
         Object.map(databases,(syncType,dbName)=>{
-            if(!isNonNullString(dbName) || !arrayValueExists(['full','asc','desc'],syncType)) return null;
-            let isCommon = isCommonDataFile(dbName);
+            if(!isNonNullString(dbName) || !['full','asc','desc'].includes(syncType)) return null;
+            const isCommon = !!(isCommonDataFile(dbName) || commonDataFiles[dbName]);
             dbName = sanitizeName(dbName,false);
-            if(dbName =="default"){
+            if(dataFilesByTypes[dbName]){
                 ////seules les bases commerciales de l'apps seront synchronisées
-                Object.map(sellersDF,(dF,i)=>{
-                    promises.push(syncDB({...arg,changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
+                Object.map(dataFilesByTypes[dbName],(dF,i)=>{
+                    promises.push(syncDB({...arg,isCommon,changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
                 });
             } else if(isCommon) {
-                for(let i in otherDBS){
-                    if(!isObj(otherDBS[i])) continue;
-                    let dF = otherDBS[i];
-                    const isCommonDB = isCommonDataFile(i);
-                    const currentDBName = i;
-                    if(isCommonDB || currentDBName == uDBName){
-                        promises.push(syncDB({...arg,changedDatabases,dbName:i,syncType,dbNameStr:dF.label,allDatabasesSync}).then((args)=>{
-                            if(changedDatabases[currentDBName] && (syncType =='full'|| syncType =='desc')){
-                                APP.setCompanyData(true,false);
-                                if(currentDBName === uDBName){
-                                    Auth.getUser(Auth.getLoggedUserCode()).then((u)=>{
-                                        if(u.status === 0){
-                                            Auth.logout();
-                                        } else {
-                                            Auth.login(u,true);
-                                        }
-                                    });
-                                }
-                            }
-                            return args;
-                        }));
-                    } else {
-                        promises.push(syncDB({...arg,changedDatabases,dbName:dF.code,syncType,dbNameStr:dF.label,allDatabasesSync}))
-                    }
+                for(let i in commonDataFiles){
+                    const dF = commonDataFiles[i];
+                    promises.push(syncDB({...arg,isCommon,changedDatabases,dbName:dF.code,syncType,dbNameStr:dF.label,allDatabasesSync}));
                 }
             } else {
-                let dF = otherDBS[dbName]
-                if(!dF) return null;
-                promises.push(syncDB({...arg,changedDatabases,dbName,syncType,dbNameStr:dF.label,allDatabasesSync}));
+                let dF = allExistingDataFiles[dbName]
+                promises.push(syncDB({...arg,isCommon,changedDatabases,dbName,syncType,dbNameStr:dF.label,allDatabasesSync}));
             }
         })
         return Promise.all(promises).then((r)=>{

@@ -19,4 +19,9 @@ export default {
         readOnlyOnEditing : true,
         label :"Type",
     },
+    archivable : {
+        type  : "switch",
+        readOnlyOnEditing : true,
+        label : "Archivable",
+    },
 }

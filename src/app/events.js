@@ -58,6 +58,8 @@ export const EXIT = "EXIT";
 
 export const RESTART = "RESTART";
 
+export const SYNC_POUCHDB_DATABASE = "SYNC_POUCHDB_DATABASE";
+
 export default {
     RESTART,
     KEYBOARD_DID_SHOW,
@@ -86,5 +88,6 @@ export default {
     SCREEN_BLUR,
     BEFORE_EXIT,
     EXIT,
+    SYNC_POUCHDB_DATABASE,
     ...appEvents,
 }

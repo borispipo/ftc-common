@@ -6,9 +6,8 @@ import {isObj,isNonNullString,defaultStr} from "$cutils";
 import sanitizeName from "./sanitizeName";
 
 export default function isValidDataFile (dF,codeIndex){
-    if(isObj(dF) && isNonNullString(dF.code)){
+    if(isObj(dF) && isNonNullString(dF.code) && isNonNullString(dF.type) && isNonNullString(dF.label)){
         dF.code = sanitizeName(dF.code);
-        dF.type = defaultStr(dF.type,'seller');
         dF.code = defaultStr(dF.code,codeIndex).toLowerCase().trim();
         return dF;
     }
