@@ -9,6 +9,8 @@ import session from "$session";
 import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
+import defaultStr from "$cutils/defaultStr";
+
 const pJson = require("$package.json");
 
 const packageJSON = pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
@@ -325,7 +327,7 @@ const config = {
     }
 }
 
-export const getName = x=>getConfigValue("name");
+export const getName = x=>defaultStr(getConfigValue("name")).toUpperCase();
 export const getDescription = x=>getConfigValue("description","desc");
 export const getDesc = getDescription;
 export const getVersion = x=>getConfigValue("version");
