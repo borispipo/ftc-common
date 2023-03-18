@@ -10,7 +10,8 @@ import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";
 import {getLoggedUser} from "$cauth/session";
 import isMasterAdmin from "$cauth/isMasterAdmin";
 import isCommon from "../../../dataFileManager/isCommon";
-const uDBName = "users";
+import dataFile from "../../../dataFileManager/dataFile";
+import fetch from "../../../dataFileManager/fetch";
 /*** retourne une base de données couchdb :
  * @param : {mixted : string | object}
  *  {
@@ -170,6 +171,10 @@ export const syncDB = (args)=>{
     const triggerAfterSync = (trigger)=>{
         if(localDB){
             localDB.unlock(trigger);
+            /** à la fin de la synchronisation, on actualise la liste des fichiers de données de l'application, et on met à jour les informations sur la base de données */
+            if(typeof localDB.getInfos =="function"){
+                localDB.getInfos();
+            }
         }
     }
     if(dbNameStr ===false){
@@ -353,7 +358,7 @@ export default {
             if(dataFilesByTypes[dbName]){
                 ////seules les bases commerciales de l'apps seront synchronisées
                 Object.map(dataFilesByTypes[dbName],(dF,i)=>{
-                    promises.push(syncDB({...arg,isCommon,changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
+                    promises.push(syncDB({...arg,isCommon:isCommonDataFile(dF.code),changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
                 });
             } else if(isCommon) {
                 for(let i in commonDataFiles){
@@ -364,7 +369,13 @@ export default {
                 let dF = allExistingDataFiles[dbName]
                 promises.push(syncDB({...arg,isCommon,changedDatabases,dbName,syncType,dbNameStr:dF.label,allDatabasesSync}));
             }
+            
         })
+        ///always sync  datafile's manager as full sync
+        promises.push(syncDB({...arg,isCommon:true,changedDatabases,syncType:"full",dbName:dataFile.code,dbNameStr:dataFile.label,allDatabasesSync}).then((r)=>{
+            fetch();
+            return r;
+        }));
         return Promise.all(promises).then((r)=>{
             return allDatabasesSync;
         }).catch((e)=>{

@@ -1,18 +1,20 @@
-import {isNonNullString,defaultStr,sanitizeFileName} from "$cutils";
-import getCurrentDB from "./getCurrentDB";
+import {isNonNullString,sanitizeFileName} from "$cutils";
 import CONSTANTS from "$pouchdb/constants";
+import dataFileDBName from "./dbName";
+import isDataFileDBName from "./isDataFileDBName";
 
-export default function sanitizeName (dFName,sanitizeDefautName,tableName){
+export default function sanitizeName (dFName){
     if(isNonNullString(dFName)){
         dFName = dFName.toLowerCase().trim();
-        tableName = defaultStr(tableName,sanitizeDefautName).toLowerCase().trim();
-        dFName = dFName.toLowerCase();
-        if(dFName == 'common' || dFName =="common-db" || dFName=="common_db"){
+        const normalizedDFName = dFName.replaceAll(" ","").replaceAll("-","").replaceAll("_","");
+        if(isDataFileDBName(dFName)) {
+            dFName = dataFileDBName;
+        } else if(['common',"commondb"].includes(normalizedDFName)){
             dFName = CONSTANTS.COMMON_DB;
-        } else if(dFName == 'structdata'){
+        } else if(normalizedDFName == 'structdata'){
             dFName = 'struct_data';
-        } else if(dFName =="default" && sanitizeDefautName !== false){
-            dFName = defaultStr(getCurrentDB()).toLowerCase().trim();
+        } else if(dFName =="default"){
+            dFName = "";
         }
         return sanitizeFileName(dFName).toLowerCase();
     }

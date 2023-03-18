@@ -8,6 +8,7 @@ import {set as setDataFiles} from "./DATA_FILES";
 import isValid from "./isValidDataFile";
 import getDB from "./getDB";
 
+const hasFetchRef = {current:false};
 /**** actualise la liste des fichiers de données pris en compte par l'application et la stocke en memoire */
 export default function fetchDataFiles(){
     const dataFiles = getAllDefault();
@@ -47,6 +48,7 @@ export default function fetchDataFiles(){
                 });
                 return Promise.all(promises).finally(()=>{
                     setDataFiles(result);
+                    hasFetchRef.current = true;
                     if(APP.getStorageUsage){
                         APP.getStorageUsage();
                     }
@@ -60,4 +62,8 @@ export default function fetchDataFiles(){
             return e;
         })
     })
+}
+
+export const hasFetch = ()=>{
+    return hasFetchRef.current;
 }

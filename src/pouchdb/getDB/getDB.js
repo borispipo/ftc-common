@@ -3,49 +3,16 @@ import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
 import {extendObj,isNonNullString,defaultStr,isObj,defaultObj} from "$cutils";
 import DateLib from "$date";
-import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "./utils";
+import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
-import { sanitizeName,isCommon } from './dataFileManager/utils';
+import { sanitizeName,isCommon } from '../dataFileManager/utils';
 import { getLoggedUser} from '$cauth/utils/session';
-import uniqid from "./pouchdb/plugins/uniqid";
-import createDefaultIndexes from "./pouchdb/plugins/createDefaultIndexes";
-import getRealName from "./pouchdb/plugins/getRealName";
-import toJSON from "./pouchdb/plugins/toJSON";
-import {structDataDBName } from "./dataFileManager/structData";
-import {triggerEventTableName} from "./dataFileManager/structData";
-import canOverrideRemove from "./pouchdb/plugins/canOverrideRemove";
-import isDataFileDBName from './dataFileManager/isDataFileDBName';
-import "./polyfill";
+import {structDataDBName } from "../dataFileManager/structData";
+import {triggerEventTableName} from "../dataFileManager/structData";
+import isDataFileDBName from '../dataFileManager/isDataFileDBName';
+import { PouchDB } from './pouchDB';
 
-import PouchObj from "./pouchdb";
-
-const {PouchDB,...pouchdbRest} = PouchObj;    
-
-if(typeof window !== 'undefined' && !window.PouchDB){
-    Object.defineProperties(window,{
-        PouchDB : {value:PouchDB,override:false,writable:false}
-    })
-}
-
-import QMapReduce from "./pouchdb/plugins/queryMapReduce";
-import PouchDBFind from "./pouchdb/plugins/find";
-PouchDB.plugin(PouchDBFind);
-PouchDB.plugin(require('pouchdb-authentication'));
-PouchDB.plugin(require('pouchdb-erase'));
-PouchDB.plugin(canOverrideRemove);
-PouchDB.plugin(QMapReduce);
-PouchDB.plugin({
-    uniqid,
-    createDefaultIndexes,
-    getRealName,
-    toJSON,
-});
-
-if(!isObj(window.___TRIGGER_CHANGES_DBS)){
-    Object.defineProperties(window,{
-        ___TRIGGER_CHANGES_DBS : {value:{},override:false}
-    })
-}
+const TRIGGER_CHANGES_DBS = {};
 
 if(!window.hasSetPouchEventsGetDB){
     window.hasSetPouchEventsGetDB = true;
@@ -316,15 +283,25 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
     db.isRemoteServer = db.isRemote = isServer ? true : false;
     const DATABASES = POUCH_DATABASES.get();
     const isDataFileManager = settings.isDataFileManager;
+    realName = realName.ltrim(getDBNamePrefix());
     if(isNonNullString(realName) && !db.realName) {
-        realName = realName.ltrim(getDBNamePrefix());
         Object.defineProperties(db,{
             realName : {value:realName,override:false,writable:false}
         });
     }
-    if("isDataFileManager" in db){
+    const sDBName = sanitizeName(realName);
+    db.isDataFileManager = db.isManager = isDataFileManager;
+    if(!isObj(db.infos)){
         Object.defineProperties(db,{
-            isDataFileManager : {value:isDataFileManager}
+            infos : {value : {
+                isDataFileManager,
+                isManager : isDataFileManager,
+                realName,
+                isServer,
+                isRemote:isServer,
+                fullName : pDBName,
+                sanitizedName : sDBName,
+            }}
         });
     }
     if(settings.willSkip){
@@ -339,10 +316,9 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
             initialize : {
                 value : x => Promise.resolve(),override:false ,writable:false
             }
-        })
+        });
     }
     if(!db.isRemoteServer){
-        const sDBName = sanitizeName(db.getName());
         if(DATABASES[sDBName]){
             return Promise.resolve(DATABASES[sDBName]);
         }
@@ -394,13 +370,13 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
             tableName = tableName.toUpperCase().trim();
             let dbName = pDBName.toLowerCase().trim();
             db.lastChangeResult = change;
-            window.___TRIGGER_CHANGES_DBS[dbName] = defaultObj(window.___TRIGGER_CHANGES_DBS[dbName]);
-            window.___TRIGGER_CHANGES_DBS[dbName][tableName] = defaultDecimal(window.___TRIGGER_CHANGES_DBS[dbName][tableName]);
-            let lastChangeStart = window.___TRIGGER_CHANGES_DBS[dbName][tableName];
+            TRIGGER_CHANGES_DBS[dbName] = defaultObj(TRIGGER_CHANGES_DBS[dbName]);
+            TRIGGER_CHANGES_DBS[dbName][tableName] = defaultDecimal(TRIGGER_CHANGES_DBS[dbName][tableName]);
+            let lastChangeStart = TRIGGER_CHANGES_DBS[dbName][tableName];
             if(isDecimal(lastChangeStart) && lastChangeStart > 0) return;
-            window.___TRIGGER_CHANGES_DBS[dbName][tableName] = new Date().getTime();
+            TRIGGER_CHANGES_DBS[dbName][tableName] = new Date().getTime();
             setTimeout(()=>{
-                window.___TRIGGER_CHANGES_DBS[dbName][tableName] = undefined;
+                TRIGGER_CHANGES_DBS[dbName][tableName] = undefined;
                 if(isObj(db.lastChangeResult) && !db.lastChangeResult.deleted){//on évite les actions de suppression car supprimé par l'autre
                     let doc = db.lastChangeResult.doc;
                     triggerDB({db,doc,isDelete:false});
@@ -418,7 +394,6 @@ const initDB = ({db,pDBName,realName,localName,settings,isServer}) =>{
     return Promise.resolve(db);
 }
 
-//end uniqid plugin
 /**** cré une instance pouchDB à partir des options passés en paramètre
  *  @param options {object} de la forme : 
  *      {
@@ -487,7 +462,7 @@ const resolveDB = (dbName,callback,options,error)=>{
         force = true;
     }
     dbName = sanitizeName(dbName);
-    if(force !== true && DATABASES[dbName] != null  && isFunction(DATABASES[dbName].upsert)){
+    if(force !== true && DATABASES[dbName] != null  && isFunction(DATABASES[dbName].upsert) && isObj(DATABASES[dbName].infos)){
         db = DATABASES[dbName];
         return new Promise((resolve,reject)=>{
             db.info().then(() => {
@@ -512,15 +487,12 @@ const resolveDB = (dbName,callback,options,error)=>{
 
 const resolveDBWithPromise = (dbName,callback,realName,options) =>{
     options = defaultObj(options);
-    return newPouchDB({...defaultObj(pouchdbRest),...options,dbName,realName}).then((db)=>{
+    return newPouchDB({...options,dbName,realName}).then((db)=>{
         db.NAME = db.Name = dbName;
         const DATABASES = POUCH_DATABASES.get()
-        if(db.isRemoteServer){
-        
-        } else {
+        if(!db.isRemoteServer){
             DATABASES[dbName] = db; 
         }
-        
         if(typeof callback === 'function'){
             callback({db,dbName,realName});
         }
@@ -541,7 +513,7 @@ const resolveDBWithPromise = (dbName,callback,realName,options) =>{
         ...rest
     }
     */
-export default function getDB (dbName,opts){
+export default function getDBFunction (dbName,opts){
     const dbOpts = isObj(dbName)? dbName : isNonNullString(dbName)? {dbName} : {};
     opts = extendObj({},dbOpts,opts);
     dbOpts.dbName = dbOpts.name = defaultStr(dbOpts.dbName,dbOpts.name);
@@ -563,4 +535,4 @@ export default function getDB (dbName,opts){
     } 
     return resolveDB(dbName,callback,options,error) 
 }
-export {getDBNamePrefix,PouchDB,getDB};
+export {PouchDB};

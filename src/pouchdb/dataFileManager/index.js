@@ -7,6 +7,7 @@ import fetch from "./fetch";
 import upsert from "./upsert";
 import remove from "./remove";
 import getDB from "./getDB";
+import { hasFetch } from "./fetch";
 
 export * from "./utils";
 
@@ -15,6 +16,7 @@ const df = {
     fetch,
     upsert,
     getDB,
-    remove
+    remove,
+    hasFetch,
 }
 export default df;

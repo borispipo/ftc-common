@@ -7,6 +7,8 @@ import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import indexes from "$pouchdbIndex";
+import DATA_FILES from "../../dataFileManager/DATA_FILES";
+import sanitizeDBName from "../../utils/sanitizeDBName";
 
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
@@ -94,7 +96,29 @@ export default function createDefaultPouchDBIndexes(force,rest){
         return Promise.resolve(context);
     }
     let isCommon = isCommonDataFile(dbName);
-    let idx = isObj(indexes[dbName])? indexes[dbName] : isCommon? indexes.common_db : indexes.default;
+    let idx = isObj(indexes[dbName])? indexes[dbName] : null;
+    if(!idx){
+        if(isNonNullString(context.infos?.type) && isObj(indexes[context.infos.type])){
+            idx = indexes[context.infos.type]; 
+        } else {
+            let dbDataFile = undefined;
+            const dFiles = DATA_FILES.get();
+            for(let i in dFiles){
+                const dF = dFiles[i];
+                if(sanitizeDBName(dbName) === sanitizeDBName(dF?.code)){
+                    dbDataFile = dF;
+                    break;
+                }
+            }
+            ///on peut créeer les index d'une base de données données à partir de son type, il suffit de récupérer le type dans la bd et puis procéder à la créer
+            if(dbDataFile && isObj(indexes[dbDataFile.type])){
+                idx = indexes[dbDataFile.type];
+            } else {
+                idx = isCommon? indexes.common_db : indexes.default;
+            }
+        }
+    }
+    ///on peut créer les index en fonction du type
     if(reset === true || views === true){
         return context.getIndexes().then(({indexes})=>{
             let eIndexes = getIndexToCreateOrDelete(idx);

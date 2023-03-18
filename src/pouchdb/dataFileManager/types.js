@@ -16,10 +16,10 @@ const types = {
         code : 'projects',
         label : 'Projets'
     },
-    store : {
-        code : "store",
-        type : "store",
-        label : "Chaines de magasin",
+    stocks : {
+        code : "stocks",
+        type : "stocks",
+        label : "Stocks",
     },
 };
 
