@@ -148,7 +148,7 @@ export function addDefaultFields(newDoc,options){
         newDoc.updatedDate = date;
     }
     if(options.updatedHour !== false || !isNonNullString(newDoc.updatedHour)){
-            newDoc.updatedHour = time;
+        newDoc.updatedHour = time;
     }
     /**** dans le document, est enregistré l'id du premier device l'ayant enregistré */
     newDoc.uuid = defaultStr(newDoc.uuid,APP.DEVICE.uuid);
