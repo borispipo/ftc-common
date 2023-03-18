@@ -30,6 +30,9 @@ module.exports = function(opts){
     if(fs.existsSync(packagePath)){
         try {
             const packageObj = require(`${packagePath}`);
+            if(typeof packageObj.name =="string"){
+                packageObj.name = packageObj.name.toUpperCase();
+            }
             if(packageObj){
                 ["scripts","private","main","repository","keywords","bugs","dependencies","devDependencies"].map(v=>{
                     delete packageObj[v];
