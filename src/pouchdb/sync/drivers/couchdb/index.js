@@ -7,7 +7,7 @@ import getDB,{PouchDB} from "$pouchdb/getDB";
 import APP from "$app/instance";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";
-import {getLoggedUser} from "$cauth/session";
+import {getLoggedUser} from "$cauth/utils/session";
 import isMasterAdmin from "$cauth/isMasterAdmin";
 import isCommon from "../../../dataFileManager/isCommon";
 import dataFile from "../../../dataFileManager/dataFile";
