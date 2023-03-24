@@ -50,8 +50,13 @@ export const set = (databases) =>{
  * }
 */
 export function extendIndexes(indexes){
-    indexRef.current = extendObj({},indexRef.current,indexes);
-    return indexRef.current;
+    const dbIndexes = get();
+    if(!isObj(indexes)) return dbIndexes;
+    Object.map(indexes,(dbIndex,dbNameOrType)=>{
+        if(!isObj(dbIndex)) return;
+        dbIndex[dbNameOrType] = extendObj({},dbIndex[dbNameOrType],dbIndex);
+    });
+    return set(dbIndexes);
 }
 
 export default {
