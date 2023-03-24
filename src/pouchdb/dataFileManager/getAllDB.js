@@ -1,6 +1,5 @@
 import fetch from "./fetch";
-import {defaultObj,isNonNullString} from "$cutils";
-import fetch from "./fetch";
+import {defaultObj} from "$cutils";
 import getDB from "../getDB"
 
 /*** retourne la liste des bases de données de l'application
