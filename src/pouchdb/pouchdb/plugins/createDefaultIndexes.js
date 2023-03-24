@@ -76,7 +76,7 @@ const createIndex = (db,idx,dbName)=>{
 
 export default function createDefaultPouchDBIndexes(force,rest){
     let context = this;
-    const allIndexes = indexes.get();
+    const allIndexes = indexes.current;
     rest = isBool(rest)? {reset:rest} : defaultObj(rest);
     let {reset,views}  = rest;
     if(!isObj(context) || !isFunction(context.createIndex) || !isNonNullString(this.realName)){
