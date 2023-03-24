@@ -19,7 +19,7 @@ function syncOnLocalServer(){
     const type = defaultStr(db.infos?.type);
     const typeSep = type ? (","+type) : "";
     const dbText = "{0}{1}".sprintf(name,typeSep);
-    if((db.infos?.isServer)){
+    if((db.infos?.isServer || db.isRemote())){
         return Promise.reject({message:"Could not sync local server db {0} with another server".sprintf(dbText)});
     }
     if(!type){

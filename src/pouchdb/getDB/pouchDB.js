@@ -16,6 +16,7 @@ if(typeof window !== 'undefined' && !window.PouchDB){
 
 import QMapReduce from "../pouchdb/plugins/queryMapReduce";
 import PouchDBFind from "../pouchdb/plugins/find";
+import isRemote from "../pouchdb/plugins/isRemote";
 PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(require('pouchdb-authentication'));
 PouchDB.plugin(require('pouchdb-erase'));
@@ -23,6 +24,7 @@ PouchDB.plugin(canOverrideRemove);
 PouchDB.plugin(QMapReduce);
 PouchDB.plugin({
     uniqid,
+    isRemote,
     createDefaultIndexes,
     getRealName,
     toJSON,

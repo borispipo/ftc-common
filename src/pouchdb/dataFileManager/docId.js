@@ -1,1 +1,0 @@
-export default 'DATA_FILE_MANAGER_DOC_ID';

@@ -1,17 +1,18 @@
 import {isNonNullString,isObj,defaultStr,extendObj,defaultDecimal,defaultBool,defaultFunc,defaultArray} from "$cutils";
-import dataFileText from "./dataFileText";
 import sanitizeName from "./sanitizeName";
+import dataFileText from "./dataFileText";
 import isValid from "./isValidDataFile";
 import getAllDefault from "./getAllDefault";
 import prepareFilter from "./prepareFilter";
-import getCurrentDB from "./getCurrentDB";
-import setCurrentDB from "./setCurrentDB";
+import isMasterAdmin from "$cauth/isMasterAdmin";
+import {getLoggedUser} from "$cauth/utils/session";
+import { getCurrentDB } from "./session";
+import DATA_FILES from "./DATA_FILES";
 import isCommon from "./isCommon";
 import {structDataDBName} from "./structData";
 import isStructData from "./isStructData";
-import isMasterAdmin from "$cauth/isMasterAdmin";
-import {getLoggedUser} from "$cauth/utils/session";
-import DATA_FILES from "./DATA_FILES";
+
+export {default as DATA_FILES } from "./DATA_FILES";
 
 export {extendDefaultDataFiles} from "./defaultDataFiles";
 
@@ -23,11 +24,10 @@ export {default as types} from "./types";
 
 export {default as fields} from "./fields";
 
+export {dataFileText,isStructData,structDataDBName,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
+
 ///check wheater the given name is supposed to be dataFile Name
 export {default as isDBName} from "./isDataFileDBName";
-
-export {dataFileText,isStructData,structDataDBName,getCurrentDB,setCurrentDB,sanitizeName,isCommon,isValid,prepareFilter,getAllDefault};
-
 
 export const trimCommonDocId = (docCodeOrId,dbName)=>{
     docCodeOrId = defaultStr(docCodeOrId).toUpperCase().trim();
@@ -91,11 +91,13 @@ export const getAll = (filter,returnArray)=>{
 *  @return {bool}, vrai si le fichier est archivé ou non et faux au cas contraire, si le fichier de données n'est pas trouvé, alors vrai est retourné
 */
 export const isArchived = (dFCode)=>{
+    let type = undefined;
     if(isObj(dFCode)){
+        type = defaultStr(dFCode.type);
         dFCode = defaultStr(dFCode.code);
     }
     if(!isNonNullString(dFCode) || dFCode.toLowerCase() == "default"){
-        dFCode = getCurrentDB();
+        dFCode = getCurrentDB(type);
     }
     const dF = get(dFCode);
     if(dF){

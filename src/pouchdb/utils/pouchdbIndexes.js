@@ -54,7 +54,7 @@ export function extendIndexes(indexes){
     if(!isObj(indexes)) return dbIndexes;
     Object.map(indexes,(dbIndex,dbNameOrType)=>{
         if(!isObj(dbIndex)) return;
-        dbIndex[dbNameOrType] = extendObj({},dbIndex[dbNameOrType],dbIndex);
+        dbIndexes[dbNameOrType] = extendObj({},dbIndexes[dbNameOrType],dbIndex);
     });
     return set(dbIndexes);
 }
