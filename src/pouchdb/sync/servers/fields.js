@@ -2,6 +2,7 @@ import {isNonNullString,defaultObj} from "$utils";
 import defaultDataFiles from "../../dataFileManager/defaultDataFiles";
 import types from "../../dataFileManager/types";
 import { getAll } from "../../dataFileManager/utils";
+const syncDataTimeoutTitle = 'Les données dont les dates de création système, sont supérieure à la valeur sélectionnée seront supprimées, Renseignez une valeur nulle ou zero, pour éviter la suppression des données';
 export default {
     localForComputer : {
         type :'switch',
