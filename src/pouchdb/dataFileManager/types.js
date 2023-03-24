@@ -12,7 +12,7 @@ const types = {
 
 
 /*** permet d'étendre les types de fichiers de données
- * @param {object|Array} liste des functions d'aggregation supplémentaires, de la forme 
+ * @param {object|Array} liste des types supplémentaires, de la forme 
  *  {
  *      code {string} le code du fichier de données
  *      label {string} le libele du dataFile

@@ -9,11 +9,17 @@ import remove from "./remove";
 import getDB from "./getDB";
 import { hasFetch } from "./fetch";
 import getAllDB from "./getAllDB";
+import { extendTypes } from "./types";
+
+export * from "./types";
+
+export {extendTypes};
 
 export * from "./utils";
 
 const df = {
     ...dataFileManager,
+    extendTypes,
     getAllDB,
     fetch,
     upsert,
