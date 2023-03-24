@@ -31,7 +31,6 @@ export {
     getCompany,
     setCompany,
     servers,
-    getIndexes,
     common,
     CONSTANTS,
     getData,
