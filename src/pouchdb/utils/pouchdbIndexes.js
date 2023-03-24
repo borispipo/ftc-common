@@ -47,6 +47,8 @@ export function extendIndexes(indexes){
 }
 
 export default {
-    extendIndexes
+    extendIndexes,
+    get get(){
+        return indexRef.current;
+    }
 };
-
