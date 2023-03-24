@@ -1,6 +1,7 @@
 import localServers from "./localServers";
 import prepareFilter from "./prepareFilter";
 import {defaultFunc} from "$utils";
+import fields from "./fields";
 
 export const getAllServers = (filter)=>{
     filter = prepareFilter(filter);
@@ -30,11 +31,13 @@ export const enableAll = (filter) =>toggle(filter,1);
 export const toggleAllStatus = toggle;
 export {
     getAllServers as getAll,
+    fields,
 }
 
 export default {
     getAll : getAllServers,
     disableAll,
+    fields,
     enableAll,
     toggleAllStatus,
 }

@@ -10,7 +10,7 @@ import mangoParser from "mongo-parse";
 import "./i18n";
 import session from "$session";
 import {getLoggedUserCode} from "$cauth/utils/session";
-import { escapeSQLQuotes } from "../extend.prototypes";
+import { escapeSQLQuotes } from "../string";
 
 export const filterTextTypes = ['text','number','email','search','tel','url','password',"id","idfield",'piecefield','piece'];
 

@@ -1,6 +1,8 @@
 import getDBFunction,{PouchDB} from "./getDB";
 import "./getInfos";
 
+export {default as localServerConfig} from "./localServerConfig"
+
 export * from "./pouchDB";
 export * from "./getDB";
 

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import "$cutils/extend.prototypes";
+import "$cutils/string";
 import isNonNullString from "$cutils/isNonNullString";
 import device from "./device";
 import session from "$session";

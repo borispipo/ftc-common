@@ -410,7 +410,7 @@ export {default as isTouchDevice} from "./isTouchDevice"
 
 export {isClientSide,isServerSide} from "$cplatform"
 
-export * from "./extend.prototypes";
+export * from "./string";
 
 require("./dom")
 

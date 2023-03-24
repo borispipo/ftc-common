@@ -7,7 +7,7 @@
  */
 import extendObj from "../extendObj";
 import defaultStr from "../defaultStr";
-import  "../extend.prototypes";
+import  "../string";
 //import "$active-platform/uri/polyfill";
 const queryString = require('qs');
 /****

@@ -10,8 +10,8 @@ import lastSyncDate from "./lastSyncDate";
 import BG_TASK_MANAGER from "./bakgroundTaskManager";
 import isRunning from "./isRunning";
 import {isObjOrArray} from "$utils";
+import allServersManager from "./servers";
 
-export {default as servers} from "./servers";
 
 ///retourne les infos liées à la synchronisation des données
 export const getInfo = ($key)=>{
@@ -168,8 +168,11 @@ export const sync = (args)=>{
 
 export {sync as run, isRunning};
 
+export {allServersManager as servers};
+
 export default {
     run : sync,
+    servers : allServersManager,
     isRunning,
     setInfo,
     getInfo,

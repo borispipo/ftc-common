@@ -335,7 +335,7 @@ export default {
         const isMasterA = isMasterAdmin();
         const dataFilesByTypes = {};
         getAllDataFiles((dF)=>{
-            if(syncDatabases.length > 0 && syncDatabases.includes(dF.code)){
+            if(syncDatabases.length > 0 && (syncDatabases.includes(dF.type))){
                 return true;
             }
             if(!isCommon(dF.code) && !isMasterA && !syncDatabases.length && !isForUser(dF,u)){
@@ -358,7 +358,7 @@ export default {
             if(dataFilesByTypes[dbName]){
                 ////seules les bases commerciales de l'apps seront synchronisées
                 Object.map(dataFilesByTypes[dbName],(dF,i)=>{
-                    promises.push(syncDB({...arg,isCommon:isCommonDataFile(dF.code),changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
+                    promises.push(syncDB({...arg,isCommon,changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
                 });
             } else if(isCommon) {
                 for(let i in commonDataFiles){
