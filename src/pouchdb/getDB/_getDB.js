@@ -529,14 +529,12 @@ export const getDBOptions = (dbName,opts)=>{
     }
     */
 export default function getDBFunction (dbName,opts){
-    let {dbName:sDBName,callback,success,error,...options} = getDBOptions(dbName,opts);
+    let {dbName,callback,success,error,...options} = getDBOptions(dbName,opts);
     callback = defaultFunc(callback,success);
-    delete options.dbName;
-    delete options.callback;
     dbName = getDBName(dbName);
     if(!isNonNullString(dbName)){
-        return Promise.reject({status:false,msg:'You must specify database name to retrieve with getDB function'})
-    } 
+        return Promise.reject({status:false,msg:'you must specify a database name that you want to retrieve'})
+    }
     return resolveDB(dbName,callback,options,error) 
 }
 export {PouchDB};
