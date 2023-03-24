@@ -512,6 +512,7 @@ export const getDBOptions = (dbName,opts)=>{
     const dbOpts = isObj(dbName)? dbName : isNonNullString(dbName)? {dbName} : {};
     opts = extendObj({},dbOpts,opts);
     dbOpts.dbName = dbOpts.name = getDBName((defaultStr(dbOpts.dbName,dbOpts.name).trim()));
+    dbOpts.callback = defaultFunc(dbOpts.callback,dbOpts.success);
     return dbOpts;
 }
 
@@ -530,7 +531,6 @@ export const getDBOptions = (dbName,opts)=>{
     */
 export default function getDBFunction (sDBName,opts){
     const {dbName,callback,success,error,...options} = getDBOptions(sDBName,opts);
-    callback = defaultFunc(callback,success);
     if(!isNonNullString(dbName)){
         return Promise.reject({status:false,msg:'you must specify a database name that you want to retrieve'})
     } 
