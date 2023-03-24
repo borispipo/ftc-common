@@ -511,7 +511,7 @@ const resolveDBWithPromise = (dbName,callback,realName,options) =>{
 export const getDBOptions = (dbName,opts)=>{
     const dbOpts = isObj(dbName)? dbName : isNonNullString(dbName)? {dbName} : {};
     opts = extendObj({},dbOpts,opts);
-    dbOpts.dbName = dbOpts.name = defaultStr(dbOpts.dbName,dbOpts.name).trim();
+    dbOpts.dbName = dbOpts.name = getDBName((defaultStr(dbOpts.dbName,dbOpts.name).trim()));
     return dbOpts;
 }
 
@@ -528,13 +528,12 @@ export const getDBOptions = (dbName,opts)=>{
         ...rest
     }
     */
-export default function getDBFunction (dbName,opts){
-    let {dbName,callback,success,error,...options} = getDBOptions(dbName,opts);
+export default function getDBFunction (sDBName,opts){
+    const {dbName,callback,success,error,...options} = getDBOptions(sDBName,opts);
     callback = defaultFunc(callback,success);
-    dbName = getDBName(dbName);
     if(!isNonNullString(dbName)){
         return Promise.reject({status:false,msg:'you must specify a database name that you want to retrieve'})
-    }
+    } 
     return resolveDB(dbName,callback,options,error) 
 }
 export {PouchDB};
