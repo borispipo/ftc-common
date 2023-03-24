@@ -1,5 +1,6 @@
 import { PouchDB } from "./pouchDB";
 import localServerConfig from "./localServerConfig";
+import APP from "$capp/instance";
 
 function getLocalServer(){
     const db = this || {};
@@ -43,10 +44,15 @@ function syncOnLocalServer(){
         setTimeout(()=>{
             const localServer = db.getLocalServer()
             if(localServer && localServer?.allDocs && localServer.get){
-                db.sync(localServer).catch((e)=>{
-                    console.error("sync {0} with local server ".sprintf(db.infos?.name),e);
-                    reject(e);
-                }).then(resolve);
+                const cb = ()=>{
+                    return db.sync(localServer).catch((e)=>{
+                        console.error("sync {0} with local server ".sprintf(db.infos?.name),e);
+                        reject(e);
+                    }).then(resolve);
+                }
+                if(localServerConfig.local || APP.isOnline()){
+                    cb();
+                } else APP.checkOnline().catch(e=>e).finally(cb);
             }
         },10);
     });

@@ -511,7 +511,7 @@ const resolveDBWithPromise = (dbName,callback,realName,options) =>{
 export const getDBOptions = (dbName,opts)=>{
     const dbOpts = isObj(dbName)? dbName : isNonNullString(dbName)? {dbName} : {};
     opts = extendObj({},dbOpts,opts);
-    dbOpts.dbName = dbOpts.name = getDBName((defaultStr(dbOpts.dbName,dbOpts.name).trim()));
+    dbOpts.dbName = dbOpts.name = getDBName((defaultStr(dbOpts.dbName,dbOpts.name).trim(),defaultStr(opts.dataFileType,opts.type)));
     dbOpts.callback = defaultFunc(dbOpts.callback,dbOpts.success);
     return dbOpts;
 }
