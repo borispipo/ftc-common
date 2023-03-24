@@ -159,7 +159,7 @@ upsertVar.upsert = function upsert(docId, diffFun, cb,options) {
     }
     return upsertInner(db, docId, diffFun,options).then(function (resp) {
         //sync or replicate database on local server if its set
-        db.syncWithLocalServer().catch(e=>e);
+        db.syncOnLocalServer().catch(e=>e);
         cb(resp);
         return resp;
     },callbackErr);

@@ -7,7 +7,7 @@ function getLocalServer(){
     return db.localServer;
 }
 
-function syncWithLocalServer(){
+function syncOnLocalServer(){
     if(!this.hasLocalServer()){
         return Promise.reject({
             message : 'local server not configurated on the application'
@@ -59,7 +59,7 @@ PouchDB.plugin({
     hasLocalServer : function(){
         return !!getLocalServer.call(this);
     },
-    syncWithLocalServer,
+    syncOnLocalServer,
     isLocalServer : function(){
         if(!this.infos?.isServer) return false;
         const url = defaultStr(this.infos.server,this.infos.serverUrl).toLowerCase().rtrim("/");

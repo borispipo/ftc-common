@@ -1,6 +1,6 @@
 import getDB from "./_getDB";
 import { getDBOptions } from "./_getDB";
-import {isValidUrl,isObj} from "$cutils/uri";
+import {isValidUrl,isObj} from "$cutils";
 import localConf from "./localServerConfig";
 import "./localServer";
 

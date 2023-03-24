@@ -11,6 +11,7 @@ import BG_TASK_MANAGER from "./bakgroundTaskManager";
 import isRunning from "./isRunning";
 import {isObjOrArray} from "$utils";
 import allServersManager from "./servers";
+import getAllDB from "../dataFileManager/getAllDB";
 
 
 ///retourne les infos liées à la synchronisation des données
@@ -170,8 +171,20 @@ export {sync as run, isRunning};
 
 export {allServersManager as servers};
 
+/**** sync dbs with local server */
+export const syncOnLocalServer = ()=>{
+    return getAllDB().then((dbs)=>{
+        const promises = [];
+        dbs.map(({db})=>{
+            promises.push(db.syncOnLocalServer);
+        });
+        return Promise.all(promises);
+    });
+}
+
 export default {
     run : sync,
+    syncOnLocalServer, //use to sync every database with local server
     servers : allServersManager,
     isRunning,
     setInfo,
