@@ -13,7 +13,7 @@ export * from "./utils";
  * @param {...({string|object})} - les paramètres devant figurer dans la route à construire
  * @return {string} une chaine de caractère préfixée par la constante retournée par getAPIHost @see {@link getAPIHost}
  * @see {getAPIHost}
- * @see {buildUrl} de $utils/uri
+ * @see {buildUrl} de $cutils/uri
  * exemple : buildAPIPath ("app","route","final","settings",{test=2,t1=3}) => appp/route/final/settings?test=2&t1=3
  */
  export const buildAPIPath = function  (){

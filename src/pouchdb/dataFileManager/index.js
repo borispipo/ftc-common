@@ -8,11 +8,13 @@ import upsert from "./upsert";
 import remove from "./remove";
 import getDB from "./getDB";
 import { hasFetch } from "./fetch";
+import getAllDB from "./getAllDB";
 
 export * from "./utils";
 
 const df = {
     ...dataFileManager,
+    getAllDB,
     fetch,
     upsert,
     getDB,

@@ -9,7 +9,7 @@ export default function getDataFileDB(opts1,opts2){
     })).then((result)=>{
         if(typeof result.db.getInfos !='function'){
             result.db.getInfos = function(){
-                return Promise.resolve(extendObj({},db.infos,{isDataFileManager:true,isManager:true}));
+                return Promise.resolve(extendObj({},db.infos,{name:dbName,code:dbName,isDataFileManager:true,isManager:true}));
             }.bind(db);
         }
         return result;

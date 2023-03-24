@@ -1,7 +1,15 @@
-/*** retourne le liste des données dans un tableau d'objet
+import {defaultObj,defaultStr,isObj} from "$utils";
+import getAllDB from "./dataFileManager/getAllDB";
+/*** retourne le liste des données dans un tableau d'objet, récupérée via les bases de données spécifiées
  *  @param object options : {
  *      databases [] La liste des données dans laquelle puiser les données,
- *      ...fetchDataOpts, les options à passer à la fonction getData, pour la récupération des dites données
+ *      dataFilter {function}, la fonction à appliquer sur chaque données récupérée
+ *      dataMutator {function}, la fonction permettant de faire une mutation sur les données trouvées en base de données
+ *      dataFileFilter {function}, la fonction à appliquer pour limiter les bases de données à récupérer
+ *      dataFileType {string}, le type particulier des fichiers de données pour lesquels l'on veut récupérer la base de données
+ *      server {string}, l'adresse du serveur où on veut aller chercher les données
+ *      fetchOptions {object|function}, les options à appliquer au plugin find de pouchdb
+ *      ...fetchOptions, les options à passer à la fonction getData, pour la récupération des dites données
  *       : voir pouchdb-find
  *  }
  * 
@@ -28,7 +36,7 @@
  *          ....data {object}, les données en elles même 
 *   *   },
  *  }
- *  @param {function} loopCb : La fonction de rappel appelée lors du parcours en boucle de l'ensemble des données
+ *  @param {function} dataMutator : La fonction de rappel appelée lors du parcours en boucle de l'ensemble des données
  *      Cette fonction prend en paramètre : 
 *       {
             db:L'instance pouchdb associé à la bd
@@ -39,55 +47,42 @@
             count : Le nombre de donnés trouvée dans la base db, pour la requête
 *       }
  */ 
-import {getDB} from "./getDB";
-import {defaultObj} from "$utils";
-export default function getAllData(options,loopCb){
-    options = defaultObj(options);
-    let {databases,server,loop,...fetchDataOpts} = options;
-    fetchDataOpts = defaultObj(fetchDataOpts);
-    if(isArray(fetchDataOpts.fields) && !arrayValueExists(fetchDataOpts.fields,'code')){
-        fetchDataOpts.fields.push("code");
-    }
-    if(isNonNullString(databases)){
-        databases = [databases];
-    }
-    databases = defaultArray(databases);
-    loopCb = defaultFunc(loopCb,loop,({data})=>(data));
-    fetchDataOpts.selector = defaultObj(fetchDataOpts.selector);
-    let mCode = defaultStr(Auth.masterAdminCode).toUpperCase();
-    if(databases.length <= 0){
-        return Promise.resolve([]);
-    }
-    let promises = [];
-    let results = [];
-    //pour chaque commercial, on met à jour tous les articles y contenant
-    for(let i in databases){
-        let database = databases[i];
-        if(!isNonNullString(database) || database.toUpperCase() == mCode) continue;
-        promises.push(
-            getDB({dbName:database,server}).then(({db})=>{
-                return db.find(fetchDataOpts).then((r)=>{
-                    for(let k in r.docs){
-                        let d = r.docs[k];
-                        if(isObj(d) && (d.code) && typeof d.code == 'string'){        
-                            d.dbId = defaultStr(d.dbId,database);
-                            d = loopCb({data:d,allData:results,db,dbName:database,database})
-                            if(d && typeof d === 'object'){
-                                results.push(d);
-                            }
-                        }
-                    }
+export default function getAllData(options,dataMutator){
+    let {dataFileType,dataFilter,dataFileFilter,loop,fetchOptions,...rest} = defaultObj(options);
+    dataMutator = typeof dataMutator ==='function'? dataMutator : ({data})=>(data);
+    dataFileFilter = typeof dataFileFilter =='function'? dataFileFilter : x=>true;
+    dataFilter = typeof dataFilter =='function'? dataFilter : x=> true;
+    dataFileType = defaultStr(dataFileType).trim().toLowerCase();
+    return new Promise((resolve,reject)=>{
+        return getAllDB({...rest,filter : (dF,dFCode)=>{
+            const dFType = dF.type.toLowerCase().trim();
+            if(dataFileType && dFType !== dataFileType) return false;
+            if(dataFileFilter(dF,dFCode) === false) return false;
+            return true;
+        }}).then((databases)=>{
+            const promises = [],results = [];
+            for(let i in databases){
+                const dbArgs = databases[i];
+                if(dbArgs.db.infos?.isDataFileManager) continue;
+                const {db} = dbArgs;
+                const fOptions = typeof fetchOptions ==='function'? defaultObj(fetchOptions(dbArgs)) : defaultObj(fetchOptions);
+                promises.push(db.find(fOptions).then((r)=>{
+                    r.docs.map((doc)=>{
+                        if(!isObj(doc)) return null;
+                        doc.dbId = defaultStr(doc.dbId,db.infos?.name,db.infos?.code);
+                        doc = dataMutator({data:doc,allData:results,allFetchedData:r,db,dbName:doc.dbId});
+                        if(!isObj(doc)) return null;
+                        results.push(doc);
+                    })
                     return null;
-                });
-            })
-        )
-    }
-    return Promise.all(promises).then((r)=>{
-        promises = null;
-        r = null;
-        return results;
-    }).catch((e)=>{
-        console.log(e,' getting all data');
-        return e;
-    })
+                }));
+                return Promise.all(promises).then(resolve).catch((e)=>{
+                    throw e;
+                })
+            }
+        }).catch((e)=>{
+            console.log(e,' getting all data');
+            reject(e);
+        });
+    });
 }

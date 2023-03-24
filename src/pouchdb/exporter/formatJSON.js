@@ -15,6 +15,9 @@
 */
 import DateLib from "$date";
 import {isNonNullString,isFunction,defaultFunc} from "$utils";
+import {getLoggedUserCode} from "$cauth/utils/session";
+import appConfig from "$capp/config";
+
 export default  (options)=>{
     if(isNonNullString(options)){
         options = {format:options};
@@ -40,8 +43,8 @@ export default  (options)=>{
                 })
             }
             let r = {
-                creator : APP.getName(),
-                createdBy : Auth.getLoggedUserCode(),
+                creator : appConfig.name,
+                createdBy : getLoggedUserCode(),
                 createdDate : new Date().format(DateLib.SQLDateFormat),
                 version : '1.0',
                 format,

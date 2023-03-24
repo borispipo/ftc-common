@@ -327,7 +327,7 @@ const config = {
     }
 }
 
-export const getName = x=>defaultStr(getConfigValue("name")).toUpperCase();
+export const getName = x=>defaultStr(getConfigValue("name")).trim().toUpperCase();
 export const getDescription = x=>getConfigValue("description","desc");
 export const getDesc = getDescription;
 export const getVersion = x=>getConfigValue("version");

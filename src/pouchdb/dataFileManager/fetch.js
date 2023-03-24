@@ -13,38 +13,40 @@ const hasFetchRef = {current:false};
 export default function fetchDataFiles(){
     const dataFiles = getAllDefault();
     const result = {};
-    const removableDataFiles = {};//en principe, toutes les bases de données non supprimables devraient être enregistrées comme fichiers de données
+    const defDataFiles = {};
+    //en principe, toutes les bases de données non supprimables devraient être enregistrées comme fichiers de données
     Object.map(dataFiles,(dF)=>{
         if(!isValid(dF)) return;
         if(!dF.removable){
-            removableDataFiles[dF.code] = dF;
+          defDataFiles[dF.code] = dF;
         }
     });
     return new Promise((resolve,reject)=>{
         return getDB().then(({db})=>{
             return db.allDocs({include_docs: true}).then(({rows})=>{
                 const promises = [];
-                const foundedDF = {};
+                const foundDBS = {};
                 rows.map(({doc})=>{
                     if(!isValid(doc)) return;
                     const code = doc._id;
-                    ///all data-file must be in lower case
-                    if(code.toUpperCase()==code) return db.remove(doc);
-                    if(code in removableDataFiles){
-                        foundedDF[code] = true;
+                    if(code in defDataFiles){
+                        foundDBS[code] = doc;
                     }
                     result[code] = doc;
                 });
-                Object.map(removableDataFiles,(dF,dFCode)=>{
-                    promises.push(
-                        db.upsert(dFCode,(n)=>{
-                            return dF;
-                        }).then(({newDoc})=>{
-                            result[dFCode] = newDoc;
-                        }).catch((e)=>{
-                            result[dFCode] = dF;
-                        })
-                    )
+                //on force l'insertion en base de données, de tous les fichiers de données à l'exception des fichiers de données supprimables
+                Object.map(defDataFiles,(dF,dFCode)=>{
+                    if(!foundDBS[dF.code] && !dF.removable){
+                        promises.push(
+                            db.upsert(dFCode,(n)=>{
+                                return dF;
+                            }).then(({newDoc})=>{
+                                result[dFCode] = newDoc;
+                            }).catch((e)=>{
+                                result[dFCode] = dF;
+                            })
+                        )
+                    }
                 });
                 return Promise.all(promises).finally(()=>{
                     setDataFiles(result);

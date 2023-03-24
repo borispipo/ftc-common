@@ -6,7 +6,7 @@
 import useSWR from 'swr';
 import { getFetcherOptions as apiGetFetcherOptions } from '$capi';
 import {defaultStr ,extendObj,isNonNullString,isObj} from "$cutils";
-import {setQueryParams} from "$utils/uri";
+import {setQueryParams} from "$cutils/uri";
 import appConfig from "$capp/config";
 import React from 'react';
 import useNativeSWRInfinite from 'swr/infinite'

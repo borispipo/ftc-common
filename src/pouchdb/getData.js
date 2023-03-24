@@ -3,8 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import getDB from "./getDB";
-import { dbName as structDataDBName } from "./getStructDataDB";
-import commonDB from "./common";
+import {isFunction,isNonNullString,defaultArray,defaultFunc,defaultObj,isObj} from "$cutils";
 
 export const getDataSuccessCB = ({findOptions,resolve,reject,successCb,db,errorCb},checkIndex) =>{
     db.find(findOptions).then(({docs})=>{
@@ -27,8 +26,6 @@ export const getDataSuccessCB = ({findOptions,resolve,reject,successCb,db,errorC
         }
     });
 };
-
-const structDBName = structDataDBName.trim().toLowerCase().remplaceAll("_","");
 /********
     cette fonction prend en paramètre une chaine de caractère et retourne une fonction qui lorsqu'elle est appelée
     devra retourner des données
@@ -36,7 +33,6 @@ const structDBName = structDataDBName.trim().toLowerCase().remplaceAll("_","");
     /// si un seul arguemnt est passé en paramètres, alors on récupère toutes les données dont la table match la valeur passée en paramtère
     ///  à plus de deux arguments, l'on considère qu'il s'agit de retourner les enfants dont l'id(table) est passé en paramètre
     ///  exemple dataStr :
-                - structData[tableName] : pour récupérer les données de structure de table 'tableName'
                 - common[tableName] ou commonDB[tableName]
                 - dbName[tableName] : retourne un tableau contenant toutes les données dont la prop table match tablename
                 - dbName[_id,field1,subsubField,.....] : récupère progréssivement les enfants de l'id table, pour récupérer intégralement 
@@ -55,7 +51,7 @@ export const getDataFunc = (dataStr,findOptions)=>{
     findOptions = defaultObj(findOptions);
     let {server} = findOptions;
     let _sp,dbName,args;
-    if(dataStr.indexOf("[") > -1 || dataStr.remplaceAll("-","").remplaceAll("_","").trim().toLowerCase() === structDBName){
+    if(dataStr.indexOf("[") > -1){
         _sp = dataStr.split("[")
         dbName = isNonNullString(_sp[0])?_sp[0].trim():'';
         args = _sp[1]?_sp[1].split(",") : []
@@ -67,21 +63,6 @@ export const getDataFunc = (dataStr,findOptions)=>{
             let table = args[0];
             args.shift(); //on élimnine le nom de la table dans la liste des arguments
             switch (defaultStr(dbName).toLowerCase()) {
-                case 'structdata': //si c'est une données de structure
-                    return (successCb,errorCb)=>{
-                        return new Promise((resolve,reject)=>{
-                        commonDB.getStructData(table).then(({data,allData})=>{
-                            let d = data;
-                            for(let k in args){
-                                if(isObj(d) && isNonNullString(args[k]) && !arrayValueExists(['null','true','false'],args[k]+''.trim().toLowerCase())){
-                                    d = d[args[k]];
-                                } else break;
-                            }
-                            if(isFunction(successCb)) successCb(d,data,allData)
-                            else resolve(d);
-                        }).catch(e=>{if(isFunction(errorCb))errorCb(e);else reject(e);})
-                    })
-                } 
                 default:
                     //if(!isNonNullString(table)) return null;
                     return (successCb,errorCb) =>{

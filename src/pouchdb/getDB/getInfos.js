@@ -12,7 +12,7 @@ PouchDB.plugin({
                 const dF = dataFiles[code];
                 if(!isValidDataFile(dF)) continue;
                 if(sanitizeDBName(dF.code) === sanitizeDBName(defaultStr(db.getName(),db.infos?.realName))){
-                    extendObj(db.infos,dF,{realName:db.infos?.realName});
+                    extendObj(db.infos,dF,{realName:db.infos?.realName,name:dF.code});
                     return db.infos;
                 }
             }

@@ -1,25 +1,12 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import {isNonNullString,isObj} from "$cutils";
+import {isNonNullString,isObj,extendObj} from "$cutils";
 
 const types = {
-    seller : {
-        code : 'seller',
-        label : 'Données commerciales'
-    },
     common : {
         code : 'common',
         label : 'Données communes'
-    },
-    projects : {
-        code : 'projects',
-        label : 'Projets'
-    },
-    stocks : {
-        code : "stocks",
-        type : "stocks",
-        label : "Stocks",
     },
 };
 
@@ -37,7 +24,7 @@ export function extendTypes(_types){
             console.error(type," is not valid data file type");
             return;
         }
-        types[type.code] = type;
+        types[type.code] = extendObj({},types[type.code],type);
     });
     return types;
 }

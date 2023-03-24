@@ -29,7 +29,6 @@ export default {
     },
     archivable : {
         type  : "switch",
-        readOnlyOnEditing : true,
         label : "Archivable",
     },
 }
