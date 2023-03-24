@@ -47,6 +47,6 @@ export function extendIndexes(indexes){
 }
 
 export default {
-    get,set,extendIndexes
+    extendIndexes
 };
 
