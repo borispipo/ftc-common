@@ -1,12 +1,10 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
-import pouchdbIndexes from "../../utils/pouchdbIndexes";
 import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
-import indexes from "$pouchdbIndex";
+import indexes,{createdIndexes} from "../../utils/pouchdbIndexes";
 import DATA_FILES from "../../dataFileManager/DATA_FILES";
 import sanitizeDBName from "../../utils/sanitizeDBName";
 
@@ -28,7 +26,6 @@ const getIndexToCreateOrDelete = (idx)=>{
 
 const createIndex = (db,idx,dbName)=>{
     let promises = [];
-    const DB_INDEXES = pouchdbIndexes.get();
     let indexToCreate = getIndexToCreateOrDelete(idx);
     for(let name in indexToCreate){
         let index = indexToCreate[name];
@@ -47,7 +44,7 @@ const createIndex = (db,idx,dbName)=>{
             if(hasViews){
                 promises.push(new Promise((resolve,reject)=>{
                     let success = (r)=>{
-                        if(!DB_INDEXES[dbName]){
+                        if(!createdIndexes[dbName]){
                             viewFuncs.map(v=>{
                                 db.queryMapReduce({designId:name+"/"+v,key:uniqid("query-key-refresh-view-"+v)});
                             })
@@ -69,10 +66,10 @@ const createIndex = (db,idx,dbName)=>{
         }
     }
     return Promise.all(promises).then((r)=>{
-        DB_INDEXES[dbName] = true;
+        createdIndexes[dbName] = true;
         return r;
     }).catch((e)=>{
-        delete DB_INDEXES[dbName];
+        delete createdIndexes[dbName];
         console.log(e," creating index of ",dbName,indexToCreate,idx)
     });;
 }
@@ -87,9 +84,8 @@ export default function createDefaultPouchDBIndexes(force,rest){
     if(reset === true || views === true){
         force = true;
     }
-    const DB_INDEXES = pouchdbIndexes.get();
     let dbName = sanitizeName(this.realName);///les indices sont stockés dans les nom de base de données en majuscule
-    if(force !== true && DB_INDEXES[dbName]){
+    if(force !== true && createdIndexes[dbName]){
         return Promise.resolve(context);
     }
     if(isStructData(dbName)){
@@ -145,7 +141,7 @@ export default function createDefaultPouchDBIndexes(force,rest){
                 }
             }
             return Promise.all(promises).catch((e)=>{
-                delete DB_INDEXES[dbName];
+                delete createdIndexes[dbName];
                 return e;
             });
         }).finally(x=>{

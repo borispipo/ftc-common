@@ -15,7 +15,7 @@ import sync from "./sync";
 import common from "./common";
 import getAllData from "./getAllData";
 import servers from "./sync/servers";
-import {get as getIndexes, set as setIndexes,extendIndexes} from "./utils/pouchdbIndexes";
+import {extendIndexes} from "./utils/pouchdbIndexes";
 import { getCompany,setCompany } from "./common";
 
 export * from "./utils";
@@ -32,7 +32,6 @@ export {
     setCompany,
     servers,
     getIndexes,
-    setIndexes,
     common,
     CONSTANTS,
     getData,
@@ -48,8 +47,7 @@ export default {
     getCompany,
     setCompany,
     servers,
-    getIndexes,
-    setIndexes,
+    extendIndexes,
     common,
     CONSTANTS,
     getData,

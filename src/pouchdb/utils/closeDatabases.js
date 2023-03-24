@@ -8,11 +8,10 @@ import pouchdbIndexes from "./pouchdbIndexes";
 const closeDatabases = (databases) =>{
     const promises = [];
     let dbs = typeof (databases) ==='object' && databases ? databases : POUCH_DATABASES.get();
-    const DB_INDEXES = pouchdbIndexes.get();
     Object.map(dbs,(db,index)=>{
         if(isObj(db) && isFunction(db.close)){
             if(isNonNullString(db.realName)){
-                delete DB_INDEXES[db.realName]
+                delete pouchdbIndexes[db.realName]
             }
             promises.push(db.close().then((r)=>{
                 delete dbs[index];

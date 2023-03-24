@@ -69,7 +69,6 @@ module.exports = function(opts){
         "$ccountries" : path.resolve(common,"countries"),
         "$cdbMainDatabaseIndex" : pouchdbIndex,
         "$pouchdb" : path.resolve(common,"pouchdb"),
-        "$cpouchdbIndex" : path.resolve(common,"pouchdb","pouchdb","plugins","defaultIndex"),
         "$ctheme" : path.resolve(common,"theme"),
         "$cnotify" : path.resolve(common,"notify"),
         "$cutils" : path.resolve(common,"utils"),
@@ -157,9 +156,6 @@ module.exports = function(opts){
     /*** les indixes des bases de données pouchdb qui doivent automatiquement crée par l'application 
      * doit systématiquement exporté un objet portant pour chacune des base de données, les différents index à créer
     */
-    if(!r["$pouchdbIndex"]){
-        r["$pouchdbIndex"] = r["$cpouchdbIndex"];
-    }
     /****
      * permettant de récupérer les props à passer au composant FormData, du composant LoginComponent pour la connexion de l'utilisateur
      */

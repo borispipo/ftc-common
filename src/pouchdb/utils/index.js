@@ -41,6 +41,3 @@ export const unmountDatabaseTable = (tableName)=>{
     }
     return false;
 }
-
-
-export {default as pouchdbIndexes} from "./pouchdbIndexes";

@@ -4,23 +4,9 @@
 
 ///used to set indexes of pouchdb database
 const indexRef = {current:{}};
-import dbName from "../dataFileManager/dbName";
-import dataFileIndexes from "../dataFileManager/indexes";
 import {isObj} from "$utils";
 
-export const get = () =>{
-    if(!isObj(indexRef.current[dbName])){
-        indexRef.current[dbName] = dataFileIndexes;
-    }
-    return indexRef.current;
-}
-
-export const set = (databases) =>{
-    if(typeof databases =='object' && databases){
-        indexRef.current = databases;
-    }
-    return indexRef.current;
-}
+export const createdIndexes = {};
 
 /*** permet d'étendre les index associés aux fichiers de données
  * @param {object|Array} la liste des index supplémentaires, de la forme 
@@ -50,13 +36,14 @@ export const set = (databases) =>{
  * }
 */
 export function extendIndexes(indexes){
-    const dbIndexes = get();
+    const dbIndexes = indexRef.current;
     if(!isObj(indexes)) return dbIndexes;
     Object.map(indexes,(dbIndex,dbNameOrType)=>{
         if(!isObj(dbIndex)) return;
         dbIndexes[dbNameOrType] = extendObj({},dbIndexes[dbNameOrType],dbIndex);
     });
-    return set(dbIndexes);
+    indexRef.current = dbIndexes;
+    return dbIndexes;
 }
 
 export default {
