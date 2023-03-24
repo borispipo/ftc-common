@@ -4,7 +4,7 @@
 
 ///used to set indexes of pouchdb database
 const indexRef = {current:{}};
-import {isObj} from "$utils";
+import {isObj,extendObj} from "$utils";
 
 export const createdIndexes = {};
 
@@ -36,14 +36,8 @@ export const createdIndexes = {};
  * }
 */
 export function extendIndexes(indexes){
-    const dbIndexes = indexRef.current;
-    if(!isObj(indexes)) return dbIndexes;
-    Object.map(indexes,(dbIndex,dbNameOrType)=>{
-        if(!isObj(dbIndex)) return;
-        dbIndexes[dbNameOrType] = extendObj({},dbIndexes[dbNameOrType],dbIndex);
-    });
-    indexRef.current = dbIndexes;
-    return dbIndexes;
+    indexRef.current = extendObj({},indexRef.current,indexes);
+    return indexRef.current;
 }
 
 export default {
