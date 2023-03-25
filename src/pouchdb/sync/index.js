@@ -137,28 +137,18 @@ export const sync = (args)=>{
             let sType = server.type;
             let driver = drivers[sType] || drivers[sType.toLowerCase()];
             if(!isObj(driver) || !isFunction(driver.sync)) return next();
-            let databases = {};
             let {local} = server;
             if(local === true || local === 1){
                 local = true;
             } else {
                 local = undefined;
             }
-            Object.map(server.syncData,(db,i)=>{
-                if(isNonNullString(db)){
-                    let sp = db.split("#");
-                    if(sp.length == 2 && isNonNullString(sp[0]) && isNonNullString(sp[1])){
-                        databases[sp[0]] = sp[1];
-                    }
-                }
-            })
-            if(Object.size(databases,true) <= 0) return next();
             if(Background.isNotDBSyncBackground()){
                 showPreloader("Synchronisation, serveur "+defaultStr(server.code,server._id)+"");
             }
             let ret = driver.sync({...restA,...server,onTimeoutEnd:(err)=>{
                 next();
-            },syncIndex:index,syncLength:length,syncDatabases:server.databases,local,databases});
+            },syncIndex:index,syncLength:length,...server,local});
             if(isPromise(ret)) {
                 ret.then((databases)=>{
                     syncResults[servCode] = databases;

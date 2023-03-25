@@ -53,7 +53,7 @@ export default {
         uncheckedTooltip : 'Non',
         defaultValue : 0,
     },
-    syncData : {
+    syncDataTypes : {
         type :'select',
         defaultValue : Object.keys(defaultDataFiles),
         multiple : true,
