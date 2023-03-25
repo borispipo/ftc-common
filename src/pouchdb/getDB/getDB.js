@@ -3,6 +3,7 @@ import { getDBOptions } from "./_getDB";
 import {isValidUrl,isObj} from "$cutils";
 import localConf from "./localServerConfig";
 import "./localServer";
+import "./getData";
 
 export default function getDBUsingLocalServer(dbName,options){
     const opts = getDBOptions(dbName,options);

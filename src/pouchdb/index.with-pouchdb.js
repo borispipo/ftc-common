@@ -9,11 +9,11 @@
 import parseDBName from "./utils/parseDBName";
 import getDB from "./getDB";
 import CONSTANTS from "./constants";
-import getData from "./getData";
+import getData from "./getDB/getData";
 import pouch from "./pouchdb";
 import sync from "./sync";
 import common from "./common";
-import getAllData from "./getAllData";
+import getAllData from "./getDB/getAllData";
 import servers from "./sync/servers";
 import {extendIndexes} from "./utils/pouchdbIndexes";
 import { getCompany,setCompany } from "./common";

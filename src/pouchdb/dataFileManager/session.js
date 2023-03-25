@@ -35,6 +35,9 @@ const setSessionData = (key,value)=>{
    @return {string}, la base de données par défaut, catchée à l'utilisateur 
 */
 export const getCurrentDB = (type)=>{
+    if(isObj(type)){
+        type = defaultStr(type.dataFileType,type.type);
+    }
     if(!isNonNullString(type)) {
         console.error("invalid db type ",type," you must specify the type we want to retrieve defautl db")
         return "";
@@ -53,4 +56,6 @@ export const setCurrentDB = (dbName,type)=>{
 export default {
     get : getCurrentDB,
     set : setCurrentDB,
+    getCurrentDB,
+    setCurrentDB,
 }

@@ -1,5 +1,5 @@
 import {defaultObj,defaultStr,isObj} from "$utils";
-import getAllDB from "./dataFileManager/getAllDB";
+import getAllDB from "../dataFileManager/getAllDB";
 /*** retourne le liste des données dans un tableau d'objet, récupérée via les bases de données spécifiées
  *  @param object options : {
  *      databases [] La liste des données dans laquelle puiser les données,
