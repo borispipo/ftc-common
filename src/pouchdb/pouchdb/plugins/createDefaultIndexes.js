@@ -5,8 +5,7 @@ import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import indexes,{createdIndexes} from "../../utils/pouchdbIndexes";
-import DATA_FILES from "../../dataFileManager/DATA_FILES";
-import sanitizeDBName from "../../utils/sanitizeDBName";
+import {isNonNullString,isObjOrArray,isObj,defaultObj} from "$cutils";
 
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
@@ -74,6 +73,7 @@ const createIndex = (db,idx,dbName)=>{
     });;
 }
 
+/**** create default indexes of pouchdb */
 export default function createDefaultPouchDBIndexes(force,rest){
     let context = this;
     const allIndexes = indexes.current;
@@ -85,7 +85,7 @@ export default function createDefaultPouchDBIndexes(force,rest){
     if(reset === true || views === true){
         force = true;
     }
-    let dbName = sanitizeName(this.realName);///les indices sont stockés dans les nom de base de données en majuscule
+    let dbName = sanitizeName(defaultStr(this.infos?.name,this.getName()));///les indices sont stockés dans les nom de base de données en majuscule
     if(force !== true && createdIndexes[dbName]){
         return Promise.resolve(context);
     }
@@ -93,26 +93,12 @@ export default function createDefaultPouchDBIndexes(force,rest){
         return Promise.resolve(context);
     }
     let isCommon = isCommonDataFile(dbName);
-    let idx = isObj(allIndexes[dbName])? allIndexes[dbName] : null;
+    let idx = isObjOrArray(allIndexes[dbName])? allIndexes[dbName] : null;
     if(!idx){
-        if(isNonNullString(context.infos?.type) && isObj(allIndexes[context.infos.type])){
+        if(isNonNullString(context.infos?.type) && isObjOrArray(allIndexes[context.infos.type])){
             idx = allIndexes[context.infos.type]; 
         } else {
-            let dbDataFile = undefined;
-            const dFiles = DATA_FILES.get();
-            for(let i in dFiles){
-                const dF = dFiles[i];
-                if(sanitizeDBName(dbName) === sanitizeDBName(dF?.code)){
-                    dbDataFile = dF;
-                    break;
-                }
-            }
-            ///on peut créeer les index d'une base de données données à partir de son type, il suffit de récupérer le type dans la bd et puis procéder à la créer
-            if(dbDataFile && isObj(allIndexes[dbDataFile.type])){
-                idx = allIndexes[dbDataFile.type];
-            } else {
-                idx = isCommon? allIndexes.common_db : allIndexes.default;
-            }
+            idx = isCommon? allIndexes.common_db : isObjOrArray(allIndexes.default)? allIndexes.default : [];
         }
     }
     ///on peut créer les index en fonction du type

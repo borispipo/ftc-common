@@ -1,6 +1,6 @@
 import session from "$session";
 import { getSessionKey as gsKey } from "$cauth/utils/session";
-import {isNonNullString,defaultStr} from "$cutils";
+import {isNonNullString,defaultStr,isObj} from "$cutils";
 
 const getSessionKey = ()=>{
     return gsKey("pouchdb-cached-by-type");
