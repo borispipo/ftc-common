@@ -2,9 +2,9 @@ import notify from "$notify";
 import {getLabel,getAll as getAllDataFiles,sanitizeName,isValid} from "../../../dataFileManager/utils";
 import isCommonDataFile from "../../../dataFileManager/isCommon";
 import Background from "../../background";
-import {isDesktopMedia} from "$dimensions";
 import getDB,{PouchDB} from "$pouchdb/getDB";
 import APP from "$app/instance";
+import { getSyncOptions,normalizeSyncDirection,syncDirections } from "../../../sync/utils";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";
 import {getLoggedUser} from "$cauth/utils/session";
@@ -55,11 +55,7 @@ export const getCouchDB = function(dbName){
 
 let dbSyncManager = Background.getDBSyncManager();
 export const replicate = ({source,onError,onActive,onResumed,onPaused,onChange,onComplete,target,cancel,method,preloaderContent,syncTypeText,preloaderTitle,...rest})=>{
-    rest = defaultObj(rest);
-    let freeRAMHigher = APP.getFreeRAM()>4;
-    rest.batches_limit = defaultNumber(rest.batches_limit,freeRAMHigher? 50 : 25)
-    rest.timeout = defaultDecimal(rest.timeout,300); //temps d'attente à 0.5s
-    rest.batch_size = defaultNumber(rest.batch_size,freeRAMHigher?300:APP.getFreeRAM()>2 ? 200 : isDesktopMedia()?150:100);  
+    rest = getSyncOptions(rest); 
     let pendingMax = 0;
     let getProgress  = (pending) => {
         let progress;
@@ -143,7 +139,7 @@ export const replicate = ({source,onError,onActive,onResumed,onPaused,onChange,o
     return scT;
 }
 
-let cMsg = (d,title,db)=>{
+const cMsg = (d,title,db)=>{
     let str = "";
     if(isObj(d)){
         if(isDecimal(d.docs_read) && d.docs_read){
@@ -323,11 +319,20 @@ export default {
         return this;
     },
     getDB : getCouchDB,
+    /**** synchronise vers un serveur de données
+     * @param {object} arg, de la forme : 
+     * {
+     *      syncDataTypes {Array|string}, tableau où chaine de caractère avec les éléments séparés par ##, représentant à gauche, le type de fichier de données et à droite, la direction de synchronisation
+     *      databases {Array|string}, idem à syncDataTypes sauf qu'il s'agit des bases de données, à gauche, le nom du fichier de données et à droite la direction de synchronisation
+     * }
+     */
     sync : (arg)=>{
         arg = defaultObj(arg);
         let allDatabasesSync = {};
-        let {databases,syncDatabases} = arg;
-        syncDatabases = defaultArray(syncDatabases);
+        const syncDataTypes = normalizeSyncDirection(arg.syncDataTypes);
+        const databases = normalizeSyncDirection(arg.databases);
+        const hasSyncTypes = Object.size(syncDataTypes,true);
+        const hasDataBases = Object.size(databases,true);
         let promises = [];
         arg.syncID = uniqid("database-syncId")
         const allExistingDataFiles = {},commonDataFiles = {};
@@ -335,10 +340,11 @@ export default {
         const isMasterA = isMasterAdmin();
         const dataFilesByTypes = {};
         getAllDataFiles((dF)=>{
-            if(syncDatabases.length > 0 && (syncDatabases.includes(dF.type))){
-                return true;
+            if(hasDataBases && !databases[dF.code]) return false;
+            if(hasSyncTypes > 0 && !(syncDataTypes[dF.type])){
+                return false;
             }
-            if(!isCommon(dF.code) && !isMasterA && !syncDatabases.length && !isForUser(dF,u)){
+            if(!isCommon(dF.code) && !isMasterA && !isForUser(dF,u)){
                 return false;
             }
             const type = defaultStr(dF.type);
@@ -351,28 +357,39 @@ export default {
             return true;
         });
         const changedDatabases = allDatabasesSync.changes = {};
-        Object.map(databases,(syncType,dbName)=>{
-            if(!isNonNullString(dbName) || !['full','asc','desc'].includes(syncType)) return null;
-            const isCommon = !!(isCommonDataFile(dbName) || commonDataFiles[dbName]);
-            dbName = sanitizeName(dbName,false);
-            if(dataFilesByTypes[dbName]){
-                ////seules les bases commerciales de l'apps seront synchronisées
-                Object.map(dataFilesByTypes[dbName],(dF,i)=>{
-                    promises.push(syncDB({...arg,isCommon,changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
-                });
-            } else if(isCommon) {
-                for(let i in commonDataFiles){
-                    const dF = commonDataFiles[i];
-                    promises.push(syncDB({...arg,isCommon,changedDatabases,dbName:dF.code,syncType,dbNameStr:dF.label,allDatabasesSync}));
+        /*** si aucun des choix n'est définit, c'est à dire, aucune base de données où aucun type de base de données n'est selectionné
+         * alors rien ne sera opérationnel
+         */
+        if(hasDataBases){
+            Object.map(databases,(dbName,syncType)=>{
+                if(!isNonNullString(dbName) || !syncType || !syncDirections(syncType)) return null;
+                const isCommon = !!(isCommonDataFile(dbName) || commonDataFiles[dbName]);
+                dbName = sanitizeName(dbName,false);
+                if(isCommon) {
+                    for(let i in commonDataFiles){
+                        const dF = commonDataFiles[i];
+                        promises.push(syncDB({...arg,isCommon,changedDatabases,dbName:dF.code,syncType,dbNameStr:dF.label,allDatabasesSync}));
+                    }
+                } else {
+                    let dF = allExistingDataFiles[dbName]
+                    promises.push(syncDB({...arg,isCommon,changedDatabases,dbName,syncType,dbNameStr:dF.label,allDatabasesSync}));
                 }
-            } else {
-                let dF = allExistingDataFiles[dbName]
-                promises.push(syncDB({...arg,isCommon,changedDatabases,dbName,syncType,dbNameStr:dF.label,allDatabasesSync}));
-            }
-            
-        })
+            });
+        } else if(hasSyncTypes){
+            Object.map(syncDataTypes,(dataFileType,syncType)=>{
+                ///on synchronise les bases pour lesquelles les types ont été sélectionnées, y compris avec leur direction
+                if(!isNonNullString(dataFileType) || !syncType || !syncDirections(syncType)) return null; 
+                if(dataFilesByTypes[dataFileType]){
+                    ////seules les bases de données dont le type a été spécifié, peuvent être synchronisées
+                    Object.map(dataFilesByTypes[dataFileType],(dF,i)=>{
+                        promises.push(syncDB({...arg,isCommon:isCommonDataFile(dF),changedDatabases,syncType,dbName:dF.code,dbNameStr:dF.label,allDatabasesSync}));
+                    });
+                } 
+            })
+        }
+        
         ///always sync  datafile's manager as full sync
-        promises.push(syncDB({...arg,isCommon:true,changedDatabases,syncType:"full",dbName:dataFile.code,dbNameStr:dataFile.label,allDatabasesSync}).then((r)=>{
+        promises.push(syncDB({...arg,isCommon:true,isDataFileManager:true,changedDatabases,syncType:"full",dbName:dataFile.code,dbNameStr:dataFile.label,allDatabasesSync}).then((r)=>{
             fetch();
             return r;
         }));

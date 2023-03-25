@@ -12,7 +12,9 @@ import isRunning from "./isRunning";
 import {isObjOrArray} from "$utils";
 import allServersManager from "./servers";
 import getAllDB from "../dataFileManager/getAllDB";
+import { syncDirections} from "./utils";
 
+export * from "./utils";
 
 ///retourne les infos liées à la synchronisation des données
 export const getInfo = ($key)=>{
@@ -53,7 +55,12 @@ const errorF = ({msg,error,reject})=>{
     setInfo(false);
     return reject(msg);
 }
-/*** args.forceSync : si la synchronisation sera forcée ou pas 
+/*** 
+ * synchronise les bases de données locales vers un serveur distant
+ * @param {args} de la forme : 
+ * {
+ *      
+ * }
  * 
 */
 export const sync = (args)=>{
@@ -182,8 +189,10 @@ export const syncOnLocalServer = ()=>{
     });
 }
 
+
 export default {
     run : sync,
+    syncDirections,
     syncOnLocalServer, //use to sync every database with local server
     servers : allServersManager,
     isRunning,

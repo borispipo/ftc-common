@@ -48,6 +48,7 @@ module.exports = function(opts){
     const src = path.resolve(base,"src");
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const $packageJSON = fs.existsSync(configPath) && configPath || path.resolve(common,"app","config.default.json");
+    const cdataFileManager = path.resolve(common,"pouchdb","dataFileManager");
     const r = {
         "$cmedia" : path.resolve(common,"media"),
         $packageJSON,
@@ -102,8 +103,8 @@ module.exports = function(opts){
         "$actions" : path.resolve(common,"actions"),
         "$base" :base, 
         "$src" : src,
-        
-        "$datafileManager" : path.resolve(common,"pouchdb","dataFileManager"),
+        "$cdatafileManager": cdataFileManager,
+        "$datafileManager": cdataFileManager,
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":"@fto-consult/common",
         "$ftc-expo":"@fto-consulting/expo-ui",

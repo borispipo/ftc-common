@@ -75,14 +75,13 @@ export function tryAndPut(db, doc, diffFun,options) {
     }
     return db.put(doc,options).then(function (res) {
         doc._rev = res.rev;
-        let t= {
+        return {
             updated: true,
             _rev: res.rev,
             _id: doc._id,
             doc : doc,
             newDoc : doc
         };
-        return t;
     }).catch(function (err) {
         /* istanbul ignore next */
         if (err.status !== 409) {
@@ -158,8 +157,6 @@ upsertVar.upsert = function upsert(docId, diffFun, cb,options) {
         options = {};
     }
     return upsertInner(db, docId, diffFun,options).then(function (resp) {
-        //sync or replicate database on local server if its set
-        db.syncOnLocalServer().catch(e=>e);
         cb(resp);
         return resp;
     },callbackErr);
@@ -277,7 +274,6 @@ export const triggerDB = ({doc,db,isDelete,deleted}) =>{
 
 const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
     let {changes} = settings;
-    let {remove} = db;
     db.localName = localName;
     db.isRemoteServer = db.isRemote = isServer ? true : false;
     const DATABASES = POUCH_DATABASES.get();
@@ -320,20 +316,38 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         });
     }
     if(!db.isRemoteServer){
+        const {remove,bulkDocs,put} = db;
         if(DATABASES[sDBName]){
             return Promise.resolve(DATABASES[sDBName]);
+        }
+        db.put = function(...args){
+            return put.apply(db,args).then((data)=>{
+                //sync or replicate database on local server if its set
+                db.syncOnLocalServer().catch(e=>e);
+                return data;
+            })
+        }
+        db.bulkDocs = function(...args){
+            return bulkDocs.apply(db,args).then((data)=>{
+                db.syncOnLocalServer();
+                return data;
+            });
         }
         const _remove = function({context,doc,force}){
             if(!isBool(force)){
                 ///par défaut, toutes les documents du fichier de données communes sont supprimées
                 force = isCommon(context.getName()) || isDataFileManager;
             }
-            const sCB = (deleted)=>{
+            const sCB = (deleted,upserted)=>{
                 if(!isObj(doc) || !isNonNullString(doc._id)){
                     doc = deleted;
                 }
                 if(!isDataFileManager){
                     triggerDB({db,deleted,doc,isDelete:true});
+                }
+                //on synchronise également la base de données avec le serveur local, après une suppression
+                if(upserted !== true){
+                    context.syncOnLocalServer();
                 }
                 return deleted;
             }
@@ -341,27 +355,24 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
                 return context.upsert(doc._id,(newDoc)=>{
                     return {...newDoc,...doc,_deleted:true};
                 }).then((up)=>{
-                    return sCB(up.newDoc);
+                    return sCB(up.newDoc,true);
                 });
             }
             return remove.call(context,doc).then(sCB);
         }
-        if(db.canOverrideRemove({pDBName})){
-            db.remove = function(){
-                let args = Array.prototype.slice.call(arguments,0);
-                let doc = args[0];
-                let force = args[1];
-                let context = this;
-                if(isNonNullString(doc)){
-                    return new Promise((resolve,reject)=>{
-                        db.get(doc).then((_doc)=>{
-                            args[0] = _doc;
-                            return _remove({context,args,doc:_doc,force}).then((resolve)).catch((reject));
-                        }).catch(reject);
-                    });
-                }
-                return _remove({context,args,doc,force});
+        db.remove = function(...args){
+            let doc = args[0];
+            let force = args[1];
+            let context = this;
+            if(isNonNullString(doc)){
+                return new Promise((resolve,reject)=>{
+                    db.get(doc).then((_doc)=>{
+                        args[0] = _doc;
+                        return _remove({context,args,doc:_doc,force}).then((resolve)).catch((reject));
+                    }).catch(reject);
+                });
             }
+            return _remove({context,args,doc,force});
         }
         //db.setMaxListeners(20);
         db.changesResult = db.changes(extendObj(true,{},changes,{since: 'now',live: true,include_docs: true}))

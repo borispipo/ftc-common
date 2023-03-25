@@ -1,6 +1,7 @@
 import { PouchDB } from "./pouchDB";
 import localServerConfig from "./localServerConfig";
 import APP from "$capp/instance";
+import { syncDirections,getSyncOptions } from "../sync/utils";
 
 function getLocalServer(){
     const db = this || {};
@@ -31,24 +32,47 @@ function syncOnLocalServer(){
     if(this.isLocalServer){
         return Promise.reject({message:'Canot sync local sever with him, same database {0}'.sprintf(dbText)});
     }
-    const syncTypes = localServerConfig.syncData;
-    if(syncTypes.length && !syncTypes.includes(type)){
-        return Promise.reject({message:'Could not sync db{0} because its type {1} is not allowed to sync on local server'.sprintf(dbText,type)})
-    }
+    let syncDirection  = null;
+    //contient la liste des bases de données à synchroniser, déjà normalisées, objet ayant pour clé chaque bd et pour valeur sa direction de synchronisation
     const databases = localServerConfig.databases;
-    if(databases.length && !databases.includes(name)){
-        return Promise.reject({message:'Could not sync db{0} because its name {1} is not allowed to sync on local server'.sprintf(dbText,name)})
+    if(Object.size(databases,true)){
+        if(!databases[name]){
+            return Promise.reject({message:'Could not sync db{0} because its name {1} is not allowed to sync on local server'.sprintf(dbText,name),databases})
+        }
+        syncDirection = databases[name];
+    }
+    if(!syncDirection){
+        ///cette fonction retourne les paramètres de configuration par type, déjà normalisés
+        const syncTypes = localServerConfig.syncDataTypes;
+        if(Object.size(syncTypes,true)){
+            if(!syncTypes[type]){
+                return Promise.reject({message:'Could not sync db{0} because its type {1} is not allowed to sync on local server'.sprintf(dbText,type),syncTypes})
+            } else {
+                syncDirection = syncTypes[type];
+            }
+        }
+    }
+    if(!syncDirection){
+        syncDirection = db.isCommon() ? syncDirections.full : syncDirections.asc;
     }
     return new Promise((resolve,reject)=>{
         /// on peut faire la synchronisation avec le serveur local, si les paramètres de bases de données sont synchronisées avec le serveur local
         setTimeout(()=>{
-            const localServer = db.getLocalServer()
+            const localServer = db.getLocalServer();
+            const syncOpts = getSyncOptions();
             if(localServer && localServer?.allDocs && localServer.get){
                 const cb = ()=>{
-                    return db.sync(localServer).catch((e)=>{
-                        console.error("sync {0} with local server ".sprintf(db.infos?.name),e);
+                    const error = (e,direction)=>{
+                        console.error("sync {0} in direction {1} with local server ".sprintf(db.getName(),direction),e);
                         reject(e);
-                    }).then(resolve);
+                    };
+                    if(syncDirection == syncDirections.full){
+                        return db.sync(localServer,syncOpts).catch(e=>error(e,"full")).then(resolve);
+                    }
+                    if(syncDirection === syncDirections.asc){
+                        return PouchDB.replicate(localServer,db,syncOpts).catch(e=>error(e,"asc")).then(resolve);
+                    }
+                    return PouchDB.replicate(db,localServer,syncOpts).catch(e=>error(e,"desc")).then(resolve);
                 }
                 if(localServerConfig.local || APP.isOnline()){
                     cb();

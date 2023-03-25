@@ -2,7 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-const queryMapReduce = function(designId,options){
+import {defaultFunc,isNonNullString,defaultBool,defaultStr,defaultVal} from "$cutils";
+
+/*** permet de faire une requête couchdb|poucdb sur la vue dont les options sont passés en paramètre
+ * @param {string} designId, l'id du design
+ * @param {object}, options, les options supplémentaires de la forme : 
+ * {
+ *      handleResult {boolean}, si les données seront interprétées, parcourues
+ *      mutator : {function}, la fonction de mutation qui sera appliquée sur les données au cas où handleResult est à true
+ *      ...rest {object} le reste d'options à passer à la fonction pouchdb query
+ * }
+ */
+export const queryMapReduce = function(designId,options){
     let db = this;
     if(isObj(designId)){
         options = extendObj({},designId,options);
@@ -26,7 +37,7 @@ const queryMapReduce = function(designId,options){
             let docs = [];
             rows.map((doc)=>{
                 if(/^_design\//.test(doc.id) || doc._deleted)return null;
-                let arg = {doc:defaultObj(doc.doc),value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
+                let arg = {doc:defaultObj(doc.doc),data:defaultObj(doc.doc),value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
                 if(filter(arg)){
                     let mDoc = mutator(arg);
                     if(isObj(mDoc)){
@@ -39,35 +50,4 @@ const queryMapReduce = function(designId,options){
         return result;
     })
 }
-export default {
-    queryMapReduce,
-    queryMapReduceWithRef : function(opts){
-        opts = defaultObj(opts);
-        opts.designId = defaultStr(opts.designId,"reference/ref_table_type");
-        let {table,type,reference} = opts;
-        let key = [];
-        table = defaultStr(table).toUpperCase();
-        reference = defaultStr(reference).toUpperCase();
-        if(!(table) || !(reference)){
-            console.log(" table non définie ",table," ou référence non définie ",reference," pour la requête sur la vue référence en base de données ",this.getName(),opts)
-        } else {
-            if(isArray(type)){
-                type.map((t)=>{
-                    if(isNonNullString(t)){
-                        key.push(APP.buildMapReduceQueryKey(reference,table,t.toUpperCase()))
-                    }
-                })
-            } else if(isNonNullString(type)){
-                key.push(APP.buildMapReduceQueryKey(reference,table,type.toUpperCase()))
-            }
-        }
-        if(key.length == 1){
-            opts.key = key[0];
-            delete opts.keys;
-        } else {
-            opts.keys = key;
-            delete opts.key;
-        }
-        return queryMapReduce.call(this,opts);
-    }
-}
+export default queryMapReduce;

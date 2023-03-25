@@ -1,8 +1,10 @@
 /**** get configuration about the database local server */
 import appConfig from "$capp/config";
 import {isNonNullString,toSnakeCase,defaultStr,isValidUrl} from "$utils";
+import {normalizeSyncDirection} from "../sync/utils";
 
 const prefix = "POUCHDB_LOCAL_SERVER_";
+
 
 const mutateVal = (val)=>{
     if(val === "false"){
@@ -49,19 +51,17 @@ export default {
     get local() {
         return getConfigValue("local");
     },
-    get syncData (){
-        const v = getConfigValue("syncData");
-        if(isNonNullString(v)) {
-            return v.split(",").filter(e=>isNonNullString(e));
-        }
-        return Array.isArray(v)? v : [];
+    /*** les types de données à synchroniser: tableau de la forme : 
+     * [type1]##[full|asc|desc]
+     */
+    get syncDataTypes (){
+        return normalizeSyncDirection(getConfigValue("syncDataTypes"));
     },
+    /*** la liste des bases de données à synchroniser, tableau de la forme : 
+     *  [dbName]##[full|asc|desc], permet de spécifier pour chaque type de données, le type de synchronisation à faire
+     */
     get databases(){
-        const v = getConfigValue("databases");
-        if(isNonNullString(v)) {
-            return v.split(",").filter(e=>isNonNullString(e));
-        }
-        return Array.isArray(v)? v : [];
+        return normalizeSyncDirection(getConfigValue("databases"));
     },
     get username(){
         return getConfigValue("username");

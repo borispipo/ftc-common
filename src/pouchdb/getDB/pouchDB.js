@@ -14,17 +14,19 @@ if(typeof window !== 'undefined' && !window.PouchDB){
     })
 }
 
-import QMapReduce from "../pouchdb/plugins/queryMapReduce";
+import queryMapReduce from "../pouchdb/plugins/queryMapReduce";
 import PouchDBFind from "../pouchdb/plugins/find";
 import isRemote from "../pouchdb/plugins/isRemote";
+import isCommon from "../dataFileManager/isCommon";
 PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(require('pouchdb-authentication'));
 PouchDB.plugin(require('pouchdb-erase'));
 PouchDB.plugin(canOverrideRemove);
-PouchDB.plugin(QMapReduce);
+PouchDB.plugin({queryMapReduce});
 PouchDB.plugin({
     uniqid,
     isRemote,
+    isCommon,
     createDefaultIndexes,
     getRealName,
     toJSON,
