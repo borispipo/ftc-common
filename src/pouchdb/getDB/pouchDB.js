@@ -1,6 +1,5 @@
 import "../polyfill";
 import PouchObj from "../pouchdb";
-import uniqid from "../pouchdb/plugins/uniqid";
 import createDefaultIndexes from "../pouchdb/plugins/createDefaultIndexes";
 import getRealName from "../pouchdb/plugins/getRealName";
 import toJSON from "../pouchdb/plugins/toJSON";
@@ -24,7 +23,6 @@ PouchDB.plugin(require('pouchdb-erase'));
 PouchDB.plugin(canOverrideRemove);
 PouchDB.plugin({queryMapReduce});
 PouchDB.plugin({
-    uniqid,
     isRemote,
     isCommon,
     createDefaultIndexes,
