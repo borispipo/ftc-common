@@ -1,4 +1,4 @@
-import { PouchDB } from "./pouchDB";
+import { PouchDB } from "./pouchdb";
 import localServerConfig from "./localServerConfig";
 import APP from "$capp/instance";
 import { syncDirections,getSyncOptions } from "../sync/utils";

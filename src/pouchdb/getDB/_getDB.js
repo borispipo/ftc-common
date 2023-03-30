@@ -10,7 +10,7 @@ import { getLoggedUser} from '$cauth/utils/session';
 import {structDataDBName } from "../dataFileManager/structData";
 import {triggerEventTableName} from "../dataFileManager/structData";
 import isDataFileDBName from '../dataFileManager/isDataFileDBName';
-import { PouchDB } from './pouchDB';
+import { PouchDB } from './pouchdb';
 
 const TRIGGER_CHANGES_DBS = {};
 
@@ -407,7 +407,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
     return Promise.resolve(db);
 }
 
-/**** cré une instance pouchDB à partir des options passés en paramètre
+/**** cré une instance pouchdb à partir des options passés en paramètre
  *  @param options {object} de la forme : 
  *      {
  *          dbName| name : le nom de la bb,

@@ -4,7 +4,7 @@
 
 import getDB from "./_getDB";
 import {isNonNullString,defaultArray,defaultObj,isObj} from "$cutils";
-import {PouchDB} from "./pouchDB";
+import {PouchDB} from "./pouchdb";
 
 
 /**** permet de retourner les données à passer à la fonction getData, pour la récupération des bases de données de l'application

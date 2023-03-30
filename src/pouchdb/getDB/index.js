@@ -3,7 +3,7 @@ import "./getInfos";
 
 export {default as localServerConfig} from "./localServerConfig"
 
-export * from "./pouchDB";
+export * from "./pouchdb";
 export * from "./getDB";
 
 export default function getDB (dbName,opts){

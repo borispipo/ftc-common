@@ -1,4 +1,4 @@
-import { PouchDB } from "./pouchDB";
+import { PouchDB } from "./pouchdb";
 import fetch from "../dataFileManager/fetch";
 import isValidDataFile from "../dataFileManager/isValidDataFile";
 import sanitizeDBName from "../utils/sanitizeDBName";
