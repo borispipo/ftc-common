@@ -330,7 +330,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         }
         db.bulkDocs = function(...args){
             return bulkDocs.apply(db,args).then((data)=>{
-                db.syncOnLocalServer();
+                db.syncOnLocalServer().catch(e=>e);
                 return data;
             });
         }
@@ -348,7 +348,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
                 }
                 //on synchronise également la base de données avec le serveur local, après une suppression
                 if(upserted !== true){
-                    context.syncOnLocalServer();
+                    context.syncOnLocalServer().catch(e=>e);
                 }
                 return deleted;
             }
