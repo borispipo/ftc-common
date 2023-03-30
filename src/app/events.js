@@ -60,6 +60,8 @@ export const RESTART = "RESTART";
 
 export const SYNC_POUCHDB_DATABASE = "SYNC_POUCHDB_DATABASE";
 
+export const FETCH_POUCHDB_DATA_FILES = "FETCH_POUCHDB_DATA_FILES";
+
 export default {
     RESTART,
     KEYBOARD_DID_SHOW,
@@ -89,5 +91,6 @@ export default {
     BEFORE_EXIT,
     EXIT,
     SYNC_POUCHDB_DATABASE,
+    FETCH_POUCHDB_DATA_FILES,
     ...appEvents,
 }

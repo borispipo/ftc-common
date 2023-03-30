@@ -50,6 +50,7 @@ export default function fetchDataFiles(){
                 });
                 return Promise.all(promises).finally(()=>{
                     setDataFiles(result);
+                    APP.trigger(APP.EVENTS.FETCH_POUCHDB_DATA_FILES,result);
                     hasFetchRef.current = true;
                     if(APP.getStorageUsage){
                         APP.getStorageUsage();
