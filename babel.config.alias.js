@@ -70,6 +70,7 @@ module.exports = function(opts){
         "$ccountries" : path.resolve(common,"countries"),
         "$cdbMainDatabaseIndex" : pouchdbIndex,
         "$pouchdb" : path.resolve(common,"pouchdb"),
+        "$pouchDB" : path.resolve(common,"pouchdb"),
         "$ctheme" : path.resolve(common,"theme"),
         "$cnotify" : path.resolve(common,"notify"),
         "$cutils" : path.resolve(common,"utils"),
