@@ -49,12 +49,15 @@ export const setConfigValue = (key,value)=>{
     const conf = getConfig();
     if(isNonNullString(key)){
         try {
-            if(key in config && key !=='current'){
+            if(key in config && key !=='current' && (!isGetter(key) || isSetter(key))){
                 config[key] = value;
             } else {
                 conf[key] = value;
             }
         } catch(e){
+            try {
+                conf[key] = value;
+            } catch{}
             console.log(e," setting config value ",key,value);
         }
     }
@@ -460,3 +463,10 @@ export const getTableData = (tableName,table)=>{
 }
 
 export default config;
+
+function isGetter (prop) {
+    return isNonNullString(props) && !!Object.getOwnPropertyDescriptor(config, prop)['get']
+}
+function isSetter (prop) {
+    return  isNonNullString(props) && !!Object.getOwnPropertyDescriptor(config, prop)['set']
+}
