@@ -465,8 +465,8 @@ export const getTableData = (tableName,table)=>{
 export default config;
 
 function isGetter (prop) {
-    return isNonNullString(props) && !!Object.getOwnPropertyDescriptor(config, prop)['get']
+    return isNonNullString(prop) && !!Object.getOwnPropertyDescriptor(config, prop)['get']
 }
 function isSetter (prop) {
-    return  isNonNullString(props) && !!Object.getOwnPropertyDescriptor(config, prop)['set']
+    return  isNonNullString(prop) && !!Object.getOwnPropertyDescriptor(config, prop)['set']
 }
