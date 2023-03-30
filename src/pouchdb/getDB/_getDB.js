@@ -156,6 +156,7 @@ upsertVar.upsert = function upsert(docId, diffFun, cb,options) {
     if(!isObj(options)){
         options = {};
     }
+    cb = typeof cb =="function"? cb : x=>x;
     return upsertInner(db, docId, diffFun,options).then(function (resp) {
         cb(resp);
         return resp;
