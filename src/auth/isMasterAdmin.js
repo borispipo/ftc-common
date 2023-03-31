@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import { getLoggedUser,isSingleUserAllowed,getDefaultSingleUser } from "./utils/session";
-import {defaultObj} from "$utils";
+import {defaultObj} from "$cutils";
 import SignIn2SignOut from "./$authSignIn2SignOut";
 
 /**** vérifie si l'utilisateur connecté/passé en paramètre est le super user

@@ -1,4 +1,4 @@
-import {isNonNullString} from '$utils';
+import {isNonNullString} from '$cutils';
 export default ({item}) =>{
     let t = isNonNullString(item.code) ? "[{0}]".sprintf(item.code) : "";
     if(isNonNullString(item.label)){

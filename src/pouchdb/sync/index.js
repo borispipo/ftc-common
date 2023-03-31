@@ -9,7 +9,7 @@ import {getAllServers} from "./servers";
 import lastSyncDate from "./lastSyncDate";
 import BG_TASK_MANAGER from "./bakgroundTaskManager";
 import isRunning from "./isRunning";
-import {isObjOrArray} from "$utils";
+import {isObjOrArray} from "$cutils";
 import allServersManager from "./servers";
 import getAllDB from "../dataFileManager/getAllDB";
 import { syncDirections} from "./utils";

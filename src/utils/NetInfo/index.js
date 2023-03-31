@@ -3,11 +3,11 @@
 // license that can be found in the LICENSE file.
 
 import {isClientSide} from "$cplatform";
-import {isValidUrl} from "$utils";
+import {isValidUrl} from "$cutils";
 let NetInfo  = undefined;
 let hasNetInfoIntialized = false;
 import appConfig from "$appConfig";
-import {defaultNumber} from "$utils";
+import {defaultNumber} from "$cutils";
 
 const init = ()=>{
     const status = 200;

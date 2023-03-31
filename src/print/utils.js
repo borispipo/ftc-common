@@ -1,5 +1,5 @@
 import createPDF from "./createPDF";
-import {defaultObj,isFunction,sanitizeFileName,defaultNumber,sprintf,defaultVal,arrayValueExists,isObj,defaultFunc,isNonNullString,defaultStr,defaultArray} from "$utils";
+import {defaultObj,isFunction,sanitizeFileName,defaultNumber,sprintf,defaultVal,arrayValueExists,isObj,defaultFunc,isNonNullString,defaultStr,defaultArray} from "$cutils";
 import notify from "$cnotify";
 import appConfig from "$capp/config";
 import APP from "$capp/instance";

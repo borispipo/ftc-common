@@ -1,6 +1,6 @@
 /**** get configuration about the database local server */
 import appConfig from "$capp/config";
-import {isNonNullString,toSnakeCase,defaultStr,isValidUrl} from "$utils";
+import {isNonNullString,toSnakeCase,defaultStr,isValidUrl} from "$cutils";
 import {normalizeSyncDirection} from "../sync/utils";
 
 const prefix = "POUCHDB_LOCAL_SERVER_";

@@ -1,6 +1,6 @@
 import defaultDataFiles from "./getAllDefault";
 import sanitizeName from "./sanitizeName";
-import {isObj,defaultStr} from "$utils";
+import {isObj,defaultStr} from "$cutils";
 import isValidDataFile from "./isValidDataFile";
 
 /**** vérifie si une base de données en question est commune 

@@ -4,7 +4,7 @@
 
 ///used to set indexes of pouchdb database
 const indexRef = {current:{}};
-import {isObj,extendObj} from "$utils";
+import {isObj,extendObj} from "$cutils";
 
 export const createdIndexes = {};
 

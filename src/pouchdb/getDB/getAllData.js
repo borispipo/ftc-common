@@ -1,4 +1,4 @@
-import {defaultObj,defaultStr,isObj} from "$utils";
+import {defaultObj,defaultStr,isObj} from "$cutils";
 import getAllDB from "../dataFileManager/getAllDB";
 /*** retourne le liste des données dans un tableau d'objet, récupérée via les bases de données spécifiées
  *  @param object options : {

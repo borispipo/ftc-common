@@ -2,7 +2,7 @@ import { PouchDB } from "./pouchdb";
 import fetch from "../dataFileManager/fetch";
 import isValidDataFile from "../dataFileManager/isValidDataFile";
 import sanitizeDBName from "../utils/sanitizeDBName";
-import {extendObj,defaultStr} from "$utils";
+import {extendObj,defaultStr} from "$cutils";
 
 PouchDB.plugin({
     getInfos : function(){

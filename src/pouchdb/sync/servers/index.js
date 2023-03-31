@@ -1,6 +1,6 @@
 import localServers from "./localServers";
 import prepareFilter from "./prepareFilter";
-import {defaultFunc} from "$utils";
+import {defaultFunc} from "$cutils";
 import fields from "./fields";
 
 export const getAllServers = (filter)=>{

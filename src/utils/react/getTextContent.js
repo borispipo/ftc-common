@@ -1,5 +1,5 @@
 import isDOMElement from "$cutils/dom/isDOMElement";
-import {defaultStr} from "$utils";
+import {defaultStr} from "$cutils";
 /**
  * Traverse any props.children to get their combined text content.
  *

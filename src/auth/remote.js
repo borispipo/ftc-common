@@ -12,7 +12,7 @@ import {SIGN_IN,SIGN_OUT,} from "./routes";
 import { getLoggedUser } from "./utils/session";
 import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
-import {isPromise,isNonNullString} from "$utils";
+import {isPromise,isNonNullString} from "$cutils";
 import appConfig from "$capp/config";
 import SignIn2SignOut from "./$authSignIn2SignOut";
 

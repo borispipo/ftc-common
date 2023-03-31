@@ -1,4 +1,4 @@
-import {defaultStr,isNonNullString} from "$utils";
+import {defaultStr,isNonNullString} from "$cutils";
 import getPouchDBNamePrefix from "./getPouchDBNamePrefix";
 import FIXED_CONSTANTS from "../constants";
 import {prefixStrWithAppId} from "$capp/config";

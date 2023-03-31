@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import * as Utils from "$cutils";
-import {isObj, isNonNullString} from "$utils";
+import {isObj, isNonNullString} from "$cutils";
 import {isClientSide,isElectron} from "$cplatform/utils";
 if(isClientSide()){
     Object.map(Utils,(u,i)=>{

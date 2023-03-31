@@ -1,5 +1,5 @@
 import appConfig from "$capp/config";
-import {isObj,defaultStr} from "$utils";
+import {isObj,defaultStr} from "$cutils";
 
 export const tableDataPerms = {};
 export const structDataPerms = {};

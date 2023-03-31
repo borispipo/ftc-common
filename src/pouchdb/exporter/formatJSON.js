@@ -14,7 +14,7 @@
     * 
 */
 import DateLib from "$date";
-import {isNonNullString,isFunction,defaultFunc} from "$utils";
+import {isNonNullString,isFunction,defaultFunc} from "$cutils";
 import {getLoggedUserCode} from "$cauth/utils/session";
 import appConfig from "$capp/config";
 

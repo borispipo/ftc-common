@@ -4,7 +4,7 @@
 import Label from "$components/Label";
 import {View} from "react-native";
 import theme from "$theme";
-import {isObj} from "$utils";
+import {isObj} from "$cutils";
 
 /**** permet d'afficher le niveau de progression de la synchronisation pouchdb */
 export function getSyncProgressPreloaderProps ({pending,title,footer:customFooter,content}){

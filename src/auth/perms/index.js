@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$utils";
+import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$cutils";
 import {tableDataPerms,structDataPerms,resetPerms} from "./reset";
 import {getLoggedUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";

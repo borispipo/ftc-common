@@ -4,7 +4,7 @@
  *    sinon, alors, toutes les données de la base seront exportées
  */
 import formatJSON from "../../exporter/formatJSON";
-import {isObj,defaultObj,} from "$utils";
+import {isObj,defaultObj,} from "$cutils";
 export default function toJSONPouchdbPlugin (success,error,options){
     return new Promise((resolve,reject)=>{
         if(isObj(success)){

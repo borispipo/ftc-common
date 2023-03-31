@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isNonNullString,defaultFunc} from "$utils";
+import {isNonNullString,defaultFunc} from "$cutils";
 /*** définit le filtre de données à utiliser pour la sélection des fichiers de données
 *  @param {func,string} : le filtre des fichiers de données à retourner
    *      - si chaine de caractère : spécifie le type de donées qui sera retournée
