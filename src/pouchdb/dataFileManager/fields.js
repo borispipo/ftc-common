@@ -1,5 +1,5 @@
 /**** les différentes champs des fichiers de données */
-import getTypes from "./types";
+import {getTypes} from "./types";
 import {sanitizeFileName} from "$cutils";
 
 export default {
