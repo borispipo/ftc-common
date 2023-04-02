@@ -62,7 +62,7 @@ export const updateColors  = (theme,force)=>{
     });
    
     if(!Colors.isValid(colors.primaryOnSurface)){
-        if(Colors.getContrast(colors.primary) === Colors.getContrast(colors.surface)){
+        if(Colors.getContrast(colors.primary) != Colors.getContrast(colors.surface)){
             colors.primaryOnSurface = colors.primary
         } else {
             colors.primaryOnSurface = colors.secondary;
@@ -70,7 +70,7 @@ export const updateColors  = (theme,force)=>{
     }
 
     if(!Colors.isValid(colors.secondaryOnSurface)){
-        if(Colors.getContrast(colors.secondary) === Colors.getContrast(colors.surface)){
+        if(Colors.getContrast(colors.secondary) != Colors.getContrast(colors.surface)){
             colors.secondaryOnSurface = colors.secondary
         } else {
             colors.secondaryOnSurface = colors.primary;
