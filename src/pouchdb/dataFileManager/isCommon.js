@@ -1,7 +1,8 @@
 import defaultDataFiles from "./getAllDefault";
 import sanitizeName from "./sanitizeName";
-import {isObj,defaultStr} from "$cutils";
+import defaultStr from "$cutils/defaultStr";
 import isValidDataFile from "./isValidDataFile";
+import constants from "../constants"
 
 /**** vérifie si une base de données en question est commune 
  * @param {object|string} dataFile, le fichier de données/ ou son code. 
@@ -15,7 +16,11 @@ export default function isCommon (dataFile){
         return dataFile.common || defaultStr(dataFile.type).toLowerCase().trim() =="common" ? true : false
     }
     const sCode = sanitizeName(dataFile);
-    if(!sCode || !isObj(defaultDataFiles[sCode])) return false;
+    const commonDb = defaultStr(constants.COMMON_DB).toLowerCase().trim();
+    if(sCode === commonDb || defaultStr(dataFile).toLowerCase().trim() === commonDb){
+        return true;
+    }
+    if(!sCode || !(defaultDataFiles[sCode])) return false;
     const dF = defaultDataFiles[sCode];
     return dF.common || defaultStr(dF.type).toLowerCase().trim() =="common" ? true : false;
 };

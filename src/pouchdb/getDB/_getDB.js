@@ -1,7 +1,7 @@
 /*** fix IE 11 : fetch  is undefined with fetch polyfill @see : https://github.com/github/fetch */
 import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
-import {extendObj,isNonNullString,defaultStr,isObj,defaultObj} from "$cutils";
+import {extendObj,isNonNullString,defaultStr,isPromise,isObj,defaultObj} from "$cutils";
 import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
@@ -11,6 +11,7 @@ import {structDataDBName } from "../dataFileManager/structData";
 import {triggerEventTableName} from "../dataFileManager/structData";
 import isDataFileDBName from '../dataFileManager/isDataFileDBName';
 import { PouchDB } from './pouchdb';
+import isValidDataFile from '../dataFileManager/isValidDataFile';
 
 const TRIGGER_CHANGES_DBS = {};
 
@@ -318,7 +319,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
     }
     if(!db.isRemoteServer){
         const {remove,bulkDocs,put} = db;
-        if(DATABASES[sDBName]){
+        if(DATABASES[sDBName] && isValidDataFile(DATABASES[sDBName]?.infos)){
             return Promise.resolve(DATABASES[sDBName]);
         }
         db.put = function(...args){
@@ -397,11 +398,15 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
             },10);
         });
         db.fullDBName = pDBName;
-        DATABASES[sDBName] = db;
-        return new Promise((resolve,reject)=>{
-            db.createDefaultIndexes({dbName:sDBName}).finally(()=>{
-                resolve(db);
-            })
+        return new Promise((resolve)=>{
+            const p = !isDataFileManager && typeof db.getInfos ==='function' ? db.getInfos() : Promise.resolve({});
+            const cbSuccess = ()=>{
+                DATABASES[sDBName] = db;
+                db.createDefaultIndexes({dbName:sDBName}).finally(()=>{
+                    resolve(db);
+                });
+            }
+            return isPromise(p)? p.catch((e=>e)).finally(cbSuccess) : cbSuccess();
         });
     }
     return Promise.resolve(db);
@@ -476,7 +481,7 @@ const resolveDB = (dbName,callback,options,error)=>{
         force = true;
     }
     dbName = sanitizeName(dbName);
-    if(force !== true && DATABASES[dbName] != null  && isFunction(DATABASES[dbName].upsert) && isObj(DATABASES[dbName].infos)){
+    if(force !== true && DATABASES[dbName] != null  && isFunction(DATABASES[dbName].upsert) && isValidDataFile(DATABASES[dbName].infos)){
         db = DATABASES[dbName];
         return new Promise((resolve,reject)=>{
             db.info().then(() => {
@@ -494,7 +499,6 @@ const resolveDB = (dbName,callback,options,error)=>{
                 },realName);
             });
         })
-
     }
     return resolveDBWithPromise(dbName,callback,realName,options);
 }

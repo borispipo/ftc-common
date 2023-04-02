@@ -19,6 +19,17 @@ export {extendTypes};
 
 export * from "./utils";
 
+export {remove};
+
+export {upsert};
+
+export {fetch};
+
+export {getDB};
+
+export {getAllDB};
+export {session};
+
 const df = {
     ...dataFileManager,
     session,

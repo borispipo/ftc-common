@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import isNonNullString from "./isNonNullString";
-import "./string";
+import {removeSpecialChars} from "./string";
 
 const sanitize = require("sanitize-filename");
 
@@ -16,10 +16,10 @@ export const sanitizeSheetName = function(sheetName){
 }
 
 export const sanitizeFileName  = (str,escapeSpaces)=>{
-    escapeSpaces = isBool(escapeSpaces)? escapeSpaces : true;
+    escapeSpaces = typeof(escapeSpaces) ==='boolean' ? escapeSpaces : true;
     if(isNonNullString(str)){
-        if(escapeSpaces) str = str.removeSpecialChars().replaceAll(" ","-").replaceAll("[","(").replaceAll("]",")")
-        return sanitize(sprintf(str).replaceAll("/","-"));
+        if(escapeSpaces) str = removeSpecialChars(str).replaceAll(" ","-").replaceAll("[","(").replaceAll("]",")")
+        return sanitize(str.replaceAll("/","-"));
     }
     return "";
 }

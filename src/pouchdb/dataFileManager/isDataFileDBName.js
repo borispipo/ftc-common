@@ -1,4 +1,4 @@
-import {defaulStr,isNonNullString} from "$cutils";
+import {isNonNullString} from "$cutils";
 import dataFileDBName from "./dbName";
 const defDataFileName = dataFileDBName.toLowerCase().trim().replaceAll(" ","__").replaceAll(".","-");
 /***

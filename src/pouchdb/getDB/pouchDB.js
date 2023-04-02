@@ -4,6 +4,7 @@ import createDefaultIndexes from "../pouchdb/plugins/createDefaultIndexes";
 import getRealName from "../pouchdb/plugins/getRealName";
 import toJSON from "../pouchdb/plugins/toJSON";
 import canOverrideRemove from "../pouchdb/plugins/canOverrideRemove";
+import getInfos from "../pouchdb/plugins/getInfos";
 
 const {PouchDB,...pouchdbRest} = PouchObj;    
 
@@ -28,6 +29,7 @@ PouchDB.plugin({
     createDefaultIndexes,
     getRealName,
     toJSON,
+    getInfos,
 });
 
 export default {PouchDB,...pouchdbRest};

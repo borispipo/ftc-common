@@ -703,18 +703,6 @@ export const maskPhoneNumber = function(number){
 export const typeOf = function (obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
-export const removeSpecialChars = function(s){
-    if(!isNonNullString(s)) return "";
-    let r = s.toLowerCase();
-    let non_asciis = {'a': '[àáâãäå]', 'ae': 'æ', 'c': 'ç', 'e': '[èéêë]', 'i': '[ìíîï]', 'n': 'ñ', 'o': '[òóôõö]', 'oe': 'œ', 'u': '[ùúûűü]', 'y': '[ýÿ]'};
-    for (let i in non_asciis) { r = r.replace(new RegExp(non_asciis[i], 'g'), i); }
-    return r;
-}
-if(typeof String.prototype.removeSpecialChars !=="function"){
-    String.prototype.removeSpecialChars = function(){
-        return removeSpecialChars(this.toString());
-    }
-}
 
 // Escapes the special characters in @text so that it can serve as a literal pattern in a regular expression
 export const escapeSpecialChars = (function () {

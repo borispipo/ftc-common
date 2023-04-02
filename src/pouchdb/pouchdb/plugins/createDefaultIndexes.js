@@ -5,7 +5,7 @@ import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import indexes,{createdIndexes} from "../../utils/pouchdbIndexes";
-import {isNonNullString,isObjOrArray,isObj,defaultObj} from "$cutils";
+import {isNonNullString,isBool,isObjOrArray,isObj,defaultObj} from "$cutils";
 
 const getIndexToCreateOrDelete = (idx)=>{
     let r = {};
@@ -76,6 +76,9 @@ const createIndex = (db,idx,dbName)=>{
 /**** create default indexes of pouchdb */
 export default function createDefaultPouchDBIndexes(force,rest){
     let context = this;
+    if(context?.infos?.isDataFileManager || isCommonDataFile(this?.infos?.name) || isCommonDataFile(this?.getName())){
+        return Promise.resolve(context);
+    }
     const allIndexes = indexes.current;
     rest = isBool(rest)? {reset:rest} : defaultObj(rest);
     let {reset,views}  = rest;
@@ -85,14 +88,14 @@ export default function createDefaultPouchDBIndexes(force,rest){
     if(reset === true || views === true){
         force = true;
     }
-    let dbName = sanitizeName(defaultStr(this.infos?.name,this.getName()));///les indices sont stockés dans les nom de base de données en majuscule
+    const dbName = sanitizeName(defaultStr(this.infos?.name,this.getName()));///les indices sont stockés dans les nom de base de données en majuscule
     if(force !== true && createdIndexes[dbName]){
         return Promise.resolve(context);
     }
     if(isStructData(dbName)){
         return Promise.resolve(context);
     }
-    let isCommon = isCommonDataFile(dbName);
+    const isCommon = this.isCommon();
     let idx = isObjOrArray(allIndexes[dbName])? allIndexes[dbName] : null;
     if(!idx){
         if(isNonNullString(context.infos?.type) && isObjOrArray(allIndexes[context.infos.type])){
@@ -119,7 +122,6 @@ export default function createDefaultPouchDBIndexes(force,rest){
                 if(isObj(eIndexes[i].views)){
                     promises.push(
                         context.get("_design/"+defaultStr(eIndexes[i].name,i)).then((d)=>{
-                            //console.log(d," is ressetting view index",eIndexes[i].name)
                             return context.remove(d,true).then((r)=>{
                                 return context.viewCleanup();
                             });

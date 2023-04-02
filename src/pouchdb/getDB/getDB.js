@@ -34,4 +34,6 @@ export default function getDBUsingLocalServer(dbName,options){
     })
 }
 
+export {getDBUsingLocalServer as getDB};
+
 export * from "./_getDB";

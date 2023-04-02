@@ -70,3 +70,11 @@ export default function fetchDataFiles(){
 export const hasFetch = ()=>{
     return hasFetchRef.current;
 }
+
+if(typeof window !=='undefined' && window && typeof window.fetchPouchdbDataFiles !=='function'){
+    Object.defineProperties(window,{
+        fetchPouchdbDataFiles : {
+            value : fetchDataFiles,
+        }
+    })
+}

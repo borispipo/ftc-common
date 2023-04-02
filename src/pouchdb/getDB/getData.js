@@ -17,10 +17,9 @@ import {PouchDB} from "./pouchdb";
  */
 export const getFetchDataOptions = (options)=>{
     options = defaultObj(options);
-    const fetchOptions = options.fetchOptions = Object.clone(defaultObj(options.fetchOptions));
+    const fetchOptions = options.fetchOptions = Object.assign({},options.fetchOptions);
     const table = options.table = defaultStr(options.tableName,options.table);
     fetchOptions.selector = defaultObj(fetchOptions.selector);
-    delete fetchOptions.mustUseIndex;
     let use_index = fetchOptions.use_index === false ? false : true,foundIdIndex = undefined,_idSelector = undefined;
     if(use_index !== false && isArray(fetchOptions.selector.$and)){
             for(let i=0; i < fetchOptions.selector.$and.length; i++){
@@ -48,9 +47,11 @@ export const getFetchDataOptions = (options)=>{
     if(use_index === false || fetchOptions.use_index === false){
         delete fetchOptions.use_index;
     } else {
-        fetchOptions.mustUseIndex = use_index;
         fetchOptions.use_index = isNonNullString(fetchOptions.use_index) && fetchOptions.use_index || undefined;
     } 
+    if(!_idSelector && !isNonNullString(fetchOptions.use_index) && Array.isArray(fetchOptions.selector.$and)){
+        fetchOptions.selector.$and.push({_id: {"$gte": null}});
+    }
     return options;
 }
 
@@ -67,13 +68,11 @@ export default function getData(options){
 }
 
 const getDataWithPouchInstance = (db,fetchOptions) =>{
-    const checkIndex = fetchOptions.mustUseIndex;
-    delete fetchOptions.mustUseIndex;
     return new Promise((resolve,reject)=>{
         return db.find(fetchOptions).then(({docs})=>{
             resolve(docs);
         }).catch(e=>{
-            if(checkIndex && isNonNullString(fetchOptions.use_index)){
+            if(isNonNullString(fetchOptions.use_index)){
                 return db.createDefaultIndexes().finally(d=>{
                     delete fetchOptions.use_index;
                     return db.find(fetchOptions).then(({docs})=>{
