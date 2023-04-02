@@ -29,4 +29,6 @@ export function extendTypes(_types){
     return types;
 }
 
+export const getTypes = x=>types;
+
 export default types;

@@ -1,5 +1,5 @@
 import defaultDataFiles from "../../dataFileManager/defaultDataFiles";
-import types from "../../dataFileManager/types";
+import getTypes from "../../dataFileManager/types";
 import { getAll } from "../../dataFileManager/utils";
 const syncDataTimeoutTitle = 'Les données dont les dates de création système, sont supérieure à la valeur sélectionnée seront supprimées, Renseignez une valeur nulle ou zero, pour éviter la suppression des données';
 export default {
@@ -58,7 +58,7 @@ export default {
         multiple : true,
         required : true,
         text : 'Synchroniser les types de données',
-        items : types,
+        items : getTypes,
         itemValue : ({item,index})=>item.code,
     },
     databases :{

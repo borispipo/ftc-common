@@ -1,5 +1,5 @@
 /**** les différentes champs des fichiers de données */
-import types from "./types";
+import getTypes from "./types";
 import {sanitizeFileName} from "$cutils";
 
 export default {
@@ -22,7 +22,7 @@ export default {
     },
     type : {
         type : "select",
-        items : types,
+        items : getTypes,
         required : true,
         readOnlyOnEditing : true,
         label :"Type",
