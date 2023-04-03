@@ -18,7 +18,7 @@ import {PouchDB} from "./pouchdb";
 export const getFetchDataOptions = (options)=>{
     options = defaultObj(options);
     const fetchOptions = options.fetchOptions = Object.assign({},options.fetchOptions);
-    const table = options.table = defaultStr(options.tableName,options.table);
+    const table = options.table = defaultStr(options.tableName,options.table,fetchOptions.table);
     fetchOptions.selector = defaultObj(fetchOptions.selector);
     let use_index = fetchOptions.use_index === false ? false : true,foundIdIndex = undefined,_idSelector = undefined;
     if(use_index !== false && isArray(fetchOptions.selector.$and)){

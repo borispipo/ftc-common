@@ -399,6 +399,9 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         });
         db.fullDBName = pDBName;
         return new Promise((resolve)=>{
+            setTimeout(()=>{
+                db.syncOnLocalServer().catch(e=>e);
+            },0);
             const p = !isDataFileManager && typeof db.getInfos ==='function' ? db.getInfos() : Promise.resolve({});
             const cbSuccess = ()=>{
                 DATABASES[sDBName] = db;
