@@ -8,14 +8,16 @@ export default {
         type : "string",
         label : "Id",
         lower : true,
-        primaryKey : true,
+        validType : "dataFileName",
     },
     code : {
         label : "Code",
         type : "string",
         readOnlyOnEditing : true,
+        primaryKey : true,
         lower : true,
         required : true,
+        validType : "dataFileName",
         toCase : (value)=>{
             return sanitizeFileName(value).toLowerCase();
         }
