@@ -5,6 +5,7 @@
 import isValid from "./isValidDataFile";
 import getDB from "./getDB";
 import fetch from "./fetch";
+import APP from "$capp/instance";
 
 const upsert = (dF,diffFunc)=>{
     if(!isValid(dF)){
@@ -17,6 +18,7 @@ const upsert = (dF,diffFunc)=>{
             }).then((nD)=>{
                 return fetch().finally(()=>{
                     resolve(nD);
+                    APP.trigger(APP.EVENTS.UPSERT_POUCHDB_DATA_FILE,nD.newDoc);
                 })
             });
         }).catch(reject);

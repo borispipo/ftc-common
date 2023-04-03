@@ -13,7 +13,9 @@ const remove = (dF)=>{
     const code = isObj(dF) && isNonNullString(dF.code)? dF.code : isNonNullString(dF)? dF : undefined;
     return getDB().then(({db})=>{
         return db.remove(code).then((c)=>{
-            fetch().catch(x=>x).finally();
+            fetch().catch(x=>x).finally(e=>{
+                APP.trigger(APP.EVENTS.REMOVE_POUCHDB_DATA_FILE,db?.infos);
+            });
             return c;
         });
     })
