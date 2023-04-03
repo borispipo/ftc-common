@@ -1,6 +1,5 @@
 /**** les différentes champs des fichiers de données */
 import {getTypes} from "./types";
-import {sanitizeFileName} from "$cutils";
 
 export default {
     _id : {
@@ -17,10 +16,7 @@ export default {
         primaryKey : true,
         lower : true,
         required : true,
-        validType : "dataFileName",
-        toCase : (value)=>{
-            return sanitizeFileName(value).toLowerCase();
-        }
+        validType : "dataFileName"
     },
     type : {
         type : "select",
