@@ -116,6 +116,7 @@ export class BaseComponent extends React.PureComponent {
         if(isFunction(this.props.onUnmount)){
             this.props.onUnmount({context:this,props:this.props});
         };
+        this.clearEvents();
     }
     componentDidMount(){
         this.__isMounted = true;
