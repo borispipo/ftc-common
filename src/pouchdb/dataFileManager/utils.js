@@ -66,10 +66,15 @@ export const getLabel = (code)=>{
 export const getAll = (filter,returnArray)=>{
     let all = {...getAllDefault(),...DATA_FILES.get()};
     filter = prepareFilter(filter);
-    dataFilesCounter = {};
     let allDBToReturn = returnArray ? [] : {};
+    const foundedTypes = {};
+    dataFilesCounter.all = 0;
     Object.map(all,(dF,i)=>{
         if(dF.type){
+            if(!foundedTypes[dF.type]){
+                dataFilesCounter[dF.type] = 0;
+                foundedTypes[dF.type] = true;
+            }
             dataFilesCounter[dF.type] = defaultDecimal(dataFilesCounter[dF.type]);
             dataFilesCounter[dF.type]++;
         }
