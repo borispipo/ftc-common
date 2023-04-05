@@ -105,7 +105,7 @@ export const stopEventPropagation = function (e){
 */
 export const getKeyFromObj = (data,rowKey,concatSeparator)=>{
     concatSeparator = defaultStr(concatSeparator,"/");
-    const rKeys = isNonNullString(rowKey)? rowKey.split(",").trim() : rowKey;
+    const rKeys = isNonNullString(rowKey)? rowKey.trim().split(",") : rowKey;
     if(isObj(data) && Array.isArray(rKeys) && rKeys.length){
         let rkVal = "";
         rKeys.map((key)=>{
