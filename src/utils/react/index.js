@@ -93,18 +93,47 @@ export const stopEventPropagation = function (e){
     return false;
 }
 
-export const getKey = (data,index,rowKey)=>{
+/****
+ * retourne l'ensemble des clé pouvant identifier un élément react à partir de la données data, la ou les clés peuvent être spécifiées dans un tableau où une 
+ * chaine de caractère qui sera splité (séparteur virgule);
+ * il  est possible de spécifier plusieurs clés dans une chaine de caractère spéparées de la virgule, surtout si pour la donnée data, on désire
+ * cumuler plusieurs valeurs de colonnes et les concatener avec le champ concaténateur, 
+ * @param data {object}, l'objet à partir duquel on désire récupérer la clé react
+ * @param rowKey {string|array}, l'ensemble des clés (chaine de caractères séparés par la virgule ou tableau de chaine de caractère) dont les valeurs associées à l'objet data seront utilisées pour déterminer la clé finale
+ * @param concatSeparator{string}, la chaine de caractère utiliséee pour concatener les différentes valeurs, lorsque l'objet admet plusieurs éléments constitunt la clé 
+   @return {string}, la clé déterminée à partir de l'objet data
+*/
+export const getKeyFromObj = (data,rowKey,concatSeparator)=>{
+    concatSeparator = defaultStr(concatSeparator,"/");
+    const rKeys = isNonNullString(rowKey)? rowKey.split(",").trim() : rowKey;
+    if(isObj(data) && Array.isArray(rKeys) && rKeys.length){
+        let rkVal = "";
+        rKeys.map((key)=>{
+            if(!isNonNullString(key)) return;
+            const v = data[key];
+            const vv = defaultStr(v ===undefined|| v===null || typeof v=="boolean" || typeof v=='function' || typeof v ==='object' ? "": v?.toString());
+            if(vv){
+                rkVal+=(rkVal?concatSeparator:"")+vv;
+            }
+        });
+        if(rkVal){
+            return rkVal;
+        }
+    }
+    return "";
+}
+
+
+export const getKey = (data,index,rowKey,concatSeparator)=>{
     if(!isObj(data) && isObj(index)){
         let t = isNonNullString(data)?data : undefined;
         data = index;
         index = t;
     }
     if(isObj(data)){
-        if(isNonNullString(rowKey)){
-            const vK = typeof data[rowKey];
-            if(vK !== 'undefined' && vK !=='object'){
-                return data[rowKey];
-            }
+        const rVal = getKeyFromObj(data,index,concatSeparator) || getKeyFromObj(data,rowKey,concatSeparator);
+        if(rVal){
+            return rVal;
         }
         let suffix = isNonNullString(data.dbId)? ("-"+data.dbId):"";
         if(isNonNullString(data.rowKey)){
