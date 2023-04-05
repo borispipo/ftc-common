@@ -364,6 +364,9 @@ if(!React.stopEventPropagation){
         getKey : {
             value : getKey,
         },
+        getKeyFromObj : {
+            value : getKeyFromObj,
+        },
         setProps : {
             value : setProps,override:false,writable:false
         },
