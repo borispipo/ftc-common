@@ -2,6 +2,7 @@ import { PouchDB } from "./pouchdb";
 import localServerConfig from "./localServerConfig";
 import APP from "$capp/instance";
 import { syncDirections,getSyncOptions } from "../sync/utils";
+import {isNonNullString} from "$cutils";
 
 function getLocalServer(){
     const db = this || {};
@@ -90,6 +91,12 @@ PouchDB.plugin({
         return !!getLocalServer.call(this);
     },
     syncOnLocalServer,
+    getLocalServerConfig : function(key){
+        if(isNonNullString(key)){
+            return localServerConfig[key];
+        }
+        return localServerConfig;
+    },
     isLocalServer : function(){
         if(!this.infos?.isServer) return false;
         const url = defaultStr(this.infos.server,this.infos.serverUrl).toLowerCase().rtrim("/");
