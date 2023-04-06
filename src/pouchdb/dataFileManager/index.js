@@ -11,10 +11,12 @@ import { hasFetch } from "./fetch";
 import getAllDB from "./getAllDB";
 import { extendTypes } from "./types";
 import session from "./session";
+import table from "./table";
 
 export * from "./session";
 export * from "./types";
 
+export {table};
 export {extendTypes};
 
 export * from "./utils";
@@ -32,6 +34,7 @@ export {session};
 
 const df = {
     ...dataFileManager,
+    table,
     session,
     extendTypes,
     getAllDB,
