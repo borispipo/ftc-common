@@ -57,6 +57,7 @@ export function upsertInner(db, docId, diffFun,options) {
                 delete newDoc[i];
             }
         }
+        newDoc.dataFileType = defaultStr(newDoc.dataFileType,db.infos?.type).toLowerCase();
         newDoc._id = docId;
         newDoc._rev = docRev;
         addDefaultFields(newDoc,options);
