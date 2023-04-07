@@ -276,7 +276,7 @@ export const getValidatorRules = ()=>{
         },
         [UPPER_CASE] : {
             validator : function(value) {
-                if(typeof value !== 'string') return false;
+                if(typeof value !== 'string' && value) return false;
                 if(!value) return true;
                 return value.toUpperCase() === value ? true : false;
             },
@@ -284,7 +284,7 @@ export const getValidatorRules = ()=>{
         },
         [LOWER_CASE] : {
             validator : function(value) {
-                if(typeof value !== 'string') return false;
+                if(typeof value !== 'string' && value) return false;
                 if(!value) return true;
                 return value.toLowerCase() === value ? true : false;
             },
@@ -572,9 +572,9 @@ const APP_Validator = {
                     //console.warn(" ms-validator invalid rule ",validRule);
                     return context.trigger('validatorValid',{...rest,value,context,extra,event,validRule,validType:validRule,extra});
                 } 
-                var i=0,r=null,countEl;
+                var i=0,r=null,countEl,validatorSeparator="|";
                 if(typeof(validRule) === "string"){
-                    var validators = validRule.split('|')
+                    var validators = validRule.trim().ltrim(validatorSeparator).rtrim(validatorSeparator).trim().split(validatorSeparator)
                     i = 0; countEl = validators.length-1;
                     var next = function(){
                         if(i > countEl) {
@@ -605,7 +605,7 @@ const APP_Validator = {
                         } else {
                             _vRule = _p
                         }
-                        if(isNullOrEmpty(_p)) {
+                        if(!isNonNullString(_p)) {
                             i++;
                             return next();
                         } 
