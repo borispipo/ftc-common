@@ -320,8 +320,10 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
     }
     if(!db.isRemoteServer){
         const {remove,bulkDocs,put} = db;
-        if(DATABASES[sDBName] && isValidDataFile(DATABASES[sDBName]?.infos)){
-            return Promise.resolve(DATABASES[sDBName]);
+        if(DATABASES[sDBName]){
+            if(isValidDataFile(DATABASES[sDBName]?.infos)){
+                return Promise.resolve(DATABASES[sDBName]);
+            }
         }
         db.put = function(...args){
             return put.apply(db,args).then((data)=>{
@@ -378,26 +380,28 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
             return _remove({context,args,doc,force});
         }
         //db.setMaxListeners(20);
-        db.changesResult = db.changes(extendObj(true,{},changes,{since: 'now',live: true,include_docs: true}))
-        .on('change', function(change) {
-            let tableName = getTriggerDBTableName(change);
-            if(!tableName) return;
-            tableName = tableName.toUpperCase().trim();
-            let dbName = pDBName.toLowerCase().trim();
-            db.lastChangeResult = change;
-            TRIGGER_CHANGES_DBS[dbName] = defaultObj(TRIGGER_CHANGES_DBS[dbName]);
-            TRIGGER_CHANGES_DBS[dbName][tableName] = defaultDecimal(TRIGGER_CHANGES_DBS[dbName][tableName]);
-            let lastChangeStart = TRIGGER_CHANGES_DBS[dbName][tableName];
-            if(isDecimal(lastChangeStart) && lastChangeStart > 0) return;
-            TRIGGER_CHANGES_DBS[dbName][tableName] = new Date().getTime();
-            setTimeout(()=>{
-                TRIGGER_CHANGES_DBS[dbName][tableName] = undefined;
-                if(isObj(db.lastChangeResult) && !db.lastChangeResult.deleted){//on évite les actions de suppression car supprimé par l'autre
-                    let doc = db.lastChangeResult.doc;
-                    triggerDB({db,doc,isDelete:false});
-                }
-            },10);
-        });
+        if(!isDataFileManager){
+            db.changesResult = db.changes(extendObj(true,{},{since: 'now',live: true,include_docs: false},changes))
+            .on('change', function(change) {
+                let tableName = getTriggerDBTableName(change);
+                if(!tableName) return;
+                tableName = tableName.toUpperCase().trim();
+                let dbName = pDBName.toLowerCase().trim();
+                db.lastChangeResult = change;
+                TRIGGER_CHANGES_DBS[dbName] = defaultObj(TRIGGER_CHANGES_DBS[dbName]);
+                TRIGGER_CHANGES_DBS[dbName][tableName] = defaultDecimal(TRIGGER_CHANGES_DBS[dbName][tableName]);
+                let lastChangeStart = TRIGGER_CHANGES_DBS[dbName][tableName];
+                if(isDecimal(lastChangeStart) && lastChangeStart > 0) return;
+                TRIGGER_CHANGES_DBS[dbName][tableName] = new Date().getTime();
+                setTimeout(()=>{
+                    TRIGGER_CHANGES_DBS[dbName][tableName] = undefined;
+                    if(isObj(db.lastChangeResult) && !db.lastChangeResult.deleted){//on évite les actions de suppression car supprimé par l'autre
+                        let doc = db.lastChangeResult.doc;
+                        triggerDB({db,doc,isDelete:false});
+                    }
+                },10);
+            });
+        }
         db.fullDBName = pDBName;
         return new Promise((resolve)=>{
             setTimeout(()=>{
