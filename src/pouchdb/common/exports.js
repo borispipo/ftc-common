@@ -2,21 +2,26 @@ import CONSTANTS from "../constants";
 import appConfig from "$capp/config";
 import {defaultObj} from "$cutils";
 import {getDB} from "../getDB";
-import {isObj,isNonNullString,isFunction,defaultStr,defaultArray} from "$cutils";
+import {isObj,isNonNullString,isFunction,defaultStr,extendObj,defaultArray} from "$cutils";
 import getStructDataDB from "../getStructDataDB";
 
 export const DB_NAME = CONSTANTS.COMMON_DB;//le nom de la base de données commune à toutes les applications
 
 export const getDefaultStructData = ()=>{
-    if(typeof appConfig.pouchdbInitialStructDatas ==='function'){
-        return defaultObj(appConfig.pouchdbInitialStructDatas());
+    if(typeof appConfig.pouchdbInitialStructsData ==='function'){
+        return defaultObj(appConfig.pouchdbInitialStructsData());
     }
-    return defaultObj(appConfig.pouchdbInitialStructDatas);
+    return defaultObj(appConfig.pouchdbInitialStructsData);
 }
 
 export const COMPANY_ID = CONSTANTS.COMPANY_ID_SETTING;
 
 export const COMPANY_TABLE_NAME = "COMPANY";
+
+export const getStructDataDocIdFromTable = (tableName)=>{
+    if(!isNonNullString(tableName)) return null;
+    return tableName.toUpperCase().trim();
+}
 
 /** récupère une données où l'ensemble des données de structures : 
 *  @param : tableName : le nom de la table de de la données de structure
@@ -29,36 +34,36 @@ export const getStructData = (tableName,code,options)=>{
         code = defaultStr(code,options.code);
     }
     options = defaultObj(options);
+    tableName = getStructDataDocIdFromTable(tableName);
     let defaultStructData = getDefaultStructData();
     let allData = {};
-    if(isNonNullString(tableName)){
-        Object.map(defaultStructData[tableName.toUpperCase()],(struct,i)=>{
+    if(tableName){
+        Object.map(defaultStructData[tableName],(struct,i)=>{
             allData[i] = struct;
         })
     }
     return new Promise((resolve,reject)=>{
         getStructDataDB().then(({db})=>{
-            if(!isNonNullString(tableName)) {
+            if(!tableName) {
                 allData = {...defaultStructData};
                 options.include_docs = true;
                 return db.allDocs(options).then((docs)=>{
-                    let {rows} = docs;
-                    rows.map((data)=>{
+                    docs.rows.map((data)=>{
                         if(isObj(data) && isObj(data.doc)){
                             if(isNonNullString(data.doc.table)){
                                 allData[data.doc.table] = data.doc;
                             }
                         }
-                    })
+                    });
                     docs.allData = allData;
                     resolve(docs)
                 }).catch((e)=>{
                     console.log(e,"gettings struct data without table name");
                     resolve({allData})
                     return e;
-                })
+                });
             }
-            let _id = defaultStr(tableName);
+            const _id = getStructDataDocIdFromTable(tableName);
             const success = (doc)=>{
                 let data = allData;
                 if(isNonNullString(code)){
@@ -104,28 +109,26 @@ export const upsertStructData = (tableName,data,diffFunction)=>{
     if(isFunction(data)){
         diffFunction = data;
     }
+    tableName = getStructDataDocIdFromTable(tableName);
     data = defaultObj(data);
-    let defaultCode = data.isDefault? data.code : undefined;
-    let allDat = {};
-    let diff = (allData)=>{
-        if(isNonNullString(data.code)){
-            allData[data.code] = APP.extend({},allData[data.code],data);
-            delete allData[data.code].isDefault;
-            if(defaultCode){
-                allData.default = data.code;
-            }
-        }
-        allData.table = tableName;
-        if(isFunction(diffFunction)){
-            allData = diffFunction(allData);
-        }
-        allDat = allData;
-        return allData;
-    };
+    const defaultCode = data.isDefault? data.code : undefined;
     return new Promise((resolve,reject)=>{
         getStructDataDB().then(({db})=>{
-            db.upsert(tableName,diff).then((rev)=>{
-                resolve({allData:allDat,rev,data});
+            db.upsert(tableName,(allData)=>{
+                if(isNonNullString(data.code)){
+                    data = allData[data.code] = extendObj({},allData[data.code],data);
+                    delete allData[data.code].isDefault;
+                    if(defaultCode){
+                        allData.default = data.code;
+                    }
+                }
+                allData.table = tableName;
+                if(isFunction(diffFunction)){
+                    allData = diffFunction(allData);
+                }
+                return allData;
+            }).then((nD)=>{
+                resolve({...nD,allData:nD.newDoc,data});
             }).catch((e)=>{
                 console.log(e,' upserting struct data');
                 reject(e);

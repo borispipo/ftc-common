@@ -39,7 +39,7 @@
     runBackgroundTasks : ({isOnline})=><Promise>
 
     ///retrieve initial struct datas 
-    pouchdbInitialStructDatas {function|object} => {
+    pouchdbInitialStructsData {function|object} => {
         [structDataTableName] {object} : [{datas}]
     }
 
