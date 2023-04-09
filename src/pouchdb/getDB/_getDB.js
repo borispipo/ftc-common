@@ -260,12 +260,13 @@ export const getTriggerDBTableName  = (doc)=>{
 export const triggerDB = ({doc,db,isDelete,deleted}) =>{
     if(isObj(doc) && isNonNullString(doc._id) && isNonNullString(doc._rev)){
         let tableName = getTriggerDBTableName(doc);
-        if(isNonNullString(db.realName) && db.realName.trim().toLowerCase() == structDataDBName.toLowerCase().trim()){
+        const sDBName = structDataDBName.toLowerCase().trim();
+        if(isNonNullString(db.realName) && db.realName.trim().toLowerCase() == sDBName || (db?.infos?.code === sDBName) ){
             tableName = triggerEventTableName(tableName);
         }
-        let isDBLocked = db && isFunction(db.isLocked) && db.isLocked() ? true : false;
+        const isDBLocked = db && isFunction(db.isLocked) && db.isLocked() ? true : false;
         let action = actions.upsert(tableName);
-        let arg = {data:doc,isDBLocked,isTableLocked:isTableLocked(tableName) ? true : isDBLocked ? true : false,deleted,tableName,table:tableName,db,dbName:db.realName};
+        const arg = {data:doc,isDBLocked,isTableLocked:isTableLocked(tableName) ? true : isDBLocked ? true : false,deleted,tableName,table:tableName,db,dbName:db.realName};
         if(isDelete){
             action = actions.onRemove(tableName);
         }
@@ -381,7 +382,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         }
         //db.setMaxListeners(20);
         if(!isDataFileManager){
-            db.changesResult = db.changes(extendObj(true,{},{since: 'now',live: true,include_docs: false},changes))
+            db.changesResult = db.changes(extendObj(true,{},{since: 'now',live: true,include_docs: true},changes))
             .on('change', function(change) {
                 let tableName = getTriggerDBTableName(change);
                 if(!tableName) return;
