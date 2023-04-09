@@ -7,7 +7,7 @@ import getStructDataDB from "../getStructDataDB";
 
 export const DB_NAME = CONSTANTS.COMMON_DB;//le nom de la base de données commune à toutes les applications
 
-export const getDefaultStructData = ()=>{
+export const getDefaultStructsData = ()=>{
     if(typeof appConfig.pouchdbInitialStructsData ==='function'){
         return defaultObj(appConfig.pouchdbInitialStructsData());
     }
@@ -35,7 +35,7 @@ export const getStructData = (tableName,code,options)=>{
     }
     options = defaultObj(options);
     tableName = getStructDataDocIdFromTable(tableName);
-    let defaultStructData = getDefaultStructData();
+    const defaultStructData = getDefaultStructsData();
     let allData = {};
     if(tableName){
         Object.map(defaultStructData[tableName],(struct,i)=>{
