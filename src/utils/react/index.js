@@ -23,11 +23,14 @@ import memoize from "./memoize";
 import isEquals from "../compare";
 import usePrevious,{usePreviousDifferent} from "./usePrevious";
 import getTextContent from "./getTextContent";
+import useEventCallback from "./useEventCallback";
+
+export {useEventCallback};
 
 React.getTextContent = getTextContent;
 React.usePrevious = usePrevious;
 React.usePreviousDifferent = usePreviousDifferent;
-
+React.useCallbackEvent = useCallbackEvent;
 React.isEquals = React.areEquals = React.compare = isEquals;
 
 export {isEquals};
