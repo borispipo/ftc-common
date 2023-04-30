@@ -30,7 +30,7 @@ export {useEventCallback};
 React.getTextContent = getTextContent;
 React.usePrevious = usePrevious;
 React.usePreviousDifferent = usePreviousDifferent;
-React.useCallbackEvent = useCallbackEvent;
+React.useEventCallback = useEventCallback;
 React.isEquals = React.areEquals = React.compare = isEquals;
 
 export {isEquals};
