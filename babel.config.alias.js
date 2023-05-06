@@ -39,7 +39,9 @@ module.exports = function(opts){
                 })
                 fs.writeFileSync(configPath,JSON.stringify(packageObj,null,"\t"));
             }
-        } catch{}
+        } catch (e){
+            console.log(e," writing file sync on package JSON, file : $common/babel.config.alias")
+        }
     }
     let {base,withPouchdb,withPouchDB,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
