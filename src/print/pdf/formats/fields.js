@@ -17,8 +17,8 @@ export default {
         type : "selecttabledata",
         text : "Accessible aux utilisateurs",
         multiple : true,
-        idfield : 'code',
-        table : "users",
+        foreignKeyColumn : 'code',
+        foreignKeyTable : "users",
         dbName : "users"
     },
     displayLogo : {
