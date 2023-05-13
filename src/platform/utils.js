@@ -148,7 +148,7 @@ export const isChromeBrowser = ()=>{
       case /OPR|Opera/.test(userAgent) && isOpera():
         return 'Opera';
       case /CriOS/.test(userAgent):
-      case /Chrome/.test(userAgent) && vendor === GOOGLE_VENDOR_NAME && isChromium():
+      case /Chrome/.test(userAgent) && vendor === GOOGLE_VENDOR_NAME :
         return 'Chrome';
       case /Vivaldi/.test(userAgent):
         return 'Vivaldi';
