@@ -8,7 +8,7 @@ import {isMobileNative,isChromeBrowser} from "$cplatform";
 import notify from "$active-platform/notify";
 import ButtonSheetProvider from "$ecomponents/BottomSheet/Provider";
 
-export const canMakePhoneCall = ()=> isMobileNative() || isChromeBrowser() ? true : false;
+export const canMakePhoneCall = ()=> isMobileNative() || isChromeBrowser();
 
 export const isValidPhoneNumber = (tel)=>{
     return isNonNullString(tel) && /^-?\d+$/.test(tel.ltrim("+")) && tel.length >= 6;
