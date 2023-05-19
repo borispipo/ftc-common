@@ -4,6 +4,7 @@
 
 import $session from "$session";
 import {isObj,extendObj,isNonNullString,defaultStr,defaultObj} from "$cutils";
+import {isJSON,parseJSON} from "$cutils/json";
 import {isClientSide} from "$platform";
 import APP from "$capp/instance";
 import {updateTheme as uTheme} from "$theme";
@@ -17,6 +18,8 @@ const USER_SESSION_KEY = "user-session";
 export const TOKEN_SESSION_KEY = "user-token-key";
 
 const encryptKey  ="auth-decrypted-key";
+
+const isValidU = u=> isObj(u) && Object.size(u,true) && (hasToken() || isNonNullString(u.code));
 
 export const getToken = ()=>{
     if(!isClientSide()) return null;
@@ -35,10 +38,10 @@ export const getToken = ()=>{
     return isValidToken(token);
   }
 
-  export const isLoggedIn = x => {
+export const isLoggedIn = x => {
     const u = getLocalUser();
-    return isObj(u) && (hasToken() || isNonNullString(u.code))  ? true : false;
-  }
+    return isValidU(u)  ? true : false;
+}
   
 /*** check wheater the singleUserAllowed mode is enabled
  * 
@@ -62,21 +65,24 @@ export const getDefaultSingleUser = ()=>{
 }
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
-    if(isObj(localUserRef.current)) return localUserRef.current;
+    if(isValidU(localUserRef.current)) return localUserRef.current;
     const encrypted = $session.get(USER_SESSION_KEY);
+    const defaultUser = getDefaultSingleUser();
     if(isNonNullString(encrypted)){
       try {
         const decoded = crypToJS.decode(encrypted,encryptKey);
-        if(isNonNullString(decoded)){
-          const u = JSON.parse(decoded);
-          localUserRef.current = u;
-          if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
-            return u;
+        if(isJSON(decoded)){
+          const u = parseJSON(decoded);
+          if(isValidU(u)){
+            localUserRef.current = extendObj({},defaultUser,u);
+            return localUserRef.current;
           }
         }
-      } catch{}
+      } catch(e){
+        console.log("getting local user ",e);
+      }
     }
-    return getDefaultSingleUser();
+    return defaultUser ;
 };
 
 export const getLoggedUser = getLocalUser;
@@ -106,8 +112,9 @@ export const setLocalUser = u => {
   let encrypted = null;
   try {
     encrypted = crypToJS.encode(JSON.stringify(uToSave),encryptKey);
-  } catch{
+  } catch(e){
     localUserRef.current = null;
+    console.log(e," setting local user");
   }
   return $session.set(USER_SESSION_KEY,encrypted)
 }
