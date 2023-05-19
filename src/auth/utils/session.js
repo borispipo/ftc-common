@@ -19,7 +19,12 @@ export const TOKEN_SESSION_KEY = "user-token-key";
 
 const encryptKey  ="auth-decrypted-key";
 
-const isValidU = u=> isObj(u) && Object.size(u,true) && (hasToken() || isNonNullString(u.code));
+const isValidU = u=> {
+  if(!isObj(u) || !Object.size(u,true)) {
+    return false;
+  }
+  return !!(hasToken() || isNonNullString(u.code));
+};
 
 export const getToken = ()=>{
     if(!isClientSide()) return null;
