@@ -62,13 +62,17 @@ export const getDefaultSingleUser = ()=>{
 }
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
+    if(isObj(localUserRef.current)) return localUserRef.current;
     const encrypted = $session.get(USER_SESSION_KEY);
-    if(isNonNullString(encryptKey)){
+    if(isNonNullString(encrypted)){
       try {
-        const u = JSON.parse(crypToJS.decode(encrypted,encryptKey));
-        localUserRef.current = u;
-        if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
-          return u;
+        const decoded = crypToJS.decode(encrypted,encryptKey);
+        if(isNonNullString(decoded)){
+          const u = JSON.parse(decoded);
+          localUserRef.current = u;
+          if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
+            return u;
+          }
         }
       } catch{}
     }
