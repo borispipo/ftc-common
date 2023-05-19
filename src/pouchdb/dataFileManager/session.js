@@ -42,7 +42,7 @@ export const getCurrentDB = (type)=>{
         console.error("invalid db type ",type," you must specify the type we want to retrieve defautl db")
         return "";
     }
-    return defaultStr(getSessionData());
+    return defaultStr(getSessionData(type));
 }
 
 export const setCurrentDB = (dbName,type)=>{

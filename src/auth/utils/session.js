@@ -10,10 +10,13 @@ import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
 import { resetPerms } from "../perms/reset";
 import appConfig from "$app/config";
+import crypToJS from "$clib/crypto-js";
 
-export const USER_SESSION_KEY = "user-session";
+const USER_SESSION_KEY = "user-session";
 
 export const TOKEN_SESSION_KEY = "user-token-key";
+
+const encryptKey  ="auth-decrypted-key";
 
 export const getToken = ()=>{
     if(!isClientSide()) return null;
@@ -59,9 +62,15 @@ export const getDefaultSingleUser = ()=>{
 }
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
-    const u = $session.get(USER_SESSION_KEY);
-    if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
-       return u;
+    const encrypted = $session.get(USER_SESSION_KEY);
+    if(isNonNullString(encryptKey)){
+      try {
+        const u = JSON.parse(crypToJS.decode(encrypted,encryptKey));
+        localUserRef.current = u;
+        if(isObj(u)  && (hasToken() || isNonNullString(u.code))){
+          return u;
+        }
+      } catch{}
     }
     return getDefaultSingleUser();
 };
@@ -84,7 +93,20 @@ export const getLoggedUserId = ()=>{
   return "";
 }
 
-export const setLocalUser = u => !isClientSide()?null: $session.set(USER_SESSION_KEY,u || null);
+const localUserRef = {current:null};
+
+export const setLocalUser = u => {
+  if(!isClientSide()) return null;
+  const uToSave = isObj(u)? u : null;
+  localUserRef.current = uToSave;
+  let encrypted = null;
+  try {
+    encrypted = crypToJS.encode(JSON.stringify(uToSave),encryptKey);
+  } catch{
+    localUserRef.current = null;
+  }
+  return $session.set(USER_SESSION_KEY,encrypted)
+}
 
 export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
 
