@@ -7,7 +7,7 @@ import {isObj} from "$cutils";
 const dataFiles = {current:{}};
 
 export const get = () => {
-    return dataFiles.current || {};
+    return isObj(dataFiles.current) && dataFiles.current || {};
 };
 
 export const set = (dFiles) =>{
