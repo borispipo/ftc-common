@@ -119,31 +119,3 @@ if (!Array.prototype.findIndex) {
     writable: true
   });
 }
-
-
-export function cloneObject(source,cloneLevel) {
-  let level = 1;
-  if (Array.isArray(source)) {
-      const clone = [];
-      for (var i=0; i<source.length; i++) {
-          clone[i] = cloneObject(source[i],i+1);
-      }
-      return clone;
-  } else if (source && typeof(source)=="object") {
-      const clone = {};
-      for (var prop in source) {
-          if (source.hasOwnProperty(prop)) {
-              clone[prop] = cloneObject(source[prop],level);
-              level ++;
-          }
-      }
-      return clone;
-  } else {
-      if(source === undefined && typeof cloneLevel !=='number'){
-          return {};
-      }
-      return source;
-  }
-}
-
-export const cloneObj = Object.clone = Object.copy =  cloneObject;

@@ -1,8 +1,9 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+import isDateObj from "./isDateObj";
 export const isPlainObject = function ( obj ) {
+    if(typeof obj =='boolean' || typeof obj =='string' || isDateObj(obj)) return false;
     var toString = Object.prototype.toString.call(obj);
     if(toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]'){
         return false;
@@ -113,3 +114,30 @@ export default function extendObj (){
     // Return the modified object
     return target;
 }
+
+export function cloneObject(source,cloneLevel) {
+    let level = 1;
+    if (Array.isArray(source)) {
+        const clone = [];
+        for (var i=0; i<source.length; i++) {
+            clone[i] = cloneObject(source[i],i+1);
+        }
+        return clone;
+    } else if (isPlainObj(source)) {
+        const clone = {};
+        for (var prop in source) {
+            if (source.hasOwnProperty(prop)) {
+                clone[prop] = cloneObject(source[prop],level);
+                level ++;
+            }
+        }
+        return clone;
+    } else {
+        if(source === undefined && typeof cloneLevel !=='number'){
+            return {};
+        }
+        return source;
+    }
+  }
+  
+  export const cloneObj = Object.clone = Object.copy =  cloneObject;

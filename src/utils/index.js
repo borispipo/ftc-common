@@ -23,7 +23,8 @@ export const uniqid = _uniqid;
 export const parseJSON = pJSON;
 export const isJSON = isJ;
 export const isDOMElement = _isDomElement;
-export {default as extendObj } from "./extendObj"
+export {default as extendObj } from "./extendObj";
+export * from "./extendObj";
 export const defaultStr = defStr;
 
 export function isFunction(function_name){
