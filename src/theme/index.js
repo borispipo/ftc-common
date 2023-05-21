@@ -139,7 +139,10 @@ export const updateTheme = (theme)=>{
             if(i !=='colors' && !(i in theme)){
                 theme[i] = v;
             }
-        })
+        });
+        if(typeof appConfig.extendAppTheme ==='function'){
+            appConfig.extendAppTheme(theme);
+        }
         updateNativeTheme(theme);
         if(themeRef && typeof themeRef.setBackgroundColor =='function'){
             themeRef.setBackgroundColor(theme.colors.background);

@@ -42,7 +42,7 @@
     pouchdbInitialStructsData {function|object} => {
         [structDataTableName] {object} : [{datas}]
     }
-
+    extendAppTheme : ({object})=>{object}, Permet d'étendre le theme de l'application
     /************************* Auth settings              */
     /tell if application is singleUserAllowed and must get the default user
     isAuthSingleUserAllowed {boolean|number},
