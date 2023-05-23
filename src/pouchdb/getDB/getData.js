@@ -52,9 +52,9 @@ export const getFetchDataOptions = (options)=>{
     } else {
         fetchOptions.use_index = isNonNullString(fetchOptions.use_index) && fetchOptions.use_index || undefined;
     } 
-    if(!_idSelector && !isNonNullString(fetchOptions.use_index) && Array.isArray(fetchOptions.selector.$and)){
+    /*if(!_idSelector && !isNonNullString(fetchOptions.use_index) && Array.isArray(fetchOptions.selector.$and)){
         fetchOptions.selector.$and.push({_id: {"$gte": null}});
-    }
+    }*/
     return options;
 }
 
