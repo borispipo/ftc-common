@@ -19,8 +19,11 @@ export const getFetchDataOptions = (options)=>{
     options = defaultObj(options);
     const fetchOptions = options.fetchOptions = Object.assign({},options.fetchOptions);
     const table = options.table = defaultStr(options.tableName,options.table,fetchOptions.table);
-    fetchOptions.selector = defaultObj(fetchOptions.selector);
-    let use_index = fetchOptions.use_index === false ? false : true,foundIdIndex = undefined,_idSelector = undefined;
+    fetchOptions.selector = defaultObj(fetchOptions.selector,options.selector);
+    if(!Object.size(fetchOptions.selector,true) && isObj(options.selector) && Object.size(options.selector,true)){
+        fetchOptions.selector = options.selector;
+    }
+    let use_index = fetchOptions.use_index === false || options.use_index === false ? false : true,foundIdIndex = undefined,_idSelector = undefined;
     if(use_index !== false && isArray(fetchOptions.selector.$and)){
             for(let i=0; i < fetchOptions.selector.$and.length; i++){
                 if(isObj(fetchOptions.selector.$and[i]) && '_id' in fetchOptions.selector.$and[i]){
