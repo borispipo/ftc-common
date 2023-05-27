@@ -30,7 +30,7 @@ module.exports = function(opts){
     withPouchDB = withPouchDB || withPouchdb;
     base = base && typeof base =='string' && fs.existsSync(base) ? base : process.cwd();;
     const src = path.resolve(base,"src");
-    const packagePath = path.resolve(basePath,"package.json");
+    const packagePath = path.resolve(base,"package.json");
     const configPath = path.resolve(base,"app.config.json");
     if(fs.existsSync(packagePath)){
         try {
