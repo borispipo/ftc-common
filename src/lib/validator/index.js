@@ -491,22 +491,6 @@ export const getValidatorRules = ()=>{
             },
             message:'Please enter between 0 to 1000 up to two decimal digits'
         }, 
-        matchField : {
-            //si le champ a la même value que celui passé en paramètre
-            validator : function(value,param){
-                var opts = $.data(this.__target, 'ms-form').options;
-                if(!param[0]) return false;
-                var field = opts.formFields[param[0]]
-                if(field.$field){
-                    return field.getValue() == value ? true : false;
-                } else return false;
-            },
-            message : function(params){
-                var _f = this.label
-                var f = params[1] || params[0]
-                return i18n.lang("the_fields")+" "+_f+" "+i18n.lang("and")+" "+f+" "+i18n.lang("mus_have_the_same_values")
-            }
-        }
     };
     _validRules.equalsTo = _validRules.equalTo;
     extendObj(_validRules,appConfig.get("validatorRules"));

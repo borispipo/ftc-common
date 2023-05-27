@@ -49,7 +49,7 @@ export const signIn = (user,callback,trigger)=>{
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
       Object.map(rest,(v,i)=>{
-        if(!(i in user) && typeof v !=='function' && !i.toLowerCase().contains("password")){
+        if(!(i in user) && typeof v !=='function'){
           if(typeof v =='object' && !isPlainObject(v)) return;
           user[i] = v;
         }
@@ -58,9 +58,9 @@ export const signIn = (user,callback,trigger)=>{
       user.id = defaultStr(userId,user.id,user.code,user.email);
       user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
-        user.token = token;
         setToken(token);
       }
+      delete user.token;
       delete user.password;
       delete user.pass;
       login(user,typeof trigger =='boolean'? trigger : true);
