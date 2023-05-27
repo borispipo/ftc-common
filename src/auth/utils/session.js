@@ -17,13 +17,31 @@ const USER_SESSION_KEY = "user-session";
 
 export const TOKEN_SESSION_KEY = "user-token-key";
 
-const encryptKey  ="auth-decrypted-key";
 
+export const getEncryptKey = x=>defaultStr(appConfig.authSessionEncryptKey,process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
+
+export const getLoginIdField = ()=> {
+  const loginId = defaultStr(appConfig.authLoginIdField,process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
+  const split = loginId.split(",").filter((t)=>!!isNonNullString(t));
+  if(split.length > 1) return split;
+  return split[0];
+};
+export const getLoginId = (data)=>{
+  if(!isObj(data)) return "";
+  const loginId = getLoginIdField();
+  if(Array.isArray(loginId)){
+     return loginId.filter((lId)=>!!(isNonNullString(data[lId])||typeof data[lId] =='number')).map((lId)=>data[lId]).join("/");
+  }
+  if(isNonNullString(data[loginId]) || typeof data[loginId] ==='number'){
+    return data[loginId];
+  }
+  return "";
+}
 const isValidU = u=> {
   if(!isObj(u) || !Object.size(u,true)) {
     return false;
   }
-  return !!(hasToken() || isNonNullString(u.code));
+  return !!(hasToken() || String(getLoginId(u)));
 };
 
 export const getToken = ()=>{
@@ -75,8 +93,9 @@ export const getLocalUser = x=> {
     const defaultUser = getDefaultSingleUser();
     if(isNonNullString(encrypted)){
       try {
-        const decoded = crypToJS.decode(encrypted,encryptKey);
-        if(isJSON(decoded)){
+        const ded = crypToJS.decode(encrypted,getEncryptKey());
+        if(isObj(ded) && typeof ded?.toString =='function'){
+          const decoded = ded.toString(crypToJS.enc.Utf8);
           const u = parseJSON(decoded);
           if(isValidU(u)){
             localUserRef.current = extendObj({},defaultUser,u);
@@ -92,31 +111,21 @@ export const getLocalUser = x=> {
 
 export const getLoggedUser = getLocalUser;
 
-export const getLoggedUserCode = ()=>{
-  const u = getLocalUser();
-  if(u) {
-   return defaultStr(u.code,u.pseudo,u.id,u.email)
-  }
-  return "";
+export const getLoggedUserCode = (data)=>{
+  return getLoginId((isValidU(data) && data || getLocalUser()))
 }
 
-export const getLoggedUserId = ()=>{
-  const u = getLocalUser();
-  if(u) {
-   return defaultStr(u.id)
-  }
-  return "";
-}
+export const getLoggedUserId = getLoggedUserCode;
 
 const localUserRef = {current:null};
 
 export const setLocalUser = u => {
   if(!isClientSide()) return null;
-  const uToSave = isObj(u)? u : null;
+  const uToSave = isValidU(u)? u : null;
   localUserRef.current = uToSave;
   let encrypted = null;
   try {
-    encrypted = crypToJS.encode(JSON.stringify(uToSave),encryptKey);
+    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave),getEncryptKey()).toString() : null;
   } catch(e){
     localUserRef.current = null;
     console.log(e," setting local user");

@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "3.14.1",
+  "version": "3.17.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "@craftzdog/pouchdb-adapter-websql-core": "^7.2.3",
     "circular-dependency-plugin": "^5.2.2",
     "color": "^4.2.3",
+    "crypto-js": "^4.1.1",
     "install": "^0.13.0",
     "invariant": "^2.2.4",
     "js-base64": "^3.7.2",

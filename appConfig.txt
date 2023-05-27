@@ -49,4 +49,8 @@
     authDefaultUser {object} => {[code],[label]} //the default connectedUser to use whent isAuthSingleUserAllowed is set to true
     
     includeFieldsInDatagridFetchOptions : {boolean}, //spécifie si par défault, les champs fields, seront inclus dans les fetchOptions du datagrid
+    
+    authLoginIdField  || process.env.AUTH_LOGIN_ID_FIELD: {string}, permet de récuprer le nom du champ id dans l'objet user
+    
+    authSessionEncryptKey || process.env.AUTH_SESSION_ENCRYPT_KEY [string], permet de définier la clé permettant de crypter les données de session
 }
