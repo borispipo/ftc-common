@@ -17,7 +17,6 @@ const USER_SESSION_KEY = "user-session";
 
 export const TOKEN_SESSION_KEY = "user-token-key";
 
-
 export const getEncryptKey = x=>defaultStr(appConfig.authSessionEncryptKey,process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
 
 export const getLoginIdField = ()=> {
