@@ -7,7 +7,7 @@
 import originalFetch from "./unfetch";
 import { buildAPIPath} from "./utils";
 import { isObj,defaultNumber,isNonNullString,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
-import {NOT_SIGNED_IN,SUCCESS} from "./status";
+import {NOT_SIGNED_IN,SUCCESS,CREATED,ACCEPTED} from "./status";
 import notify from "$active-platform/notify";
 import {getToken} from "$cauth/utils";
 import APP from "$capp/instance";
@@ -118,7 +118,7 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
             });
         }
         response.status = response.status || res?.status;
-        response.success = response.status === SUCCESS ? true : false;
+        response.success = response.status === SUCCESS || CREATED || ACCEPTED ? true : false;
         if(!isJson && !isObj(d)){
            d = {};
         }
