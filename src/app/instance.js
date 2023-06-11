@@ -175,7 +175,7 @@ if(isClientSide() && typeof window !== 'undefined' &&  !(window.APP)  || typeof 
 observable(APP_INSTANCE);
 addObserver(APP_INSTANCE);
 
-if(electronMessageApi){
+if(electronMessageApi && typeof window !=='undefined' && window){
     if(!isObj(window.electronIpcRenderCustomRender)){
         Object.defineProperties(window,{
             electronIpcRenderCustomRender : {
