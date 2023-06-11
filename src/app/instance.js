@@ -56,7 +56,7 @@ export const checkOnline = ()=>{
          })
     });
 }
-const electronMessageApi = isElectron() && typeof window.ELECTRON =='object' && window.ELECTRON && ELECTRON.version && 
+const electronMessageApi = isClientSide() && isElectron() && typeof window.ELECTRON =='object' && window.ELECTRON && ELECTRON.version && 
     (isObj(window.electronIpcRenderCustomRender) && window.electronIpcRenderCustomRender || {})
 || null;
 const APP_INSTANCE = {
