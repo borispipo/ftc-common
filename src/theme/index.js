@@ -648,6 +648,7 @@ const defaultDarkTheme = {
     colors : {...darkColors,primary : "#06b6d4",primary:'#212121',secondary : "#fda4af"},
     dark : true,
 }
+
 updateColors(defaultDarkTheme);
 
 export {defaultTheme as defaultLightTheme,defaultDarkTheme};

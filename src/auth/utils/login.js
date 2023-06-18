@@ -5,7 +5,7 @@
 import { setLocalUser} from "./session";
 import APP from "$capp/instance";
 import { updateTheme,getLoggedUser,isValidUser } from "./session";
-import {isObj,isNonNullString} from "$cutils";
+import {isObj} from "$cutils";
 import { resetPerms } from "../perms/reset";
 
 /**** connecte l'utilisateur actuel */
