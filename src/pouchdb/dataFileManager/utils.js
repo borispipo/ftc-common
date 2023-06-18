@@ -5,7 +5,7 @@ import isValid from "./isValidDataFile";
 import getAllDefault from "./getAllDefault";
 import prepareFilter from "./prepareFilter";
 import isMasterAdmin from "$cauth/isMasterAdmin";
-import {getLoggedUser} from "$cauth/utils/session";
+import {getLoggedUser,getLoginId} from "$cauth/utils/session";
 import { getCurrentDB } from "./session";
 import DATA_FILES from "./DATA_FILES";
 import isCommon from "./isCommon";
@@ -118,6 +118,7 @@ export const isForUser = (dF,user)=>{
         user = {code:user};
     }
     user = isObj(user)? user : defaultObj(getLoggedUser());
-    if(!isNonNullString(user.code)) return false;
-    return dF.users.includes(user.code);
+    const loginId = getLoginId(user);
+    if(!isNonNullString(loginId) && typeof loginId !=='number') return false;
+    return dF.users.includes(loginId);
 }

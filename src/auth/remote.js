@@ -9,7 +9,7 @@ import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGN_IN,SIGN_OUT,} from "./routes";
-import { getLoggedUser } from "./utils/session";
+import { getLoggedUser,getLoginId } from "./utils/session";
 import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import {isPromise,isNonNullString} from "$cutils";
@@ -55,8 +55,6 @@ export const signIn = (user,callback,trigger)=>{
         }
       });
       extendObj(user,preferences);
-      user.id = defaultStr(userId,user.id,user.code,user.email);
-      user.code = defaultStr(user.code,user.pseudo,user.email,user.id);
       if(token){
         setToken(token);
       }

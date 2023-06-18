@@ -4,7 +4,7 @@
 
 import { setLocalUser} from "./session";
 import APP from "$capp/instance";
-import { updateTheme,getLoggedUser } from "./session";
+import { updateTheme,getLoggedUser,isValidUser } from "./session";
 import {isObj,isNonNullString} from "$cutils";
 import { resetPerms } from "../perms/reset";
 
@@ -18,7 +18,7 @@ export default function login (user,trigger){
         user = getLoggedUser();
     }
     try {
-        if(isObj(user) && isNonNullString(user.code)){
+        if(isValidUser(user)){
             setLocalUser(user);
             updateTheme(user);
             if(trigger !== false){

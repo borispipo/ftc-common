@@ -57,9 +57,9 @@ export const isAndroidMobileBrowser = x=> isWeb() && typeof navigator !=='object
 
 export const isWebOrElectron = x=> isWeb() || isElectron();
 
-export const isServerSide = x => typeof window === 'undefined' || !window || typeof window !=='object' ? true : false;
+export const isServerSide = x => typeof window === 'undefined' && typeof process !=='undefined' || !window || typeof window !=='object' ? true : false;
 
-export const isClientSide = x=> typeof window !=="undefined" && typeof window === "object" && window ? true : false;
+export const isClientSide = x=> typeof window =="undefined"? false : typeof window !=="undefined" && typeof window === "object" ? true : false;
 
 
 ///s'il s'agit d'un environnement react-native où expo

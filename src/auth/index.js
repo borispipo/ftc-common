@@ -20,7 +20,7 @@ export {routes};
 Auth.Container = Container;
 Auth.Provider = Provider;
 
-if(typeof window !='undefined' && window){
+if(typeof window !='undefined' && typeof window ==='object' && typeof ___hasDefinedAuthModuleMS =='undefined'){
     if(!window.___hasDefinedAuthModuleMS){
         Object.defineProperties(window,{
             Auth : {value:Auth,writable:false,override:false}

@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+const mainGlobal = typeof globalThis !=='undefined' && typeof globalThis ==='object' ? globalThis : typeof global !=='undefined' && typeof global=='object' ? global  : typeof window !=='undefined' && typeof window =='object'? window : {};
 import * as Utils from "$cutils";
 import {isObj, isNonNullString} from "$cutils";
 import {isClientSide,isElectron} from "$cplatform/utils";
-if(isClientSide()){
+if(isClientSide() && typeof window !=='undefined' && typeof window ==='object'){
     Object.map(Utils,(u,i)=>{
         if(typeof u =="function" && !window[i]){
            window[i] = u;
@@ -56,9 +57,10 @@ export const checkOnline = ()=>{
          })
     });
 }
-const electronMessageApi = isClientSide() && isElectron() && typeof window.ELECTRON =='object' && window.ELECTRON && ELECTRON.version && 
-    (isObj(window.electronIpcRenderCustomRender) && window.electronIpcRenderCustomRender || {})
+const electronMessageApi = typeof window === 'undefined' ? null : isClientSide() && isElectron() && isObj(mainGlobal.ELECTRON) && mainGlobal.ELECTRON.version && 
+    (isObj(mainGlobal.electronIpcRenderCustomRender) && mainGlobal.electronIpcRenderCustomRender || {})
 || null;
+
 const APP_INSTANCE = {
     get NAME (){
         return appConfig.name;
@@ -166,8 +168,8 @@ const APP_INSTANCE = {
         }
     },
 };
-if(isClientSide() && typeof window !== 'undefined' &&  !(window.APP)  || typeof window.APP != 'object'){
-    Object.defineProperties(window,{
+if(!isObj((typeof mainGlobal.APP ==='undefined'))){
+    Object.defineProperties(mainGlobal,{
         APP : {value : APP_INSTANCE,override:false,writable:false}
     });
 } 
@@ -175,21 +177,17 @@ if(isClientSide() && typeof window !== 'undefined' &&  !(window.APP)  || typeof 
 observable(APP_INSTANCE);
 addObserver(APP_INSTANCE);
 
-if(electronMessageApi && typeof window !=='undefined' && window){
-    if(!isObj(window.electronIpcRenderCustomRender)){
-        Object.defineProperties(window,{
-            electronIpcRenderCustomRender : {
-                value : electronMessageApi,
-            }
-        })
+if(electronMessageApi){
+    if(typeof electronIpcRenderCustomRender !=='object' && !isObj(mainGlobal.electronIpcRenderCustomRender)){
+        mainGlobal.electronIpcRenderCustomRender  = electronMessageApi;
     } 
     if(!isObservable(electronMessageApi)){
         observable(electronMessageApi);
         addObserver(electronMessageApi);
     }
-    if(!window.hasDeclaredElectronOnMessage){
-        window.hasDeclaredElectronOnMessage = true;
-        window.addEventListener("message", function(event) {
+    if(!mainGlobal.hasDeclaredElectronOnMessage && typeof mainGlobal.addEventListener =='function'){
+        mainGlobal.hasDeclaredElectronOnMessage = true;
+        mainGlobal.addEventListener("message", function(event) {
             // event.source === window means the message is coming from the preload
             // script, as opposed to from an <iframe> or other source
             if (/*event.origin === "file://" &&*/ event.source === window) {

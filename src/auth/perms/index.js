@@ -4,7 +4,7 @@
 
 import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$cutils";
 import {tableDataPerms,structDataPerms,resetPerms} from "./reset";
-import {getLoggedUser} from "../utils/session";
+import {getLoggedUser,isValidUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";
 
 export {isMasterAdmin};
@@ -216,7 +216,7 @@ export const isAllowed = function(args){
     let result = true;
     if(!isObj(user)){
         user = defaultObj(getLoggedUser());
-        if(!isNonNullString(user.code)){
+        if(!isValidUser(user)){
             if(isObjectOrArray(resource)){
                 result = {};
                 for(let k in resource){

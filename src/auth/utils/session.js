@@ -43,6 +43,8 @@ const isValidU = u=> {
   return !!(hasToken() || String(getLoginId(u)));
 };
 
+export const isValidUser = isValidU;
+
 export const getToken = ()=>{
     if(!isClientSide()) return null;
     const token = $session.get(TOKEN_SESSION_KEY);

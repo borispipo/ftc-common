@@ -176,7 +176,7 @@ export const observable = function(el) {
   });
   return el
 }
-var MS_OBSERVER = typeof window !="undefined" && window ? window.___MS_ALL_OBSERVER_VAR : {}
+var MS_OBSERVER = typeof window !="undefined" && typeof ___MS_ALL_OBSERVER_VAR ==='object' && typeof ___MS_ALL_OBSERVER_VAR !=='undefined' ? ___MS_ALL_OBSERVER_VAR : {}
 const isFunction = x => typeof x =="function";
 if(MS_OBSERVER && isFunction(MS_OBSERVER.add) && isFunction(MS_OBSERVER.removeObserver) && isFunction(MS_OBSERVER.reset)){
 
@@ -233,7 +233,7 @@ export const isObserver = MS_OBSERVER.isObserver = function (obj){
       });
   }
 
-if(typeof window =="object" && window){
+if(typeof window =="object" && typeof window !=='undefined'){
   if(!window.observable && !window.addObserver){
     Object.defineProperties(window,{
         addObserver : {

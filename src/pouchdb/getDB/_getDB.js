@@ -6,7 +6,7 @@ import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
 import { sanitizeName,isCommon } from '../dataFileManager/utils';
-import { getLoggedUser} from '$cauth/utils/session';
+import { getLoggedUser,getLoginId} from '$cauth/utils/session';
 import {structDataDBName } from "../dataFileManager/structData";
 import {triggerEventTableName} from "../dataFileManager/structData";
 import isDataFileDBName from '../dataFileManager/isDataFileDBName';
@@ -102,9 +102,11 @@ export function addDefaultFields(newDoc,options){
     options = isObj(options)? options : {};
     let user = getLoggedUser();
     if(user){
-        newDoc.createdBy = defaultStr(newDoc.createdBy,user.code)
+        const loginId = getLoginId(user);
+        const hasLoginId = isNonNullString(loginId) || typeof loginId =='number';
+        newDoc.createdBy = defaultStr(newDoc.createdBy) || loginId;
         if(options.updatedBy !== false || !isNonNullString(newDoc.updatedBy)){
-            newDoc.updatedBy = defaultStr(user.code,newDoc.updatedBy)
+            newDoc.updatedBy = hasLoginId ? loginId : defaultStr(newDoc.updatedBy)
         }
     }
     //ms-update prerequise update for all type of field db
