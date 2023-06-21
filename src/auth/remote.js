@@ -45,7 +45,7 @@ export const signIn = (user,callback,trigger)=>{
       url : SIGN_IN,
       body : user
   })).then((args)=>{
-    const {response,userId,done,token,preferences,fetchResponse,res,status,...rest}=  defaultObj(args);
+    const {response,done,token,preferences,fetchResponse,res,status,...rest}=  defaultObj(args);
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
       Object.map(rest,(v,i)=>{
@@ -66,7 +66,7 @@ export const signIn = (user,callback,trigger)=>{
           callback(user);
       }
     }
-    return {response,user,userId,token,...rest};
+    return {response,user,token,...rest};
   }).catch((e)=>{
       console.log(e.stackTrace|| e.message || e.msg," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
