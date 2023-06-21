@@ -118,7 +118,7 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
             });
         }
         response.status = response.status || res?.status;
-        response.success = response.status === SUCCESS || CREATED || ACCEPTED ? true : false;
+        response.success = response.status === SUCCESS || response.status === CREATED || response.status === ACCEPTED ? true : false;
         if(!isJson && !isObj(d)){
            d = {};
         }
