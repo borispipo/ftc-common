@@ -168,7 +168,7 @@ const APP_INSTANCE = {
         }
     },
 };
-if(!isObj((typeof mainGlobal.APP ==='undefined'))){
+if(!isObj(mainGlobal.APP) || !mainGlobal.APP){
     Object.defineProperties(mainGlobal,{
         APP : {value : APP_INSTANCE,override:false,writable:false}
     });
