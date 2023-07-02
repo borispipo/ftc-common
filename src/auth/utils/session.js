@@ -139,7 +139,7 @@ export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
 export const getSessionKey = (sessionName)=>{
   sessionName = defaultStr(sessionName,DEFAULT_SESSION_NAME);
   const userCode = getLoggedUserCode();
-  if(!isNonNullString(userCode)) return false;
+  if(!isValidU(userCode)) return sessionName;
   return sessionName+"-"+userCode;
 }
 
