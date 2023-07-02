@@ -20,7 +20,7 @@ export const TOKEN_SESSION_KEY = "user-token-key";
 export const getEncryptKey = x=>defaultStr(appConfig.authSessionEncryptKey,process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
 
 export const getLoginIdField = ()=> {
-  const loginId = defaultStr(appConfig.authLoginIdField,process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
+  const loginId = defaultStr(appConfig.authLoginIdField,appConfig.get("authLoginIdField"),process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
   const split = loginId.split(",").filter((t)=>!!isNonNullString(t));
   if(split.length > 1) return split;
   return split[0];
