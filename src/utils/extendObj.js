@@ -138,6 +138,6 @@ export function cloneObject(source,cloneLevel) {
         }
         return source;
     }
-  }
+ }
   
-  export const cloneObj = Object.clone = Object.copy =  cloneObject;
+Object.clone = Object.copy =  cloneObject;
