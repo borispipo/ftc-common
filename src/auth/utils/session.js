@@ -25,13 +25,15 @@ export const getLoginIdField = ()=> {
   if(split.length > 1) return split;
   return split[0];
 };
+
+export const isValidLoginId = (loginId)=> isNonNullString(loginId) || typeof loginId ==='number';
 export const getLoginId = (data)=>{
   if(!isObj(data)) return "";
   const loginId = getLoginIdField();
   if(Array.isArray(loginId)){
      return loginId.filter((lId)=>!!(isNonNullString(data[lId])||typeof data[lId] =='number')).map((lId)=>data[lId]).join("/");
   }
-  if(isNonNullString(data[loginId]) || typeof data[loginId] ==='number'){
+  if(isValidLoginId(data[loginId])){
     return data[loginId];
   }
   return "";
@@ -139,7 +141,7 @@ export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
 export const getSessionKey = (sessionName)=>{
   sessionName = defaultStr(sessionName,DEFAULT_SESSION_NAME);
   const userCode = getLoggedUserCode();
-  if(!isValidU(userCode)) return sessionName;
+  if(!isValidLoginId(userCode)) return sessionName;
   return sessionName+"-"+userCode;
 }
 
