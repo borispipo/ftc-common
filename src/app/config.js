@@ -305,14 +305,14 @@ const config = {
     get getTableData (){
         return getTableData;
     },
-    get getStructData (){
-        return getStructData;
-    },
     set getTableData (value){
         if(typeof value =='function'){
             getTableDataRef.current = value;
         }
         return getTableDataRef.current;
+    },
+    get getStructData (){
+        return getStructData;
     },
     set getStructData (value){
         if(typeof getStructDataRef.current =='function'){
