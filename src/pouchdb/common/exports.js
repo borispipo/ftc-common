@@ -8,10 +8,11 @@ import getStructDataDB from "../getStructDataDB";
 export const DB_NAME = CONSTANTS.COMMON_DB;//le nom de la base de données commune à toutes les applications
 
 export const getDefaultStructsData = ()=>{
-    if(typeof appConfig.pouchdbInitialStructsData ==='function'){
-        return defaultObj(appConfig.pouchdbInitialStructsData());
+    const pouchdbFunc = appConfig.get("pouchdbInitialStructsData");
+    if(typeof pouchdbFunc ==='function'){
+        return defaultObj(pouchdbFunc());
     }
-    return defaultObj(appConfig.pouchdbInitialStructsData);
+    return defaultObj(pouchdbFunc);
 }
 
 export const COMPANY_ID = CONSTANTS.COMPANY_ID_SETTING;

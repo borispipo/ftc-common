@@ -17,10 +17,10 @@ const USER_SESSION_KEY = "user-session";
 
 export const TOKEN_SESSION_KEY = "user-token-key";
 
-export const getEncryptKey = x=>defaultStr(appConfig.authSessionEncryptKey,process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
+export const getEncryptKey = x=>defaultStr(appConfig.get("authSessionEncryptKey"),process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
 
 export const getLoginIdField = ()=> {
-  const loginId = defaultStr(appConfig.authLoginIdField,appConfig.get("authLoginIdField"),process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
+  const loginId = defaultStr(appConfig.get("authLoginIdField"),process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
   const split = loginId.split(",").filter((t)=>!!isNonNullString(t));
   if(split.length > 1) return split;
   return split[0];
@@ -73,7 +73,7 @@ export const isLoggedIn = x => {
  * 
  */
 export const isSingleUserAllowed = ()=>{
-  return (!!appConfig.isAuthSingleUserAllowed && isObj(appConfig.authDefaultUser)) && true || false;
+  return (!!appConfig.get("isAuthSingleUserAllowed") && isObj(appConfig.get("authDefaultUser"))) && true || false;
 }
 /*** check wheater the multi user is allowed on application */
 export const isMultiUsersAllowed = ()=>{
@@ -84,7 +84,7 @@ export const isMultiUsersAllowed = ()=>{
  */
 export const getDefaultSingleUser = ()=>{
   if(isSingleUserAllowed()){
-    const defUser = appConfig.authDefaultUser;
+    const defUser = appConfig.get("authDefaultUser");
     return isObj(defUser) && defUser || null;
   }
   return null;

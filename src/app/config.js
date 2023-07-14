@@ -33,11 +33,12 @@ export const getConfig = x=>{
     configRef.current = {};
     return configRef.current;
 };
-
+const configValuesRef = {current:{}};
 const isInitializedRef = {current:null};
 
 export const setConfig = configValue=> {
     if(typeof configValue =="object" && configValue && !Array.isArray(configValue)){
+        configValuesRef.current = configValue;
         configRef.current = {
             ...packageJSON,
             ...configValue,

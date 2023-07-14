@@ -408,6 +408,7 @@ export const useMergeRefs = React.useMergeRefs = (...args) =>{
 
 
 export const updateNativePropsOnDimensionsChanged = React.updateNativePropsOnDimensionsChanged = (hostRef,updateNativePropsCallback,dimensions)=>{
+    console.log("will set native propsss ",hostRef?.current?.setNativeProps," is native props",hostRef.current)
     if(!hostRef || !hostRef.current|| typeof hostRef.current.setNativeProps !=='function') return null;
     const args = Dimensions.getDimensionsProps(dimensions);
     args.target = hostRef.current;
