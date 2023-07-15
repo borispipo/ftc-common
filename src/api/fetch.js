@@ -14,13 +14,7 @@ import APP from "$capp/instance";
 import {timeout,canCheckOnline} from "./utils";
 import {isClientSide} from "$cplatform";
 import appConfig from "$capp/config";
-import apiC from "$apiCustom";
 import i18n from "$i18n";
-
-const apiCustom = isObj(apiC)? apiC : {};
-
-export {apiCustom};
-
 
 export  function setCodeVerifierHeader(verifier) {
   codeVerifier = verifier;
@@ -37,9 +31,6 @@ export const getRequestHeaderKey = x=>{
 export const getRequestHeaders = function (opts){
     opts = typeof opts !=="object" || Array.isArray(opts) || !opts ? {} : opts;
     let customRequestHeader = null;
-    if(typeof apiCustom.getRequestHeaders =='function'){
-        customRequestHeader = apiCustom.getRequestHeaders(opts);
-    }
     const ret = extendObj({},opts.headers,customRequestHeader);
     if(!ret.Authorization  && !ret.authorization && opts.authorization !== false && opts.Authorization !== false){
        const token = getToken();
@@ -129,7 +120,6 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
         if(d.error && typeof d.error =='string'){
              d.message = response.message = response.msg = d.error;
         }
-        if(typeof apiCustom.handleFetchResult =='function' && apiCustom.handleFetchResult({...d,resolve,reject})== false) return;
         if(response.success){
            return resolve(d)
         }
@@ -258,17 +248,7 @@ export function getFetcherOptions (opts,options){
      if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization || opts.headers.authorization)){
         opts.credentials = "include";
      }
-     /** personnaliser la fonction getFetcherOptions */
-     if(typeof apiCustom.getFetcherOptions =='function'){
-        extendObj(opts,apiCustom.getFetcherOptions(opts))
-     }
-     let hasContentType = false;
-     for(let i in opts.headers){
-        if(i.toLowerCase() === 'content-type'){
-           hasContentType = true;
-           break;
-        }
-     }
+     const hasContentType = "Content-Type" in opts.headers || "content-type" in opts.headers || "Content-type" in opts.headers || "content-Type" in opts.headers;
      if(isObj(opts.body)){
         if(!hasContentType){
            opts.headers["Content-Type"] = "application/json";

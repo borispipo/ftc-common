@@ -151,7 +151,6 @@ module.exports = function(opts){
     if(!r["$auth"]){
         r["$auth"] = r["$cauth"];
     }
-    r.$apiCustom = r.$apiCustom || r.$capiCustom;
     r.$print = r.$print || r["$cprint"];
     return r;
 }
