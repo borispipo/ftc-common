@@ -5,7 +5,6 @@
 import { useAuth } from "./AuthProvider"
 import React from "$react";
 import appConfig from "$capp/config";
-import React from "$react";
 
 export default function AuthGuard({ children,...rest}) {
   const auth = useAuth();
