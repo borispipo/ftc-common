@@ -17,7 +17,6 @@ import {addEventListener,addListener} from "./eventListener";
 import useForceRender from "./useForceRender";
 import * as isComponents from "./isComponent";
 import useStableMemo from "./useStableMemo";
-import useMediaQueryUpdateStyle from "./useMediaQueryUpdateStyle";
 import {isClientSide} from "$cplatform";
 import memoize from "./memoize";
 import isEquals from "../compare";
@@ -37,12 +36,9 @@ export {isEquals};
 
 export {memoize};
 
-export {useMediaQueryUpdateStyle};
-
 export {useStableMemo};
 
 React.useStableMemo = useStableMemo;
-React.useMediaQueryUpdateStyle = useMediaQueryUpdateStyle;
 
 export * from "./isComponent";
 
@@ -232,10 +228,6 @@ export const extractPropTypes = (propTypes) => {
 }
 
 
-
-
-
-
 /**
  *  useDidUpdate hook
  *
@@ -404,64 +396,6 @@ export const mergeRefs = React.mergeRefs = (...args)=>{
 
 export const useMergeRefs = React.useMergeRefs = (...args) =>{
   return React.useMemo(() => mergeRefs(...args),[...args]);
-}
-
-
-export const updateNativePropsOnDimensionsChanged = React.updateNativePropsOnDimensionsChanged = (hostRef,updateNativePropsCallback,dimensions)=>{
-    console.log("will set native propsss ",hostRef?.current?.setNativeProps," is native props",hostRef.current)
-    if(!hostRef || !hostRef.current|| typeof hostRef.current.setNativeProps !=='function') return null;
-    const args = Dimensions.getDimensionsProps(dimensions);
-    args.target = hostRef.current;
-    if(typeof updateNativePropsCallback !== 'function') return args;
-    const nProps = updateNativePropsCallback(args,hostRef); 
-    if(!isObj(nProps) || !Object.size(nProps,true)) return null;
-    return hostRef.current.setNativeProps(nProps);
-}
-
-/**** permet de récupérer la fonction à attacher par défaut au listener DimensionChange, pour la mise à jour automatique des props à l'aide de la fonction setNativeProps
- *  * @param updatePropsWithMediaQuery{function}, la fonction permettant de mettre à jour les props lorsque la taille de l'écran change
-    * @pram hostRef{func||object}, la référence de l'objet qu'on utilisera pour mettre à jour les props avec la méthode setNativeProps de react-native
-    * @param timeout {number}, le délai d'attente à passer à la fonction debounce, pour pouvoir appeler la fonction de mise à jour des props lorsque la taile de l'écran change
-    * @return {function||null} la fonction à attacher au listener
- */
-export const mediaQueryUpdateNativePropsCallback = React.mediaQueryUpdateNativePropsCallback =  (updatePropsWithMediaQuery,hostRef,timeout)=>{
-    if(typeof updatePropsWithMediaQuery !=='function') return null;
-    if(typeof hostRef ==='number'){
-        const t = timeout;
-        timeout = t;
-        hostRef = typeof t =='function' || isObj(t)? t : undefined;
-    }
-    let options = {};
-    if(typeof timeout =='object' && timeout){
-        options = timeout;
-    }
-    timeout = typeof timeout =='number'? timeout : typeof options.timeout =='number'? options.timeout : 200;
-    return debounce((dimensions)=>{
-        return updateNativePropsOnDimensionsChanged(hostRef,updatePropsWithMediaQuery,dimensions);
-    },timeout);
-}
-
-/*** permet d'attacher un lister sur la modification des props de manière responsive
- *  @return {object{remove:function}||null} l'objet null ou ayan la fonction remove permettant de suprimer le listerner lorsque le composant est démonté
- */
-export const getMediaQueryPropsSubscription = React.getMediaQueryPropsSubscription = (updatePropsWithMediaQuery,hostRef,timeout)=>{
-    const cb = mediaQueryUpdateNativePropsCallback(updatePropsWithMediaQuery,hostRef,timeout);
-    if(!cb) return null;
-    return Dimensions.addEventListener("change",cb);
-}
-
-/**** 
- * @parm {function}, la fonction de rappel à utiliser pour définir les props à passer à la référence
- * @param {ref}, la référence de l'objet dom auquel on écoutera le changement d'évènement
- * @parm timeout, le délai d'attente lorsque la dimension de l'écran change
- */
- export const useMediaQueryUpdateNativeProps = React.useMediaQueryUpdateNativeProps = (updatePropsWithMediaQuery,ref,timeout)=>{
-    const hostRef = React.useRef(null);
-    React.useEffect(()=>{
-        const subscription = getMediaQueryPropsSubscription(updatePropsWithMediaQuery,hostRef,timeout);
-        return () => subscription?.remove();
-    },[]);
-    return React.useMergeRefs(hostRef,ref);
 }
 
 export const useLazyRef = React.useLazyRef = function useLazyRef(callback) {
