@@ -111,8 +111,6 @@ module.exports = function(opts){
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":rootDir,
         "$ftc" : "@fto-consult",
-        "$cloginComponent":path.resolve(common,"auth","LoginComponent"),
-        "$cgetLoginProps" : path.resolve(common,"auth","getLoginProps"),
         $cappConfig : path.resolve(common,"app","config"),
         $swr : path.resolve(common,"swr"),
         $useSWR : path.resolve(common,"swr"),
@@ -150,20 +148,8 @@ module.exports = function(opts){
         r["$navigation"] = r["$cnavigation"];
     }
     /**** cet alias est utile pour la personnalisation du composant de connexion */
-    if(!r["$loginComponent"]){
-        r["$loginComponent"] = r["$cloginComponent"];
-    }
     if(!r["$auth"]){
         r["$auth"] = r["$cauth"];
-    }
-    /*** les indixes des bases de données pouchdb qui doivent automatiquement crée par l'application 
-     * doit systématiquement exporté un objet portant pour chacune des base de données, les différents index à créer
-    */
-    /****
-     * permettant de récupérer les props à passer au composant FormData, du composant LoginComponent pour la connexion de l'utilisateur
-     */
-    if(!r["$getLoginProps"]){
-        r["$getLoginProps"] = r["$cgetLoginProps"];
     }
     r.$apiCustom = r.$apiCustom || r.$capiCustom;
     r.$print = r.$print || r["$cprint"];

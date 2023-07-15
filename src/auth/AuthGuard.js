@@ -4,8 +4,8 @@
 
 import { useAuth } from "./AuthProvider"
 import React from "$react";
-/*** cet alias est utilisé pour définir le composant de connexion */
-import LoginComponent from "$loginComponent";
+import appConfig from "$capp/config";
+import React from "$react";
 
 export default function AuthGuard({ children,...rest}) {
   const auth = useAuth();
@@ -15,11 +15,13 @@ export default function AuthGuard({ children,...rest}) {
     const child = typeof children =='function' ? children(auth) : children;
     return React.isValidElement(child)? child : null;
   }
-  return <AuthGuard.Login
+  const LoginComponent = React.isComponent(appConfig.LoginComponent)? appConfig.LoginComponent : null;
+  if(!LoginComponent){
+    throw "Login component not defined!!! Merci de définir le composant de connextion à traver la propriété LoginComponent de $appConfig";
+    return null;
+  }
+  return <LoginComponent
     {...rest}
     withPortal onSuccess = {forceRender}
   />
 }
-
-///on peut override cette fonction, pour le rendu de la méthode login
-AuthGuard.Login = React.isComponent(LoginComponent)? LoginComponent : ()=>null;

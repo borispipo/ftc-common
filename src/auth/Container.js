@@ -14,9 +14,9 @@ export default function AuthContainer({ children,required,...rest }) {
       return React.isValidElement(children)? children : typeof children =='function'? children(auth): null;
     }
     return <AuthGuard {...rest} children={children}/>
-  }
+}
 
-  AuthContainer.propTypes = {
-    ///si l'authentification est requis pour afficher la page
-    required : PropTypes.bool,
-  }
+AuthContainer.propTypes = {
+  ///si l'authentification est requis pour afficher la page
+  required : PropTypes.bool,
+}

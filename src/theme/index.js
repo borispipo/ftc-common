@@ -376,7 +376,7 @@ export const webFontFamilly =  isWeb() ? {
 } : null;
 const createStyleSheet = StyleSheet && StyleSheet.create ? StyleSheet.create.bind(StyleSheet) : x=>x;
 export const styles = createStyleSheet({
-    shadow : {
+    boxShadow : {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
