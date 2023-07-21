@@ -32,7 +32,7 @@
     "crypto-js": "^4.1.1",
     "install": "^0.13.0",
     "invariant": "^2.2.4",
-    "js-base64": "^3.7.2",
+    "js-base64": "^3.7.5",
     "mongo-parse": "^2.1.0",
     "npm": "^9.6.3",
     "pdfmake": "^0.2.7",
