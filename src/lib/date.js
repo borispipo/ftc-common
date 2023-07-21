@@ -442,9 +442,19 @@ var getInt = function (str, i, minlength, maxlength) {
 };
 
 export function isIsoDateStr(str) {
-    if (!isNonNullString(str) || !/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str.trim())) return false;
-    const d = new Date(str.trim()); 
-    return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str.trim(); // valid date 
+    if(!isNonNullString(str)){
+        return false;
+    }
+    str = str.trim();
+    if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) {
+        try {
+            const dateParsed = new Date(Date.parse(str))
+            return dateParsed.toUTCString() === new Date(d).toUTCString();
+        } catch{}
+        return false;
+    }
+    const d = new Date(str); 
+    return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str; // valid date 
 }
 export const isIsoDateString = isIsoDateStr;
 /**
@@ -457,7 +467,7 @@ export const isIsoDateString = isIsoDateStr;
 export const parse = function (val, format,returnObj) {
     val = isNonNullString(val)? val.trim() : val;
     if(isIsoDateStr(val)){
-        val = new Date(val.trim());
+        val = new Date(Date.parse(val));
     } else if(isNullOrEmpty(val)){
         val = new Date();
     }
