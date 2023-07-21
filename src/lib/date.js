@@ -441,6 +441,12 @@ var getInt = function (str, i, minlength, maxlength) {
     return null;
 };
 
+export function isIsoDateStr(str) {
+    if (!isNonNullString(str) || !/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str.trim())) return false;
+    const d = new Date(str.trim()); 
+    return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str.trim(); // valid date 
+}
+export const isIsoDateString = isIsoDateStr;
 /**
  * parsing a date string
  * @param {String} val - date string
@@ -449,15 +455,10 @@ var getInt = function (str, i, minlength, maxlength) {
  * @returns {Object} || NaN the constructed date
  */
 export const parse = function (val, format,returnObj) {
-    if(isNonNullString(val)){
-        try {
-            const dd = new Date(val.trim());
-            if(isDateObj(dd)){
-                val = dd;
-            }
-        } catch{}
-    }
-    if(isNullOrEmpty(val)){
+    val = isNonNullString(val)? val.trim() : val;
+    if(isIsoDateStr(val)){
+        val = new Date(val.trim());
+    } else if(isNullOrEmpty(val)){
         val = new Date();
     }
     if(isDateObj(val)){
@@ -1136,12 +1137,14 @@ Object.defineProperties(DateLib,{
     system : {
     writable : false,
     override:false,
-    value : {
-        time_format : SQLTimeFormat,
-        date_format : SQLDateFormat,
-        date_time_format : SQLDateTimeFormat,
+        value : {
+            time_format : SQLTimeFormat,
+            date_format : SQLDateFormat,
+            date_time_format : SQLDateTimeFormat,
+        },
     },
-    },
+    isIsoDateStr : {value:isIsoDateStr},
+    isIsoDateString : {value:isIsoDateString},
     addMonths : {
         /**ajoute le nombre de mois à l'objet date
          * @param months : number le nombre de mois à ajouter à la date
