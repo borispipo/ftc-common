@@ -449,6 +449,14 @@ var getInt = function (str, i, minlength, maxlength) {
  * @returns {Object} || NaN the constructed date
  */
 export const parse = function (val, format,returnObj) {
+    if(isNonNullString(val)){
+        try {
+            const dd = new Date(val.trim());
+            if(isDateObj(dd)){
+                val = dd;
+            }
+        } catch{}
+    }
     if(isNullOrEmpty(val)){
         val = new Date();
     }
