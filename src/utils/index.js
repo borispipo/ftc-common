@@ -224,11 +224,17 @@ export const defaultFunc = function(){
 export const defaultObj = function() {
     var args = Array.prototype.slice.call(arguments,0);
     if(args.length === 1) return isObj(args[0]) ? args[0] : {};
+    let prevObj = null;
     for(var i in args){
         const x = args[i];
-        if(isObj(x) && Object.size(x,true)>0) return x;
+        if(isObj(x)) {
+            if(Object.size(x,true)>0) return x;
+            if(!prevObj){
+                prevObj = x;
+            }
+        }
     }
-    return {};
+    return prevObj || {};
 }
 export const isObjOrArray = x =>  x && typeof x =="object" ? true : false;
 export const defaultObjOrArray = function(){
@@ -245,11 +251,17 @@ export const isObjectOrArray= a => isObj(a) || isArray(a);
 export const defaultArray = function(){
     var args = Array.prototype.slice.call(arguments,0);
     if(args.length === 1 && isArray(args[0])) return args[0];
+    let prevA = null;
     for(var i in args){
         let x = args[i];
-        if(x && Array.isArray(x) && x.length > 0) return x;
+        if(x && Array.isArray(x)){
+            if(x.length > 0) return x;
+        }
+        if(!prevA){
+            prevA = x;
+        }
     }
-    return [];
+    return prevA || [];
 }
 
 export {default as isPromise} from "./isPromise";
