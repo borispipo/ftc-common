@@ -3,11 +3,11 @@
     it returns an array of booleans, indicating whether the given query matches or queries match. 
     @see : https://docs.nativebase.io/use-media-query
 */
-import Dimensions,{ useWindowDimensions } from '$cdimensions';
+import { useWindowDimensions } from '$cdimensions';
 
 const isNil = v=> v===null || v === undefined;
 
-export function useMediaQuery(query) {
+export default function useMediaQuery(query) {
   const dims = useWindowDimensions();
   const height = dims?.height;
   const width = dims?.width;
