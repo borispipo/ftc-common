@@ -441,6 +441,10 @@ var getInt = function (str, i, minlength, maxlength) {
     return null;
 };
 
+export function isIsoTimeStr(str) {
+    return isIsoDateStr(str) && !/\T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str);
+}
+
 export function isIsoDateStr(str) {
     if(!isNonNullString(str)){
         return false;
@@ -457,6 +461,56 @@ export function isIsoDateStr(str) {
     return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str; // valid date 
 }
 export const isIsoDateString = isIsoDateStr;
+
+export const isTimeStr = (timeStr)=>{
+    if(!isNonNullString(timeStr)) return false;
+    return timeStr.match(/^\s*(\d\d?)(?::?(\d\d))?(?::(\d\d))?(?!\d)(\.\d+)?\s*(pm?|am?)?/i);
+}
+/**
+   @see : https://stackoverflow.com/questions/141348/how-to-parse-a-time-into-a-date-object-from-user-input-in-javascript
+ * Parses a string into a Date. Supports several formats: "12", "1234",
+ * "12:34", "12:34pm", "12:34 PM", "12:34:56 pm", and "12:34:56.789".
+ * The time must be at the beginning of the string but can have leading spaces.
+ * Anything is allowed after the time as long as the time itself appears to
+ * be valid, e.g. "12:34*Z" is OK but "12345" is not.
+ * @param {string} t Time string, e.g. "1435" or "2:35 PM" or "14:35:00.0"
+ *        is called on it. Otherwise, setUTCHours is called on 1970/1/1.
+ * @returns {Date|undefined} The parsed date, if parsing succeeded.
+ */
+export function parseTime(t) {
+    if(isDateObj(t)) return t;
+    if(!isNonNullString(t)) return null;
+    t = t.trim();
+    // ?: means non-capturing group and ?! is zero-width negative lookahead
+    var time = isTimeStr(t);
+    if (time) {
+      var hour = parseInt(time[1]), pm = (time[5] || ' ')[0].toUpperCase();
+      var min = time[2] ? parseInt(time[2]) : 0;
+      var sec = time[3] ? parseInt(time[3]) : 0;
+      var ms = (time[4] ? parseFloat(time[4]) * 1000 : 0);
+      if (pm !== ' ' && (hour == 0 || hour > 12) || hour > 24 || min >= 60 || sec >= 60)
+        return undefined;
+      if (pm === 'A' && hour === 12) hour = 0;
+      if (pm === 'P' && hour !== 12) hour += 12;
+      if (hour === 24) hour = 0;
+      const date = new Date();
+      date.setHours(hour,min,sec,ms);
+      return date;
+    } else {
+        var b = t.match(/\d+/g);
+        if(b){
+            const date = new Date();
+            date.setHours( 
+                b[0]>12? b[0] : b[0]%12 + (/p/i.test(t)? 12 : 0), //hours
+                /\d/.test(b[1])? b[1] : 0,//minutes
+                /\d/.test(b[2])? b[2] : 0, //seconds,
+                0,
+            );
+            return date;
+        }
+    }
+    return undefined;
+}
 /**
  * parsing a date string
  * @param {String} val - date string
@@ -467,9 +521,23 @@ export const isIsoDateString = isIsoDateStr;
 export const parse = function (val, format,returnObj) {
     val = isNonNullString(val)? val.trim() : val;
     if(isIsoDateStr(val)){
-        val = new Date(Date.parse(val));
+        const v = Date.parse(val);
+        if(isDateObj(v)){
+            val = new Date(v);
+        } else if(isIsoTimeStr(val)) {
+            const v2 = parseTime(val);
+            if(isDateObj(v2)){
+                val = v2;
+            }
+        }
     } else if(isNullOrEmpty(val)){
         val = new Date();
+    }
+    if(isNonNullString(val) && !isNonNullString(format) && isTimeStr(val)){
+        const vv = parseTime(val);
+        if(isDateObj(vv)){
+            val = vv;
+        }
     }
     if(isDateObj(val)){
         var date = new Date(val);
@@ -1063,6 +1131,9 @@ Object.defineProperties(DateLib,{
         },
         override : false, writable : false
     },
+    parseTime : {value:parseTime},
+    isTimeStr : {value : isTimeStr},
+    isTimeString : {value:isTimeStr},
     parse : {
         value : parse,
         override : false, writable : false
@@ -1155,6 +1226,8 @@ Object.defineProperties(DateLib,{
     },
     isIsoDateStr : {value:isIsoDateStr},
     isIsoDateString : {value:isIsoDateString},
+    isIsoTimeStr : {value:isIsoTimeStr},
+    isIsoTimeString : {value:isIsoTimeStr},
     addMonths : {
         /**ajoute le nombre de mois à l'objet date
          * @param months : number le nombre de mois à ajouter à la date
