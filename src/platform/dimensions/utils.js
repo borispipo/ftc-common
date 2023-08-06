@@ -34,31 +34,34 @@ export const updateDeviceClassName = ()=>{
 	return false;
 }
 
-export const isPhoneMedia = () =>{
+export const smallPhoneBreakpoints = ["sp"];
+export const mobileBreakpoints = ["mobile",...smallPhoneBreakpoints,"xs","mp"];
+export const phoneBreakpoints = mobileBreakpoints;
+export const tabletBreakpoints = ["tablet","md","sm"];;
+export const desktopBreakpoints = ["desktop","xl","lg"];
+export const isMediaDevice = (alias)=>{
     if(!isObj(breakpoints.current)) return false;
-    let currentMedia = defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase()
-    return  currentMedia == "sp" || currentMedia == "mp" ? true : false;
+	if(isNonNullString(alias)){
+	   alias = alias.trim().toLowerCase().split(",");
+	}
+	if(!Array.isArray(alias)) return false;
+	return alias.includes(defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase());
+}
+export const isPhoneMedia = () =>{
+    return isMediaDevice(phoneBreakpoints);
 }
 
 export const isSmallPhoneMedia = () =>{
-	if(!isObj(breakpoints.current)) return false;
-	let currentMedia = defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase()
-	return currentMedia === "sp";
+	return isMediaDevice(smallPhoneBreakpoints);
 }
 export const isMobileMedia = () =>{
-	if(!isObj(breakpoints.current)) return false;
-	let currentMedia = defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase()
-	return currentMedia == "mobile" || currentMedia == "xs" || currentMedia == "sp" || currentMedia == "mp"
+	return isMediaDevice(mobileBreakpoints) || isMediaDevice(smallPhoneBreakpoints);
 }
 export const isTabletMedia = () => {
-	if(!isObj(breakpoints.current)) return false;
-	let currentMedia = defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase();
-	return currentMedia === "tablet" || currentMedia == "md" ||  currentMedia == "sm"
+	return isMediaDevice(tabletBreakpoints);
 }
 export const isDesktopMedia = () => {
-	if(!isObj(breakpoints.current)) return false;
-	let currentMedia = defaultStr(APP.currentMedia,breakpoints.current.name).toLowerCase()
-	return currentMedia == "desktop" || currentMedia == "xl" || currentMedia =="lg"
+	return isMediaDevice(desktopBreakpoints);
 }
 
 export const isPortrait = () => {

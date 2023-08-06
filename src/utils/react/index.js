@@ -23,8 +23,12 @@ import isEquals from "../compare";
 import usePrevious,{usePreviousDifferent} from "./usePrevious";
 import getTextContent from "./getTextContent";
 import useEventCallback from "./useEventCallback";
+import useMediaQuery from "./useMediaQuery";
 
 export {useEventCallback};
+export {useMediaQuery};
+
+React.useMediaQuery = useMediaQuery;
 
 React.getTextContent = getTextContent;
 React.usePrevious = usePrevious;
