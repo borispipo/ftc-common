@@ -79,8 +79,8 @@ module.exports = function(opts){
         "$curi" : path.resolve(common,"utils","uri"),
         "$ccurrency" : path.resolve(common,"lib","currency"),
         "$csession" : path.resolve(common,"session"),
-        "$cbase64" : path.resolve(common,"lib","projectRoot-64"),
-        "$base64" : path.resolve(common,"lib","projectRoot-64"),
+        "$cbase64" : path.resolve(common,"lib","base-64"),
+        "$base64" : path.resolve(common,"lib","base-64"),
         "$cactions" : path.resolve(common,"actions"),
         
         "$media" : path.resolve(common,"media"),
