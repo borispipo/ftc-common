@@ -8,7 +8,6 @@ import {isWeb,isIos} from "$cplatform";
 import PropTypes from "prop-types";
 import styled  from "$active-platform/styled";
 import updateNativeTheme from "./updateNative";
-import {modes} from "../TextField";
 import {isMobileMedia} from "$cplatform/dimensions";
 import * as React from "react";
 import { isComponent } from "$react/isComponent";
@@ -173,13 +172,7 @@ export {default as grid} from "./grid";
 export const isDark = checkSystemUI => Theme.current.dark ? true : checkSystemUI === true ? isDarkUI():false;
 export const isLight = x=> !isDark(x);
 
-/***** possibilité de charger le mode d'affichage par défaut des champs textuels dans le theme de l'application */
-export const getTextFieldMode = x=> {
-    if(typeof Theme.current.textFieldMode =='string' && Theme.current.textFieldMode && modes[Theme.current.textFieldMode]){
-        return modes[Theme.current.textFieldMode];
-    }
-    return isMobileMedia()? modes.shadow : modes.flat;
-}
+
 /*** récupère une propriétée associée au theme courant */
 export const getProperty = function(){
     const args = Array.prototype.slice.call(arguments,0);
@@ -212,7 +205,9 @@ const theme = {
     get isDarkUI (){return isDarkUI},
     get roundness () { return Theme.current.roundness},
     get animation () { return Theme.current.animation;},
-    get textFieldMode () {return getTextFieldMode()},
+    get textFieldMode () {
+        return Theme.current.textFieldMode;
+    },
     get profilAvatarPosition (){
         return  getProfilAvatarPosition();
     },
