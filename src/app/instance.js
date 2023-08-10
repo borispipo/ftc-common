@@ -19,11 +19,8 @@ import {defaultObj} from "$cutils";
 import appConfig from "./config";
 import Platform from "$cplatform";
 import EVENTS from "./events";
-import { observable,addObserver,isObservable,removeObserver } from "$clib/observable";
+import { observable,addObserver,isObservable} from "$clib/observable";
 import NetInfo from '$cutils/NetInfo';
-import notify from "$cnotify";
-
-const appWasOfflineRef ={current:false};
 
 const setTitle = (title,cb)=>{
     APP_INSTANCE.previousTitle = APP_INSTANCE.currentTitle || title;
@@ -111,10 +108,6 @@ const APP_INSTANCE = {
                     APP_INSTANCE.trigger(EVENTS.GO_ONLINE,newOnlineState)
                 } else {
                     APP_INSTANCE.trigger(EVENTS.GO_OFFLINE,newOnlineState);
-                    appWasOfflineRef.current = true;
-                }
-                if(appWasOfflineRef.current && appConfig.initialized && appConfig.getConfigValue("notifyOnOnlineStateChange")){
-                    notify[!isOn?'warning':'success'](i18n.lang(isOn?"network_connection_restaured":"network_connection_lost"))
                 }
             }
         };

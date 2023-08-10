@@ -2,8 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+const cb = ()=>{
+    return Promise.resolve({})
+};
 export default {
     fetch : ()=>{
         return Promise.resolve({});
-    }
+    },
+    refresh:cb,
+    addEventListener : cb,
+    useNetInfo : cb,
 }
