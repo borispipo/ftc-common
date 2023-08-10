@@ -139,7 +139,10 @@ export const updateTheme = (theme)=>{
             }
         });
         if(typeof appConfig.extendAppTheme ==='function'){
-            appConfig.extendAppTheme(theme);
+            const r = appConfig.extendAppTheme(theme);;
+            if(isValid(r)){
+                theme = r;
+            }
         }
         updateNativeTheme(theme);
         if(themeRef && typeof themeRef.setBackgroundColor =='function'){
