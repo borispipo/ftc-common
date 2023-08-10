@@ -8,7 +8,6 @@ import {isWeb,isIos} from "$cplatform";
 import PropTypes from "prop-types";
 import styled  from "$active-platform/styled";
 import updateNativeTheme from "./updateNative";
-import {isMobileMedia} from "$cplatform/dimensions";
 import * as React from "react";
 import { isComponent } from "$react/isComponent";
 import defTheme,{white,black,lightColors,darkColors} from "./defaultTheme";

@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import { lightColors,darkColors} from "./defaultTheme";
-import {modesObject} from "../TextField";
 import themeRef from "$active-platform/themeRef";
 
 export * from "./alpha";
@@ -49,11 +48,7 @@ export const fields = {
         label : "Profil affiché sur le drawer",
         checkedTooltip : "Votre profil avatar sera affiché sur la barre de navigation latéralle de l'application"
     },
-    textFieldMode : {
-        type : 'select',
-        items : {...modesObject,none:{code:'',label:'Dynamique'}},
-        text : 'Mode d\'affichage des champs de texte'
-    },
+    textFieldMode:null,
     primary : {
         type : 'color',
         text : 'Couleur principale [primary]',
