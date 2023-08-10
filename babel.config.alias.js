@@ -105,7 +105,7 @@ module.exports = function(opts){
         "$session" : path.resolve(common,"session"),
         "$actions" : path.resolve(common,"actions"),
         "$projectRoot" :projectRoot, 
-        "$base" : $projectRoot,
+        "$base" : projectRoot,
         "$src" : src,
         "$cdatafileManager": cdataFileManager,
         "$datafileManager": cdataFileManager,
