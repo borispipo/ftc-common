@@ -148,7 +148,9 @@ export const updateTheme = (theme)=>{
         if(themeRef && typeof themeRef.setBackgroundColor =='function'){
             themeRef.setBackgroundColor(theme.colors.background);
         }
-        APP.trigger(APP.EVENTS.UPDATE_THEME,theme);
+        setTimeout(()=>{
+            APP.trigger(APP.EVENTS.UPDATE_THEME,theme);
+        },100);
         Theme.current = theme;
     }
     return theme;
