@@ -1,8 +1,8 @@
 
 const unfetch = 
-    typeof global !='undefined' && global && typeof global.fetch =='function' ? global.fetch : 
-    typeof globalThis != "undefined" && globalThis && typeof globalThis.fetch =='function'? globalThis.fetch : 
-    typeof window !=='undefined' && window && typeof XMLHttpRequest !=='undefined' && window.XMLHttpRequest && typeof window?.fetch === "function"? window?.fetch : 
+    typeof global !='undefined' && global && typeof global?.fetch =='function' ? global.fetch : 
+    typeof globalThis != "undefined" && globalThis && typeof globalThis?.fetch =='function'? globalThis.fetch : 
+    typeof window !=='undefined' && window && typeof window?.fetch === "function"? window?.fetch : 
     function (url, options) {
         if(typeof XMLHttpRequest ==='undefined' || typeof window ==="undefined") throw "unfetch function is not supported on the current platform. Please install required dependencies";
         options = options || {};
