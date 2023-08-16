@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {uniqid} from "$cutils";
+import {uniqid,defaultStr} from "$cutils";
 import { isWeb } from "$cplatform";
 import { TIPPY_THEME } from "./utils";
 const themeDomId = uniqid("web-theme-id");
@@ -30,6 +30,7 @@ export default function updateWebTheme(theme){
             scrollbarColor = Colors.isDark(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
         }
     }
+    const css = defaultStr(typeof theme.customCSS ==='function' ? theme.customCSS(theme) : theme.customCSS);
     style.textContent = `
         body,html { 
             -ms-overflow-style: none !important; 
@@ -141,6 +142,7 @@ export default function updateWebTheme(theme){
             height : 0px!important;
         }
         :focus { outline: none!important; }
+        ${customCSS}
     `;
     document.body.appendChild(style);
 }

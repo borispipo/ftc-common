@@ -8,7 +8,7 @@ import isDOMElement from "$cutils/dom/isDOMElement";
 import defaultStr from "$cutils/defaultStr";
 import uniqid from "$cutils/uniqid"
 import {isPlainObj,isNonNullString,isObj,isUndefined,debounce} from "$cutils";
-import Component from "./Component";
+import Component,{ObservableComponent} from "./Component";
 import useIsMounted from "./useIsMounted";
 import setRef from "./setRef";
 import  isValidElement  from "./isValidElement";
@@ -371,7 +371,8 @@ if(!React.stopEventPropagation){
         },
         AppComponent : {
             value : Component,
-        }
+        },
+        ObservableComponent : {value:ObservableComponent},
     })
 }
 //default base component for each element
