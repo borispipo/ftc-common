@@ -30,7 +30,6 @@ export default function updateWebTheme(theme){
             scrollbarColor = Colors.isDark(theme.colors.secondary) ? theme.colors.secondary : theme.colors.primaryText;
         }
     }
-    const css = defaultStr(typeof theme.customCSS ==='function' ? theme.customCSS(theme) : theme.customCSS);
     style.textContent = `
         body,html { 
             -ms-overflow-style: none !important; 
@@ -142,7 +141,7 @@ export default function updateWebTheme(theme){
             height : 0px!important;
         }
         :focus { outline: none!important; }
-        ${customCSS}
+        ${defaultStr(typeof theme.customCSS ==='function' ? theme.customCSS(theme) : theme.customCSS).trim()}
     `;
     document.body.appendChild(style);
 }
