@@ -141,6 +141,7 @@ export default function updateWebTheme(theme){
             height : 0px!important;
         }
         :focus { outline: none!important; }
+        
         ${defaultStr(typeof theme.customCSS ==='function' ? theme.customCSS(theme) : theme.customCSS).trim()}
     `;
     document.body.appendChild(style);
