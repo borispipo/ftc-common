@@ -149,7 +149,6 @@ export const updateTheme = (theme)=>{
             themeRef.setBackgroundColor(theme.colors.background);
         }
         setTimeout(()=>{
-            console.log("calling update theme ",theme,APP.EVENTS.UPDATE_THEME);
             APP.trigger(APP.EVENTS.UPDATE_THEME,theme);
         },100);
         Theme.current = theme;
