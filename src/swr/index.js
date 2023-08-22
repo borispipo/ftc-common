@@ -5,7 +5,7 @@
 
 import useSWR from 'swr';
 import { getFetcherOptions as apiGetFetcherOptions } from '$capi';
-import {defaultStr ,extendObj,isNonNullString,isObj} from "$cutils";
+import {defaultStr ,extendObj,isNonNullString,isObjOrArray} from "$cutils";
 import {setQueryParams} from "$cutils/uri";
 import appConfig from "$capp/config";
 import React from 'react';
@@ -38,8 +38,8 @@ export default function useSwr (path,opts) {
   return {
     ...rest,
     mutate,
-    refresh : (key, data, options)=>{
-       return mutate(defaultStr(key,path),data,options);
+    refresh : (key, customData, options)=>{
+       return mutate(defaultStr(key,path),isObjOrArray(customData) && Object.size(customData,true) ? customData : data,options);
     },
     data,
     isLoading: !error && !data,
