@@ -460,6 +460,12 @@ export const styles = createStyleSheet({
     },
     label: {fontWeight:'normal'},
     bold : {fontWeight:'bold'},
+    textDecorationUnderline : {
+        textDecorationLine:'underline',
+    },
+    textDecorationNone : {
+        textDecorationLine:'none',
+    },
     ...stylesShortcuts,
     absoluteFill : StyleSheet && StyleSheet.absoluteFillObject || {},
 });
