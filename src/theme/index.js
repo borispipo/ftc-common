@@ -200,8 +200,11 @@ export const getProfilAvatarPosition = x=>{
 }
 const theme = {
     get ALPHA () {return ALPHA},
+    get name(){return Theme.current.name;},
     get ALPHA_OPACITY () {return ALPHA_OPACITY},
     get colors () {return Theme.current.colors},
+    get primary (){ return Theme.current.colors.primary;},
+    get secondary(){return Theme.current.colors.secondary;},
     get fonts () { return Theme.current.fonts},
     get dark () { return Theme.current.dark},
     get isDark () { return isDark},
