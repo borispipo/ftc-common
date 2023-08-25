@@ -12,6 +12,7 @@ export const isClassComponent = function isClassComponent(component) {
 }
 
 export const isFunctionComponent = function isFunctionComponent(component) {
+    if(typeof component !=='function' || !component) return false;
     const str = String(component);
     return typeof component === 'function' && ( 
         str.includes('return React.createElement')
