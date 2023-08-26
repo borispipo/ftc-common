@@ -13,6 +13,7 @@ export default function AuthContainer({ children,required,...rest }) {
     if(required === false){
       return React.isValidElement(children)? children : typeof children =='function'? children(auth): null;
     }
+    return children;
     return <AuthGuard {...rest} children={children}/>
 }
 
