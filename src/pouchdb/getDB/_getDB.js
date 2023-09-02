@@ -121,7 +121,9 @@ export function addDefaultFields(newDoc,options){
         newDoc.updatedHour = time;
     }
     /**** dans le document, est enregistré l'id du premier device l'ayant enregistré */
-    newDoc.uuid = defaultStr(newDoc.uuid,APP.DEVICE.uuid);
+    if(isNonNullString(APP.DEVICE.uuid)){
+        newDoc.uuid = defaultStr(newDoc.uuid,APP.DEVICE.uuid);
+    }
     return newDoc;
 }
 const upsertVar = {};
