@@ -15,7 +15,6 @@ import sync from "./sync";
 import common from "./common";
 import getAllData from "./getDB/getAllData";
 import servers from "./sync/servers";
-import {extendIndexes} from "./utils/pouchdbIndexes";
 import { getCompany,setCompany } from "./common";
 
 export * from "./utils";
@@ -37,7 +36,6 @@ export {
     parseDBName,
     PouchDB,
     sync,
-    extendIndexes,
     getAllData,
 }
 
@@ -46,7 +44,6 @@ export default {
     getCompany,
     setCompany,
     servers,
-    extendIndexes,
     common,
     CONSTANTS,
     getData,

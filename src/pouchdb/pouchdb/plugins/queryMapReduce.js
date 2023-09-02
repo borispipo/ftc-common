@@ -15,12 +15,12 @@ import {defaultFunc,isNonNullString,defaultBool,defaultStr,defaultVal} from "$cu
  */
 export const queryMapReduce = function(designId,options){
     let db = this;
+    options = defaultObj(options);
     if(isObj(designId)){
         options = extendObj({},designId,options);
     } else if(isNonNullString(designId)){
         options.designId = defaultStr(options.designId,designId);
     }
-    options = defaultObj(options);
     let handleResult = defaultVal(options.handleResult,options.returnArray,true);
     designId = defaultStr(options.designId,options.designName,options.design);
     if(!designId){
@@ -31,23 +31,42 @@ export const queryMapReduce = function(designId,options){
     mutator = defaultFunc(mutator,({doc})=>doc);
     rest.include_docs = defaultBool(rest.include_docs,true);
     rest.reduce = defaultVal(rest.reduce,false);
-    return db.query(designId,rest).then((result)=>{
-        if(handleResult){
-            let {rows} = result;
-            let docs = [];
-            rows.map((doc)=>{
-                if(/^_design\//.test(doc.id) || doc._deleted)return null;
-                let arg = {doc:defaultObj(doc.doc),data:defaultObj(doc.doc),value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
-                if(filter(arg)){
-                    let mDoc = mutator(arg);
-                    if(isObj(mDoc)){
-                        docs.push(mDoc);
+    return new Promise((resolve,reject)=>{
+        const handleFinalResult = (result)=>{
+            if(handleResult){
+                let {rows} = result;
+                let docs = [];
+                rows.map((doc)=>{
+                    if(/^_design\//.test(doc.id) || doc._deleted)return null;
+                    let arg = {doc:defaultObj(doc.doc),data:defaultObj(doc.doc),value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
+                    if(filter(arg)){
+                        let mDoc = mutator(arg);
+                        if(isObj(mDoc)){
+                            docs.push(mDoc);
+                        }
                     }
-                }
-            })
-            return docs;
+                })
+                resolve(docs);
+                return docs;
+            }
+            resolve(result);
+            return result;
         }
-        return result;
+        return db.query(designId,rest).then(handleFinalResult).catch((e)=>{
+            if(e && e?.status == 404){
+                const docId = defaultStr(e?.docId).toLowerCase().trim();
+                const d = designId?.toLocaleLowerCase().trim();
+                if(d.startsWith(docId) || docId.startsWith("_design/")){
+                    return db.createDefaultIndexes().then((i)=>{
+                        db.getIndexes().then((i)=>{
+                            console.log(i," is def indexess");
+                        });
+                        return db.query(designId,rest).then(handleFinalResult).catch(reject);
+                    });
+                }         
+            }
+            reject(e);
+        });
     })
 }
 export default queryMapReduce;
