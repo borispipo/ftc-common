@@ -134,8 +134,8 @@ export default function createDefaultPouchDBIndexes(force,rest){
     return createIndex(context,idx,dbName);
 }
 
-export function resetViewsIndexes(reset){
-    reset = isObj(rest)? reset : typeof reset ==='boolean'? {force} : {};
-    const {force} = reset;
-    return createDefaultPouchDBIndexes.call(this,force,extendObj(true,{},reset,{views:true}));
+export function resetViewsIndexes(opts){
+    opts = isObj(opts)? opts : typeof opts ==='boolean'? {force:opts} : {};
+    const {force} = opts;
+    return createDefaultPouchDBIndexes.call(this,force,extendObj(true,{},opts,{views:true}));
 }
