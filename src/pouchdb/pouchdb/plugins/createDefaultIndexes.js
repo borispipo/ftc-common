@@ -5,7 +5,7 @@ import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import pouchdbIndexes from "../../utils/pouchdbIndexes";
-import {isNonNullString,isBool,isObjOrArray,isObj,defaultObj} from "$cutils";
+import {isNonNullString,isBool,isObjOrArray,isObj,defaultObj,extendObj} from "$cutils";
 import types from "../../dataFileManager/types";
 
 const getIndexToCreateOrDelete = (idx)=>{
@@ -132,4 +132,10 @@ export default function createDefaultPouchDBIndexes(force,rest){
         })
     }
     return createIndex(context,idx,dbName);
+}
+
+export function resetViewsIndexes(reset){
+    reset = isObj(rest)? reset : typeof reset ==='boolean'? {force} : {};
+    const {force} = reset;
+    return createDefaultPouchDBIndexes.call(this,force,extendObj(true,{},reset,{views:true}));
 }

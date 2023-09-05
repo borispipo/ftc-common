@@ -1,6 +1,6 @@
 import "../polyfill";
 import PouchObj from "../pouchdb";
-import createDefaultIndexes from "../pouchdb/plugins/createDefaultIndexes";
+import createDefaultIndexes,{resetViewsIndexes} from "../pouchdb/plugins/createDefaultIndexes";
 import getRealName from "../pouchdb/plugins/getRealName";
 import toJSON from "../pouchdb/plugins/toJSON";
 import canOverrideRemove from "../pouchdb/plugins/canOverrideRemove";
@@ -27,6 +27,8 @@ PouchDB.plugin({
     isRemote,
     isCommon,
     createDefaultIndexes,
+    resetViewsIndexes,
+    resetIndexesOfViews : resetViewsIndexes,
     getRealName,
     toJSON,
     getInfos,
