@@ -270,7 +270,7 @@ a.map((v)=>{
         rowGap : v10,
     }
     stylesShortcuts['columnGap'] = {
-        columnGap : v1O,
+        columnGap : v10,
     }
     /*** les props de lineHeight */
     stylesShortcuts['lh'+v] = {
