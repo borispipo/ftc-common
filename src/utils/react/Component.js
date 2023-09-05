@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {uniqid,defaultObj,isFunction,isBool,autobind,debounce} from "$cutils";
+import {uniqid,defaultObj,isFunction,isBool,autobind,debounce,isNonNullString} from "$cutils";
 import { observable,addObserver } from "$clib/observable";
 const previousStateSymbol = uniqid("prev-state-react-comopp");
 import React from "react";
@@ -151,8 +151,18 @@ export class ObservableComponent extends Component {
         observable(this);
         addObserver(this);
     }
+    _callTriggerEvent(eventName,...rest){
+        if(typeof this.trigger =='function' && isNonNullString(eventName)){
+            this.trigger(eventName,...rest);
+        }
+    }
+    componentDidUpdate(){
+        super.componentDidUpdate();
+        this._callTriggerEvent("componentDidUpdate");//trigger de l'évènement componentDidUpdate quand le composant est mis à jour
+    }
     componentWillUnmount(){
       super.componentWillUnmount();
+      this._callTriggerEvent("componentWillUnmount");//trigger de l'évènement componentWillUnmount quand le composant est mis à jour
       this.offAll();
     }
 };
