@@ -263,6 +263,15 @@ a.map((v)=>{
     stylesShortcuts['flex'+v] = stylesShortcuts['f'+v] = {
         flex : v
     }
+    stylesShortcuts['gap'+v] = {
+        gap : v10,
+    }
+    stylesShortcuts['rowGap'+v] = {
+        rowGap : v10,
+    }
+    stylesShortcuts['columnGap'] = {
+        columnGap : v1O,
+    }
     /*** les props de lineHeight */
     stylesShortcuts['lh'+v] = {
         lineHeight : v10,
