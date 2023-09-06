@@ -42,6 +42,10 @@ export default function actions(componentName,type){
     /**** affiche le formulaire d'édition ou d'ajout d'une nouvelle donnée de type tableData */
     'showTableData'
 ].map((action,k)=>{
+    action = action.trim();
+    if(action.toLowerCase().includes("remove")){
+        action = "remove";
+    }
     actions[action] =   (componentName) => actions(componentName,action);;
 });
 
