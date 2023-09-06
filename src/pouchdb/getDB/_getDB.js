@@ -371,9 +371,9 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
             return remove.call(context,doc).then(sCB);
         }
         db.remove = function(...args){
-            let doc = args[0];
-            let force = args[1];
-            let context = this;
+            const doc = args[0];
+            const force = args[1];
+            const context = this;
             if(isNonNullString(doc)){
                 return new Promise((resolve,reject)=>{
                     db.get(doc).then((_doc)=>{
