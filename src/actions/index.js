@@ -18,7 +18,10 @@ import defaultStr from "$cutils/defaultStr";
  *            actions('productsCategories','upsert') => PRODUCTS_CATEGORIES_UPSERT : appelée lorsqu'une catégorie de produit est mise à jour
  */
 export default function actions(componentName,type){
-    type = defaultStr(type);
+    type = defaultStr(type).trim();
+    if(type.toLowerCase().includes("remove")){
+        type = "remove";
+    }
     if(type){
         type = "_"+type.toUpperCase().trim().ltrim("_");
     }
@@ -42,10 +45,6 @@ export default function actions(componentName,type){
     /**** affiche le formulaire d'édition ou d'ajout d'une nouvelle donnée de type tableData */
     'showTableData'
 ].map((action,k)=>{
-    action = action.trim();
-    if(action.toLowerCase().includes("remove")){
-        action = "remove";
-    }
     actions[action] =   (componentName) => actions(componentName,action);;
 });
 
