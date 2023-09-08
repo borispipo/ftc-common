@@ -263,6 +263,9 @@ a.map((v)=>{
     stylesShortcuts['flex'+v] = stylesShortcuts['f'+v] = {
         flex : v
     }
+    stylesShortcuts['flexGrow'+v] = stylesShortcuts['f'+v] = {
+        flexGrow : v
+    }
     stylesShortcuts['gap'+v] = {
         gap : v10,
     }
@@ -273,18 +276,18 @@ a.map((v)=>{
         columnGap : v10,
     }
     /*** les props de lineHeight */
-    stylesShortcuts['lh'+v] = {
+    stylesShortcuts['lh'+v] = stylesShortcuts['lineHeight'+v] = {
         lineHeight : v10,
     }
-    stylesShortcuts['fs'+v] = {
+    stylesShortcuts['fs'+v] = stylesShortcuts['fontSize'+v] = {
         fontSize : v10,
     }
     if(isLessThanTen){
         /*** les props de lineHeight */
-        stylesShortcuts['lh0'+v] = {
+        stylesShortcuts['lh0'+v] = stylesShortcuts['lineHeight0'+v] = {
             lineHeight : v,
         }
-        stylesShortcuts['fs0'+v] = {
+        stylesShortcuts['fs0'+v] = stylesShortcuts['fontSize0'+v] = {
             fontSize : v,
         }
     }
@@ -297,15 +300,15 @@ a.map((v)=>{
     /*** uniquement pour les multiples de 10 et 5 */
     if(isTenMultiplier){
         /*** les propriétés de longueur : w0, w10, 100 pour 100%, ... */
-        stylesShortcuts['w'+v10] = {
+        stylesShortcuts['w'+v10] = stylesShortcuts['width'+v10] = {
             width : v10+"%"
         }
         /*** propriété de hauteur en pourcentage : h10 pour height:10%, h11 pour height : 11% */
-        stylesShortcuts['h'+v10] = {
+        stylesShortcuts['h'+v10] = stylesShortcuts['height'+v10] = {
             height : v10+"%"
         }
         /*** les proprités de padding : p10 : padding : 10 */
-        stylesShortcuts['p'+v] = {
+        stylesShortcuts['p'+v] = stylesShortcuts['padding'+v] = {
             padding : v10
         }
         /*** les propriétés de margin pour m10 pour margin 10, m20 pour margin 20 */
@@ -313,30 +316,30 @@ a.map((v)=>{
             margin : v10
         }
         /*** les propriétés de paddingHorizontal */
-        stylesShortcuts['ph'+v] = {
+        stylesShortcuts['ph'+v] = stylesShortcuts['paddingHorizontal'+v] = {
             paddingHorizontal : v10,
         }
 
         /*** les props de padding vertical */
-        stylesShortcuts['pv'+v] = {
+        stylesShortcuts['pv'+v] = stylesShortcuts['paddingVertical'+v] = {
             paddingVertical : v10,
         }
         /*** les props de margin horizontal */
-        stylesShortcuts['mh'+v] = {
+        stylesShortcuts['mh'+v] = stylesShortcuts['marginHorizontal'+v] = {
             marginHorizontal : v10,
         }
         /*** les props de margin vertical mv10 pour margin vertical 10 */
-        stylesShortcuts['mv'+v] = {
+        stylesShortcuts['mv'+v] = stylesShortcuts['marginVertical'+v] = {
             marginVertical : v10,
         }
 
         b.map((t)=>{
             ///les propriétés de marginLeft : ml margin right [mr], margin top [mt], margin bottom [mb]
             const c = t[0].toLowerCase();
-            stylesShortcuts['m'+c+v] = {
+            stylesShortcuts['m'+c+v] = stylesShortcuts['margin'+c+v] = {
                 ['margin'+t] : v10,
             }
-            stylesShortcuts['p'+c+v] = {
+            stylesShortcuts['p'+c+v] = stylesShortcuts['padding'+c+v] = {
                 ['padding'+t] : v10,
             }
             
@@ -345,36 +348,36 @@ a.map((v)=>{
         /*** les propriétés en 0... */
         if(isLessThanTen){
             /*** les propriétés de longueur : w0, w10, 100 pour 100%, ... */
-            stylesShortcuts['w0'+v] = {
+            stylesShortcuts['w0'+v] = stylesShortcuts['width0'+v] = {
                 width : v+"%"
             }
             /*** propriété de hauteur en pourcentage : h10 pour height:10%, h11 pour height : 11% */
-            stylesShortcuts['h0'+v] = {
+            stylesShortcuts['h0'+v] = stylesShortcuts['height0'+v] = {
                 height : v+"%"
             }
             /*** les proprités de padding : p10 : padding : 10 */
-            stylesShortcuts['p0'+v] = {
+            stylesShortcuts['p0'+v] = stylesShortcuts['padding0'+v] = {
                 padding : v
             }
             /*** les propriétés de margin pour m10 pour margin 10, m20 pour margin 20 */
-            stylesShortcuts['m0'+v] = {
+            stylesShortcuts['m0'+v] = stylesShortcuts['margin0'+v] = {
                 margin : v
             }
             /*** les propriétés de paddingHorizontal */
-            stylesShortcuts['ph0'+v] = {
+            stylesShortcuts['ph0'+v] = stylesShortcuts['paddingHorizontal0'+v] = {
                 paddingHorizontal : v,
             }
 
             /*** les props de padding vertical */
-            stylesShortcuts['pv0'+v] = {
+            stylesShortcuts['pv0'+v] = stylesShortcuts['paddingVertical0'+v] = {
                 paddingVertical : v,
             }
             /*** les props de margin horizontal */
-            stylesShortcuts['mh0'+v] = {
+            stylesShortcuts['mh0'+v] = stylesShortcuts['marginHorizontal0'+v] = {
                 marginHorizontal : v,
             }
             /*** les props de margin vertical mv10 pour margin vertical 10 */
-            stylesShortcuts['mv0'+v] = {
+            stylesShortcuts['mv0'+v] = stylesShortcuts['marginVertical0'+v] = {
                 marginVertical : v,
             }
         }
