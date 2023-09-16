@@ -5,7 +5,7 @@
 /*** for usage, @see : https://github.com/raphaelpor/sync-storage 
   @see : https://github.com/echowaves/expo-storage
 */
-import { Storage } from 'expo-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import isPromise from "$cutils/isPromise";
 import {handleError} from './helpers';
 import {stringify} from "$cutils/json";
@@ -15,7 +15,7 @@ let currentInitSession = undefined;
 
 export const isInitialized = x=> isPromise(currentInitSession);
 
-class SyncStorage {
+class SyncAsyncStorage {
   data = new Map();
   loading = true;
 
@@ -23,8 +23,8 @@ class SyncStorage {
     if(isInitialized()){
       return currentInitSession;
     }
-    currentInitSession = Storage.getAllKeys().then((keys) =>
-      Storage.multiGet(keys).then((data) => {
+    currentInitSession = AsyncStorage.getAllKeys().then((keys) =>
+      AsyncStorage.multiGet(keys).then((data) => {
         data.forEach(this.saveItem.bind(this));
         this.isInitialized = true;
         return [...this.data];
@@ -42,7 +42,7 @@ class SyncStorage {
     if (!key) return handleError('set', 'a key');
     this.data.set(key, value);
     value = stringify(value);
-    return Storage.setItem(key, value).then((v)=>{return {[key]:value}});
+    return AsyncStorage.setItem(key, value).then((v)=>{return {[key]:value}});
   }
 
   remove(key) {
@@ -50,7 +50,7 @@ class SyncStorage {
     if (!key) return handleError('remove', 'a key');
 
     this.data.delete(key);
-    return Storage.removeItem(key);
+    return AsyncStorage.removeItem(key);
   }
 
   saveItem(item) {
@@ -72,8 +72,8 @@ class SyncStorage {
 }
 
 
-const syncStorage = new SyncStorage();
+const syncAsyncStorage = new SyncAsyncStorage();
 
-syncStorage.init();
+syncAsyncStorage.init();
 
-export default syncStorage;
+export default syncAsyncStorage;
