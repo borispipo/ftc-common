@@ -31,7 +31,9 @@ module.exports = function(opts){
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
     const src = path.resolve(projectRoot,"src");
     const packagePath = path.resolve(projectRoot,"package.json");
-    const configPath = path.resolve(projectRoot,"comn-pkgjson.json");
+    const node_modulesPath = path.resolve(projectRoot,"node_modules");
+    const packageJSONName = "package.common.app.json"
+    const configPath = fs.existsSync(node_modulesPath)? path.resolve(node_modulesPath,packageJSONName) : path.resolve(projectRoot,packageJSONName);
     if(fs.existsSync(packagePath)){
         try {
             const packageObj = require(`${packagePath}`);
