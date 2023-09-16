@@ -2,8 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-/*** for usage, @see : https://github.com/raphaelpor/sync-storage */
-import AsyncStorage from '@react-native-async-storage/async-storage';
+/*** for usage, @see : https://github.com/raphaelpor/sync-storage 
+  @see : https://github.com/echowaves/expo-storage
+*/
+import { Storage } from 'expo-storage'
 import isPromise from "$cutils/isPromise";
 import {handleError} from './helpers';
 import {stringify} from "$cutils/json";
@@ -21,8 +23,8 @@ class SyncStorage {
     if(isInitialized()){
       return currentInitSession;
     }
-    currentInitSession = AsyncStorage.getAllKeys().then((keys) =>
-      AsyncStorage.multiGet(keys).then((data) => {
+    currentInitSession = Storage.getAllKeys().then((keys) =>
+      Storage.multiGet(keys).then((data) => {
         data.forEach(this.saveItem.bind(this));
         this.isInitialized = true;
         return [...this.data];
@@ -40,7 +42,7 @@ class SyncStorage {
     if (!key) return handleError('set', 'a key');
     this.data.set(key, value);
     value = stringify(value);
-    return AsyncStorage.setItem(key, value).then((v)=>{return {[key]:value}});
+    return Storage.setItem(key, value).then((v)=>{return {[key]:value}});
   }
 
   remove(key) {
@@ -48,7 +50,7 @@ class SyncStorage {
     if (!key) return handleError('remove', 'a key');
 
     this.data.delete(key);
-    return AsyncStorage.removeItem(key);
+    return Storage.removeItem(key);
   }
 
   saveItem(item) {
