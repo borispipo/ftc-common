@@ -25,7 +25,7 @@ module.exports = function(opts){
     /***** faire une copie du fichier package.json, situé à la racine du projet */
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
-    let {projectRoot,withPouchdb,withPouchDB,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
+    let {projectRoot,withPouchdb,withPouchDB,assets,alias,packageJSON:cPackageJSON,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
     withPouchDB = withPouchDB || withPouchdb;
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
@@ -50,7 +50,11 @@ module.exports = function(opts){
             console.log(e," writing file sync on package JSON, file : $common/babel.config.alias")
         }
     }
-    const $packageJSON = fs.existsSync(configPath) && configPath || path.resolve(common,"app","config.default.json");
+    const pkg = opts["$package.json"] || opts.$packageJSON;
+    const pkgPath = typeof cPackageJSON =='string' && fs.existsSync(cPackageJSON) && cPackageJSON.toLowerCase().includes("package.json") && cPackageJSON || 
+        pkg && typeof pkg =='string' && fs.existsSync(pkg) && pkg.toLowerCase().includes("package.json") && pkg || null;
+    ;
+    const $packageJSON = pkgPath || fs.existsSync(configPath) && configPath || path.resolve(common,"app","config.default.json");
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const cdataFileManager = path.resolve(common,"pouchdb","dataFileManager");
     const r = {
