@@ -31,13 +31,12 @@ module.exports = function(opts){
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
     const src = path.resolve(projectRoot,"src");
     const packagePath = path.resolve(projectRoot,"package.json");
-    const $packageJSON = fs.existsSync(packagePath) && packagePath || path.resolve(common,"app","config.default.json");
+    const $packageJSON = getPackageJSOn(opts.$packageJSON,opts.packageJSON,packagePath,path.resolve(common,"app","config.default.json"));
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const cdataFileManager = path.resolve(common,"pouchdb","dataFileManager");
     const r = {
         "$cmedia" : path.resolve(common,"media"),
         $packageJSON,
-        "$package.json" : $packageJSON,
         "$capp" : path.resolve(common,"app"),
         "$capi" : path.resolve(common,"api"),
         "$capiCustom" : path.resolve(common,"api","apiCustom"),
@@ -137,4 +136,15 @@ module.exports = function(opts){
     }
     r.$print = r.$print || r["$cprint"];
     return r;
+}
+
+const getPackageJSOn = (p)=>{
+    if(Array.isArray(p)){
+        for(let i in p){
+            const r = getPackageJSOn(p[i]);
+            if(r) return r;
+        }
+    }
+    if(typeof p =='string' && p && fs.existsSync(p) && p.toLowerCase().trim().endsWith(".json")) return p;
+    return null;
 }
