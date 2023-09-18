@@ -11,7 +11,7 @@ import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
 import defaultStr from "$cutils/defaultStr";
 
-const pJson = require("$package.json");
+const pJson = require("$packageJSON");
 
 const packageJSON = pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
 

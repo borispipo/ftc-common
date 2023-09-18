@@ -31,30 +31,7 @@ module.exports = function(opts){
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
     const src = path.resolve(projectRoot,"src");
     const packagePath = path.resolve(projectRoot,"package.json");
-    const node_modulesPath = path.resolve(projectRoot,"node_modules");
-    const packageJSONName = "package.common.app.json"
-    const configPath = fs.existsSync(node_modulesPath)? path.resolve(node_modulesPath,packageJSONName) : path.resolve(projectRoot,packageJSONName);
-    if(fs.existsSync(packagePath)){
-        try {
-            const packageObj = require(`${packagePath}`);
-            if(typeof packageObj.name =="string"){
-                packageObj.name = packageObj.name.toUpperCase();
-            }
-            if(packageObj){
-                ["scripts","private","main","repository","keywords","bugs","dependencies","devDependencies"].map(v=>{
-                    delete packageObj[v];
-                })
-                fs.writeFileSync(configPath,JSON.stringify(packageObj,null,"\t"));
-            }
-        } catch (e){
-            console.log(e," writing file sync on package JSON, file : $common/babel.config.alias")
-        }
-    }
-    const pkg = opts["$package.json"] || opts.$packageJSON;
-    const pkgPath = typeof cPackageJSON =='string' && fs.existsSync(cPackageJSON) && cPackageJSON.toLowerCase().includes("package.json") && cPackageJSON || 
-        pkg && typeof pkg =='string' && fs.existsSync(pkg) && pkg.toLowerCase().includes("package.json") && pkg || null;
-    ;
-    const $packageJSON = pkgPath || fs.existsSync(configPath) && configPath || path.resolve(common,"app","config.default.json");
+    const $packageJSON = fs.existsSync(packagePath) && packagePath || path.resolve(common,"app","config.default.json");
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const cdataFileManager = path.resolve(common,"pouchdb","dataFileManager");
     const r = {
