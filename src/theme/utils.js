@@ -9,10 +9,6 @@ export * from "./alpha";
 
 export {themeRef};
 
-export const getStyleSheet = x => {
-    return themeRef && themeRef.StyleSheet ? themeRef.StyleSheet : null;
-}
-
 export const fields = {
     name : {
         type : 'text',
