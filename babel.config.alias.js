@@ -31,7 +31,7 @@ module.exports = function(opts){
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
     const src = path.resolve(projectRoot,"src");
     const packagePath = path.resolve(projectRoot,"package.json");
-    const $packageJSON = getPackageJSON(opts.$packageJSON,opts.packageJSON,packagePath,path.resolve(common,"app","config.default.json"));
+    const $packageJSON = getPackageJSON([opts.$packageJSON,opts.packageJSON,packagePath,path.resolve(common,"app","config.default.json")]);
     const pouchdbIndex = path.resolve(common,"pouchdb",withPouchDB?"index.with-pouchdb":"index.with-no-pouchdb");
     const cdataFileManager = path.resolve(common,"pouchdb","dataFileManager");
     const r = {
