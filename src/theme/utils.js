@@ -58,9 +58,9 @@ export const fields = {
             }
         }
     },
-    primaryText : {
+    onPrimary : {
         type :'color',
-        text :'Texte sur couleur principale [primaryText]',
+        text :'Texte sur couleur principale [onPrimary]',
         required : true,
     },
     secondary : {
@@ -76,9 +76,9 @@ export const fields = {
             }
         }
     },
-    secondaryText : {
+    onSecondary : {
         type :'color',
-        text :'Texte sur couleur secondaire [secondaryText]',
+        text :'Texte sur couleur secondaire [onSecondary]',
         required : true,
     },
     text : {
@@ -102,9 +102,9 @@ export const fields = {
         type :'color',
         text :'Couleur de surface [surface]',
     },
-    surfaceText : {
+    onSurface : {
         type :'color',
-        text :'Texte sur surface [surfaceText]',
+        text :'Texte sur surface [onSurface]',
     },
     primaryOnSurface : {
         type :'color',

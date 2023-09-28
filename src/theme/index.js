@@ -32,6 +32,7 @@ export const isStatusBarColorDarken = x=>{
 
 
 /*** modifie les couleurs du theme pris en paramètre 
+   @see : https://github.com/pchmn/expo-material3-theme/blob/main/src/ExpoMaterial3Theme.types.ts#L59-L62
  * @param {object} objet theme ou tout simplement les couleurs pris en paramètre, valide selon la fonction isValid
  * @return {object} theme dont les couleurs ont été modifiées
 */

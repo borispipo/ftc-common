@@ -31,16 +31,16 @@ export const getDefaultDark = x=>{
 let colors = {};
 export const lightColors = {
     info : '#1890FF',
-    infoText : "white",
+    onInfo : "white",
     success : '#4caf50',
-    successText : "white",
+    onSuccess : "white",
     warning : '#FFC107',
     error: '#B00020',
-    errorText : "white",
+    onError : "white",
     text: black,
     background: '#f6f6f6',
     surface: white,
-    surfaceText: '#000000',
+    onSurface: '#000000',
     disabled: Colors.setAlpha(black,0.26),
     placeholder: Colors.setAlpha(black,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
@@ -49,16 +49,16 @@ export const lightColors = {
 }
 export const darkColors = {
     info : '#39c0ed',
-    infoText: "black",
+    onInfo: "black",
     success : '#00b74a',
     warning : '#ffa900',
-    warningText: "black",
+    onWarning: "black",
     error : "#EF4E69",
-    errorText: "black",
+    onError: "black",
     background : "#111b21",
     surface : "#343a40",
     surface : "#202c33",
-    surfaceText: '#FFFFFF',
+    onSurface: '#FFFFFF',
     text: white,
     disabled: Colors.setAlpha(white,0.5),
     placeholder: Colors.setAlpha(white,ALPHA),
@@ -97,6 +97,48 @@ const defaultTheme = {
     }
 }
 
+export const namedColors = [
+    'green-white',
+    
+    'indigo-pink',
+    'indigo-dark_orange',
+    
+    'dark_blue-white',
+    'dark_blue-pink',
+        
+    'dark_blue-deep_purple',
+    'dark_blue1-white',
+    
+    'custom_blue-white',
+    'custom_blue-pink',
+    'custom_blue-purple',
+    
+    'light_black-white',
+    'light_black-pink',
+    
+    'teal-white',
+    
+    'purple-white',
+    
+    'pink-white',
+    'pink-yellow',
+    
+    'light_blue-indigo',
+    
+    'custom_purple-white',
+    
+    'brown-white',
+    'brown-yellow',
+    'brown-pink',
+    
+    'blue_grey-white',
+    'blue_grey-yellow',
+    
+    'blue-white',
+    'blue-yellow',
+    'blue-indigo',
+]
+
 export const getColors = ()=>{
     extendObj(lightColors,getDefaultLight());
     extendObj(darkColors,getDefaultDark());
@@ -108,50 +150,11 @@ export const getColors = ()=>{
             name : "odoo",
             primary : "#714B67",
             secondary : "#017e84",
-            primaryText : "rgba(255, 255, 255, 0.9)",
-            secondaryText : white,
+            onPrimary : "rgba(255, 255, 255, 0.9)",
+            onSecondary : white,
             surface : "white",
             disabled : "#8f8f8f",
         },
-        'green-white',
-    
-        'indigo-pink',
-        'indigo-dark_orange',
-    
-        'dark_blue-white',
-        'dark_blue-pink',
-        
-        'dark_blue-deep_purple',
-        'dark_blue1-white',
-    
-        'custom_blue-white',
-        'custom_blue-pink',
-        'custom_blue-purple',
-    
-        'light_black-white',
-        'light_black-pink',
-    
-        'teal-white',
-    
-        'purple-white',
-    
-        'pink-white',
-        'pink-yellow',
-    
-        'light_blue-indigo',
-    
-        'custom_purple-white',
-    
-        'brown-white',
-        'brown-yellow',
-        'brown-pink',
-    
-        'blue_grey-white',
-        'blue_grey-yellow',
-    
-        'blue-white',
-        'blue-yellow',
-        'blue-indigo',
     ]
     const dark1 = {
         ...darkColors,
@@ -160,13 +163,13 @@ export const getColors = ()=>{
         dark: true,
         primary: "#bcab95",
         primaryOnSurface: "#bcab95",
-        primaryText: "white",
+        onPrimary: "white",
         secondary: "#fbcfe8",
         secondaryOnSurface: "#fbcfe8",
-        secondaryText: "black",
-        successText: "black",
+        onSecondary: "black",
+        onSuccess: "black",
         surface: "#202c33",
-        surfaceText: "#FFFFFF",
+        onSurface: "#FFFFFF",
     }
     const lColors = {
         dark_blue : "#0073b1",
@@ -217,14 +220,14 @@ export const getColors = ()=>{
             secondaryName,
             ...defaultTheme.colors,
             primary,
-            primaryText : Colors.getContrast(primary),
+            onPrimary : Colors.getContrast(primary),
             secondary,
-            secondaryText : Colors.getContrast(secondary),
+            onSecondary : Colors.getContrast(secondary),
         }
         if(secondaryName =='white'){
             c.primaryOnSurface = primary;
             c.secondaryOnSurface = primary;
-            c.secondaryText = black;
+            c.onSecondary = black;
             c.disabled = Colors.setAlpha(black,0.6);
         }
         if(isMainTheme){
