@@ -48,16 +48,13 @@ export const updateColors  = (theme,force)=>{
     ///la couleur secondaire
     colors.primary = Colors.isValid(colors.primary)? colors.primary : Colors.isValid(colors.primaryColor)? colors.primaryColor : cTheme.primary;
     colors.secondary = Colors.isValid(colors.secondary)? colors.secondary : Colors.isValid(colors.secondaryColor)? colors.secondaryColor  : cTheme.colors.secondary;
-    colors.primaryText = Colors.isValid(colors.primaryText)? colors.primaryText : Colors.getContrast(colors.primary);
-    colors.secondaryText = Colors.isValid(colors.secondaryText)? colors.secondaryText : Colors.getContrast(colors.secondary);
-    colors.surfaceText = Colors.getContrast(colors.surface);
     colors.info = Colors.isValid(colors.info)? colors.info : lightColors.info;
     colors.warning = Colors.isValid(colors.warning)? colors.warning : lightColors.warning;
     colors.error = Colors.isValid(colors.error)? colors.error : lightColors.error;
     colors.success = Colors.isValid(colors.success)? colors.success : lightColors.success;
-    ['error','success','info','warning'].map((c)=>{
-        const key = c+"Text";
-        colors[key] = Colors.isValid(colors[key])? colors[key] : Colors.getContrast(colors[c])
+    ['primary','secondary','background','surface','error','success','info','warning'].map((c)=>{
+        const key = c+"Text",onKey="on"+c.trim().ucFirst();
+        colors[key] = colors[onKey] = Colors.isValid(colors[onKey]) ? colors[onKey] :  Colors.isValid(colors[key])? colors[key] : Colors.getContrast(colors[c])
     });
    
     if(!Colors.isValid(colors.primaryOnSurface)){
