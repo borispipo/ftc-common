@@ -30,10 +30,11 @@ import useNativeSWRInfinite from 'swr/infinite'
  * 
  */
 export default function useSwr (path,opts) {
-  const {swrOptions,url,fetcher,...options} = getFetcherOptions(path,opts);
+  const {swrOptions,...options} = getFetcherOptions(opts);
   const { data, error,mutate,...rest } = useSWR(path,(fetchUrl)=>{
-    options.swrQueryKey = options.swrQueryPath = fetchUrl;
-    return fetcher(url,options);
+    const {fetcher,...rest} = apiGetFetcherOptions(fetchUrl,options);
+    rest.swrQueryKey = options.swrQueryPath = fetchUrl;
+    return fetcher(path,rest);
   },swrOptions);
   return {
     ...rest,
@@ -67,7 +68,7 @@ export const useSWRInfinite = (getKey,opts)=>{
     }
     return setQueryParams(fetchUrl,{page:pageIndex});
   },typeof fetcher =='function'?fetcher : (url)=>{
-    const {url: fUrl,fetcher:cFetcher,...opts2} = getFetcherOptions(url,options);
+    const {url: fUrl,fetcher:cFetcher,...opts2} = getFetcherOptions(options);
     return cFetcher(fUrl,opts2);
   },swrOptions);
   return {
@@ -85,9 +86,9 @@ export const useSWRInfinite = (getKey,opts)=>{
 }
 export const useInfinite = useSWRInfinite;
 
-  export const getFetcherOptions = (path,opts)=>{
-    const {swrOptions,...rest} = apiGetFetcherOptions(path,opts);
-    return {...rest,swrOptions :extendObj(true,{},appConfig.swr,swrOptions)};
+  export const getFetcherOptions = (opts)=>{
+    opts = defaultObj(opts);
+    return {...opts,swrOptions :extendObj(true,{},appConfig.swr,opts.swrOptions)};
   }
 
   export * from "swr";
