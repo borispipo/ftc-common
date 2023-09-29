@@ -183,41 +183,14 @@ export const handleFetchError = (opts)=>{
   }
   throw(rest);
 }
-
-/*** le mutator permet de modifier les options de la recherche dynamiquement 
- * ajout de la props fetchOptionsMutator : permettant d'être en mesure de muter les fetchOptions de la requête envoie l'envoie vers le serveur
- * si la fonction fetchOptionsMutator retourne un objet contenant la props url valide alors c'est cet url qui sera utilisée pour effectuer la requête fetch    
-   la fonction fetchOptionsMutator, lorsqu'elle retourne un objet, les propriétés dudit objet permettent d'override les propriétés à passer à la fonction handleFetchResult
-*/
-export function getFetcherOptions (opts,options){
-    if(opts && typeof opts =="string"){
-        opts = {path:opts};
-     }
-     opts = extendObj(true,{},opts,options);
-     let {path,url,fetcher,auth,isAuth,includeCredentials,queryParams,mutator,fetchOptionsMutator,offlineMode,onlineMode,checkOnline} = opts;
-     isAuth = isAuth || auth;
-     url = defaultStr(url,path);
-     queryParams = Object.assign({},queryParams);
-     const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-         return originalFetch(url,opts2)
-            .then(res=>handleFetchResult({...opts,fetchResult:res}))
-            .catch((error)=>{
-               return handleFetchError({...opts,error});
-         });
-     }
-     opts.fetcher = (url,opts2)=>{
-        const delay = defaultNumber(opts.delay,opts.timeout);
-        const canRunOffline = onlineMode === false || offlineMode === true && true || false;
-        const p = (!canRunOffline && isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline())? 
-              APP.checkOnline().then(()=>{
-                 return fetcher2(url,opts2);
-              }) : fetcher2(url,opts2);
-
-        return timeout(p,delay).catch((error)=>{
-           return handleFetchError({...opts,error})
-        });
-     }
-     opts.queryParams = queryParams;
+export const prepareFetchOptions = (_opts,options)=>{
+   if(_opts && typeof _opts =="string"){
+      _opts = {path:_opts};
+   }
+   let {path,url,includeCredentials,queryParams,mutator,...opts} = extendObj(true,{},_opts,options);;
+   url = defaultStr(url,path);
+   queryParams = Object.assign({},queryParams);
+   opts.queryParams = queryParams;
      const method = defaultStr(opts.method,"get").toLowerCase();
      if((method ==='get' | method =='post') && (isObj(opts.fetchOptions))){
          if(method =='get'){
@@ -226,9 +199,6 @@ export function getFetcherOptions (opts,options){
             opts.body = defaultObj(opts.body);
             opts.body.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.body.fetchOptions);
          }
-     }
-     if(typeof mutator =='function'){
-        mutator(opts)
      }
      const requestHeaders = getRequestHeaders(opts);
      opts.headers = extendObj({},opts.headers,requestHeaders)
@@ -249,6 +219,37 @@ export function getFetcherOptions (opts,options){
      }
      delete opts.authorization;
      delete opts.Authorization;
+     if(typeof mutator =='function'){
+         mutator(opts)
+     }
+     return opts;
+}
+/*** le mutator permet de modifier les options de la recherche dynamiquement 
+ * ajout de la props fetchOptionsMutator : permettant d'être en mesure de muter les fetchOptions de la requête envoie l'envoie vers le serveur
+ * si la fonction fetchOptionsMutator retourne un objet contenant la props url valide alors c'est cet url qui sera utilisée pour effectuer la requête fetch    
+   la fonction fetchOptionsMutator, lorsqu'elle retourne un objet, les propriétés dudit objet permettent d'override les propriétés à passer à la fonction handleFetchResult
+*/
+export function getFetcherOptions (opts,options){
+     opts = prepareFetchOptions(opts,options);
+     const {fetcher,offlineMode,onlineMode,checkOnline} = opts;
+     const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
+         return originalFetch(url,opts2)
+            .then(res=>handleFetchResult({...opts,fetchResult:res}))
+            .catch((error)=>{
+               return handleFetchError({...opts,error});
+         });
+     }
+     opts.fetcher = (url,opts2)=>{
+        const delay = defaultNumber(opts.delay,opts.timeout);
+        const canRunOffline = onlineMode === false || offlineMode === true && true || false;
+        const p = (!canRunOffline && isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline())? 
+         APP.checkOnline().then(()=>{
+            return fetcher2(url,opts2);
+         }) : fetcher2(url,opts2);
+         return timeout(p,delay).catch((error)=>{
+           return handleFetchError({...opts,error})
+         });
+     }
      return opts;
 }
 
