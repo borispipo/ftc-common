@@ -31,8 +31,8 @@ import useNativeSWRInfinite from 'swr/infinite'
  */
 export default function useSwr (path,opts) {
   const {swrOptions,url,fetcher,...options} = getFetcherOptions(path,opts);
-  const { data, error,mutate,...rest } = useSWR(path,()=>{
-    options.swrQueryKey = options.swrQueryPath = path;
+  const { data, error,mutate,...rest } = useSWR(path,(fetchUrl)=>{
+    options.swrQueryKey = options.swrQueryPath = fetchUrl;
     return fetcher(url,options);
   },swrOptions);
   return {
