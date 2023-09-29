@@ -205,18 +205,8 @@ export function getFetcherOptions (opts,options){
                return handleFetchError({...opts,error});
          });
      }
-     fetcher = (url,opts2)=>{
-        let customOpts = {};
-        if(typeof fetchOptionsMutator =='function'){
-           const r = fetchOptionsMutator({...opts2,url,path:url});
-           if(isObj(r)){
-              if(isValidURL(r.url)){
-                 url = r.url;
-              }
-              customOpts = r;
-           }
-        } 
-        const delay = defaultNumber(customOpts.delay,customOpts.timeout,opts.delay,opts.timeout);
+     opts.fetcher = (url,opts2)=>{
+        const delay = defaultNumber(opts.delay,opts.timeout);
         const canRunOffline = onlineMode === false || offlineMode === true && true || false;
         const p = (!canRunOffline && isClientSide() && (checkOnline === true || canCheckOnline) && !APP.isOnline())? 
               APP.checkOnline().then(()=>{
@@ -224,7 +214,7 @@ export function getFetcherOptions (opts,options){
               }) : fetcher2(url,opts2);
 
         return timeout(p,delay).catch((error)=>{
-           return handleFetchError({...opts,...customOpts,error})
+           return handleFetchError({...opts,error})
         });
      }
      opts.queryParams = queryParams;
@@ -243,7 +233,6 @@ export function getFetcherOptions (opts,options){
      const requestHeaders = getRequestHeaders(opts);
      opts.headers = extendObj({},opts.headers,requestHeaders)
      opts.url = buildAPIPath(url,opts.queryParams);
-     opts.fetcher = fetcher;
      ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
      if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization || opts.headers.authorization)){
         opts.credentials = "include";
