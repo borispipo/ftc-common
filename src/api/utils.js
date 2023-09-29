@@ -115,15 +115,17 @@ const t = process.env.API_FETCH_TIMEOUT && (typeof process.env.API_FETCH_TIMEOUT
 export const getFetchDelay = x=> defaultNumber(appConfig.get("apiFetchDelay","apiFetchTimeout"),t,60000);
 
 export async function timeout(promise,delay,errorArgs) {
-  delay = typeof delay =='number' && delay ? delay : getFetchDelay();
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      errorArgs = defaultObj(errorArgs);
-        reject({message:i18n.lang("api_timeout"),...React.getOnPressArgs(errorArgs)})
-    }, delay)
-    promise.then(resolve).catch(reject);
-  })
-}
+    delay = typeof delay =='number' && delay ? delay : getFetchDelay();
+    return new Promise(function(resolve, reject) {
+      const tt = setTimeout(function() {
+          errorArgs = defaultObj(errorArgs);
+          reject({message:i18n.lang("api_timeout"),...React.getOnPressArgs(errorArgs)})
+      }, delay);
+      return promise.then(resolve).catch(reject).finally(()=>{
+        clearTimeout(tt);
+      });
+    });
+  }
 
 export const isPostMethod = function(req){
     return isObj(req) && defaultStr(req.method).toUpperCase()=="POST"? true : false;
