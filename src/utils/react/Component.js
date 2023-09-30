@@ -68,8 +68,9 @@ export class BaseComponent extends React.PureComponent {
      *  @parm : le callback à appeler
      *  @param : le boolean pour spécifier si le composant sera mise à jour indépendemment de l'état en cours de mise à jour ou pas
      */
-    setState (state,cb,force){
+    setState (...rest){
         if(!this._isMounted()) return this;
+        return super.setState(...rest);
         if(isFunction(force)){
             cb = isFunction(cb)? cb : force;
             force = undefined;
