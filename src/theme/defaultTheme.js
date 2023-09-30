@@ -101,41 +101,27 @@ export const namedColors = [
     'green-white',
     
     'indigo-pink',
-    'indigo-dark_orange',
-    
     'dark_blue-white',
     'dark_blue-pink',
-        
     'dark_blue-deep_purple',
-    'dark_blue1-white',
     
     'custom_blue-white',
     'custom_blue-pink',
     'custom_blue-purple',
     
-    'light_black-white',
-    'light_black-pink',
-    
     'teal-white',
     
     'purple-white',
     
-    'pink-white',
-    'pink-yellow',
-    
     'light_blue-indigo',
-    
     'custom_purple-white',
     
     'brown-white',
-    'brown-yellow',
     'brown-pink',
     
     'blue_grey-white',
-    'blue_grey-yellow',
     
     'blue-white',
-    'blue-yellow',
     'blue-indigo',
 ]
 
@@ -155,6 +141,7 @@ export const getColors = ()=>{
             surface : "white",
             disabled : "#8f8f8f",
         },
+        ...namedColors,
     ]
     const dark1 = {
         ...darkColors,

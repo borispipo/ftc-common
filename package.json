@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "3.47.0",
+  "version": "3.48.3",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -48,7 +48,7 @@
     "react-native-get-random-values": "^1.9.0",
     "sanitize-filename": "^1.6.3",
     "stable-hash": "^0.0.3",
-    "swr": "^2.2.2",
+    "swr": "^2.2.4",
     "written-number": "^0.11.1"
   }
 }
