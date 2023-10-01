@@ -105,49 +105,6 @@ export const getTheme = x => Theme.current ? Theme.current : defaultTheme;
 
 export const getColors  =  x => getTheme().colors;
 
-/**** permet de mettre à jour le thème courant : 
- *  @voir : https://callstack.github.io/react-native-paper/theming.html
- *  @paramètre de l'objet Theme : {
-    primary - primary color for your app, usually your brand color.
-    secondary - secondary color for your app which complements the primary color.
-    background - background color for pages, such as lists.
-    surface - background color for elements containing content, such as cards.
-    text - text color for content.
-    disabled - color for disabled elements.
-    placeholder - color for placeholder text, such as input placeholder.
-    backdrop - color for backdrops of various components such as modals.
-    onSurface - background color for snackbars
-    notification - background color for badges
- * }
- * 
- */
-
-export const updateTheme = (theme)=>{
-    theme = updateColors(theme);
-    if(isValid(theme)){
-        Object.map(defaultTheme,(v,i)=>{
-            if(i !=='colors' && !(i in theme)){
-                theme[i] = v;
-            }
-        });
-        if(typeof appConfig.extendAppTheme ==='function'){
-            const r = appConfig.extendAppTheme(theme);;
-            if(isValid(r)){
-                theme = r;
-            }
-        }
-        updateNativeTheme(theme);
-        if(themeRef && typeof themeRef.setBackgroundColor =='function'){
-            themeRef.setBackgroundColor(theme.colors.background);
-        }
-        setTimeout(()=>{
-            APP.trigger(APP.EVENTS.UPDATE_THEME,theme);
-        },100);
-        Theme.current = theme;
-    }
-    return theme;
-} 
-
 export const remToPixel=  (x)=> 16*defaultNumber(x);
 
 export const pixelToRem  = x => 0.0625 * defaultNumber(x);
@@ -237,6 +194,48 @@ const theme = {
     }
 }
 
+
+/**** permet de mettre à jour le thème courant : 
+ *  @voir : https://callstack.github.io/react-native-paper/theming.html
+ *  @paramètre de l'objet Theme : {
+    primary - primary color for your app, usually your brand color.
+    secondary - secondary color for your app which complements the primary color.
+    background - background color for pages, such as lists.
+    surface - background color for elements containing content, such as cards.
+    text - text color for content.
+    disabled - color for disabled elements.
+    placeholder - color for placeholder text, such as input placeholder.
+    backdrop - color for backdrops of various components such as modals.
+    onSurface - background color for snackbars
+    notification - background color for badges
+ * }
+ * 
+ */
+export const updateTheme = (currentTheme)=>{
+    currentTheme = updateColors(currentTheme);
+    if(isValid(currentTheme)){
+        Object.map(defaultTheme,(v,i)=>{
+            if(i !=='colors' && !(i in currentTheme)){
+                currentTheme[i] = v;
+            }
+        });
+        if(typeof appConfig.extendAppTheme ==='function'){
+            const r = appConfig.extendAppTheme(currentTheme,theme);
+            if(isValid(r)){
+                currentTheme = r;
+            }
+        }
+        updateNativeTheme(currentTheme,theme);
+        if(themeRef && typeof themeRef.setBackgroundColor =='function'){
+            themeRef.setBackgroundColor(currentTheme.colors.background);
+        }
+        setTimeout(()=>{
+            APP.trigger(APP.EVENTS.UPDATE_THEME,currentTheme);
+        },100);
+        Theme.current = currentTheme;
+    }
+    return currentTheme;
+} 
 
 export default theme;
 
