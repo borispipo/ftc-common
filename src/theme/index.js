@@ -57,23 +57,20 @@ export const updateColors  = (theme,force)=>{
         const key = c+"Text",onKey="on"+c.trim().ucFirst();
         colors[key] = colors[onKey] = Colors.isValid(colors[onKey]) ? colors[onKey] :  Colors.isValid(colors[key])? colors[key] : Colors.getContrast(colors[c])
     });
-   
     if(!Colors.isValid(colors.primaryOnSurface)){
-        if(Colors.getContrast(colors.primary) != Colors.getContrast(colors.surface)){
-            colors.primaryOnSurface = colors.primary
+        if( Colors.getContrast(colors.primary) === Colors.getContrast(colors.onSurface)){
+            colors.primaryOnSurface = colors.primary;
         } else {
-            colors.primaryOnSurface = colors.secondary;
+            colors.primaryOnSurface = colors.onSurface;
         }
     }
-
     if(!Colors.isValid(colors.secondaryOnSurface)){
-        if(Colors.getContrast(colors.secondary) != Colors.getContrast(colors.surface)){
+        if(Colors.getContrast(colors.secondary) == Colors.getContrast(colors.onSurface)){
             colors.secondaryOnSurface = colors.secondary
         } else {
-            colors.secondaryOnSurface = colors.primary;
+            colors.secondaryOnSurface = colors.onSurface;
         }
     }
-
     //la couleur du status bar
     colors.statusBar = theme.dark ? colors.surface : isStatusBarColorDarken() ? Colors.darken(colors.primary) : colors.primary;
     return theme;
