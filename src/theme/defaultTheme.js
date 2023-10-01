@@ -143,7 +143,7 @@ export const getColors = (opts)=>{
     };
     const t = [
         ...(withDefaults !== false && withDefaultsColors !== false ? [defaultTheme.name,odoo]:[]),
-        ...(withNamed !== false && withNamedColors ? namedColors : []),
+        ...(withNamed !== false && withNamedColors !== false ? namedColors : []),
     ]
     const dark1 = {
         ...darkColors,
