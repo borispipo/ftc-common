@@ -125,23 +125,25 @@ export const namedColors = [
     'blue-indigo',
 ]
 
-export const getColors = ()=>{
+export const getColors = (opts)=>{
     extendObj(lightColors,getDefaultLight());
     extendObj(darkColors,getDefaultDark());
     extendObj(defaultTheme.colors,getDefaultLight());
+    opts = isObj(opts)? opts : {};
+    const {withDefaults,withNamed,withNamedColors,withDefaultsColors} = opts;
+    const odoo = {
+        ...lightColors,
+        name : "odoo",
+        primary : "#714B67",
+        secondary : "#017e84",
+        onPrimary : "rgba(255, 255, 255, 0.9)",
+        onSecondary : white,
+        surface : "white",
+        disabled : "#8f8f8f",
+    };
     const t = [
-        defaultTheme.name,
-        {
-            ...lightColors,
-            name : "odoo",
-            primary : "#714B67",
-            secondary : "#017e84",
-            onPrimary : "rgba(255, 255, 255, 0.9)",
-            onSecondary : white,
-            surface : "white",
-            disabled : "#8f8f8f",
-        },
-        ...namedColors,
+        ...(withDefaults !== false && withDefaultsColors !== false ? [defaultTheme.name,odoo]:[]),
+        ...(withNamed !== false && withNamedColors ? namedColors : []),
     ]
     const dark1 = {
         ...darkColors,
