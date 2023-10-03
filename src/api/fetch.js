@@ -236,7 +236,7 @@ export const prepareFetchOptions = (_opts,options)=>{
 */
 export function getFetcherOptions (opts,options){
      opts = prepareFetchOptions(opts,options);
-     const {fetcher,offlineMode,onlineMode,checkOnline} = opts;
+     const {fetcher,checkOnline} = opts;
      const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
          return originalFetch(url,opts2)
             .then(res=>handleFetchResult({...opts,fetchResult:res}))
@@ -246,8 +246,8 @@ export function getFetcherOptions (opts,options){
      }
      opts.fetcher = (url,opts2)=>{
         const delay = defaultNumber(opts.delay,opts.timeout,opts.delay,opts.timeout);
-        const canRunOffline = onlineMode === false || opts2.onlineMode === false || offlineMode === true || opts2.offlineMode===true && true || false;
-        const checkOnl = (!canRunOffline && isClientSide() && (checkOnline === true || opts.checkOnline === true || canCheckOnline) && !APP.isOnline());
+        const canRunOffline = checkOnline === false || opts2.checkOnline === false;
+        const checkOnl = !canRunOffline && isClientSide() && (canCheckOnline) && !APP.isOnline() || false;
         const p = checkOnl ? APP.checkOnline().then(()=>fetcher2(url,opts2)).catch(e=>{throw e;}) : fetcher2(url,opts2);
         return timeout(p,delay).catch((error)=>{
            return handleFetchError({...opts,...opts2,error})
