@@ -1,13 +1,16 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
 /**
  *  @see : https://www.npmjs.com/package/dateformat
+    @see : https://en.wikipedia.org/wiki/ISO_8601
+    @see : https://momentjs.com/docs/#/use-it
  */
+import appConfig from "$capp/config";
 import i18n from "../i18n";
 import defaultStr from "$cutils/defaultStr";
 import isDateObj from "$cutils/isDateObj";
+import moment from 'moment';
 
 export const SQLDateFormat = "yyyy-mm-dd";
 export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
@@ -16,7 +19,7 @@ export const SQLTimeFormat = "HH:MM:ss";
 const isBool = x=> typeof x=='boolean';
 const isNonNullString = x => x && typeof x =="string";
 
-let global = typeof window =='object' && window ? window : {}
+export const isoDateRegExp = new RegExp( /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/ );
 
 var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZWN]|'[^']*'|'[^']*'/g;
 if(typeof Date.prototype.getDays != 'function'){
@@ -236,8 +239,7 @@ function shorten(arr, sLen) {
 }
 
 
-//const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss";
-var defaultD = null;
+//const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss"
 dateFormat.masks = {
     "day1" : "dd",
     hour1 : "HH:MM",
@@ -250,11 +252,20 @@ dateFormat.masks = {
      month1 : "mmm",
      month2 : "mmmm",
      month3 : "mm",
-    'default': isNonNullString(defaultD)? defaultD : 'dd/mm/yyyy HH:MM:ss',
-    'defaultDate' : 'dd/mm/yyyy',
+    get default(){
+        const def = appConfig.get("defaultDateTimeFormat");
+        return isNonNullString(def)? def : 'dd/mm/yyyy HH:MM:ss';
+    },
+    get defaultDate(){
+        const def = appConfig.get("defaultDateFormat");
+        return isNonNullString(def)? def : 'dd/mm/yyyy';
+    },
+    get defaultTime(){
+        const def = appConfig.get("defaultTimeFormat");
+        return isNonNullString(def)? def : 'HH:MM:ss';
+    },
     'defaultDat1' : "dd/mm",
     'defaultDat1' : "dd mm",
-    'defaultTime' : 'HH:MM:ss',
     'shortDate':   'm/d/yy',
     "monthO1" : "mm/yyyy",
     "monthO2" : "mm/yy",
@@ -340,8 +351,7 @@ export const DaysAndMonths = {
 
 export const DaysAndMonthsObject = {};
 
-export const defaultDateTimeFormat = dateFormat.masks.default;
-export const defaultDateFormat = dateFormat.masks.defaultDate;
+
 
 const resetDaysAndMonth = ()=>{
     const dayNames = i18n.lang("ms_date_daynames");
@@ -442,25 +452,27 @@ var getInt = function (str, i, minlength, maxlength) {
 };
 
 export function isIsoTimeStr(str) {
-    return isIsoDateStr(str) && !/\T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str);
+    if(!isNonNullString(str)) return;
+    try {
+        return moment(str.trim(),["HH:mm:ss.SSS","HH:mm:ss","HH:mm"])?.isValid();
+    } catch{}
+    return false;
 }
 
 export function isIsoDateStr(str) {
-    if(!isNonNullString(str)){
+    if(!isNonNullString(str) || str.trim().length<6){
         return false;
     }
     str = str.trim();
-    if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) {
+    if(isoDateRegExp.test(str) || !/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)){
         try {
-            const dateParsed = new Date(Date.parse(str))
-            return dateParsed.toUTCString() === new Date(d).toUTCString();
-        } catch{}
-        return false;
+            return moment(str.trim())?.isValid();
+        } catch{
+            return false;
+        }
     }
-    const d = new Date(str); 
-    return d instanceof Date && !isNaN(d.getTime()) && d.toISOString()===str; // valid date 
+    return bool;
 }
-export const isIsoDateString = isIsoDateStr;
 
 export const isTimeStr = (timeStr)=>{
     if(!isNonNullString(timeStr)) return false;
@@ -521,15 +533,7 @@ export function parseTime(t) {
 export const parse = function (val, format,returnObj) {
     val = isNonNullString(val)? val.trim() : val;
     if(isIsoDateStr(val)){
-        const v = Date.parse(val);
-        if(isDateObj(v)){
-            val = new Date(v);
-        } else if(isIsoTimeStr(val)) {
-            const v2 = parseTime(val);
-            if(isDateObj(v2)){
-                val = v2;
-            }
-        }
+        val = moment(val.trim())?.toDate();
     } else if(isNullOrEmpty(val)){
         val = new Date();
     }
@@ -1009,7 +1013,7 @@ export function formatDatePeriod(periodDate,isDateTime){
             if(!isDateTime) isDateTime = isValidSQLDateTime(to);
             to = new Date(to);
         }
-        const dateFormat = isDateTime ? (isFR?defaultDateTimeFormat:SQLDateTimeFormat) : (isFR?defaultDateFormat:SQLDateFormat);
+        const dateFormat = isDateTime ? (isFR?DateLib.defaultDateTimeFormat:SQLDateTimeFormat) : (isFR?DateLib.defaultDateFormat:SQLDateFormat);
         if(isValidDate(from) && isValidDate(to)){
             return "{0} {1} {2} {3}".sprintf(isFR?"Du":"From",new Date(from).toFormat(dateFormat),isFR?"au":"to",new Date(to).toFormat(dateFormat));
         }
@@ -1224,10 +1228,9 @@ Object.defineProperties(DateLib,{
             date_time_format : SQLDateTimeFormat,
         },
     },
+    isoDateRegExp : {value:isoDateRegExp},
     isIsoDateStr : {value:isIsoDateStr},
-    isIsoDateString : {value:isIsoDateString},
     isIsoTimeStr : {value:isIsoTimeStr},
-    isIsoTimeString : {value:isIsoTimeStr},
     addMonths : {
         /**ajoute le nombre de mois à l'objet date
          * @param months : number le nombre de mois à ajouter à la date
@@ -1403,7 +1406,7 @@ Object.defineProperties(DateLib,{
         value : dateFormat.masks.defaultTime,override:false,writable:false
     },
     defaultDateTimeFormat : {
-        value : defaultDateTimeFormat,override:false,writable:false
+        value : dateFormat.masks.default,override:false,writable:false
     },
     SQLDateTimeFormat : {
         value : SQLDateTimeFormat,override:false,writable:false
