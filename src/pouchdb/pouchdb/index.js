@@ -2,21 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isAndroid,isIos} from "$cplatform"
-import mobileNativePouchAdapter from "./native.adapter";
-let extra = {adapter : mobileNativePouchAdapter.adapter};
-import 'react-native-get-random-values';
 import  PouchDB from "pouchdb";
-PouchDB
-  .plugin(mobileNativePouchAdapter)
-if(isIos()){
-  extra.iosDatabaseLocation = 'Library';
-} else if(isAndroid()){
-  extra.androidDatabaseImplementation = 2
+import {isElectron} from "$cplatform";
+import {defaultObj} from "$cutils";
+import sqlPouch from "./sqlitePouch";
+export default   {
+    PouchDB,
+    ...(isElectron() && window.ELECTRON && defaultObj(ELECTRON.getPouchdb({PouchDB,sqlPouch})) || {}),
 }
-export default {
-  PouchDB,
-  ...extra
-}
-
-export {PouchDB};
