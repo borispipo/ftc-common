@@ -119,7 +119,8 @@ if(!isObj(breakpoints.allNormalized)){
  * 
  */
  export const getDimensionsProps = (dimensions)=>{
-    dimensions = isObj(dimensions)? dimensions : {window:Dimensions.get("window"),screen:Dimensions.get("screen")};
+    const dim2 = {window:Dimensions.get("window"),screen:Dimensions.get("screen")};
+    dimensions = isObj(dimensions)? dimensions : dim2;
     return {
         currentMedia : getCurrentMedia(),
         isMobile : isMobileMedia(),
@@ -129,6 +130,8 @@ if(!isObj(breakpoints.allNormalized)){
         isTabletOrDeskTop : isTabletOrDeskTopMedia(),
         isPhone : isPhoneMedia(),
         isSmallPhone : isSmallPhoneMedia(),
+        ...dim2.window,
+        ...dim2,
         ...dimensions,
     };
 }
