@@ -342,8 +342,15 @@ export const getDevMail = x=>getConfigValue("devMail");
 export const getDevWebsite = x=>getConfigValue("devWebsite");
 export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
-export const getAppId = x=>getConfigValue("appId","id");
-export const getAppVersion = x=>getConfigValue("apiVersion");
+export const getAppId = x=>{
+    const appID = getConfigValue("appId","id");
+    const name = getName().trim().replaceAll(" ",".");
+    if(appID){
+        return `${name}-${appID}`;
+    }
+    return name;
+};
+export const getAppVersion = x=>getConfigValue("apiVersion");0
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
