@@ -6,14 +6,25 @@ export function flattenStyle(...styles) {
     if (styles == null || typeof styles !== 'object') {
       return  {};
     }
-    if(typeof StyleSheet.flatten =='function' ) return Object.assign({},StyleSheet.flatten(styles));
-    const flatArray = styles.flat(Infinity);
-    const result = {};
-    for (let i = 0; i < flatArray.length; i++) {
-      const style = flatArray[i];
-      if (style != null && typeof style === 'object') {
-        Object.assign(result, style);
-      }
+    if(typeof StyleSheet.flatten =='function' ){
+      try {
+        const t =  StyleSheet.flatten(styles);
+        if(typeof t =='object' && t){
+          return Object.assign({},t);
+        }
+      } catch{};
+      return {};
     }
-    return result;
+    try {
+      const flatArray = styles.flat(Infinity);
+      const result = {};
+      for (let i = 0; i < flatArray.length; i++) {
+        const style = flatArray[i];
+        if (style != null && typeof style === 'object') {
+          Object.assign(result, style);
+        }
+      }
+      return result;
+    } catch{}
+    return  {};
 }
