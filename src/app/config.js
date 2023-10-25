@@ -343,7 +343,7 @@ export const getDevWebsite = x=>getConfigValue("devWebsite");
 export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>{
-    const appID = getConfigValue("appId","id");
+    const appID = defaultStr(getConfigValue("appId","id"));
     const name = getName().trim().replaceAll(" ",".");
     if(appID){
         return `${name}-${appID}`;
