@@ -13,7 +13,7 @@ import { isComponent } from "$react/isComponent";
 import defTheme,{white,black,lightColors,darkColors} from "./defaultTheme";
 import { themeRef } from "./utils";
 import appConfig from "$capp/config";
-import styles,{flattenStyle,_cursorPointer,webFontFamilly} from "./styles";
+import styles,{flattenStyle,_cursorPointer} from "./styles";
 
 import APP from "$capp/instance";
 
@@ -171,7 +171,6 @@ const theme = {
     get showProfilAvatarOnDrawer (){
         return getProfilAvatarPosition().toLowerCase() === 'drawer'? true : false;
     },
-    get webFontFamilly () {return  webFontFamilly;},
     get withStyles (){ return withStyles},
     get flattenStyle(){return flattenStyle},
     get StyleProp (){return StyleProp},
