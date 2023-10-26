@@ -9,7 +9,6 @@ export const signInRef = {
 export default {
   get hasMethod(){
     return function(methodName){
-        console.log(signInRef.current," has method heeein ",signInRef.current.isMasterAdmin);
         return typeof signInRef.current[methodName] === "function";
     }
   },
