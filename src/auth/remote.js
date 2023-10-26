@@ -15,6 +15,7 @@ import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 import {isPromise,isNonNullString} from "$cutils";
 import appConfig from "$capp/config";
 import SignIn2SignOut from "./authSignIn2SignOut";
+export * from "./authSignIn2SignOut";
 
 export const isSignedIn = isLoggedIn;
 
