@@ -4,20 +4,17 @@
 
 import { useAuth } from "./AuthProvider"
 import React from "$react";
-import appConfig from "$capp/config";
 
 export default function AuthGuard({ children,...rest}) {
-  const auth = useAuth();
+  const {LoginComponent,Login,...auth} = useAuth();
   const { user } = auth;
   const forceRender = React.useForceRender();
   if (isObj(user) && auth.isLoggedIn()){
     const child = typeof children =='function' ? children(auth) : children;
     return React.isValidElement(child)? child : null;
   }
-  const LoginComponent = React.isComponent(appConfig.LoginComponent)? appConfig.LoginComponent : null;
-  if(!LoginComponent){
+  if(!React.isComponent(LoginComponent)){
     throw "Login component not defined!!! Merci de définir le composant de connextion à traver la propriété LoginComponent de $appConfig";
-    return null;
   }
   return <LoginComponent
     {...rest}
