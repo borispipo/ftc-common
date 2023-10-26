@@ -23,7 +23,7 @@ const Auth = {
 };
 
 export default function AuthProvider({ children,...rest}) {
-  extendObj(signInRef,rest);
+  extendObj(signInRef.current,rest);
   const [user, setUser] = React.useState(isLoggedIn()?getLoggedUser():null);
   const signIn = (_user)=>{
     return signInUser(_user).then((u)=>{
