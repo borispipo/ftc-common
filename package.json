@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "3.55.3",
+  "version": "3.55.4",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "delete-docs": "node ./deleteDocsFolder",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
     "docs": "npm run build-docs",
-    "update": "npm i @craftzdog/pouchdb-adapter-websql-core@latest pouchdb@latest pouchdb-authentication@latest pouchdb-erase@latest pouchdb-find@latest prop-types@latest qs@latest react-fast-compare@latest react-is@latest react-native-get-random-values@latest sanitize-filename@latest stable-hash@latest written-number@latest swr@latest"
+    "update": "npm i @craftzdog/pouchdb-adapter-websql-core@latest pouchdb@latest pouchdb-authentication@latest pouchdb-erase@latest pouchdb-find@latest prop-types@latest qs@latest react-fast-compare@latest react-is@latest sanitize-filename@latest stable-hash@latest written-number@latest swr@latest"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,6 @@
     "qs": "^6.11.2",
     "react-fast-compare": "^3.2.2",
     "react-is": "^18.2.0",
-    "react-native-get-random-values": "^1.9.0",
     "sanitize-filename": "^1.6.3",
     "stable-hash": "^0.0.3",
     "swr": "^2.2.4",
