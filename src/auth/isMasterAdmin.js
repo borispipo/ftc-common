@@ -10,8 +10,11 @@ import SignIn2SignOut from "./authSignIn2SignOut";
  * si le mode single user est admis alors par défaut l'utilisateur par défaut est le master admin
  */
 export default function isAuthMasterAdmin(user){
-    if(isSingleUserAllowed()){
-        return !!getDefaultSingleUser();
-    }
-   return !!SignIn2SignOut.isMasterAdmin(defaultObj(user,getLoggedUser()));
+   if(SignIn2SignOut.hasMethod("isMasterAdmin")){
+        return !!SignIn2SignOut.isMasterAdmin(defaultObj(user,getLoggedUser()))
+   }
+   if(isSingleUserAllowed()){
+     return !!getDefaultSingleUser();
+   }
+   return false;
 }
