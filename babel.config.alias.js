@@ -116,11 +116,6 @@ module.exports = function(opts){
     if(!r["$app"]){
         r["$app"] = r["$capp"];
     }
-    r["$csignIn2SignOut"] = path.resolve(common,"auth","signIn2SignOut");
-    /**** cet alias var servir à personnaliser les fonction de connexion signIn et de déconnexion signOut à l'application */
-    if(!r["$signIn2SignOut"]){
-        r["$signIn2SignOut"] = r["$csignIn2SignOut"];
-    }
     /*** alias interne utile pour la compilation en fonction de la platform, soi next où expo */
     r["$active-platform"] = path.resolve(common,"platforms",platform);
     r["$clipboard"] = path.resolve(r["$active-platform"],"clipboard");

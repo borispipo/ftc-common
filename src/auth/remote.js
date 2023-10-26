@@ -14,9 +14,7 @@ import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import {isPromise,isNonNullString} from "$cutils";
 import appConfig from "$capp/config";
-import SignIn2SignOut from "./$authSignIn2SignOut";
-
-export {SignIn2SignOut};
+import SignIn2SignOut from "./authSignIn2SignOut";
 
 export const isSignedIn = isLoggedIn;
 
@@ -36,7 +34,7 @@ export const signIn = (user,callback,trigger)=>{
     trigger = callback;
     callback = t;
   }
-  const isCustom = typeof SignIn2SignOut.signIn =='function';
+  const isCustom = SignIn2SignOut.hasMethod("signIn");
   return (isCustom?SignIn2SignOut.signIn({
     user,
   }):post({
@@ -81,7 +79,7 @@ export const signIn = (user,callback,trigger)=>{
  * @param {boolean} trigger - si l'évènement relatif à la déconnection de l'utilisateur sera déclenché où pas
 */
 export const signOut = (callback,user,trigger)=>{
-  const isCustom = typeof SignIn2SignOut.signOut =='function';
+  const isCustom = SignIn2SignOut.hasMethod("signOut");
   if(typeof user =='boolean'){
       const t = trigger;
       trigger = user;
@@ -140,7 +138,7 @@ export const signOut = (callback,user,trigger)=>{
           }
         });
       }
-      if(typeof SignIn2SignOut.upsertUser =='function'){
+      if(SignIn2SignOut.hasMethod("upsertUser")){
           promise = SignIn2SignOut.upsertUser({user:u});
       } 
       const cb = x=> {
@@ -157,37 +155,33 @@ export const signOut = (callback,user,trigger)=>{
      return Promise.resolve(u);
   };
 
-  const getUProps = (user,functionName,propsName)=>{
+  const getUProps = (user,propsName)=>{
     user = defaultObj(user,getLoggedUser());
-    if(typeof SignIn2SignOut[functionName] =='function'){
-       return SignIn2SignOut[functionName](user);
-    }
-    return user[propsName];
-  }
-
+    return SignIn2SignOut.getUserProp(user,propsName) || user[propsName];
+ }
 /*** retourne le username de l'utilsateur passé en paramètre */
 export const getUserName = (user)=>{
-     return getUProps(user,"getUserName","userName");
+     return getUProps(user,"userName");
 }
 /*** retourne le pseudo de l'utilisateur passé en paramètre */
 export const getUserPseudo = (user)=>{
-    return getUProps(user,"getUserPseudo","pseudo");
+    return getUProps(user,"pseudo");
 }
 
 export const getUserFirstName = (user)=>{
-  return getUProps(user,"getUserFirstName","firstName");
+  return getUProps(user,"firstName");
 }
 
 export const getUserLastName = (user)=>{
-  return getUProps(user,"getUserLastName","lastName");
+  return getUProps(user,"lastName");
 }
 
 export const getUserSurname = (user)=>{
-  return getUProps(user,"getUserSurname","surname");
+  return getUProps(user,"surname");
 }
 
 export const getUserFullName = (user)=>{
-  const fullName = getUProps(user,"getUserFullName","fullName");
+  const fullName = getUProps(user,"fullName");
   if(!fullName){
     let firstName = getUserFirstName(), lastName = getUserLastName();
     if(isNonNullString(firstName) && isNonNullString(lastName)){
@@ -201,8 +195,8 @@ export const getUserFullName = (user)=>{
 }
 
 export const getUserEmail = (user)=>{
-  return getUProps(user,"getUserEmail","email");
+  return getUProps(user,"email");
 }
 export const getUserCode = (user)=>{
-  return getUProps(user,"getUserCode","code");
+  return getUProps(user,"code");
 }

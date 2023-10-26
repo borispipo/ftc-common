@@ -6,6 +6,8 @@ import React from "$react";
 import { signIn as signInUser,signOut } from "./remote";
 import {isSignedIn,signOut2Redirect } from "./instance";
 import {getLoggedUser,isLoggedIn} from "./utils/session";
+import { signInRef } from "./authSignIn2SignOut";
+import {extendObj} from "$cutils";
 
 
 const AuthContext = React.createContext(null);
@@ -20,7 +22,8 @@ const Auth = {
   signOut2Redirect,
 };
 
-export default function AuthProvider({ children }) {
+export default function AuthProvider({ children,...rest}) {
+  extendObj(signInRef,rest);
   const [user, setUser] = React.useState(isLoggedIn()?getLoggedUser():null);
   const signIn = (_user)=>{
     return signInUser(_user).then((u)=>{
@@ -35,7 +38,7 @@ export default function AuthProvider({ children }) {
       callback();
     }
   };
-  return <AuthContext.Provider value={{...Auth,user,signIn, logout,signOut : logout }}>
+  return <AuthContext.Provider value={{...Auth,...rest,user,signIn, logout,signOut : logout }}>
       {children}
   </AuthContext.Provider>;
 }

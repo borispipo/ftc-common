@@ -9,7 +9,6 @@ import appConfig from "$capp/config";
 export default function AuthGuard({ children,...rest}) {
   const auth = useAuth();
   const { user } = auth;
-  console.log(user,"is user111 ",auth);
   const forceRender = React.useForceRender();
   if (isObj(user) && auth.isLoggedIn()){
     const child = typeof children =='function' ? children(auth) : children;
