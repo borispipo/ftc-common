@@ -11,11 +11,11 @@ import SignIn2SignOut from "./$authSignIn2SignOut";
  */
 export default function isAuthMasterAdmin(user){
     if(isSingleUserAllowed()){
-        return getDefaultSingleUser();
+        return !!getDefaultSingleUser();
     }
     user = defaultObj(user,getLoggedUser());
     if(typeof SignIn2SignOut.isMasterAdmin =='function'){
-        return SignIn2SignOut.isMasterAdmin(user);
+        return !!SignIn2SignOut.isMasterAdmin(user);
     }
     return false;
 }
