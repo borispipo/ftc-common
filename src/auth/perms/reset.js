@@ -37,3 +37,17 @@ export const resetPerms = ()=>{
     allPerms.structDataPerms = structDataPerms;
     return allPerms;
 }
+
+export const disableAuth = ()=>{
+    appConfig.set("isAuthSingleUserAllowed",true);
+    appConfig.set("authDefaultUser",{code:"root",password:"admin123",label:"Master admin"});
+    resetPerms();
+    return true;
+  }
+  
+  export const enableAuth = ()=>{
+    appConfig.set("isAuthSingleUserAllowed",false);
+    appConfig.set("authDefaultUser",null);
+    resetPerms();
+    return true;
+  }

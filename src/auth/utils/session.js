@@ -76,18 +76,6 @@ export const isSingleUserAllowed = ()=>{
   return (!!appConfig.get("isAuthSingleUserAllowed") && isObj(appConfig.get("authDefaultUser"))) && true || false;
 }
 
-export const disableAuth = ()=>{
-  appConfig.set("isAuthSingleUserAllowed",true);
-  appConfig.set("authDefaultUser",{code:"root",password:"admin123",label:"Master admin"});
-  return true;
-}
-
-export const enableAuth = ()=>{
-  appConfig.set("isAuthSingleUserAllowed",false);
-  appConfig.set("authDefaultUser",null);
-  return true;
-}
-
 /*** check wheater the multi user is allowed on application */
 export const isMultiUsersAllowed = ()=>{
   return !isSingleUserAllowed();
