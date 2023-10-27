@@ -603,6 +603,9 @@ const operatorsMap = {
      @return {string}, la requête Where correspondante
   */
   export const buildWhere = (whereClausePrepared,withStatementsParams,fields)=>{
+    if(isObj(whereClausePrepared)){
+        whereClausePrepared = mangoParser.parse(whereClausePrepared);
+    }
     if(!Array.isArray(whereClausePrepared)) return null;
     statementParamsCounterRef.current = -1;
     const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;

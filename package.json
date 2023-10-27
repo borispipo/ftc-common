@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "3.56.11",
+  "version": "3.56.12",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "delete-docs": "node ./deleteDocsFolder",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
     "docs": "npm run build-docs",
-    "update": "npm i @craftzdog/pouchdb-adapter-websql-core@latest pouchdb@latest pouchdb-authentication@latest pouchdb-erase@latest pouchdb-find@latest prop-types@latest qs@latest react-fast-compare@latest react-is@latest sanitize-filename@latest stable-hash@latest written-number@latest swr@latest"
+    "update": "npm i mongo-parse@latest @craftzdog/pouchdb-adapter-websql-core@latest pouchdb@latest pouchdb-authentication@latest pouchdb-erase@latest pouchdb-find@latest prop-types@latest qs@latest react-fast-compare@latest react-is@latest sanitize-filename@latest stable-hash@latest written-number@latest swr@latest"
   },
   "repository": {
     "type": "git",
