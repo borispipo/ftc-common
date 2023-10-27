@@ -438,11 +438,12 @@ export default utils;
  * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
  * @param {object} filters, les filtres au format mango query à convertir au format SQL
  */
-export const convertToSQL = (filters)=>{
+export const convertToSQL = (filters,opts)=>{
     if(!isObjOrArray(filters)) return [];
+    opts = isObj(opts)? opts : {}; 
     const whereParsed = mangoParser.parse(filters)
     return whereParsed.parts.reduce((prev, curr) => {
-        const c = whereClauseToSQL(curr);
+        const c = whereClauseToSQL(curr,opts);
         return c ? [...prev,c] : prev;
     }, []).map((filter)=>{
         if(filter.field === MANGO_QUERY_OPERATOR){
@@ -451,8 +452,16 @@ export const convertToSQL = (filters)=>{
         return filter;
     });
 }
+export const getOptimizedOperator = (operator,opts)=>{
+    opts = typeof opts =='object' && opts || {};
+    const driver = defaultStr(opts?.driver,opts.dataSourceType).toLowerCase();
+    if(operand === "LIKE" && driver.contains("postgres")){
+        operator = "ILIKE";
+    }
+    return operator;
+}
 export const MANGO_QUERY_OPERATOR = "MANGO_QUERY_OPERATOR";
-const whereClauseToSQL = (currentMongoParserElement) => {
+const whereClauseToSQL = (currentMongoParserElement,opts) => {
     let { field, operator, operand } = currentMongoParserElement;
     if(!isNonNullString(operator) || !operatorsMap[operator]) return null;
     operator = operatorsMap[operator]
@@ -476,12 +485,13 @@ const whereClauseToSQL = (currentMongoParserElement) => {
             operand = opMap.sql(operand);
         }
     }
+    operator = getOptimizedOperator(operator,opts);
     // AND or OR operators with nested elements
     if (typeof field === 'undefined') {
       // parse nested elements
       const nested = operand.reduce((prev, curr) => {
         const parsed = mangoParser.parse(curr);
-        const prepared = whereClauseToSQL(parsed.parts[0]);
+        const prepared = whereClauseToSQL(parsed.parts[0],opts);
         if(prepared){
             return [...prev,prepared]
         }
@@ -527,7 +537,7 @@ const operatorsMap = {
  * @param {object} statementsParams, les paramètres des statements au cas où on utilisera des requêtes paramétrées
  * Return the operand in right format
  */
-  export const getTyppedOperand = (operand, operator, field,statementsParams,fields) => {
+  export const getTyppedOperand = (operand, operator, field,statementsParams,fields,opts) => {
     const hasStamentsParms = isObj(statementsParams);
     const getStatement = ()=>{
         statementParamsCounterRef.current++
@@ -557,7 +567,7 @@ const operatorsMap = {
       // recursively call 'buildWhereElement' for nested elements
       // join each element with operator AND or OR
       return operand.reduce((prev, curr) => {
-        const bb = buildWhereElement(curr,statementsParams,fields);
+        const bb = buildWhereElement(curr,statementsParams,fields,opts);
         if(bb !== null){
             prev.push(bb);
         }
@@ -585,11 +595,12 @@ const operatorsMap = {
    * @param {object} les champs, le mappage des colonnes en bd, à utiliser pour effectuer la requête
    * Return element of WHERE clause
    */
-  export const buildWhereElement = (elem,statementsParams,fields) => {
+  export const buildWhereElement = (elem,statementsParams,fields,opts) => {
     if(!elem || typeof elem !=='object' || Array.isArray(elem)) return "";
     let { field, operator, operand } = elem
     if (!isNonNullString(operator)) return "";
-    const op = getTyppedOperand(operand, operator, field,statementsParams,fields);
+    operator = getOptimizedOperator(operator,opts);
+    const op = getTyppedOperand(operand, operator, field,statementsParams,fields,opts);
     if(!isNonNullString(op)) return "";
     field = getField(field,fields);
     return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
@@ -602,13 +613,13 @@ const operatorsMap = {
      @param {object} fields les alias aux colonnes
      @return {string}, la requête Where correspondante
   */
-  export const buildWhere = (whereClausePrepared,withStatementsParams,fields)=>{
+  export const buildWhere = (whereClausePrepared,withStatementsParams,fields,opts)=>{
     if(!Array.isArray(whereClausePrepared)) return null;
     statementParamsCounterRef.current = -1;
     const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
-       const bb = buildWhereElement(curr,statementsParams,fields);
+       const bb = buildWhereElement(curr,statementsParams,fields,opts);
        if(bb !== null){
             prev.push(bb);
        }
