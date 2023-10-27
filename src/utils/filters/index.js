@@ -455,7 +455,7 @@ export const convertToSQL = (filters,opts)=>{
 export const getOptimizedOperator = (operator,opts)=>{
     opts = typeof opts =='object' && opts || {};
     const driver = defaultStr(opts?.driver,opts.dataSourceType).toLowerCase();
-    if(operand === "LIKE" && driver.contains("postgres")){
+    if(operator === "LIKE" && driver.contains("postgres")){
         operator = "ILIKE";
     }
     return operator;
