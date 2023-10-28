@@ -5,7 +5,6 @@
 import {buildUrl,isValidURL} from "$cutils/uri";
 import "$cutils/string";
 import defaultStr from "$cutils/defaultStr";
-import {getAPIHost} from "./utils";
 import appConfig from "$capp/config";
 
 /*** retourne l'url locale à l'application
@@ -53,12 +52,6 @@ export const getAPIHost = x=> {
     }
     return API_BASE_PATH;
 }
-
-/***@function
- * @alias {@link getAPIHost} alias à la fonction getAPIHost
- */
-export const getApiHost = getAPIHost;
-
 
 /**** 
  * construit une route/url (url|api) à partir des paramtères pris dynamiquement 
