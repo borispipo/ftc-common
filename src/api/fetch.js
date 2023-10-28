@@ -212,7 +212,7 @@ export const prepareFetchOptions = (_opts,options)=>{
      if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization)){
         opts.credentials = "include";
      }
-     const hasContentType = !!(["Content-Type","content-type","Content-type", "content-Type"].filter(c=>!!(c in headers)).length);
+     const hasContentType = !!(["Content-Type","content-type","Content-type", "content-Type"].filter(c=>!!(c in opts.headers)).length);
      if(isObj(opts.body)){
         if(!hasContentType){
            opts.headers["Content-Type"] = "application/json";
