@@ -37,7 +37,7 @@ export const isPlainObj = isPlainObject;
  *  alors celui-ci est considéré comme un filtre sur les props à appeler
  */
 export default function extendObj (){
-    let options, name, src, copy, copyIsArray, clone,deepArray,filter = x=>true,//si l'on doit copier les tableaux en profondeur
+    let name, src, copy, copyIsArray, clone,deepArray,filter = x=>true,//si l'on doit copier les tableaux en profondeur
         target = arguments[ 0 ] || {},
         i = 1,
         length = arguments.length,
@@ -59,24 +59,23 @@ export default function extendObj (){
         length = length-1;
     }
     // Handle case when target is a string or something (possible in deep copy)
-    if ( typeof target !== "object" && !isFunction( target ) ) {
+    if (typeof target !== "object" && !isFunction(target)) {
         target = {};
     }
-
-    // Extend jQuery itself if only one argument is passed
-    if ( i === length ) {
-        target = this;
-        i--;
-    }
-
+    /***    
+        // Extend jQuery itself if only one argument is passed
+        if ( i === length ) {
+            target = this;
+            i--;
+        }
+    */
     for ( ; i < length; i++ ) {
-
+        const options = arguments[i];
         // Only deal with non-null/undefined values
-        if ( ( options = arguments[ i ] ) != null ) {
-
+        if ( options != null  && typeof options =='object') {
             // Extend the base object
             for ( name in options ) {
-                if(typeof(options) ==="object" && options && !Object.prototype.hasOwnProperty.call(options,name)) continue;
+                if(!Object.prototype.hasOwnProperty.call(options,name)) continue;
                 copy = options[ name ];
                 // Prevent Object.prototype pollution
                 // Prevent never-ending loop
