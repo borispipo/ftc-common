@@ -108,6 +108,12 @@ export const handleFetchResult = ({fetchResult:res,json,handleError,...restOpts}
       const contentType = defaultStr(getH("Content-Type"),getH("content-type")).toLowerCase();
       const isJson = contentType.contains("application/json");
       const cb = (d)=>{
+        if(isObj(d) && d[fetchOptionsKey]){
+          if(d?.response?.success){
+            return resolve(d);
+          }
+          return handleFetchError({...restOpts,...d,handleError}).catch(reject);
+        }
         d = isJson ?  (!isObj(d)? {data:d,result:d} : d) : d;
         const response = {};
         if(res && typeof res !=='boolean' && typeof res !='string'){
@@ -124,6 +130,7 @@ export const handleFetchResult = ({fetchResult:res,json,handleError,...restOpts}
         d.fetchResponse = res;
         d.parsed = isJson;
         d.res = res;
+        d[fetchOptionsKey] = true;
         if(d.error && typeof d.error =='string'){
              d.message = response.message = response.msg = d.error;
         }
@@ -229,6 +236,8 @@ export const prepareFetchOptions = (_opts,options)=>{
      }
      return opts;
 }
+
+const fetchOptionsKey = "resultParsedAndHandledWithHandleFetchResult";
 /*** le mutator permet de modifier les options de la recherche dynamiquement 
  * ajout de la props fetchOptionsMutator : permettant d'être en mesure de muter les fetchOptions de la requête envoie l'envoie vers le serveur
  * si la fonction fetchOptionsMutator retourne un objet contenant la props url valide alors c'est cet url qui sera utilisée pour effectuer la requête fetch    
@@ -237,6 +246,9 @@ export const prepareFetchOptions = (_opts,options)=>{
 export function getFetcherOptions (opts,options){
      opts = prepareFetchOptions(opts,options);
      const {fetcher,checkOnline} = opts;
+     if(typeof fetcher =='function' && fetcher[fetchOptionsKey]){
+       return opts;
+     }
      const fetcher2 = typeof fetcher ==='function' ? fetcher : originalFetch;
      opts.fetcher = (url,opts2)=>{
         const delay = defaultNumber(opts.delay,opts.timeout,opts.delay,opts.timeout);
@@ -247,6 +259,7 @@ export function getFetcherOptions (opts,options){
            return handleFetchError({...opts,...opts2,error})
         });
      }
+     opts.fetcher[fetchOptionsKey] = true;
      return opts;
 }
 
