@@ -195,7 +195,7 @@ export const prepareFetchOptions = (_opts,options)=>{
    }
    let {path,url,includeCredentials,mutator,...opts} = extendObj(true,{},_opts,options);;
    url = defaultStr(url,path);
-   opts.queryParams = Object.assign({},queryParams);
+   opts.queryParams = Object.assign({},opts.queryParams);
    const method = defaultStr(opts.method,"get").toLowerCase();
    if(isObj(opts.fetchOptions) && Object.size(opts.fetchOptions,true) && (["get","post","delete","put","patch"].includes(method))){
       if(["get","delete"].includes(method)){
