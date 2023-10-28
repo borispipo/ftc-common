@@ -6,6 +6,8 @@
 {
     includeCredentialsOnApiFetch : {boolean}, ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
     API_HOST : {string|validURL} ///l'adresse url par défaut es apiFetch
+    RUN_API_OFFLINE; si définie, alors l'API peut être appelé hors ligne,
+    
     validatorRules : {object} // pour étendre les règles de validation du composant $lib/validator
     apiFetchTimeout {number} : le délai d'attente des requêtes d'API
     showProfilAvatarOnDrawer : {boolean} si false alors le profil utilisateur ne sera pas affiché sur le drawer principal de l'application, mais plutôt sur l'AppBar des écrans de type non modal
