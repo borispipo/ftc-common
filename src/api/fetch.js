@@ -7,7 +7,7 @@
 import originalFetch from "./unfetch";
 import { buildAPIPath} from "./utils";
 import { isObj,defaultNumber,isNonNullString,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
-import {NOT_SIGNED_IN,SUCCESS,CREATED,ACCEPTED} from "./status";
+import {NOT_SIGNED_IN,SUCCESS,CREATED,ACCEPTED} from "./status/status";
 import notify from "$active-platform/notify";
 import {getToken} from "$cauth/utils";
 import APP from "$capp/instance";
@@ -16,12 +16,6 @@ import {isClientSide} from "$cplatform";
 import appConfig from "$capp/config";
 import i18n from "$i18n";
 
-export  function setCodeVerifierHeader(verifier) {
-  codeVerifier = verifier;
-}
-export const getRequestHeaderKey = x=>{
-  return appConfig.prefixWithAppId(x);
-}
 /**** recupère l'ensemble des entêtes par défaut à ajouter au header de la requête. 
  * @namespace api/fetch
  * Par défaut, l'entête Authorization Baerer est ajoutée à l'entête de la requête, lorsqu'il existe un token valide
@@ -31,11 +25,11 @@ export const getRequestHeaderKey = x=>{
 export const getRequestHeaders = function (opts){
     opts = defaultObj(opts);
     const ret = extendObj({},opts.headers);
-    if(!ret.Authorization  && opts.Authorization !== false && opts.authorization !==false && opts.Authorization !==false){
+    if(!ret.Authorization  && !ret.authorization && opts.authorization !==false && opts.Authorization !==false){
        const token = getToken();
        if(token){
          ret.Authorization = "Bearer "+token;
-      } else {
+       } else {
          delete ret.Authorization;
        }
     } else {
@@ -88,6 +82,12 @@ export const put = (url, options = {})=> {
   return fetch(url,options);
 };
 
+export const patch = (url, options = {})=> {
+   options = defaultObj(options);
+   options.method = 'PATCH';
+   return fetch(url,options);
+ };
+
 const deleteApi = (url, options = {})=> {
   options = defaultObj(options);
   options.method = 'delete';
@@ -102,9 +102,10 @@ export {deleteApi as delete};
  *   Si le résultat issue de l'api est un objet, alors cet objet est décomposé dans la réponse à retourner à l'utilisateur
  *   Si le résultat issue de l'api n'est pas un objet, alors celui-ci est transmis dans la variable data qui résolvra la promessage * 
  */
-export const handleFetchResult = ({fetchResult:res,showError,json,handleError,isAuth,redirectWhenNoSignin}) =>{
+export const handleFetchResult = ({fetchResult:res,json,handleError,...restOpts}) =>{
    return new Promise((resolve,reject)=>{
-      const contentType = defaultStr(res.headers.get("Content-Type"),res.headers.get("content-type")).toLowerCase();
+      const getH = x => typeof res?.headers?.get =="function"? res.headers.get(x) : undefined;
+      const contentType = defaultStr(getH("Content-Type"),getH("content-type")).toLowerCase();
       const isJson = contentType.contains("application/json");
       const cb = (d)=>{
         d = isJson ?  (!isObj(d)? {data:d,result:d} : d) : d;
@@ -129,13 +130,12 @@ export const handleFetchResult = ({fetchResult:res,showError,json,handleError,is
         if(response.success){
            return resolve(d)
         }
-        return handleFetchError({isAuth,...d,response,showError,handleError,redirectWhenNoSignin}).catch(reject);
-       };
-      return json !== false && isJson ? res.json().then(cb).catch(reject) : resolve(cb(res));
+        return handleFetchError({...restOpts,...d,response,handleError}).catch(reject);
+      };
+      return json !== false && isJson  && typeof res?.json =='function' ? res.json().then(cb).catch(reject) : resolve(cb(res));
    })
  }
-export const handleFetchError = (opts)=>{
-  let {showError,isAuth,reject,redirectWhenNoSignin,error,response,...rest} = defaultObj(opts);
+export const handleFetchError = ({showError,isAuth,reject,redirectWhenNoSignin,error,response,...rest})=>{
   response = defaultObj(response);
   rest.error = error;
   const isClient = typeof window !='undefined' && window;
@@ -183,7 +183,7 @@ export const handleFetchError = (opts)=>{
   rest.response = response;
   rest.status = response.status || error && typeof error !='boolean' && error?.status;
   rest.userNotSignedIn = rest.notSignedIn = response.notSignedIn = response.userNotSignedIn = response.status === NOT_SIGNED_IN ? true : false;
-  if(isClient && isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false){
+  if(isClient && isAuth !== true && response.userNotSignedIn && redirectWhenNoSignin !== false && typeof Auth !='undefined' && Auth?.signOut2Redirect){
      const hasMessage = defaultStr(response.message,response.msg)? true : false;
      Auth.signOut2Redirect(!hasMessage);
   }
@@ -193,18 +193,18 @@ export const prepareFetchOptions = (_opts,options)=>{
    if(_opts && typeof _opts =="string"){
       _opts = {url:_opts};
    }
-   let {path,url,includeCredentials,queryParams,mutator,...opts} = extendObj(true,{},_opts,options);;
+   let {path,url,includeCredentials,mutator,...opts} = extendObj(true,{},_opts,options);;
    url = defaultStr(url,path);
-   queryParams = Object.assign({},queryParams);
-   opts.queryParams = queryParams;
-     const method = defaultStr(opts.method,"get").toLowerCase();
-     if((method ==='get' | method =='post') && (isObj(opts.fetchOptions))){
-         if(method =='get'){
-            opts.queryParams.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions);
-         } else {
-            opts.body = defaultObj(opts.body);
-            opts.body.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.body.fetchOptions);
-         }
+   opts.queryParams = Object.assign({},queryParams);
+   const method = defaultStr(opts.method,"get").toLowerCase();
+   if(isObj(opts.fetchOptions) && Object.size(opts.fetchOptions,true) && (["get","post","delete","put","patch"].includes(method))){
+      if(["get","delete"].includes(method)){
+         opts.queryParams.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.queryParams.fetchOptions);
+      } else {
+         opts.body = defaultObj(opts.body);
+         opts.body.fetchOptions = extendObj(true,{},opts.fetchOptions,opts.body.fetchOptions);
+      }
+      delete opts.fetchOptions;
      }
      opts.headers = getRequestHeaders(opts);
      opts.url = buildAPIPath(url,opts.queryParams);
@@ -212,7 +212,7 @@ export const prepareFetchOptions = (_opts,options)=>{
      if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization)){
         opts.credentials = "include";
      }
-     const hasContentType = "Content-Type" in opts.headers || "content-type" in opts.headers || "Content-type" in opts.headers || "content-Type" in opts.headers;
+     const hasContentType = !!(["Content-Type","content-type","Content-type", "content-Type"].filter(c=>!!(c in headers)).length);
      if(isObj(opts.body)){
         if(!hasContentType){
            opts.headers["Content-Type"] = "application/json";
@@ -237,19 +237,13 @@ export const prepareFetchOptions = (_opts,options)=>{
 export function getFetcherOptions (opts,options){
      opts = prepareFetchOptions(opts,options);
      const {fetcher,checkOnline} = opts;
-     const fetcher2 = typeof (fetcher) ==='function' ? fetcher : (url,opts2) => {
-         return originalFetch(url,opts2)
-            .then(res=>handleFetchResult({...opts,fetchResult:res}))
-            .catch((error)=>{
-               return handleFetchError({...opts,error});
-         });
-     }
+     const fetcher2 = typeof fetcher ==='function' ? fetcher : originalFetch;
      opts.fetcher = (url,opts2)=>{
         const delay = defaultNumber(opts.delay,opts.timeout,opts.delay,opts.timeout);
         const canRunOffline = checkOnline === false || opts2.checkOnline === false;
         const checkOnl = !canRunOffline && isClientSide() && (canCheckOnline) && !APP.isOnline() || false;
-        const p = checkOnl ? APP.checkOnline().then(()=>fetcher2(url,opts2)).catch(e=>{throw e;}) : fetcher2(url,opts2);
-        return timeout(p,delay).catch((error)=>{
+        const cb = x=> fetcher2(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}));
+        return timeout((checkOnl ? APP.checkOnline().then(cb) : cb()),delay).catch((error)=>{
            return handleFetchError({...opts,...opts2,error})
         });
      }

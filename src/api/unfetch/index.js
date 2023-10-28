@@ -1,6 +1,6 @@
 
 function defaultUnfetch(url, options) {
-    if(typeof XMLHttpRequest ==='undefined' || typeof window =='undefined')throw "unfetch function is not supported on the current platform. Please install required dependencies";;
+    if(typeof XMLHttpRequest ==='undefined' || typeof window =='undefined') throw "unfetch function is not supported on the current platform. Please install required dependencies";;
     options = options || {};
     return new Promise((resolve, reject) => {
         const request = new XMLHttpRequest();
