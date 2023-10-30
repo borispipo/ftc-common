@@ -5,9 +5,9 @@ export {StyleSheet};
 
 export const LINE_HEIGHT = 20;
 
-export const DISABLED_OPACITY = 0.77;
+export const DISABLED_OPACITY = 0.75;
 
-export const READ_ONLY_OPACITY = 0.82;
+export const READ_ONLY_OPACITY = 0.80;
 
 export const READONLY_OPACITY = READ_ONLY_OPACITY;
 

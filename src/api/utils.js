@@ -19,8 +19,11 @@ export async function timeout(promise,delay,errorArgs) {
     delay = typeof delay =='number' && delay || getFetchDelay();
     return new Promise(function(resolve, reject) {
       const tt = setTimeout(function() {
-          errorArgs = defaultObj(errorArgs);
-          reject({message:i18n.lang("api_timeout"),...React.getOnPressArgs(errorArgs)})
+          const a = {message:i18n.lang("api_timeout")};
+          if(typeof errorArgs =='function'){
+             return reject(errorArgs(a));
+          }
+          reject({...a,...React.getOnPressArgs(errorArgs)})
       }, delay);
       return promise.then(resolve).catch(reject).finally(()=>{
         clearTimeout(tt);
