@@ -253,7 +253,11 @@ export function getFetcherOptions (opts,options){
      opts.fetcher = (url,opts2)=>{
         const delay = defaultNumber(opts.delay,opts.timeout,opts.delay,opts.timeout);
         const canRunOffline = checkOnline === false || opts2.checkOnline === false;
-        const checkOnl = !canRunOffline && isClientSide() && (canCheckOnline) && !APP.isOnline() || false;
+        let checkOnl = !canRunOffline && isClientSide() && (canCheckOnline) && !APP.isOnline() || false;
+        ///faire en sorte que le test de la connexion ne soit pas possible lorsque l'url par défaut est locale
+        if(checkOnl && isNonNullString(url) && (url.toLowerCase().contains("localhost") || url.contains("127.0.0.1"))){
+            checkOnl = false;
+        }
         const cb = x=> fetcher2(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}));
         return timeout((checkOnl ? APP.checkOnline().then(cb) : cb()),delay).catch((error)=>{
            return handleFetchError({...opts,...opts2,error})
