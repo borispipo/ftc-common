@@ -94,10 +94,12 @@ module.exports = function(opts){
         ...(typeof alias =='object' && !Array.isArray(alias) && alias || {}),
         "$ftc-common":rootDir,
         "$ftc" : "@fto-consult",
+        "$ceventSource" : path.resolve(common,"utils","eventSource"),
         $cappConfig : path.resolve(common,"app","config"),
         $swr : path.resolve(common,"swr"),
         $useSWR : path.resolve(common,"swr"),
     }
+    r.$eventSource = r.$eventSource || r.$ceventSource;
     r.currencies = r.$ccurrency;
     if(!r.$api){
         r.$api = r.$capi;
