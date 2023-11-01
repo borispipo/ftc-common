@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 export default function Queue(asStack){
-    const queue=[];
+    let queue=[];
     let running=false;
     Object.defineProperties(
         this,
