@@ -8,26 +8,9 @@ import {isSignedIn,signOut2Redirect } from "./instance";
 import {getLoggedUser,isLoggedIn} from "./utils/session";
 import { signInRef } from "./authSignIn2SignOut";
 import {extendObj} from "$cutils";
-import APP from "$capp/instance";
+import { AuthContext } from "./hook";
 
-export const useIsSignedIn = ()=>{
-  const [isSignIn,setIsSignIn] = React.useState(isSignedIn());
-  React.useEffect(()=>{
-    const onSignInOrOut = ()=>{
-      setIsSignIn(isSignedIn());
-    }
-    APP.on(APP.EVENTS.AUTH_LOGIN_USER,onSignInOrOut);
-    APP.on(APP.EVENTS.AUTH_LOGOUT_USER,onSignInOrOut);
-    return ()=>{
-      APP.off(APP.EVENTS.AUTH_LOGIN_USER,onSignInOrOut);
-      APP.off(APP.EVENTS.AUTH_LOGOUT_USER,onSignInOrOut);
-    }
-  },[])
-  return React.useMemo(()=>isSignIn,[isSignIn]);
-}
-export const useIsLoggedIn = useIsSignedIn;
-
-const AuthContext = React.createContext(null);
+export * from "./hook";
 
 const Auth = {
   isLoggedIn,
@@ -59,8 +42,4 @@ export default function AuthProvider({ children,...rest}) {
   return <AuthContext.Provider value={{...Auth,...rest,user,signIn, logout,signOut : logout }}>
       {children}
   </AuthContext.Provider>;
-}
-
-export function useAuth() {
-    return React.useContext(AuthContext);
 }
