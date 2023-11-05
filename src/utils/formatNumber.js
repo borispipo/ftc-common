@@ -1,6 +1,7 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+import defaultStr from "./defaultStr";
 
 export const numberFormats = {  
     '# ###': { fractionSep: '', groupSep: ' ', precision: 0 },
@@ -56,7 +57,7 @@ export default {
       if (!number) {
         number = 0;
       }
-      let info = defaultObj(this.getFormatInfo(format));
+      let info = Object.assign({},this.getFormatInfo(format));
       if (isNumber(precision)) {
         info.precision = precision;
       }
