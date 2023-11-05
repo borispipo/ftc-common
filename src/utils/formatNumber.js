@@ -58,7 +58,7 @@ export default {
         number = 0;
       }
       let info = Object.assign({},this.getFormatInfo(format));
-      if (isNumber(precision)) {
+      if (typeof(precision) =="number") {
         info.precision = precision;
       }
       let is_negative = false;
