@@ -50,7 +50,7 @@ export default {
   get tableDataPermResourcePrefix(){
       return function(tableName,...rest){
         if(this.hasMethod("getTableDataPermResourcePrefix")){
-            return this.getTableDataPermResource(tableName,...rest);
+            return defaultStr(this.getTableDataPermResource(tableName,...rest));
         }
         return tableName.trim().toLowerCase();
       }
@@ -58,7 +58,7 @@ export default {
   get structDataPermResourcePrefix(){
     return function(tableName,...rest){
       if(this.hasMethod("getStructDataPermResourcePrefix")){
-          return this.getTableDataPermResource(tableName,...rest);
+          return defaultStr(this.getTableDataPermResource(tableName,...rest));
       }
       return tableName.trim().toLowerCase();
     }

@@ -288,7 +288,9 @@ export const isStructDataAllowed = (_table,action,user)=>{
     action = _table.action;
     let {table,tableName,resource} = _table;
     tableName = defaultStr(tableName,table);
-    _table.resource = defaultStr(resource,getStructDataPermResourcePrefix(tableName));
+    const prefix = getStructDataPermResourcePrefix(tableName).trim().rtrim('/');
+    resource = defaultStr(resource).trim();
+    _table.resource = resource ? `${prefix}/${resource.ltrim(prefix+"/").ltrim("/")}`:prefix;
     if(!Object.size(structDataPerms,true)){
         resetPerms();
     }
@@ -347,7 +349,9 @@ export const isTableDataAllowed = (_table,action,user)=>{
     action = _table.action;
     let {table,tableName,resource} = _table;
     tableName = defaultStr(tableName,table);
-    _table.resource = defaultStr(resource,getTableDataPermResourcePrefix(tableName));
+    const prefix = getTableDataPermResourcePrefix(tableName).trim().rtrim('/');
+    resource = defaultStr(resource).trim();
+    _table.resource = resource ? `${prefix}/${resource.ltrim(prefix+"/").ltrim("/")}`:prefix;
     if(!Object.size(tableDataPerms,true)){
         resetPerms();
     }

@@ -29,13 +29,13 @@ export const resetPerms = ()=>{
     Object.map(appConfig.tablesData,(table,tableName)=>{
         tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
         if(!(tableName)) return null;
-        const resource = getTableDataPermResourcePrefix(tableName = tableName.toLowerCase().trim());
+        const resource = getTableDataPermResourcePrefix(tableName.toLowerCase().trim()).trim().rtrim("/");
         tableDataPerms[tableName] = Auth.isAllowed({resource,action});
     })
     Object.map(appConfig.structsData,(table,tableName)=>{
         tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
         if(!(tableName)) return null;
-        const resource = getStructDataPermResourcePrefix(tableName = tableName.toLowerCase().trim());
+        const resource = getStructDataPermResourcePrefix(tableName.toLowerCase().trim()).trim().rtrim("/");
         structDataPerms[tableName] = Auth.isAllowed({resource,action});
     })
     allPerms.tableDataPerms = tableDataPerms;
