@@ -176,7 +176,7 @@ export const navigate = (toRoute,navigation)=>{
     if(!isObj(toRoute)) return null;
     let {routeName,route,from,url,routeParams,href,params,source,...rest} = toRoute;
     routeName = sanitizeName(defaultStr(url,href,routeName,route));
-    params = extendObj({},routeParams,params);
+    params = extendObj({},params,routeParams);
     params = {...defaultObj(rest),...params};
     source = defaultStr(source).toLowerCase();
     const currentNavigation = isValidNavigation(navigation) ? navigation : navigationRef;
