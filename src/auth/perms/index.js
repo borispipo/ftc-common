@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$cutils";
-import {tableDataPerms,structDataPerms,resetPerms} from "./reset";
+import {tableDataPerms,structDataPerms,resetPerms,getStructDataPermResourcePrefix,getTableDataPermResourcePrefix} from "./reset";
 import {getLoggedUser,isValidUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";
 
@@ -284,9 +284,11 @@ export const isStructDataAllowed = (_table,action,user)=>{
     }
     _table = defaultObj(_table);
     _table.action = defaultVal(_table.action,action,'read');
+    user = isObj(_table.user) && Object.size(_table.user,true) && _table.user || user;
     action = _table.action;
     let {table,tableName,resource} = _table;
-    _table.resource = defaultStr(table,tableName,resource);
+    tableName = defaultStr(tableName,table);
+    _table.resource = defaultStr(resource,getStructDataPermResourcePrefix(tableName));
     if(!Object.size(structDataPerms,true)){
         resetPerms();
     }
@@ -308,7 +310,7 @@ export const isStructDataAllowed = (_table,action,user)=>{
                     let act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
-                        b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),user,action:act})
+                        b = isAllowed({resource:_table.resource,user,action:act})
                     }
                     p[action[k]] = b;
                 }
@@ -318,7 +320,7 @@ export const isStructDataAllowed = (_table,action,user)=>{
             action = defaultStr(action,'read').toLowerCase();
             let b = p[action];
             if(!isBool(b)){
-                b = isAllowed({resource:"structData/"+_table.resource.ltrim("structData/"),user,action})
+                b = isAllowed({resource:_table.resource,user,action})
             }
             p[action] = b;
             return p[action] || false;
@@ -341,9 +343,11 @@ export const isTableDataAllowed = (_table,action,user)=>{
     }
     _table = defaultObj(_table);
     _table.action = defaultVal(_table.action,action,'read');
+    user = isObj(_table.user) && Object.size(_table.user,true) && _table.user || user;
     action = _table.action;
     let {table,tableName,resource} = _table;
-    _table.resource = defaultStr(table,tableName,resource);
+    tableName = defaultStr(tableName,table);
+    _table.resource = defaultStr(resource,getTableDataPermResourcePrefix(tableName));
     if(!Object.size(tableDataPerms,true)){
         resetPerms();
     }
@@ -365,7 +369,7 @@ export const isTableDataAllowed = (_table,action,user)=>{
                     let act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
-                        b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),user,action:act})
+                        b = isAllowed({resource:table.resource,user,action:act})
                     }
                     p[action[k]] = b;
                 }
@@ -375,7 +379,7 @@ export const isTableDataAllowed = (_table,action,user)=>{
             action = defaultStr(action,'read').toLowerCase();
             let b = p[action];
             if(!isBool(b)){
-                b = isAllowed({resource:"table/"+_table.resource.ltrim("table/"),user,action})
+                b = isAllowed({resource:_table.resource,user,action})
             }
             p[action] = b;
             return p[action] || false;

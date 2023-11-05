@@ -1,9 +1,16 @@
 import appConfig from "$capp/config";
-import {isObj,defaultStr} from "$cutils";
-
+import {isObj,defaultStr,isNonNullString} from "$cutils";
+import authSignIn2SignOut from "../authSignIn2SignOut";
 export const tableDataPerms = {};
 export const structDataPerms = {};
 
+export const getTableDataPermResourcePrefix = (tableName,...rest)=>{
+    return authSignIn2SignOut.tableDataPermResourcePrefix(defaultStr(tableName).trim().ltrim("/"),...rest);
+}
+
+export const getStructDataPermResourcePrefix = (tableName,...rest)=>{
+    return authSignIn2SignOut.structDataPermResourcePrefix(defaultStr(tableName).trim().ltrim("/"),...rest);
+}
 /*** 
  *  - on peut définir la liste des noms de tables data dans le propriété tables|tableNames de appConfig.tablesData
  *  - on peut définir la liste des noms struct data dans la propriété structData | structDataTableNames de appConfig.structsData
@@ -22,15 +29,13 @@ export const resetPerms = ()=>{
     Object.map(appConfig.tablesData,(table,tableName)=>{
         tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
         if(!(tableName)) return null;
-        tableName = tableName.toLowerCase().trim();
-        let resource = "table/"+tableName.ltrim("table/");
+        const resource = getTableDataPermResourcePrefix(tableName = tableName.toLowerCase().trim());
         tableDataPerms[tableName] = Auth.isAllowed({resource,action});
     })
     Object.map(appConfig.structsData,(table,tableName)=>{
         tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
         if(!(tableName)) return null;
-        tableName = tableName.toLowerCase().trim();
-        let resource = "structdata/"+tableName.ltrim("structdata/");
+        const resource = getStructDataPermResourcePrefix(tableName = tableName.toLowerCase().trim());
         structDataPerms[tableName] = Auth.isAllowed({resource,action});
     })
     allPerms.tableDataPerms = tableDataPerms;

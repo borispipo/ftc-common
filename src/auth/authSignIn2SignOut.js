@@ -43,6 +43,26 @@ export default {
          }
      }
   },
+  /***** recupère le nom de la resource table data à partir de la tableName passée en paramètre 
+    @param {string} tableName, le nom de la table,
+    @return {string}, le nom de la resource obtenue à partir de la table
+  */
+  get tableDataPermResourcePrefix(){
+      return function(tableName,...rest){
+        if(this.hasMethod("getTableDataPermResourcePrefix")){
+            return this.getTableDataPermResource(tableName,...rest);
+        }
+        return tableName.trim().toLowerCase();
+      }
+  },
+  get structDataPermResourcePrefix(){
+    return function(tableName,...rest){
+      if(this.hasMethod("getStructDataPermResourcePrefix")){
+          return this.getTableDataPermResource(tableName,...rest);
+      }
+      return tableName.trim().toLowerCase();
+    }
+  },
   get signOut(){
     return function(...p){
        if(this.hasMethod("signOut")){
