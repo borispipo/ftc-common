@@ -34,7 +34,7 @@ export default function useSwr (path,opts) {
   const { data, error,mutate,...rest } = useSWR(path,(fetchUrl)=>{
     const {fetcher,...rest} = apiGetFetcherOptions(fetchUrl,options);
     rest.swrQueryKey = options.swrQueryPath = fetchUrl;
-    rest.url = rest.path = fetchUrl;
+    rest.fetchUrl = fetchUrl;
     return fetcher(path,rest);
   },swrOptions);
   return {
