@@ -454,6 +454,12 @@ export const convertToSQL = (filters,opts)=>{
 }
 export const getOptimizedOperator = (operator,opts)=>{
     opts = typeof opts =='object' && opts || {};
+    if(typeof opts.getDatabaseOperator =="function"){
+        const t = opts.getDatabaseOperator(operator);
+        if(isNonNullString(t)){
+            return t;
+        }
+    }
     const driver = defaultStr(opts?.driver,opts.dataSourceType).toLowerCase();
     if(operator === "LIKE" && driver.contains("postgres")){
         operator = "ILIKE";
@@ -541,7 +547,7 @@ const operatorsMap = {
     const hasStamentsParms = isObj(statementsParams);
     const getStatement = ()=>{
         statementParamsCounterRef.current++
-        field = getField(field,fields);
+        field = getField(field,fields,opts);
         const _field = field+statementParamsCounterRef.current;
         statementsParams[_field] = oprand;
         return ":{0}".sprintf(_field);
@@ -578,8 +584,14 @@ const operatorsMap = {
     }
     return null;
 }
-  const getField = (field,fields) =>{
+  const getField = (field,fields,opts) =>{
      field = defaultStr(field).trim();
+     if(!field) return field;
+     const getF = isObj(opts)? (typeof opts.getDatabaseColumnName ==="function" && opts.getDatabaseColumnName || typeof opts.getField =="function" && opts.getField || null) : null;
+     if(getF){
+        const t = defaultStr(getF({field,fieldName:field,column:field,fields,columnField:field}));
+        if(t) return t;
+     }
      if(!(field) || !isObj(fields)) return field;
      const f = fields[field];
      if(isNonNullString(f)) return f.trim();
@@ -602,7 +614,7 @@ const operatorsMap = {
     operator = getOptimizedOperator(operator,opts);
     const op = getTyppedOperand(operand, operator, field,statementsParams,fields,opts);
     if(!isNonNullString(op)) return "";
-    field = getField(field,fields);
+    field = getField(field,fields,opts);
     return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
   }
   
@@ -611,10 +623,17 @@ const operatorsMap = {
    * @parm {array} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction convertToSQL
      @param {bool || object} withStatementsParams si le contenu de la requête utilisera les query builder params
      @param {object} fields les alias aux colonnes
+     @param {object} opts {
+        allFields {object}, //les champs supplémentaires à prendre en compte pour la récupération du nom du champ en base de données
+        getField|getDatabaseColumnName {function({field{string},columnField{string},fields{object}})=><string>}, fonction personnalisée permettant de récupérer le nom du champ en base de données
+        getDatabaseOperator {function(operator{string})=><string>}, fonction permettant de personnaliser les opérateurs s'il y a lieu, en fonction du type de rawer ou de nimporte quoi
+    }, les options supplémentaires
      @return {string}, la requête Where correspondante
   */
-  export const buildWhere = (whereClausePrepared,withStatementsParams,fields,opts)=>{
+  export const buildWhere = (whereClausePrepared,withStatementsParams,_fields,opts)=>{
     if(!Array.isArray(whereClausePrepared)) return null;
+    opts = defaultObj(opts);
+    const fields = isObj(opts.allFields)? extendObj({},opts.allFields,_fields) : Object.assign({},_fields);
     statementParamsCounterRef.current = -1;
     const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
