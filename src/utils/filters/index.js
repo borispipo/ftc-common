@@ -549,8 +549,8 @@ const operatorsMap = {
         statementParamsCounterRef.current++
         field = getField(field,fields,opts);
         const _field = field+statementParamsCounterRef.current;
-        statementsParams[_field] = oprand;
-        return ":{0}".sprintf(_field);
+        statementsParams[_field] = operand;
+        return `:${_field}`;
     }
     if (typeof operand === 'string') { // wrap strings in double quots
       if(!isNonNullString(field)) return null;
@@ -574,7 +574,7 @@ const operatorsMap = {
       // join each element with operator AND or OR
       return operand.reduce((prev, curr) => {
         const bb = buildWhereElement(curr,statementsParams,fields,opts);
-        if(bb !== null){
+        if(isNonNullString(bb) && bb.trim()){
             prev.push(bb);
         }
         return prev;
@@ -586,7 +586,7 @@ const operatorsMap = {
 }
   const getField = (field,fields,opts) =>{
      field = defaultStr(field).trim();
-     if(!field) return field;
+     if(!isNonNullString(field)) return "";
      const getF = isObj(opts)? (typeof opts.getDatabaseColumnName ==="function" && opts.getDatabaseColumnName || typeof opts.getField =="function" && opts.getField || null) : null;
      if(getF){
         const t = defaultStr(getF({field,fieldName:field,column:field,fields,columnField:field}));
@@ -609,11 +609,11 @@ const operatorsMap = {
    */
   export const buildWhereElement = (elem,statementsParams,fields,opts) => {
     if(!elem || typeof elem !=='object' || Array.isArray(elem)) return "";
-    let { field, operator, operand } = elem
+    let { field, operator, operand } = elem;
     if (!isNonNullString(operator)) return "";
     operator = getOptimizedOperator(operator,opts);
     const op = getTyppedOperand(operand, operator, field,statementsParams,fields,opts);
-    if(!isNonNullString(op)) return "";
+    if(!isNonNullString(op) && typeof op !=='number' && typeof op !=='boolean') return "";
     field = getField(field,fields,opts);
     return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
   }
@@ -639,7 +639,7 @@ const operatorsMap = {
     // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
        const bb = buildWhereElement(curr,statementsParams,fields,opts);
-       if(bb !== null){
+       if(isNonNullString(bb) && bb.trim()){
             prev.push(bb);
        }
        return prev;
