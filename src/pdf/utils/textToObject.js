@@ -1,4 +1,4 @@
-import APP from "$capp/utils";
+import APP from "$capp/instance";
 import {isNonNullString,defaultStr} from "$cutils";
 export default function toPdfmakeObj(str){
     if(!isNonNullString(str)) return null;
