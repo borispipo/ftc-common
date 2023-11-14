@@ -86,6 +86,7 @@ export const pageBreakBefore = (cb)=>{
     *      footerCopyRight : Le contenu de pied de page
            footerCopyRightColor {string}, la couleur du footerCopyRight
            showPreloader {function(text)}, la fonction de rappel à utiliser pour afficher la progression en cours de la création du pdf
+           hidePreloader {function()}, la fonction appelée pour masquer le preloader
     * }
 */
 export const createPageFooter = (opts)=>{
@@ -102,16 +103,21 @@ export const createPageFooter = (opts)=>{
        }
    }
    let devWebsite = appConfig.devWebsite;
-   const showPreloader = defaultFunc(opts.showPreloader);
+   const showPreloader = defaultFunc(opts.showPreloader), hidePreloader = defaultFunc(opts.hidePreloader);
    return function(currentPage, pageCount, pageSize) {
-       showPreloader("page "+pageCount.formatNumber()+"/"+defaultNumber(pageCount).formatNumber());
-       currentPage = isNumber(currentPage)? currentPage.formatNumber().toString() : currentPage.toString();
+       currentPage = defaultNumber(currentPage);
+       const currentPageStr = currentPage.formatNumber().toString();
+       pageCount = defaultNumber(pageCount);
+       showPreloader("page "+currentPage.formatNumber()+"/"+pageCount.formatNumber());
+       if(currentPage >=  pageCount){
+         setTimeout(hidePreloader,100);
+       }
        pageCount = pageCount > 2 ? {
            fontSize: 9,
            width : "140",
            text:[
                {
-                   text : '     Page '+currentPage + '/' + pageCount.formatNumber(),
+                   text : '     Page '+currentPageStr + '/' + pageCount.formatNumber(),
                    bold : true,
                },
                {
@@ -313,4 +319,4 @@ export const getPageMargins = (options)=>{
     return ret;
 }
 
-export {textToObject};
+export {textToObject,textToObject as sprintf};
