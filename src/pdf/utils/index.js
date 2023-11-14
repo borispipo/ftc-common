@@ -110,7 +110,7 @@ export const createPageFooter = (opts)=>{
        pageCount = defaultNumber(pageCount);
        showPreloader("page "+currentPage.formatNumber()+"/"+pageCount.formatNumber());
        if(currentPage >=  pageCount){
-         setTimeout(hidePreloader,100);
+         setTimeout(hidePreloader,10);
        }
        pageCount = pageCount > 2 ? {
            fontSize: 9,
