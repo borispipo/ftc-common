@@ -12,8 +12,9 @@ export * from "./pdfmake";
     @see https://pdfmake.github.io/docs/0.1
     @param {object} docDefinition {la définition selon pdfmake}
     @param {object} options, les options supplémentaires permettant de générer le pdf
+    @param {object:{createPDF|createPdf}}, en environnement node par example, l'on devra passer une autre fonction createPdf afin que ça marche car sinon une erreur sera générée
 */
-export function createPDF(docDefinition,options){
+export function createPDF(docDefinition,options,customPdfMake){
     options = Object.assign({},options);
     const {content:dContent} = docDefinition;
     const content = Array.isArray(dContent)? dContent : isObj(dContent) ? [dContent] : [];
@@ -37,5 +38,6 @@ export function createPDF(docDefinition,options){
     docDefinition.pageOrientation = pageOrientation;
     docDefinition.content = content;
     docDefinition.pageMargins = Array.isArray(docDefinition.pageMargins) && docDefinition.pageMargins.length && docDefinition.pageMargins || getPageMargins(options);
-    return pdfMake.createPdf(docDefinition);
+    const createPdf = customPdfMake && typeof customPdfMake?.createPDF =='function'? customPdfMake.createPDF : typeof customPdfMake?.createPdf =='function'? customPdfMake.createPdf : pdfMake.createPdf;
+    return createPdf(docDefinition);
 };
