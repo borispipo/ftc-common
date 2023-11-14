@@ -59,16 +59,9 @@ export default function extendObj (){
         length = length-1;
     }
     // Handle case when target is a string or something (possible in deep copy)
-    if (typeof target !== "object" && !isFunction(target)) {
+    if (!Array.isArray(target) && typeof target !== "object" && !isFunction(target)) {
         target = {};
     }
-    /***    
-        // Extend jQuery itself if only one argument is passed
-        if ( i === length ) {
-            target = this;
-            i--;
-        }
-    */
     for ( ; i < length; i++ ) {
         const options = arguments[i];
         // Only deal with non-null/undefined values
@@ -82,14 +75,17 @@ export default function extendObj (){
                 if ( name === "__proto__" || target === copy || filter(copy,name) === false) {
                     continue;
                 }
+                // Prevent never-ending loop
+				if ( target === copy ) {
+					continue;
+				}
                 copyIsArray = Array.isArray( copy )
                 // Recurse if we're merging plain objects or arrays
                 if ( deep && copy && ( isPlainObject( copy ) || ( copyIsArray) ) ) {
                     src = target[ name ];
-                    // Ensure proper type for the source value
-                    if ( copyIsArray && !Array.isArray( src ) ) {
-                        clone = [];
-                    } else if ( !copyIsArray && !isPlainObject( src ) ) {
+                    if(copyIsArray){
+                        clone = Array.isArray(src)? src : [];
+                    } else if (!isPlainObject( src ) ) { // Ensure proper type for the source value
                         clone = {};
                     } else {
                         clone = src;
@@ -97,11 +93,9 @@ export default function extendObj (){
                     if(copyIsArray && !deepArray){
                         target[name] = copy;
                     } else {
-                        copyIsArray = false;
                         // Never move original objects, clone them
                         target[ name ] = extendObj( deep,deepArray, clone, copy,filter);
                     }
-
                 // Don't bring in undefined values
                 } else if ( copy !== undefined ) {
                     target[ name ] = copy;
