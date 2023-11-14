@@ -94,7 +94,7 @@ export const createPageFooter = (opts)=>{
    let footerCopyRight = opts.footerCopyRight === false ? "" : defaultVal(opts.footerCopyRight,undefined)
    if(isNonNullString(footerCopyRight)){
        footerCopyRight = {
-           text : textToObject(APP.sprintf(footerCopyRight)),
+           text : textToObject(footerCopyRight),
            alignment : "center",
            fontSize:10,
            margin,

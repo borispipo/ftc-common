@@ -1,6 +1,6 @@
 import pdfMake from "./pdfmake";
 import {isObj,isNonNullString,defaultStr} from "$cutils";
-import { pageBreakBefore,createPageFooter,createPageHeader,getPageMargins} from "./utils";
+import { pageBreakBefore,createPageFooter,createPageHeader,getPageMargins,textToObject} from "./utils";
 import formats from "./formats/formats";
 import { defaultPageFormat,defaultPageOrientation } from "./formats";
 export * from "./formats";
@@ -37,6 +37,9 @@ export function createPDF(docDefinition,options,customPdfMake){
     docDefinition.pageSize = pageSize;
     docDefinition.pageOrientation = pageOrientation;
     docDefinition.content = content;
+    if(isNonNullString(options.footerNote)){
+        content.push({text:textToObject(options.footerNote)})
+    }
     docDefinition.pageMargins = Array.isArray(docDefinition.pageMargins) && docDefinition.pageMargins.length && docDefinition.pageMargins || getPageMargins(options);
     const createPdf = customPdfMake && typeof customPdfMake?.createPDF =='function'? customPdfMake.createPDF : typeof customPdfMake?.createPdf =='function'? customPdfMake.createPdf : pdfMake.createPdf;
     return createPdf(docDefinition);

@@ -1,5 +1,8 @@
+import APP from "$capp/utils";
+import {isNonNullString,defaultStr} from "$cutils";
 export default function toPdfmakeObj(str){
     if(!isNonNullString(str)) return null;
+    str = defaultStr(APP.sprintf(str)).trim();
     let bold = false, italics = false,underlined = false;
     let output = [];
     let text = str.split('').reduce((a, b) => {
