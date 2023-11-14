@@ -33,7 +33,7 @@ export default {
         maxLength : 500,
     },
     footerCopyRight : {
-        text : 'Pied de page',
+        text : 'Pied de page/Copyright',
         format : 'hashtag',
         maxLength : 500,
         defaultValue : appConfig.copyright,
