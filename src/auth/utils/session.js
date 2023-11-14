@@ -181,11 +181,10 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
 export const logout = () =>{
     if(!isClientSide()) return null;
     resetPerms();
-    $session.set(USER_SESSION_KEY,"");
+    setLocalUser(null);
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
     return true;
 }
-
 
 export const updateTheme = (u)=>{
     if(!isObj(u)){

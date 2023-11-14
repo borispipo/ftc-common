@@ -13,7 +13,7 @@ import APP from "$capp/instance";
 export const useIsSignedIn = ()=>{
   const [isSignIn,setIsSignIn] = React.useState(isSignedIn());
   React.useEffect(()=>{
-    const onSignInOrOut = ()=>{
+    const onSignInOrOut = (a)=>{
       setIsSignIn(isSignedIn());
     }
     APP.on(APP.EVENTS.AUTH_LOGIN_USER,onSignInOrOut);
@@ -23,7 +23,7 @@ export const useIsSignedIn = ()=>{
       APP.off(APP.EVENTS.AUTH_LOGOUT_USER,onSignInOrOut);
     }
   },[])
-  return React.useMemo(()=>isSignIn,[isSignIn]);
+  return isSignIn;
 }
 export const useIsLoggedIn = useIsSignedIn;
 
