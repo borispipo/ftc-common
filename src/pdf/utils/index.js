@@ -164,18 +164,14 @@ export const createPageHeader = (options)=>{
     options = defaultObj(options);
     const companyHeader = getCompanyHeader(options);
     let hasCompany = companyHeader && companyHeader.length> 0;
-    let dynamicPageHeaderWidth = defaultVal(options.dynamicPageHeaderWidth,1);
+    const dynamicPageHeaderWidth = defaultVal(options.dynamicPageHeaderWidth,0);
     let pageHeader = Array.isArray(options.pageHeader)? options.pageHeader : isObj(options.pageHeader)? [options.pageHeader] : [];
     let columnGap = getHeaderColumnGap();
     let hasLogo = hasCompany && isObj(companyHeader[0]) && companyHeader[0].image ? true : false;
-    if(!pageHeader.length){
-        pageHeader = undefined;
-    }
     let margin = pageHeaderMargin;
     let ret = {}
     let hasColumns = false;
     if(dynamicPageHeaderWidth){
-        pageHeader = pageHeader || [];
         //le logo seule prend quatre lignes
         let companyHeaderLength = hasCompany ? (hasLogo? (companyHeader.length+4):companyHeader.length) : 0;
         let diff = pageHeader.length - companyHeaderLength;
@@ -241,7 +237,7 @@ export const getCompanyHeader = (options)=>{
     let fontSize = defaultNumber(options.fontSize,11);
     let bold = true;
     const headerColumn = []
-    if(options.displayLogo !== false && isDataURL(options.logo)){
+    if(options.displayLogo !== false && options.displayLogo !== 0 && isDataURL(options.logo)){
         headerColumn.push({
             image : options.logo,
             width : defaultNumber(options.logoWidth,LOGO_WIDTH) 
