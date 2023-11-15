@@ -1,4 +1,4 @@
-import {isObj,isNonNullString,isDataURL,defaultStr,isNumber,defaultObj,defaultFunc,isFunction,defaultVal,defaultNumber} from "$cutils";
+import {isObj,isNonNullString,isDataURL,defaultStr,sortBy,isNumber,defaultObj,defaultFunc,isFunction,defaultVal,defaultNumber} from "$cutils";
 import theme from "$theme";
 import APP from "$capp/instance";
 import appConfig from "$capp/config";
@@ -244,11 +244,8 @@ export const getCompanyHeader = (options)=>{
         });
     }
     const socialReason = defaultStr(options.socialReason).trim();
-    const displaySocialReason = !!socialReason;
-    if(displaySocialReason){
-        if(displaySocialReason){
-            headerColumn.push({text:socialReason+"\n",fontSize:13,bold})
-        }
+    if(socialReason){
+        headerColumn.push({text:socialReason+"\n",fontSize:13,bold})
     }
     let phone = defaultStr(options.phone);
     if(isNonNullString(options.mobile1)){
@@ -311,6 +308,97 @@ export const getPageMargins = (options)=>{
         }
     }
     return ret;
+}
+
+/***affiche le contenu rendu des ginataires du document
+ * @param {Array} signatories : tableau portant la liste des signataires du document, de la forme : 
+    {
+        image{string|dataURL},
+        users {Array},le tableau des utilisateurs 
+    }
+   @param {object} options,
+ 
+ */
+export const signatories = (signatories,options)=>{
+    signatories = Array.isArray(signatories)? signatories : [];
+    options = Object.assign({},options);
+    settings = defaultObj(settings);
+    if(!signatories.length){
+        return {text:""};
+    }
+    const marginNumber = Math.floor(isDecimal(options.signatoriesMargin)? options.signatoriesMargin : 3);
+    const opts = {
+        margin  : [0,5,0,0]
+    }
+    const canPrintSignatoriesImages = options.printSignatoriesImages;
+    let columns = []
+    signatories.map((s,i)=>{
+        if(!isObj(s)) return null;
+        let image = s.image;
+        const sOptions = defaultObj(s.signatureOptions);
+        const style = {fontSize:14};
+        s.fontStyle = defaultStr(s.fontStyle,'italics+bold').toLowerCase();
+        if(s.fontStyle.contains("italics")){
+            style.italics = true;
+        }
+        if(s.fontStyle.contains("bold")){
+            style.bold = true;
+        }
+        s = defaultStr(s.label,s.code);
+        if(isNonNullString(s)){
+            let text = {text:s,...style};
+            if(canPrintSignatoriesImages && isDataURL(image)){
+                const signature = {image,alignment:'center',margin:[0,0,0,0]};
+                const maxSignatureDim = defaultNumber(options.maxCreatedSignaturePrintSize,MAX_CREATED_SIGNATURE_PRINT_SIZE)
+                let width = Math.abs(defaultNumber(sOptions.width)), 
+                height = Math.abs(defaultNumber(sOptions.height));
+                if(width && height){
+                    width = Math.min(width,maxSignatureDim);
+                    height = Math.min(height,maxSignatureDim);
+                } else if(width){
+                    width = height = Math.min(width,maxSignatureDim)
+                } else if(height){
+                    height = width = Math.min(height,maxSignatureDim);
+                } else {
+                    width = height = maxSignatureDim
+                }
+                signature.fit = [width,height];
+                text = [text,signature]
+            }
+            columns.push(text);
+        }
+        return '';
+    })
+    if(columns.length > 0){
+        let percent = (100/columns.length)
+        for(let i in columns){
+            columns[i].width = percent+"%";
+        }
+        let t = '';
+        for(let i=0; i< marginNumber-1;i++){
+            t+="\n";
+        }
+        if(t){
+            columns.push({text:t})
+        }
+    } else {
+        if(settings.duplicateDocOnPage){
+            let t = '';
+            for(let i=0; i< marginNumber-1;i++){
+                t+="\n";
+            }
+            if(t){
+                columns.push({text:t})
+            }
+        }
+        delete opts.margin;
+        return columns;
+    }
+    return {
+        columns,
+        alignment : 'center',
+        ...opts
+    }
 }
 
 export {textToObject,textToObject as sprintf};
