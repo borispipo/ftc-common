@@ -156,9 +156,7 @@ export const getHeaderColumnGap = ()=>{
  * @param : Object {
  *      ///PropType.array, le contenu à concaténer auprès du companyHeader
  *      ///tableau contenant le header à afficher côte à cote ou de manière repartie au companyHeader 
- *      pageHeader : [
- *          
- *      ]
+ *      pageHeader : [], le contenu à afficher du côté du companyHeader à créer
  * }
  * 
  */
@@ -167,7 +165,7 @@ export const createPageHeader = (options)=>{
     const companyHeader = getCompanyHeader(options);
     let hasCompany = companyHeader && companyHeader.length> 0;
     let dynamicPageHeaderWidth = defaultVal(options.dynamicPageHeaderWidth,1);
-    let pageHeader = defaultArray(options.pageHeader);
+    let pageHeader = Array.isArray(options.pageHeader)? options.pageHeader : isObj(options.pageHeader)? [options.pageHeader] : [];
     let columnGap = getHeaderColumnGap();
     let hasLogo = hasCompany && isObj(companyHeader[0]) && companyHeader[0].image ? true : false;
     if(!pageHeader.length){
