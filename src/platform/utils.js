@@ -80,7 +80,25 @@ export const isNativeDesktop = isElectron;
    *
    * Indicates whether executes in node.js application.
    */
-export const isNode = x=> !!(typeof process !== 'undefined' && process.versions && process.versions.node);
+export const isNode = x=> {
+  try {
+    
+    if(typeof process !== 'undefined' && process?.versions && process?.versions?.node){
+        return true;
+    }
+    if(typeof global === 'object' && '[object global]' === global?.toString.call(global)) return true;
+  } catch{}
+  return false;
+}
+export const isNodeJS = isNode;
+
+if (typeof process === 'object') {
+  if (typeof process.versions === 'object') {
+    if (typeof process.versions.node !== 'undefined') {
+      isNode = true;
+    }
+  }
+}
 
 // http://stackoverflow.com/questions/19877924/what-is-the-list-of-possible-values-for-navigator-platform-as-of-today
 const pfstring = typeof window !=='undefined' && window && window.navigator && typeof window.navigator.platform =='string' && window.navigator.platform ? window.navigator.platform : "";
