@@ -4,7 +4,7 @@
 
 import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from './breakpoints';
-import {useEffect} from "react";
+import {useEffect,useState} from "react";
 import {isObj,defaultStr} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
@@ -141,7 +141,7 @@ if(!isObj(breakpoints.allNormalized)){
 
 export const usePageDimensions = ()=>{
 	const isMounted = useIsMounted();
-	const [dimensions,setDimensions] = getDimensionsProps();
+	const [dimensions,setDimensions] = useState(getDimensionsProps());
 	useEffect(()=>{
 		const onResize = ()=>{
 			const dim = getDimensionsProps();
