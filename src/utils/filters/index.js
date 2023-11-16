@@ -375,7 +375,7 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
     if(typeof opts =='function'){
         opts = {filter:opts};
     }
-    let {filter,convertToSQL:convToSQL} = opts;
+    let {filter,parseMangoQueries:convMangoQueries} = opts;
     const filters = {}
     filter = typeof filter =='function'? filter : x=>true;
     Object.map(filtersToPrepare,(f,i)=>{
@@ -428,7 +428,7 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
             filters[f.operator].push(ob)
         }
     });
-    return convToSQL ? convertToSQL(filters) : filters;
+    return convMangoQueries ? parseMangoQueries(filters) : filters;
 }
 
 
@@ -436,20 +436,20 @@ export default utils;
 
 /*** convertis les filtres pris au format mangoesQuey, au format de sortie SQL
  * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
- * @param {object} filters, les filtres au format mango query à convertir au format SQL
+ * @param {object} queries, les requêtes au format mango query à convertir au format SQL
  */
-export const convertToSQL = (filters,opts)=>{
-    if(!isObjOrArray(filters)) return [];
+export const parseMangoQueries = (queries,opts)=>{
+    if(!isObjOrArray(queries)) return [];
     opts = isObj(opts)? opts : {}; 
-    const whereParsed = mangoParser.parse(filters)
+    const whereParsed = mangoParser.parse(queries)
     return whereParsed.parts.reduce((prev, curr) => {
         const c = whereClauseToSQL(curr,opts);
         return c ? [...prev,c] : prev;
-    }, []).map((filter)=>{
-        if(filter.field === MANGO_QUERY_OPERATOR){
-            delete filter.field;
+    }, []).map((query)=>{
+        if(query.field === MANGO_QUERY_OPERATOR){
+            delete query.field;
         }
-        return filter;
+        return query;
     });
 }
 export const getOptimizedOperator = (operator,opts)=>{
@@ -570,10 +570,10 @@ const operatorsMap = {
         const opRand = oprand.join(', ');
         return isNonNullString(opRand)? ('(' + opRand + ')') : "";
     } else if (!isNonNullString(field) && Array.isArray(operand)) { // AND or OR elements
-      // recursively call 'buildWhereElement' for nested elements
+      // recursively call 'buildSQLWhereElement' for nested elements
       // join each element with operator AND or OR
       return operand.reduce((prev, curr) => {
-        const bb = buildWhereElement(curr,statementsParams,fields,opts);
+        const bb = buildSQLWhereElement(curr,statementsParams,fields,opts);
         if(isNonNullString(bb) && bb.trim()){
             prev.push(bb);
         }
@@ -607,7 +607,7 @@ const operatorsMap = {
    * @param {object} les champs, le mappage des colonnes en bd, à utiliser pour effectuer la requête
    * Return element of WHERE clause
    */
-  export const buildWhereElement = (elem,statementsParams,fields,opts) => {
+  export const buildSQLWhereElement = (elem,statementsParams,fields,opts) => {
     if(!elem || typeof elem !=='object' || Array.isArray(elem)) return "";
     let { field, operator, operand } = elem;
     if (!isNonNullString(operator)) return "";
@@ -618,9 +618,9 @@ const operatorsMap = {
     return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
   }
   
-  /**** construit une requête Where à partir des filtres préparé dans le tableau whereClausePrepared
+  /**** construit une requête SQL d'instructions Where à partir des filtres préparé dans le tableau whereClausePrepared
    * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
-   * @parm {array} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction convertToSQL
+   * @parm {array|object} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction parseMangoQueries
      @param {bool || object} withStatementsParams si le contenu de la requête utilisera les query builder params
      @param {object} fields les alias aux colonnes
      @param {object} opts {
@@ -630,7 +630,26 @@ const operatorsMap = {
     }, les options supplémentaires
      @return {string}, la requête Where correspondante
   */
-  export const buildWhere = (whereClausePrepared,withStatementsParams,_fields,opts)=>{
+  export const buildSQLWhere = (whereClausePrepared,withStatementsParams,_fields,opts)=>{
+    if(isObj(whereClausePrepared)){
+        let isMang = whereClausePrepared.$and || whereClausePrepared.$or;
+        if(!isMang){
+            for(let i in whereClausePrepared){
+                if(isObj(whereClausePrepared[i])){
+                    for(let j in operatorsMap){
+                        if(j in whereClausePrepared[i]){
+                            isMang = true;
+                            break;
+                        }
+                    }
+                }
+                if(isMang) break;
+            }
+        }
+        if(isMang){
+            whereClausePrepared = parseMangoQueries(whereClausePrepared);
+        }
+    }
     if(!Array.isArray(whereClausePrepared)) return null;
     opts = defaultObj(opts);
     const fields = isObj(opts.allFields)? extendObj({},opts.allFields,_fields) : Object.assign({},_fields);
@@ -638,7 +657,7 @@ const operatorsMap = {
     const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
-       const bb = buildWhereElement(curr,statementsParams,fields,opts);
+       const bb = buildSQLWhereElement(curr,statementsParams,fields,opts);
        if(isNonNullString(bb) && bb.trim()){
             prev.push(bb);
        }
