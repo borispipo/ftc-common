@@ -4,10 +4,12 @@
 
 import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from './breakpoints';
+import {useEffect} from "react";
 import {isObj,defaultStr} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
 import isTouchDevice from "$cutils/isTouchDevice";
+import useIsMounted from "$cutils/react/useIsMounted";
 
 export {default as useWindowDimensions} from "$active-platform/useWindowDimensions";
 
@@ -134,4 +136,23 @@ if(!isObj(breakpoints.allNormalized)){
         ...dim2,
         ...dimensions,
     };
+}
+
+
+export const usePageDimensions = ()=>{
+	const isMounted = useIsMounted();
+	const [dimensions,setDimensions] = getDimensionsProps();
+	useEffect(()=>{
+		const onResize = ()=>{
+			const dim = getDimensionsProps();
+			if(isMounted() && JSON.stringify(dim) !== JSON.stringify(dimensions)){
+				setDimensions(dim);
+			}
+		}
+		APP.on(APP.EVENTS.RESIZE_PAGE,onResize);
+		return ()=>{
+			APP.off(APP.EVENTS.RESIZE_PAGE,onResize);
+		}
+	},[]);
+	return dimensions;
 }
