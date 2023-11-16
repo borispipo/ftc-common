@@ -144,9 +144,8 @@ export const usePageDimensions = ()=>{
 	const [dimensions,setDimensions] = useState(getDimensionsProps());
 	useEffect(()=>{
 		const onResize = ()=>{
-			const dim = getDimensionsProps();
-			if(isMounted() && JSON.stringify(dim) !== JSON.stringify(dimensions)){
-				setDimensions(dim);
+			if(isMounted()){
+				setDimensions(getDimensionsProps());
 			}
 		}
 		APP.on(APP.EVENTS.RESIZE_PAGE,onResize);
