@@ -92,14 +92,6 @@ export const isNode = x=> {
 }
 export const isNodeJS = isNode;
 
-if (typeof process === 'object') {
-  if (typeof process.versions === 'object') {
-    if (typeof process.versions.node !== 'undefined') {
-      isNode = true;
-    }
-  }
-}
-
 // http://stackoverflow.com/questions/19877924/what-is-the-list-of-possible-values-for-navigator-platform-as-of-today
 const pfstring = typeof window !=='undefined' && window && window.navigator && typeof window.navigator.platform =='string' && window.navigator.platform ? window.navigator.platform : "";
 
