@@ -548,7 +548,7 @@ const operatorsMap = {
     const getStatement = ()=>{
         statementParamsCounterRef.current++
         field = getField(field,fields,opts);
-        const _field = `$${statementParamsCounterRef.current}`;
+        const _field = `${field}_${statementParamsCounterRef.current}`;
         statementsParams[_field] = operand;
         return `:${_field}`;
     }
@@ -621,7 +621,7 @@ const operatorsMap = {
   /**** construit une requête SQL d'instructions Where à partir des filtres préparé dans le tableau whereClausePrepared
    * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
    * @parm {array|object} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction parseMangoQueries
-     @param {bool || object} withStatementsParams si le contenu de la requête utilisera les query builder params
+     @param {object} statementsParams, cet objet portera les valeurs des requêtes paremétrées, ces valeurs seront sous forme de : {champ:[operand]}, où les champs seront substitués dans les requêtes
      @param {object} fields les alias aux colonnes
      @param {object} opts {
         allFields {object}, //les champs supplémentaires à prendre en compte pour la récupération du nom du champ en base de données
@@ -630,7 +630,7 @@ const operatorsMap = {
     }, les options supplémentaires
      @return {string}, la requête Where correspondante
   */
-  export const buildSQLWhere = (whereClausePrepared,withStatementsParams,_fields,opts)=>{
+  export const buildSQLWhere = (whereClausePrepared,statementsParams,_fields,opts)=>{
     if(isObj(whereClausePrepared)){
         let isMang = whereClausePrepared.$and || whereClausePrepared.$or;
         if(!isMang){
@@ -654,7 +654,7 @@ const operatorsMap = {
     opts = defaultObj(opts);
     const fields = isObj(opts.allFields)? extendObj({},opts.allFields,_fields) : Object.assign({},_fields);
     statementParamsCounterRef.current = -1;
-    const statementsParams = isObj(withStatementsParams) ? withStatementsParams : withStatementsParams ? {} : null;
+    statementsParams = isObj(statementsParams) ? statementsParams : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
     return whereClausePrepared.reduce((prev, curr) => {
        const bb = buildSQLWhereElement(curr,statementsParams,fields,opts);
