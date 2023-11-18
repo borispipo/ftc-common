@@ -550,7 +550,7 @@ const operatorsMap = {
     if(isInOperator){
         operand = Object.toArray(operand).map(op => {
             return escapeSQLQuotes(op);
-        }).filter(!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
+        }).filter(op=>!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
     }
     const getStatement = ()=>{
         statementParamsCounterRef.current++
