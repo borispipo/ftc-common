@@ -555,7 +555,7 @@ const operatorsMap = {
         const columnName = field;
         field = getField(field,fields,opts);
         const _field = `${field}_${statementParamsCounterRef.current}`;
-        statementsParams[_field] = `(${operand.join(",")})`;
+        statementsParams[_field] = operand;
         if(isInOperator){
             statementsParams.inOperators = defaultObj(statementsParams.inOperators);
             statementsParams.inOperators[_field] = {field:_field,columnField:field,operator,operand};
