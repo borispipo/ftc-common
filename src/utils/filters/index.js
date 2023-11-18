@@ -545,11 +545,27 @@ const operatorsMap = {
  */
   export const getTyppedOperand = (operand, operator, field,statementsParams,fields,opts) => {
     const hasStamentsParms = isObj(statementsParams);
+    opts = defaultObj(opts);
+    const isInOperator = operator === 'IN' || operator =='NOT IN';
+    if(isInOperator){
+        operand = Object.toArray(operand).map(op => {
+            return escapeSQLQuotes(op);
+        }).filter(!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
+    }
     const getStatement = ()=>{
         statementParamsCounterRef.current++
+        const columnName = field;
         field = getField(field,fields,opts);
         const _field = `${field}_${statementParamsCounterRef.current}`;
-        statementsParams[_field] = operand;
+        statementsParams[_field] = `(${operand.join(",")})`;
+        if(isInOperator){
+            statementsParams.inOperators = defaultObj(statementsParams.inOperators);
+            statementsParams.inOperators[_field] = {field:_field,columnField:field,operator,operand};
+        }
+        if(typeof opts.getStatementParam =="function"){
+            const ff = opts.getStatementParam({...opts,field,isInOperator,_field,statementsParams,columnName,fields,operator,operand});
+            if(isNonNullString(ff)) return ff;
+        }
         return `:${_field}`;
     }
     if (typeof operand === 'string') { // wrap strings in double quots
@@ -558,16 +574,11 @@ const operatorsMap = {
         return getStatement();
       }
       return escapeSQLQuotes(operand)
-    } else if (operator === 'IN' || operator =='NOT IN') { // wrap IN arguments in brackers
-        operand = Object.toArray(operand);
+    } else if (isInOperator) { // wrap IN arguments in brackers
         if(hasStamentsParms){
             return getStatement();
         }
-        const oprand = [];
-        operand.map(op => {
-            oprand.push(escapeSQLQuotes(op));
-        });
-        const opRand = oprand.join(', ');
+        const opRand = operand.join(', ');
         return isNonNullString(opRand)? ('(' + opRand + ')') : "";
     } else if (!isNonNullString(field) && Array.isArray(operand)) { // AND or OR elements
       // recursively call 'buildSQLWhereElement' for nested elements
