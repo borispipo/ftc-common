@@ -548,9 +548,7 @@ const operatorsMap = {
     opts = defaultObj(opts);
     const isInOperator = operator === 'IN' || operator =='NOT IN';
     if(isInOperator){
-        operand = Object.toArray(operand).map(op => {
-            return escapeSQLQuotes(op);
-        }).filter(op=>!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
+        operand = Object.toArray(operand);
     }
     const getStatement = ()=>{
         statementParamsCounterRef.current++
@@ -578,6 +576,9 @@ const operatorsMap = {
         if(hasStamentsParms){
             return getStatement();
         }
+        operator = operator.map(op => {
+            return escapeSQLQuotes(op);
+        }).filter(op=>!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
         const opRand = operand.join(', ');
         return isNonNullString(opRand)? ('(' + opRand + ')') : "";
     } else if (!isNonNullString(field) && Array.isArray(operand)) { // AND or OR elements
