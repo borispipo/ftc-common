@@ -564,7 +564,7 @@ const operatorsMap = {
             const ff = opts.getStatementParam({...opts,field,isInOperator,_field,statementsParams,columnName,fields,operator,operand});
             if(isNonNullString(ff)) return ff;
         }
-        return `:${_field}`;
+        return isInOperator? `(:...${_field})` : `:${_field}`;
     }
     if (typeof operand === 'string') { // wrap strings in double quots
       if(!isNonNullString(field)) return null;
