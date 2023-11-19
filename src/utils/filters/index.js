@@ -576,7 +576,7 @@ const operatorsMap = {
         if(hasStamentsParms){
             return getStatement();
         }
-        operator = operator.map(op => {
+        operand = operand.map(op => {
             return escapeSQLQuotes(op);
         }).filter(op=>!!op || isNonNullString(op) || typeof op =="number" || typeof op =="boolean");
         const opRand = operand.join(', ');
