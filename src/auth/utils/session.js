@@ -177,9 +177,15 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
   return dat;
 }
 
+export const canSignOut = ()=>{
+  if(!isClientSide() || isSingleUserAllowed()) return false;
+  return true;
+}
+export const canLogout = canSignOut;
+
 /*** déconnecte l'utilisateur actuel */
 export const logout = () =>{
-    if(!isClientSide()) return null;
+    if(!canSignOut()) return null;
     resetPerms();
     setLocalUser(null);
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
