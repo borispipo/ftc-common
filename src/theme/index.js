@@ -303,7 +303,7 @@ export const withStyles = (Component,options,mutator)=>{
             if(customShouldForwardProps(prop) === false) return false;
             return prop !=="cursorPointer" && prop !=="cursorNotAllowed" && !colorsKeysAlias[prop] && prop !=='surface' && prop !== 'withStyle' ? true : false;
         }
-    })(({color,surface,bold,selectable,noPadding,noMargin,textBold,cursorNotAllowed:cCursorNotAllowed,cursorPointer:cCursorPointer,loading,withStyle,disabled,backgroundColor,mode:customMode,style,...rest }) =>{
+    })(({color,surface,bold,userSelect,noPadding,noMargin,textBold,cursorNotAllowed:cCursorNotAllowed,cursorPointer:cCursorPointer,loading,withStyle,disabled,backgroundColor,mode:customMode,style,...rest }) =>{
         const isContained = (typeof customMode =='string' && customMode ? customMode : mode) == 'contained' ? true : false;
         rest = defaultObj(rest);
         const colors = theme.colors;
@@ -385,8 +385,8 @@ export const withStyles = (Component,options,mutator)=>{
         if(noMargin){
             style.margin = style.marginHorizontal = style.marginVertical = 0;
         }
-        if(typeof selectable ==='boolean'){
-            style.userSelect = selectable ? "all" : "none";
+        if(typeof userSelect ==='boolean'){
+            style.userSelect = userSelect ? "all" : "none";
         }
         if(typeof mutator =='function'){
             extendObj(style,mutator(style,{...rest,style,disabled,loading,displayName,color,backgroundColor}));
