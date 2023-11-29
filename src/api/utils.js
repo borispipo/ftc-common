@@ -8,7 +8,7 @@ import appConfig from "$capp/config";
 
 export * from "./host";
 
-export const canCheckOnline = !!!process.env.RUN_API_OFFLINE;
+export const canCheckOnline = !!process.env.RUN_API_ONLINE;
 export const canFetchOffline = !canCheckOnline;
 
 ///delay d'attente de connexion : peut être définie dans la variable d'environnement API_FETCH_TIMEOUT
