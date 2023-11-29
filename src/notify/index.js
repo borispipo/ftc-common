@@ -97,8 +97,24 @@
      return notify(message,"warning",title,set)
  }
  
+ export const canSendDesktop = x=> typeof window ==='undefined' || !window || !window?.Notification || !window?.Notification?.requestPermission ? false: true;
+ 
+ /*** @see : https://developer.mozilla.org/en-US/docs/Web/API/Notification */
+ export const sendDesktop = (message,options)=>{
+    if (canSendDesktop()) {
+        return Promise.resolve(notify(message,null,null,options));
+    }
+    return Promise.resolve((Notification.permission === 'granted'?Notification.permission:Notification.requestPermission())).then(function(p) {
+        if(p === 'granted') {
+            options = isObj(options)? options : {};
+            return new Notification(message,options)
+        } else {
+            throw {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."}
+        }
+    });
+ }
  
  export const  toast =  info;
  
- export default {error,success,warning,info,toast,notify};
+ export default {error,success,warning,info,toast,notify,canSendDesktop,sendDesktop,desktop:sendDesktop};
  
