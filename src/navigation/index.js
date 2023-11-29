@@ -13,8 +13,15 @@ export * from "$active-platform/navigation";
 import * as React from "react";
 
 /**** permet d'uniformaliser le nom d'un écran ou d'une route*/
-export const sanitizeName =  function (screenName,screenType){
-    return actions(screenName,screenType);
+export const sanitizeName =  function (screenName){
+    if(!isNonNullString(screenName)) return "";
+    const split = screenName.split("?");
+    screenName = split[0].trim().toSnakeCase().toLowerCase().replace(/\s/g, "-").replaceAll("_","-").replaceAll("--","-").trim();
+    if(split.length > 1){
+        const qs = split.filter((v,index)=>index>0 && isNonNullString(v)).join("&");
+        return `${screenName}${qs?`?${qs}`:""}`
+    }
+    return screenName;
 }
 
 const ROUTER_MANAGER = {};
@@ -138,7 +145,8 @@ export const isRouteActive = (routeName)=>{
     if(!currentRoute){
         currentRoute = getInitialRouteName();
     }
-    return routeName && sanitizeName(routeName) === (currentRoute) ? true : false;
+    const sanit = sanitizeName(routeName);
+    return routeName && (sanit === currentRoute || sanit === sanitizeName(currentRoute)) ? true : false;
 }
 
 export const currentRouteRef = React.createRef(null);
