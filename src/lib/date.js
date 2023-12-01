@@ -32,6 +32,30 @@ Date.prototype.withoutTime = function () {
     return d;
 }
 
+if(typeof Date.prototype.toUTCDateTime !== 'function'){
+    Date.prototype.toUTCDateTime = function(){
+        return ISOSQLDateTime(new Date(this));
+    }
+}
+
+if(typeof Date.prototype.toISOSQLDateTime !== 'function'){
+    Date.prototype.ISOSQLDateTime = function(){
+        return ISOSQLDateTime(new Date(this));
+    }
+}
+
+if(typeof Date.prototype.toUTCDate !== 'function'){
+    Date.prototype.toUTCDate = function(){
+        return ISOSQLDate(new Date(this));
+    }
+}
+
+if(typeof Date.prototype.toISOSQLDate !== 'function'){
+    Date.prototype.ISOSQLDateTime = function(){
+        return ISOSQLDate(new Date(this));
+    }
+}
+
 Date.isLeapYear = function (year) { 
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
 };
@@ -237,6 +261,7 @@ function shorten(arr, sLen) {
     }
     return newArr;
 }
+
 
 
 //const SQLDateFormat = "yyyy-mm-dd",SQLDateTimeFormat = "yyyy-mm-dd\'T\'HH:MM:sso",SQLTimeFormat = "HH:MM:ss"
@@ -926,7 +951,27 @@ export const isValidDate = function (sDate,format) {
     let timeFormat = /^(?:[01]?\d|2[0-3]):[0-5]\d:[0-5]\d$/;
     return timeFormat.test(strTime);
 };
-let DateLib = {}
+
+/**** retourne le temps GMT eu format SQLDateTime
+    @param {object|string} date, la date à partir de laquelle on veut convertir, si date n'est pas définie, alors la date en cours est exploiée
+    @return {string}
+*/
+export const ISOSQLDateTime = (date)=>{
+    if(!date){
+        date = new Date();
+    } else  date = parse(date);
+    if(isDateObj(date)){
+        return date.toISOString().slice(0, 19).replace('T', ' ');
+    }
+    return "";
+}
+
+export function ISOSQLDate (date){
+    return defaultStr(ISOSQLDateTime(date)).split(":")[0].trim();
+}
+
+
+const DateLib = {}
 export const isValidSQLDate = (date)=>{
     if(!isNonNullString(date)) return false;
     var regEx = /^\d{4}-\d{2}-\d{2}$/;
@@ -1054,6 +1099,8 @@ export const currentMonthDaysLimits = (date,format)=>{
     return {first,last}
 }
 
+
+
 /***
  * retourne les dates limites de la semaine passée à partir de la date passées en une semaine
  * @param {date}, l'objet date à partir duquel retourner les limites
@@ -1081,6 +1128,21 @@ Object.defineProperties(DateLib,{
     },
     getFirstDayOfMonth : {
         value : getFirstDayOfMonth,
+    },
+    UTCDateTime : {
+        value : ISOSQLDateTime,
+    },
+    toUTCDateTime : {
+        value : ISOSQLDateTime,
+    },
+    UTCDate : {
+        value : ISOSQLDate,
+    },
+    ISOSQLDate : {
+        value : ISOSQLDate,
+    },
+    toUTCDate : {
+        value : ISOSQLDate,
     },
     dateDiff : {
         /*** determine difference of from date to toDate 
