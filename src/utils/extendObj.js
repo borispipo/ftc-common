@@ -94,7 +94,9 @@ export default function extendObj (){
                         target[name] = copy;
                     } else {
                         // Never move original objects, clone them
-                        target[ name ] = extendObj( deep,deepArray, clone, copy,filter);
+                        if(deepArray && Array.isArray(target)){
+                            target.push(extendObj( deep,deepArray, clone, copy,filter));
+                        }  else target[ name ] = extendObj( deep,deepArray, clone, copy,filter);
                     }
                 // Don't bring in undefined values
                 } else if ( copy !== undefined ) {
