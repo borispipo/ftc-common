@@ -185,7 +185,6 @@ export const getURIPathName = (uri,useCurrentURI)=>{
         qs = qs.trim().ltrim("?"); //chop off last "&"
         path = path + "?" + qs;
     }
-    console.log("before sending ",params, qs);
     return path;
 }
 export default queryString;
