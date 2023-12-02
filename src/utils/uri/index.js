@@ -32,7 +32,7 @@ export const getQueryString = (uri,addSepartor) =>{
  */
 export const getQueryParams = function(uri,queryStringOpts){
     if(typeof uri !=='string') return {};
-    return queryString.parse(getQueryString(uri,false),queryStringOpts);
+    return queryString.parse(getQueryString(uri,false),{ allowSparse: true,...Object.assign({},queryStringOpts) });
 }
 
 /**** supprimer les queryString des paramètres et ne laisser que l'url */
@@ -43,6 +43,12 @@ export const removeQueryString = function(uri,_decodeURIComponent){
         return decodeURIComponent(uri);
     }
     return uri;
+}
+
+const defaultStringifyOptions = {
+    indices: false,
+    arrayFormat: 'brackets',
+    encodeValuesOnly: true
 }
 
 /**** ajoute les paramètres GET à l'url passée en paramètre
@@ -62,7 +68,10 @@ export function setQueryParams(url,key, value,options) {
     } else if(typeof key =="string"){
         key = {[key]:value};
     }
-    return url+"?"+queryString.stringify(extendObj(true,{},params,key),options);
+    if(typeof key =='object' && key && !Array.isArray(key)){
+        extendObj(true,params,key);
+    }
+    return url+"?"+queryString.stringify(params,{...defaultStringifyOptions,...Object.assign({},options)});
 }
 
 /*** converti un objet en une chaine de caractère queryString */
@@ -169,13 +178,14 @@ export const getURIPathName = (uri,useCurrentURI)=>{
     })
     params = params && typeof params =="object" ? params : {};
     params = {...getQueryParams(path),...params};
-    let qs = queryString.stringify(params);
+    let qs = queryString.stringify(params,defaultStringifyOptions);
     path = path ? path : "";
     path = path.split("?")[0].trim().ltrim("/");
     if (qs.length > 0){
         qs = qs.trim().ltrim("?"); //chop off last "&"
         path = path + "?" + qs;
     }
+    console.log("before sending ",params, qs);
     return path;
 }
 export default queryString;
