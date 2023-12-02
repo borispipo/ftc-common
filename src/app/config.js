@@ -13,9 +13,11 @@ import defaultStr from "$cutils/defaultStr";
 
 const pJson = require("$packageJSON");
 
-const packageJSON = pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
+export const getPackageJson = ()=>{
+    return pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
+}
 
-const configRef = {current:packageJSON};
+const configRef = {current:getPackageJson()};
 
 /**** l'ensemble des tables de la base de données */
 const tablesDataRef = {current:null};
@@ -29,8 +31,8 @@ const sessionDatatKey = "app-config-session-data-key";
 const sessionAPIHostKey = "app-config-session-api-host";
 
 export const getConfig = x=>{
-    if(typeof configRef.current =="object" && configRef.current && !Array.isArray(configRef.current) ) return configRef.current;
-    configRef.current = {};
+    if(typeof configRef.current =="object" && configRef.current && !Array.isArray(configRef.current) && configRef.current?.name) return configRef.current;
+    configRef.current = {...getPackageJson()};
     return configRef.current;
 };
 const configValuesRef = {current:{}};
@@ -40,7 +42,7 @@ export const setConfig = configValue=> {
     if(typeof configValue =="object" && configValue && !Array.isArray(configValue)){
         configValuesRef.current = configValue;
         configRef.current = {
-            ...packageJSON,
+            ...getPackageJson(),
             ...configValue,
         };
         isInitializedRef.current = true;
