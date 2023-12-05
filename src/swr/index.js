@@ -5,11 +5,9 @@
 
 import useSWR from 'swr';
 import { getFetcherOptions as apiGetFetcherOptions } from '$capi';
-import {defaultStr ,extendObj,isNonNullString,isObjOrArray} from "$cutils";
-import {setQueryParams} from "$cutils/uri";
+import {defaultStr ,extendObj,isNonNullString,isObjOrArray,defaultObj} from "$cutils";
 import appConfig from "$capp/config";
-import React from 'react';
-import useNativeSWRInfinite from 'swr/infinite'
+import {canFetchOffline} from "$capi/utils";
 
 /****
  * Cette fonction est une abstraction au hook useSWR de https://swr.vercel.app
@@ -36,7 +34,7 @@ export default function useSwr (path,opts) {
     rest.swrQueryKey = options.swrQueryPath = fetchUrl;
     rest.fetchUrl = fetchUrl;
     return fetcher(path,rest);
-  },swrOptions);
+  },{refreshWhenOffline:canFetchOffline,...defaultObj(swrOptions)});
   return {
     ...rest,
     mutate,
@@ -50,46 +48,10 @@ export default function useSwr (path,opts) {
     error,
   }
 }
-/***
- * @see : https://swr.vercel.app/docs/pagination#infinite-loading
- * @param {function|string} la fonction permettant de construire l'url à effectuer la requête, où le chemin de base de l'url
- * @param {object} les options supplémentaires à passer à la fonction fetch
- */
-export const useSWRInfinite = (getKey,opts)=>{
-  const {swrOptions,fetcher,...options} = defaultObj(opts);
-  const pageRef = React.useRef(null);
-  const urlRef = React.useRef(null);
-  const { data, error,mutate,...rest } = useNativeSWRInfinite((pageIndex, previousPageData) => {
-    if (previousPageData && !previousPageData.length) return null // reached the end
-    pageRef.current = pageIndex;
-    const fetchUrl = typeof getKey =='function'? getKey({page:pageIndex,previousData:previousPageData,prevData:previousPageData}) : typeof getKey =='string' ? getKey : undefined;
-    if(!isNonNullString(fetchUrl)){
-       console.warn("l'url à utiliser pour la récupération des données useInfinieSWR ne doit pas être null",options);
-       return null;
-    }
-    return setQueryParams(fetchUrl,{page:pageIndex});
-  },typeof fetcher =='function'?fetcher : (url)=>{
-    const {url: fUrl,fetcher:cFetcher,...opts2} = getFetcherOptions(options);
-    return cFetcher(fUrl,opts2);
-  },swrOptions);
-  return {
-    ...rest,
-    mutate,
-    refresh : (key, data, options)=>{
-       return mutate(urlRef.current,data,options);
-    },
-    data,
-    isLoading: !error && !data,
-    isError: error,
-    hasError : error,
-    error,
-  }
+
+export const getFetcherOptions = (opts)=>{
+  opts = defaultObj(opts);
+  return {...opts,swrOptions :extendObj(true,{},appConfig.swr,opts.swrOptions)};
 }
-export const useInfinite = useSWRInfinite;
 
-  export const getFetcherOptions = (opts)=>{
-    opts = defaultObj(opts);
-    return {...opts,swrOptions :extendObj(true,{},appConfig.swr,opts.swrOptions)};
-  }
-
-  export * from "swr";
+export * from "swr";
