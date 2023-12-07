@@ -69,7 +69,7 @@ export default function (data,options){
                 if(isObj(allData[i]) && Object.size(allData[i],true)){
                     countD++
                     const p = Promise.resolve(print({...rest,multiple,data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"})).then((content)=>{
-                        return {content,data:allData[i]}
+                        return {result,data:allData[i]}
                     });
                     promises.push(p);
                     if(duplicateDocOnPage){
@@ -81,10 +81,11 @@ export default function (data,options){
             let counter = 0;
             return Promise.all(promises).then((results)=>{
                 for(let i in results){
-                    const {content} = results[i];
+                    const {result} = results[i];
                     let qrCode = null//generate(results[i].data);
                     //qrCode.alignment = qrCodeAlignment;
-                    if(isValidPrintableContent(content)){
+                    if(isValidPrintableContent(result)){
+                        const {content} = result;
                         counter ++;
                         if(pageHeader && (Array.isArray(pageHeader) && pageHeader.length || Object.size(pageHeader,true))){
                             content.unshift(pageHeader);
@@ -96,13 +97,14 @@ export default function (data,options){
                         if(printedDateStr){
                             content.push(printedDateStr);
                         }
-                        if(Array.isArray(tags) && tags.length){
-                            const pTag = printTags(tags,printOptions);
+                        const tagsA = Array.isArray(result.tags)? result.tags : tags;
+                        if(Array.isArray(tagsA) && tagsA.length){
+                            const pTag = printTags(tagsA,printOptions);
                             if(pTag){
                                 content.push(pTag);
                             }
                         }
-                        let sign = printSignatories(signatories,printOptions);
+                        let sign = printSignatories(Array.isArray(result.signatories)? result.signatories : signatories,printOptions);
                         if(sign){
                             content.push(sign);
                         }
@@ -130,6 +132,8 @@ export default function (data,options){
     })
  };
  
-export const isValidPrintableContent = (content)=>{
-    return !!(Array.isArray(args.content) && content.length);
+export const isValidPrintableContent = (printContent)=>{
+    if(!isObj(printContent)) return false;
+    const {content} = printContent;
+    return !!(Array.isArray(content) && content.length);
 }
