@@ -54,7 +54,7 @@ export default function (data,options){
             } else if(!isObj(footerNote)){
                 footerNote = null;
             }
-            printOptions = {...printOptions,...rest};
+            printOptions = {...printOptions,duplicateDocOnPage,...rest};
             const pageHeader = createPageHeader(options);
             const allData = data;
             const multiple = allData.length > 1;

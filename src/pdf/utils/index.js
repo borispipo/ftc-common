@@ -324,7 +324,6 @@ export const getPageMargins = (options)=>{
 export const printSignatories = (signatories,options)=>{
     signatories = Array.isArray(signatories)? signatories : [];
     options = Object.assign({},options);
-    settings = defaultObj(settings);
     if(!signatories.length){
         return {text:""};
     }
@@ -384,7 +383,7 @@ export const printSignatories = (signatories,options)=>{
             columns.push({text:t})
         }
     } else {
-        if(settings.duplicateDocOnPage){
+        if(options.duplicateDocOnPage){
             let t = '';
             for(let i=0; i< marginNumber-1;i++){
                 t+="\n";
