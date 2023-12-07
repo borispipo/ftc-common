@@ -51,7 +51,7 @@ export default function (data,options){
             pageBreakBeforeEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
             if(isNonNullString(footerNote)){
                 footerNote = {text:textToObject(footerNote,{fontSize:typeof(footerNoteFontSize) =='number'? footerNoteFontSize: 11})};
-            } else if(!isObj(footerNote)){
+            } else if(!Object.size(footerNote,true)){
                 footerNote = null;
             }
             printOptions = {...printOptions,duplicateDocOnPage,...rest};
@@ -84,14 +84,24 @@ export default function (data,options){
                     //qrCode.alignment = qrCodeAlignment;
                     if(isValidPrintableContent(result)){
                         const {content} = result;
+                        let {footerNote:resultFooter} = result;
                         counter ++;
                         const pHeader = result.pageHeader ? createPageHeader({...printOptions,...result}) : null;
-                        if(pHeader && Array.isArray(pHeader)){
+                        if(pHeader && Object.size(pHeader,true)){
                             content.unshift(pHeader);
-                        } else if(pageHeader && (Array.isArray(pageHeader))){
+                        } else if(pageHeader && Object.size(pageHeader,true)){
                             content.unshift(pageHeader);
                         }
-                        if(footerNote){
+                        if(resultFooter){
+                            if(isNonNullString(resultFooter)){
+                                resultFooter = {text:textToObject(resultFooter,{fontSize:typeof(footerNoteFontSize) =='number'? footerNoteFontSize: 11})};
+                            } else if(!Object.size(resultFooter,true)){
+                                resultFooter = null;
+                            }
+                        }
+                        if(resultFooter){
+                            content.push(resultFooter);
+                        } else if(footerNote){
                             content.push(footerNote);
                         }
                         const printedDateStr = getPrintedDate(printOptions);
