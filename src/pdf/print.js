@@ -68,9 +68,7 @@ export default function (data,options){
             for(let i in allData){
                 if(isObj(allData[i]) && Object.size(allData[i],true)){
                     countD++
-                    const p = Promise.resolve(print({...rest,multiple,data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"})).then((content)=>{
-                        return {result,data:allData[i]}
-                    });
+                    const p = Promise.resolve(print({...rest,multiple,data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
                     promises.push(p);
                     if(duplicateDocOnPage){
                         promises.push(p);
@@ -81,7 +79,7 @@ export default function (data,options){
             let counter = 0;
             return Promise.all(promises).then((results)=>{
                 for(let i in results){
-                    const {result} = results[i];
+                    const result = results[i];
                     let qrCode = null//generate(results[i].data);
                     //qrCode.alignment = qrCodeAlignment;
                     if(isValidPrintableContent(result)){
