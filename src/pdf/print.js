@@ -85,7 +85,10 @@ export default function (data,options){
                     if(isValidPrintableContent(result)){
                         const {content} = result;
                         counter ++;
-                        if(pageHeader && (Array.isArray(pageHeader) && pageHeader.length || Object.size(pageHeader,true))){
+                        const pHeader = result.pageHeader ? createPageHeader({...printOptions,...result}) : null;
+                        if(pHeader && Array.isArray(pHeader)){
+                            content.unshift(pHeader);
+                        } else if(pageHeader && (Array.isArray(pageHeader))){
                             content.unshift(pageHeader);
                         }
                         if(footerNote){
