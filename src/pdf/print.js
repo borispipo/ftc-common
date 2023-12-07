@@ -136,5 +136,5 @@ export default function (data,options){
 export const isValidPrintableContent = (printContent)=>{
     if(!isObj(printContent)) return false;
     const {content} = printContent;
-    return !!(Array.isArray(content) && content.length);
+    return !!(Array.isArray(content));
 }
