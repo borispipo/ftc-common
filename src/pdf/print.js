@@ -1,5 +1,5 @@
 import {defaultObj,isNonNullString,defaultStr} from "$cutils";
-import { createPageHeader,printSignatories,textToObject,printTags} from "./utils";
+import { createPageHeader,printSignatories,textToObject,printTags,getPrintedDate} from "./utils";
 /*** cette fonction prend en paramètre un tableau de donnés ou un objet à imprimer
     *  @param data {ArrayOf[object]|| object} les/la données à imprimer.
     *  lorsque data est un tableau, alors il s'agit de l'impression cumulée de plusieurs document
