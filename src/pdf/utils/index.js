@@ -1,10 +1,12 @@
 import {isObj,isNonNullString,isDataURL,defaultStr,sortBy,isNumber,defaultObj,defaultFunc,isFunction,defaultVal,defaultNumber} from "$cutils";
 import theme from "$theme";
-import APP from "$capp/instance";
+import {getLoggedUserCode} from "$cauth/utils/session";
 import appConfig from "$capp/config";
 import textToObject from "./textToObject";
 import Colors from "$theme/colors";
+import DateLib from "$clib/date";
 import { LOGO_WIDTH } from "../formats/fields";
+import outlineText from "./outlineText";
 /*permet de créer l'entête des données de type tableau
     @param {Array} tableHeader : l'entte du tableau à créer
     @param {function|object} : les options supplémentaires. is function alors il s'agit de la méthode render par défaut
@@ -314,12 +316,12 @@ export const getPageMargins = (options)=>{
  * @param {Array} signatories : tableau portant la liste des signataires du document, de la forme : 
     {
         image{string|dataURL},
-        users {Array},le tableau des utilisateurs 
+        label|text|code {string}, le libelé à affiché avant le signataire
     }
    @param {object} options,
  
  */
-export const signatories = (signatories,options)=>{
+export const printSignatories = (signatories,options)=>{
     signatories = Array.isArray(signatories)? signatories : [];
     options = Object.assign({},options);
     settings = defaultObj(settings);
@@ -330,7 +332,7 @@ export const signatories = (signatories,options)=>{
     const opts = {
         margin  : [0,5,0,0]
     }
-    const canPrintSignatoriesImages = options.printSignatoriesImages;
+    const canPrintSignatoriesImages = !!options.printSignatoriesImages;
     let columns = []
     signatories.map((s,i)=>{
         if(!isObj(s)) return null;
@@ -344,7 +346,7 @@ export const signatories = (signatories,options)=>{
         if(s.fontStyle.contains("bold")){
             style.bold = true;
         }
-        s = defaultStr(s.label,s.code);
+        s = defaultStr(s.label,s.text,s.code);
         if(isNonNullString(s)){
             let text = {text:s,...style};
             if(canPrintSignatoriesImages && isDataURL(image)){
@@ -401,4 +403,41 @@ export const signatories = (signatories,options)=>{
     }
 }
 
+export const getPrintedDate = (opts)=>{
+    opts = defaultObj(opts);
+    let displayPrintedDate = opts.displayPrintedDate !== undefined ? opts.displayPrintedDate : true;
+    if(!displayPrintedDate){
+        return null;
+    }
+    const code = getLoggedUserCode();
+    const hasCode = isNonNullString(code) || typeof code =='number';
+    return [
+        {
+            text : [(`Date de tirage : ${new Date().toFormat(DateLib.defaultDateTimeFormat)} ${hasCode ? `, par : `:""}`).toUpperCase(),hasCode ? {text:code,bold:true}:{text:""}],
+            italics: true,
+            fontSize : typeof opts.printedDateFontSize =='number'? opts.printedDateFontSize : 11,
+            margin : [0,3,0,0]
+        } //: {}
+    ]
+}
+
+/****
+    
+*/
+export const printTags = (tags,arg)=>{
+    arg = defaultObj(arg);
+    const columns = []
+    Object.map(tags,(s,i)=>{
+        const image = outlineText(s);
+        if(!image){
+            columns.push({image})
+        }
+        return '';
+    })
+    if(columns.length <= 0) return null;
+    return {
+        columns,
+        alignment : 'center',
+    }
+}
 export {textToObject,textToObject as sprintf};

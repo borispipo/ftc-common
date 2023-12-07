@@ -1,8 +1,10 @@
 import pdfMake from "./pdfmake";
 import {isObj,isNonNullString,defaultStr} from "$cutils";
-import { pageBreakBefore,createPageFooter,createPageHeader,getPageMargins,textToObject} from "./utils";
+import { pageBreakBefore,createPageFooter,createPageHeader,getPageMargins,textToObject,printSignatories} from "./utils";
 import formats from "./formats/formats";
 import { defaultPageFormat,defaultPageOrientation } from "./formats";
+import printFile from "./print";
+
 export * from "./formats";
 export * from "./utils";
 export * from "./pdfmake";
@@ -40,7 +42,18 @@ export function createPDF(docDefinition,options,customPdfMake){
     if(isNonNullString(options.footerNote)){
         content.push({text:textToObject(options.footerNote)})
     }
+    const signatories = printSignatories(Array.isArray(options.signatories)? options.signatories : Array.isArray(docDefinition.signatories)? docDefinition.signatories : []);
+    if(signatories){
+        content.push(signatories);
+    }
     docDefinition.pageMargins = Array.isArray(docDefinition.pageMargins) && docDefinition.pageMargins.length && docDefinition.pageMargins || getPageMargins(options);
     const createPdf = customPdfMake && typeof customPdfMake?.createPDF =='function'? customPdfMake.createPDF : typeof customPdfMake?.createPdf =='function'? customPdfMake.createPdf : pdfMake.createPdf;
     return createPdf(docDefinition);
 };
+
+/*** permet de générer le pdf à partir de la fonction print du fichier ./print */
+export const print = (data,options,customPdfMake)=>{
+    return printFile(data,options).then(({options,...rest})=>{
+        return createPDF(rest,options,customPdfMake)
+    })
+}
