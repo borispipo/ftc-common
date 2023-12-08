@@ -32,6 +32,12 @@ export default {
         format : 'hashtag',
         maxLength : 500,
     },
+    footerNoteFontSize : {
+        type : "number",
+        text : "Taille police note de bas de page",
+        tooltip : "Définissez la taille de la police de la note de bas de page",
+        defaultValue : 11,
+    },
     footerCopyRight : {
         text : 'Pied de page/Copyright',
         format : 'hashtag',
@@ -49,6 +55,12 @@ export default {
         defaultValue : 50,
         label : "Taille de la signature image",
         tooltip : "Veuillez spécifier la taille maximale de la signature à apposée lorsqu'il s'agit d'une image enregistrée en signature",
+    },
+    displayPrintedDate : {
+        type : "switch",
+        text  : "Afficher la date de tirage",
+        tooltip : "Si coché, la date de tirage sera affichée",
+        defaultValue : 1,
     },
     pageFormat : {
         text : 'Format de la page',
