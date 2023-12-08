@@ -47,7 +47,7 @@ export default function (data,options){
         if(!Array.isArray(data)){
             data = [defaultObj(data)];
         } 
-        const allData = data;
+        let allData = data;
         const multiple = allData.length > 1;
         return Promise.resolve(getSettings({...rest,multiple,allData,data})).then(({
             pageBreakBeforeEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
@@ -65,15 +65,21 @@ export default function (data,options){
             showPreloader("Impression en cours ...");
             const promises = [];
             const allContents = [];
+            if(duplicateDocOnPage){
+                const ds = [];
+                allData.map((data)=>{
+                    if(isObj(data) && Object.size(data,true)){
+                        ds.push(data);
+                        ds.push(data);
+                    }
+                });
+                allData = data = ds;
+            }
             for(let i in allData){
                 if(isObj(allData[i]) && Object.size(allData[i],true)){
                     countD++
                     const p = Promise.resolve(print({...rest,multiple:!!(multiple||duplicateDocOnPage),data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
                     promises.push(p);
-                    if(duplicateDocOnPage){
-                        promises.push(p);
-                        countD++;
-                    }
                 }
             }
             let counter = 0;
