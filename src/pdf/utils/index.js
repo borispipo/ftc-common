@@ -321,7 +321,7 @@ export const getPageMargins = (options)=>{
    @param {object} options,
  
  */
-export const printSignatories = (signatories,options)=>{
+export const createSignatories = (signatories,options)=>{
     signatories = Array.isArray(signatories)? signatories : [];
     options = Object.assign({},options);
     if(!signatories.length){
