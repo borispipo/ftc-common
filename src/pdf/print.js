@@ -47,7 +47,9 @@ export default function (data,options){
         if(!Array.isArray(data)){
             data = [defaultObj(data)];
         } 
-        return Promise.resolve(getSettings(rest)).then(({
+        const allData = data;
+        const multiple = allData.length > 1;
+        return Promise.resolve(getSettings({...rest,multiple,allData,data})).then(({
             pageBreakBeforeEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
             if(isNonNullString(footerNote)){
                 footerNote = {text:textToObject(footerNote,{fontSize:typeof(footerNoteFontSize) =='number'? footerNoteFontSize: 11})};
@@ -56,8 +58,6 @@ export default function (data,options){
             }
             printOptions = {...printOptions,duplicateDocOnPage,...rest};
             const pageHeader = createPageHeader(options);
-            const allData = data;
-            const multiple = allData.length > 1;
             if(!qrCodeAlignment || !["left","center","right"].includes(qrCodeAlignment)){
                 qrCodeAlignment = "left";
             }
@@ -68,7 +68,7 @@ export default function (data,options){
             for(let i in allData){
                 if(isObj(allData[i]) && Object.size(allData[i],true)){
                     countD++
-                    const p = Promise.resolve(print({...rest,multiple,data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
+                    const p = Promise.resolve(print({...rest,multiple:!!(multiple||duplicateDocOnPage),data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
                     promises.push(p);
                     if(duplicateDocOnPage){
                         promises.push(p);
