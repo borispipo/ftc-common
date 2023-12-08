@@ -7,6 +7,7 @@ import Colors from "$theme/colors";
 import DateLib from "$clib/date";
 import { LOGO_WIDTH } from "../formats/fields";
 import outlineText from "./outlineText";
+const MAX_CREATED_SIGNATURE_PRINT_SIZE = 50;
 /*permet de créer l'entête des données de type tableau
     @param {Array} tableHeader : l'entte du tableau à créer
     @param {function|object} : les options supplémentaires. is function alors il s'agit de la méthode render par défaut
@@ -317,6 +318,9 @@ export const getPageMargins = (options)=>{
     {
         image{string|dataURL},
         label|text|code {string}, le libelé à affiché avant le signataire
+        position {string}, la fonction occupée par l'employée en question
+        signature {Array,Object,string}, le contenu à remplacer par la signature image, lorsque la signature n'est pas définie,
+        signatureOptions {object}, les options liés à la signature : 
     }
    @param {object} options,
  
@@ -327,17 +331,21 @@ export const createSignatories = (signatories,options)=>{
     if(!signatories.length){
         return {text:""};
     }
-    const marginNumber = Math.floor(isDecimal(options.signatoriesMargin)? options.signatoriesMargin : 3);
+    const marginNumber = Math.floor(typeof options.signatoriesMargin == 'number'? options.signatoriesMargin : 2);
     const opts = {
-        margin  : [0,5,0,0]
+        margin  : [0,7,0,0]
     }
     const canPrintSignatoriesImages = !!options.printSignatoriesImages;
-    let columns = []
+    const columns = []
+    let marginText = '';
+    for(let i=0; i< marginNumber-1;i++){
+        marginText+="\n";
+    }
     signatories.map((s,i)=>{
         if(!isObj(s)) return null;
         let image = s.image;
         const sOptions = defaultObj(s.signatureOptions);
-        const style = {fontSize:14};
+        const style = {fontSize:13};
         s.fontStyle = defaultStr(s.fontStyle,'italics+bold').toLowerCase();
         if(s.fontStyle.contains("italics")){
             style.italics = true;
@@ -345,11 +353,14 @@ export const createSignatories = (signatories,options)=>{
         if(s.fontStyle.contains("bold")){
             style.bold = true;
         }
+        const position = defaultStr(s.position);
+        const signature  = Array.isArray(s.signature) || isObj(s.signature) || isNonNullString(s.signature) ? s.signature : null;
         s = defaultStr(s.label,s.text,s.code);
         if(isNonNullString(s)){
-            let text = {text:s,...style};
-            if(canPrintSignatoriesImages && isDataURL(image)){
-                const signature = {image,alignment:'center',margin:[0,0,0,0]};
+            const text = [{text:position?position:s,...style}];
+            const hasImage = canPrintSignatoriesImages && isDataURL(image);
+            if(hasImage){
+                const signatureImage = {image,alignment:'center',margin:[0,0,0,0]};
                 const maxSignatureDim = defaultNumber(options.maxCreatedSignaturePrintSize,MAX_CREATED_SIGNATURE_PRINT_SIZE)
                 let width = Math.abs(defaultNumber(sOptions.width)), 
                 height = Math.abs(defaultNumber(sOptions.height));
@@ -363,40 +374,34 @@ export const createSignatories = (signatories,options)=>{
                 } else {
                     width = height = maxSignatureDim
                 }
-                signature.fit = [width,height];
-                text = [text,signature]
+                signatureImage.fit = [width,height];
+                text.push(signatureImage);
+            } else if(signature){
+                text.push(signature);
+            }
+            if(position){
+               //lorsque la fonction est spécifiée et que ni la signature, ni l'image n'est spécifiée, alors on laisse un intervalle de 2 lignes pour obtenir la signature concernée
+                text.push({text:`${!hasImage && !signature?`${marginText}`:""}${s}`,fontSize:12});
+            } else if(marginText && !hasImage && !signature){
+                text.push({text:marginText})
             }
             columns.push(text);
         }
         return '';
     })
+
     if(columns.length > 0){
-        let percent = (100/columns.length)
+        const percent = (100/columns.length)
         for(let i in columns){
             columns[i].width = percent+"%";
         }
-        let t = '';
-        for(let i=0; i< marginNumber-1;i++){
-            t+="\n";
-        }
-        if(t){
-            columns.push({text:t})
-        }
     } else {
-        if(options.duplicateDocOnPage){
-            let t = '';
-            for(let i=0; i< marginNumber-1;i++){
-                t+="\n";
-            }
-            if(t){
-                columns.push({text:t})
-            }
-        }
         delete opts.margin;
-        return columns;
+        //return columns;
     }
     return {
         columns,
+        width : '100%',
         alignment : 'center',
         ...opts
     }
@@ -440,3 +445,5 @@ export const printTags = (tags,arg)=>{
     }
 }
 export {textToObject,textToObject as sprintf};
+
+export {outlineText};

@@ -38,6 +38,18 @@ export default {
         maxLength : 500,
         defaultValue : appConfig.copyright,
     },
+    signatoriesMargin : {
+        type : "number",
+        label : "Marge pour Signataire",
+        tooltip : "Veuillez spécifier le nombre de ligne à laisser comme marge (nécessaire pour que chaque signataire puisse signer convenablement) s'il y en a des signataires",
+        defaultValue : 2,
+    },
+    maxCreatedSignaturePrintSize : {
+        type : "number",
+        defaultValue : 50,
+        label : "Taille de la signature image",
+        tooltip : "Veuillez spécifier la taille maximale de la signature à apposée lorsqu'il s'agit d'une image enregistrée en signature",
+    },
     pageFormat : {
         text : 'Format de la page',
         defaultValue : defaultPageFormat,
