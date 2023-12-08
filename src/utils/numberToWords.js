@@ -4,6 +4,10 @@
 
 import defaultStr from "$cutils/defaultStr";
 const writtenNumber = require('written-number');
+const isDecimal = x=> typeof x =="number";
+const isNumber = isDecimal;
+import appConfig from "$capp/config";
+
 export default function numberToWords(number,options){
     if(isNonNullString(options)){
         options = {lang:options};
@@ -13,7 +17,7 @@ export default function numberToWords(number,options){
     return writtenNumber(number,options);
 };
 Number.prototype.formatWord = function(language,withCurrency){
-    if(isBool(language)){
+    if(typeof(language) ==='boolean'){
         let t = withCurrency;
         withCurrency = language;
         language = t;
@@ -24,8 +28,8 @@ Number.prototype.formatWord = function(language,withCurrency){
     let ret = number.formatNumber();
     try {
         ret = writtenNumber(Math.trunc(number),{lang:language});
-        let currency = APP && APP.getDefaultCurrency ? APP.getDefaultCurrency() : {};
-        if(currency && isDecimal(currency.decimal_digits) && currency.decimal_digits > 0){
+        let currency = appConfig.currencyObj || {};
+        if(currency && isDecimal(currency?.decimal_digits) && currency?.decimal_digits > 0){
             decimalPart = number.toFixed(currency.decimal_digits);
             if(decimalPart.contains(".")){
                 decimalPart = decimalPart.split(".")[1];
@@ -46,8 +50,8 @@ Number.prototype.formatWord = function(language,withCurrency){
             }   
         }
         if(withCurrency && currency){
-            if(currency.name_plural){
-                ret +=" "+currency.name_plural+"."
+            if(currency?.name_plural){
+                ret +=" "+currency?.name_plural+"."
             }
         }
     } catch (e){
