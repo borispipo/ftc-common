@@ -134,11 +134,13 @@ export default function (data,options){
                         if(generateQRCode && isNonNullString(qrCode.qr)){
                             content.push(qrCode);
                         }
-                        if(counter > 1 && pageBreakBeforeEachDoc){
-                            //saut de page suite à une nouveau pd
-                            allContents.push({text:'',pageBreak: 'before'});
-                        } else if(counter > 1 && counter < results.length-1){
-                            allContents.push({text:pageMarginAf});
+                        if(counter > 1){
+                            if(pageBreakBeforeEachDoc){
+                                //saut de page suite à une nouveau pd
+                                allContents.push({text:'',pageBreak: 'before'});
+                            } else if(counter < results.length){
+                                allContents.push({text:pageMarginAf});
+                            }   
                         }
                         allContents.push(content);
                     }
