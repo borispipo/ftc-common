@@ -6,7 +6,10 @@ import textToObject from "./textToObject";
 import Colors from "$theme/colors";
 import DateLib from "$clib/date";
 import { LOGO_WIDTH } from "../formats/fields";
+import formats from "./formats/formats";
+import { defaultPageFormat,defaultPageOrientation } from "./formats";
 import outlineText from "./outlineText";
+import pageSizes from "../formats/pageSizes/iso";
 const MAX_CREATED_SIGNATURE_PRINT_SIZE = 50;
 /*permet de créer l'entête des données de type tableau
     @param {Array} tableHeader : l'entte du tableau à créer
@@ -246,7 +249,8 @@ export const getCompanyHeader = (options)=>{
             width : defaultNumber(options.logoWidth,LOGO_WIDTH) 
         });
     }
-    const socialReason = defaultStr(options.socialReason).trim();
+    const displaySocialReason = !!defaultVal(options.displaySocialReason,1);
+    const socialReason = displaySocialReason && defaultStr(options.socialReason).trim() ||'';
     if(socialReason){
         headerColumn.push({text:socialReason+"\n",fontSize:13,bold})
     }
@@ -289,6 +293,8 @@ export const getCompanyHeader = (options)=>{
 }
 
 /*** récupère les marges à partir des options des pages
+    @see : https://pdfmake.github.io/docs/0.1/document-definition-object/page
+    // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
     les marges sont définies de la forme : 
     {
         leftMargin : {number},
@@ -415,14 +421,12 @@ export const getPrintedDate = (opts)=>{
     }
     const code = getLoggedUserCode();
     const hasCode = isNonNullString(code) || typeof code =='number';
-    return [
-        {
-            text : [(`Date de tirage : ${new Date().toFormat(DateLib.defaultDateTimeFormat)} ${hasCode ? `, par : `:""}`).toUpperCase(),hasCode ? {text:code,bold:true}:{text:""}],
-            italics: true,
-            fontSize : typeof opts.printedDateFontSize =='number'? opts.printedDateFontSize : 11,
-            margin : [0,3,0,0]
-        } //: {}
-    ]
+    return {
+        text : [(`Date de tirage : ${new Date().toFormat(DateLib.defaultDateTimeFormat)} ${hasCode ? `, par : `:""}`).toUpperCase(),hasCode ? {text:code,bold:true}:{text:""}],
+        italics: true,
+        fontSize : typeof opts.printedDateFontSize =='number'? opts.printedDateFontSize : 11,
+        margin : [0,3,0,0]
+    }
 }
 
 /****
@@ -443,6 +447,61 @@ export const printTags = (tags,arg)=>{
         columns,
         alignment : 'center',
     }
+}
+
+/*** retourne les dimensions de la page */
+export const getPageSize = (options,force)=>{
+    options = defaultObj(options);
+    let {pageHeight,pageWidth,pageSize,pageFormat,pageOrientation} = options;
+    pageFormat = defaultStr(pageFormat,pageSize).trim().toUpperCase();
+    if(!pageFormat || !formats.includes(pageFormat)){
+        pageFormat = defaultPageFormat;
+    }
+    pageOrientation = defaultStr(options.pageOrientation).toLowerCase().trim();
+    if(!pageOrientation || !["landscape",defaultPageOrientation].includes(pageOrientation)){
+        pageOrientation = defaultPageOrientation;
+    }
+    const isLandScape = pageOrientation == 'landscape';
+    pageSize = pageFormat;
+    pageWidth = typeof pageWidth =='number'? pageWidth : 0;
+    pageHeight = typeof pageHeight =='number'? pageHeight: 0;
+    if(pageWidth > 0 || pageHeight > 0 || force){
+        if(isObj(pageSizes[pageSize]) && Array.isArray(pageSizes[pageSize].pt)){
+            if(pageWidth <= 0){
+                pageWidth = pageSizes[pageSize].pt[isLandScape? 1 : 0]
+            }
+            if(pageHeight <= 0){
+                pageHeight = pageSizes[pageSize].pt[isLandScape? 0 : 1]
+            }
+        }
+    }
+    if( pageWidth > 0 && pageHeight>0){
+        pageSize = {
+            width : pageWidth,
+            height: pageHeight           
+        }
+        pageOrientation = undefined;
+    }
+    const pageMargins = typeof options.pageMargins === 'number'? [options.pageMargins,options.pageMargins,options.pageMargins,options.pageMargins] 
+        : Array.isArray(options.pageMargins) && (options.pageMargins.length == 2 || options.pageMargins.length ===4) && options.pageMargins || getPageMargins(options);
+    //console.log(pageSize,pageFormat,' page format is page siez')
+    let margins = {};
+    if(pageMargins.length === 2){ //[horizontal, vertical]
+        margins = {
+            pageMarginLeft : pageMargins[0],
+            pageMarginRight : pageMargins[0],
+            pageMarginTop : pageMargins[1],
+            pageMarginBottom : pageMargins[1],
+        }
+    } else {
+        margins = {
+            pageMarginLeft : pageMargins[0],
+            pageMarginTop : pageMargins[1],
+            pageMarginRight : pageMargins[2],
+            pageMarginBottom : pageMargins[3],
+        }
+    } 
+    return {pageSize,pageFormat,pageOrientation,pageMargins,...margins}
 }
 export {textToObject,textToObject as sprintf};
 

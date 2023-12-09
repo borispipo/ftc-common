@@ -1,5 +1,5 @@
 import {defaultObj,isNonNullString,defaultStr} from "$cutils";
-import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDate} from "./utils";
+import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDate,getPageSize} from "./utils";
 /*** cette fonction prend en paramètre un tableau de donnés ou un objet à imprimer
     *  @param data {ArrayOf[object]|| object} les/la données à imprimer.
     *  lorsque data est un tableau, alors il s'agit de l'impression cumulée de plusieurs document
@@ -11,6 +11,7 @@ import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDat
             hidePreloader : {function}, la fonction permettant de masquer le preloader
             getSettings {()=><Promise<{
                 duplicateDocOnPage : {boolean}, si chaque document sera dupliqué sur deux pages
+                pageMarginAfterEachDoc {number[2]}, le nombre de ligne à ajouter comme marge après chaque document, ceci est valide uniquement lorsque pageBreakBeforeEachDoc est à false
                 pageBreakBeforeEachDoc {boolean}, s'il y aura un break de page après chaque document
                 printTitle {string}, le titre que portera le document imprimé
                 title {string}, le titre du document imprimé
@@ -38,7 +39,6 @@ export default function (data,options){
     let {print,getSettings,showPreloader,hidePreloader, ...rest} = options;
     showPreloader = typeof showPreloader =='function'? showPreloader : x=>true;
     hidePreloader = typeof hidePreloader =='function'? hidePreloader : x=>true;
-    let printOptions = {...options,showPreloader,hidePreloader};
     return new Promise((resolve,reject)=>{
         print = typeof print =='function'? print : (args)=>{
             resolve(args);
@@ -50,13 +50,19 @@ export default function (data,options){
         let allData = data;
         const multiple = allData.length > 1;
         return Promise.resolve(getSettings({...rest,multiple,allData,data})).then(({
-            pageBreakBeforeEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
+            pageBreakBeforeEachDoc,pageMarginAfterEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
+            pageMarginAfterEachDoc = typeof pageMarginAfterEachDoc =='number'? Math.ceil(pageMarginAfterEachDoc) : 2;
+            let pageMarginAf = "";
+            for(let i=0;i<pageMarginAfterEachDoc;i++){
+                pageMarginAf+="\n";
+            }
             if(isNonNullString(footerNote)){
                 footerNote = {text:textToObject(footerNote,{fontSize:typeof(footerNoteFontSize) =='number'? footerNoteFontSize: 11})};
             } else if(!Object.size(footerNote,true)){
                 footerNote = null;
             }
-            printOptions = {...printOptions,duplicateDocOnPage,...rest};
+            const printOptions = {...options,showPreloader,hidePreloader,duplicateDocOnPage,...rest};
+            const pageSizes = getPageSize(printOptions);
             const pageHeader = createPageHeader(options);
             if(!qrCodeAlignment || !["left","center","right"].includes(qrCodeAlignment)){
                 qrCodeAlignment = "left";
@@ -78,11 +84,12 @@ export default function (data,options){
             for(let i in allData){
                 if(isObj(allData[i]) && Object.size(allData[i],true)){
                     countD++
-                    const p = Promise.resolve(print({...rest,multiple:!!(multiple||duplicateDocOnPage),data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
+                    const p = Promise.resolve(print({...rest,...pageSizes,multiple:!!(multiple||duplicateDocOnPage),data:allData[i],printTitle:allData[i].code+"-"+(allData.length-1)+"documents"}));
                     promises.push(p);
                 }
             }
             let counter = 0;
+            const printedDateStr = getPrintedDate(printOptions);
             return Promise.all(promises).then((results)=>{
                 for(let i in results){
                     const result = results[i];
@@ -110,7 +117,6 @@ export default function (data,options){
                         } else if(footerNote){
                             content.push(footerNote);
                         }
-                        const printedDateStr = getPrintedDate(printOptions);
                         if(printedDateStr){
                             content.push(printedDateStr);
                         }
@@ -131,8 +137,8 @@ export default function (data,options){
                         if(counter > 1 && pageBreakBeforeEachDoc){
                             //saut de page suite à une nouveau pd
                             allContents.push({text:'',pageBreak: 'before'});
-                        } else if(counter > 1){
-                            allContents.push({text:'\n\n'});
+                        } else if(counter > 1 && counter < results.length-1){
+                            allContents.push({text:pageMarginAf});
                         }
                         allContents.push(content);
                     }

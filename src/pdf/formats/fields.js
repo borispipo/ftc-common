@@ -6,14 +6,66 @@ import appConfig from "$capp/config";
 export const LOGO_WIDTH = 100;
 
 export default {
-    code : {
-        label : 'Code du format',
+    pageFormat : {
+        text : 'Format de la page',
+        defaultValue : defaultPageFormat,
+        type : 'select',
+        items : formats,
         required : true,
-        maxLength : 20
+        multiple : false,
+        itemValue : ({item})=>{
+            return formats[item] || item;
+        }
     },
-    label : {
-        text : "Intitulé du format",
-        maxLength : 40
+    pageOrientation : {
+        text : 'Orientation de la page',
+        type : 'select',
+        items : [{code:'portrait',label:'Portrait'},{code:'landscape',label:'Paysage'}],
+        defaultValue : defaultPageOrientation,
+        required : true,
+    },
+    pageWidth : {
+        text : 'Largeur de la page en pts(pt)',
+        tooltip : 'Spécifiez une valeur de la largeur de la page à imprimer, si cette valeur vaut zéro, la valeur du format de la page sera utilisée',
+        defaultValue : 0,
+        type : 'number',
+        format : 'number',
+        validType : 'decimal',
+    }, 
+    pageHeight : {
+        text : 'Hauteur de la page en pts(pt)',
+        tooltip : 'Spécifiez une valeur de la hauteur de la page à imprimer, si cette valeur vaut zéro, la valeur du format de la page sera utilisée',
+        defaultValue : 0,
+        type : 'number',
+        format : 'number',
+        validType : 'decimal',
+    }, 
+    leftMargin : {
+        type : 'number',
+        format : 'number',
+        validType : 'number',
+        text : 'Marge [Gauche]',
+        defaultValue : 20
+    },
+    topMargin : {
+        type : 'number',
+        format : 'number',
+        validType : 'number',
+        text : 'Marge [Haut]',
+        defaultValue : 20,
+    },
+    rightMargin : {
+        type : 'number',
+        text : 'Marge [Droite]',
+        validType : 'number',
+        defaultValue : 20
+    },
+    bottomMargin : {
+        type : 'number',
+        format : 'number',
+        validType : 'number',
+        text : 'Marge [Bas]',
+        defaultValue : 30
     },
     displayLogo : {
         text : 'Afficher le logo société',
@@ -26,6 +78,19 @@ export default {
         text : 'Largeur du logo',
         defaultValue : LOGO_WIDTH,
         type : "number",
+    },
+    displaySocialReason : {
+        text : 'Afficher les entêtes société',
+        type : 'switch',
+        checkedTooltip : 'Les entêtes sociétés à l\'instar du nom, la raison sociale seront affichés',
+        uncheckedTooltip : 'Les entêtes sociétés à l\'instar du nom, la raison sociale ne seront pas affichés',
+        defaultValue : 1,
+    },
+    displayCompanyContacts : {
+        text : 'Afficher Contacts société',
+        type : 'switch',
+        tooltip : 'Afficher les contacts sociétés, à l\'instar de l\'email, les numéros de télphone, le fax',
+        defaultValue : 1,
     },
     footerNote : {
         text : 'Note de bas de page',
@@ -62,65 +127,10 @@ export default {
         tooltip : "Si coché, la date de tirage sera affichée",
         defaultValue : 1,
     },
-    pageFormat : {
-        text : 'Format de la page',
-        defaultValue : defaultPageFormat,
-        type : 'select',
-        items : formats,
-        required : true,
-        multiple : false,
-        itemValue : ({item})=>{
-            return formats[item] || item;
-        }
-    },
-    pageWidth : {
-        text : 'Largeur de la page en pts(pt)',
-        tooltip : 'Spécifiez une valeur de la largeur de la page à imprimer, si cette valeur vaut zéro, la valeur du format de la page sera utilisée',
-        defaultValue : 0,
-        type : 'number',
-        format : 'number',
-        validType : 'decimal',
-    }, 
-    pageHeight : {
-        text : 'Hauteur de la page en pts(pt)',
-        tooltip : 'Spécifiez une valeur de la hauteur de la page à imprimer, si cette valeur vaut zéro, la valeur du format de la page sera utilisée',
-        defaultValue : 0,
-        type : 'number',
-        format : 'number',
-        validType : 'decimal',
-    }, 
-    pageOrientation : {
-        text : 'Orientation de la page',
-        type : 'select',
-        items : [{code:'portrait',label:'Portrait'},{code:'landscape',label:'Paysage'}],
-        defaultValue : defaultPageOrientation,
-        required : true,
-    },
-    leftMargin : {
-        type : 'number',
-        format : 'number',
-        validType : 'number',
-        text : 'Marge [Gauche]',
-        defaultValue : 20
-    },
-    topMargin : {
-        type : 'number',
-        format : 'number',
-        validType : 'number',
-        text : 'Marge [Haut]',
-        defaultValue : 20,
-    },
-    rightMargin : {
-        type : 'number',
-        text : 'Marge [Droite]',
-        validType : 'number',
-        defaultValue : 20
-    },
-    bottomMargin : {
-        type : 'number',
-        format : 'number',
-        validType : 'number',
-        text : 'Marge [Bas]',
-        defaultValue : 30
+    printedDateFontSize : {
+        type : "number",
+        text : "Police date de tirage",
+        tooltip : "Spécifiez une valeur de la police de la date de tirage",
+        defaultValue : 11,
     },
 }

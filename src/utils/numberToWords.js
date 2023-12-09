@@ -4,8 +4,7 @@
 
 import defaultStr from "$cutils/defaultStr";
 const writtenNumber = require('written-number');
-const isDecimal = x=> typeof x =="number";
-const isNumber = isDecimal;
+const isNumber = x=> typeof x =="number";
 import appConfig from "$capp/config";
 
 export default function numberToWords(number,options){
@@ -28,8 +27,8 @@ Number.prototype.formatWord = function(language,withCurrency){
     let ret = number.formatNumber();
     try {
         ret = writtenNumber(Math.trunc(number),{lang:language});
-        let currency = appConfig.currencyObj || {};
-        if(currency && isDecimal(currency?.decimal_digits) && currency?.decimal_digits > 0){
+        const currency = Object.assign({},appConfig.currency);
+        if(isNumber(currency.decimal_digits) && currency.decimal_digits > 0){
             decimalPart = number.toFixed(currency.decimal_digits);
             if(decimalPart.contains(".")){
                 decimalPart = decimalPart.split(".")[1];
@@ -49,10 +48,8 @@ Number.prototype.formatWord = function(language,withCurrency){
                 } 
             }   
         }
-        if(withCurrency && currency){
-            if(currency?.name_plural){
-                ret +=" "+currency?.name_plural+"."
-            }
+        if(withCurrency && currency.name_plural){
+            ret +=" "+currency?.name_plural+".";
         }
     } catch (e){
         console.log(e,' format number to word')

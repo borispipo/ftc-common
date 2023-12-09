@@ -224,15 +224,8 @@ const config = {
     get currencyFormat(){
         return getCurrencyFormat();
     },
-    get currencyObj(){
-        const currency = defaultStr(getCurrency());
-        if(currency){
-            currency = currency.trim();
-            if(currencies[currency]) return currencies[currency];
-            currency = currency.toUpperCase();
-            if(currencies[currency]) return currencies[currency];
-        }
-        return null;
+    get currencies(){
+        return currencies;
     },
     set currencyFormat(value){
         return setCurrencyFormat(value);

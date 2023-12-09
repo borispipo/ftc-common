@@ -1,8 +1,7 @@
 import pdfMake from "./pdfmake";
 import {isObj,isNonNullString,defaultStr} from "$cutils";
-import { pageBreakBefore,createPageFooter,createPageHeader,getPageMargins,textToObject,createSignatories} from "./utils";
-import formats from "./formats/formats";
-import { defaultPageFormat,defaultPageOrientation } from "./formats";
+import { pageBreakBefore,createPageFooter,createPageHeader,getPrintedDate,getPageSize,getPageMargins,textToObject,createSignatories} from "./utils";
+
 import printFile from "./print";
 
 export * from "./formats";
@@ -17,12 +16,13 @@ export * from "./pdfmake";
         pageHeader {false|string|array|object}, si false, le header de la page ne sera pas généré
         pageFooter {false|string|array|object}, si false, le footer de la page ne sera pas généré
         signatories {Array<{object}>}, la liste des signataires, générés en bas de page
-        
+        printedDate {false}, si la date de tirage sera affichée où non
     }
     @param {object:{createPDF|createPdf}}, en environnement node par example, l'on devra passer une autre fonction createPdf afin que ça marche car sinon une erreur sera générée
 */
-export function createPDF(docDefinition,customPdfMake){
-    docDefinition = Object.assign({},docDefinition);
+export function createPDF(_docDefinition,customPdfMake){
+    _docDefinition = Object.assign({},_docDefinition);
+    const docDefinition = {..._docDefinition,...getPageSize(_docDefinition)};
     const {content:dContent,pageBreakBefore:pBefore} = docDefinition;
     const content = Array.isArray(dContent)? dContent : isObj(dContent) || isNonNullString(content) ? [dContent] : [];
     docDefinition.pageBreakBefore = pageBreakBefore(pBefore);
@@ -37,20 +37,14 @@ export function createPDF(docDefinition,customPdfMake){
         docDefinition.pageFooter = Array.isArray(docDefinition.pageFooter) && docDefinition.pageFooter.length && docDefinition.pageFooter || isObj(docDefinition.pageFooter) && Object.size(docDefinition.pageFooter,true) && docDefinition.pageFooter || createPageFooter(docDefinition);
     }
     delete docDefinition.pageFooter;
-    let pageSize = defaultStr(docDefinition.pageSize,docDefinition.pageFormat).trim().toUpperCase();
-    if(!pageSize || !formats.includes(pageSize)){
-        pageSize = defaultPageFormat;
-    }
-    let pageOrientation = defaultStr(docDefinition.pageOrientation).toLowerCase().trim();
-    if(!pageOrientation || !["landscape",defaultPageOrientation].includes(pageOrientation)){
-        pageOrientation = defaultPageOrientation;
-    }
-    docDefinition.pageSize = pageSize;
-    docDefinition.pageOrientation = pageOrientation;
+    
     if(isNonNullString(docDefinition.footerNote)){
         content.push({text:textToObject(docDefinition.footerNote)})
     }
     delete docDefinition.footerNote;
+    if(docDefinition.printedDate !== false){
+        content.push(getPrintedDate(docDefinition));
+    }
     const _sign = Array.isArray(docDefinition.signatories)? docDefinition.signatories : [];
     if(_sign.length && docDefinition.signatories !== false){
         const signatories = createSignatories(_sign);
@@ -59,7 +53,6 @@ export function createPDF(docDefinition,customPdfMake){
         }
     }
     delete docDefinition.signatories;
-    docDefinition.pageMargins = Array.isArray(docDefinition.pageMargins) && docDefinition.pageMargins.length && docDefinition.pageMargins || getPageMargins(docDefinition);
     docDefinition.content = content;
     const createPdf = customPdfMake && typeof customPdfMake?.createPDF =='function'? customPdfMake.createPDF : typeof customPdfMake?.createPdf =='function'? customPdfMake.createPdf : pdfMake.createPdf;
     return createPdf(docDefinition);
@@ -71,6 +64,6 @@ export function createPDF(docDefinition,customPdfMake){
 */
 export const print = (data,options,customPdfMake)=>{
     return printFile(data,options).then((docDefinition)=>{
-        return createPDF({...docDefinition,pageHeader:false,footerNote:false,signatories:false},customPdfMake)
+        return createPDF({...docDefinition,pageHeader:false,printedDate:false,footerNote:false,signatories:false},customPdfMake)
     })
 }
