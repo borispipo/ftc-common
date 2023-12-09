@@ -137,9 +137,11 @@ export default function (data,options){
                             if(pageBreakBeforeEachDoc){
                                 //saut de page suite à une nouveau pd
                                 allContents.push({text:'',pageBreak: 'before'});
-                            } else if(counter <= results.length){
+                            } else if(counter < results.length){
                                 allContents.push({text:pageMarginAf});
                             }   
+                        } else if(!pageBreakBeforeEachDoc){
+                            allContents.push({text:pageMarginAf});
                         }
                         allContents.push(content);
                     }
