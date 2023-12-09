@@ -6,7 +6,7 @@ import textToObject from "./textToObject";
 import Colors from "$theme/colors";
 import DateLib from "$clib/date";
 import { LOGO_WIDTH } from "../formats/fields";
-import formats from "./formats/formats";
+import formats from "../formats/formats"
 import { defaultPageFormat,defaultPageOrientation } from "./formats";
 import outlineText from "./outlineText";
 import pageSizes from "../formats/pageSizes/iso";
