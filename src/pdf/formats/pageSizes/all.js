@@ -5,7 +5,7 @@ export default {
             26,
             37
         ],
-        "points": [
+        "pt": [
             74,
             105
         ],
@@ -19,7 +19,7 @@ export default {
             594,
             841
         ],
-        "points": [
+        "pt": [
             1684,
             2384
         ],
@@ -33,7 +33,7 @@ export default {
             841,
             1189
         ],
-        "points": [
+        "pt": [
             2384,
             3370
         ],
@@ -47,7 +47,7 @@ export default {
             297,
             420
         ],
-        "points": [
+        "pt": [
             842,
             1191
         ],
@@ -61,7 +61,7 @@ export default {
             420,
             594
         ],
-        "points": [
+        "pt": [
             1191,
             1684
         ],
@@ -75,7 +75,7 @@ export default {
             148,
             210
         ],
-        "points": [
+        "pt": [
             420,
             595
         ],
@@ -85,25 +85,25 @@ export default {
         ]
         },
         "A4": {
-        "mm": [
-            210,
-            297
-        ],
-        "points": [
-            595,
-            842
-        ],
-        "inches": [
-            8.3,
-            11.7
-        ]
+            "mm": [
+                210,
+                297
+            ],
+            "pt": [
+                595,
+                842
+            ],
+            "inches": [
+                8.3,
+                11.7
+            ]
         },
         "A7": {
         "mm": [
             74,
             105
         ],
-        "points": [
+        "pt": [
             210,
             298
         ],
@@ -117,7 +117,7 @@ export default {
             105,
             148
         ],
-        "points": [
+        "pt": [
             298,
             420
         ],
@@ -131,7 +131,7 @@ export default {
             37,
             52
         ],
-        "points": [
+        "pt": [
             105,
             147
         ],
@@ -145,7 +145,7 @@ export default {
             52,
             74
         ],
-        "points": [
+        "pt": [
             147,
             210
         ],
@@ -159,7 +159,7 @@ export default {
             44,
             31
         ],
-        "points": [
+        "pt": [
             125,
             88
         ],
@@ -173,7 +173,7 @@ export default {
             1020,
             720
         ],
-        "points": [
+        "pt": [
             2891,
             2041
         ],
@@ -187,7 +187,7 @@ export default {
             353,
             250
         ],
-        "points": [
+        "pt": [
             1001,
             709
         ],
@@ -201,7 +201,7 @@ export default {
             250,
             176
         ],
-        "points": [
+        "pt": [
             709,
             499
         ],
@@ -215,7 +215,7 @@ export default {
             176,
             125
         ],
-        "points": [
+        "pt": [
             499,
             354
         ],
@@ -229,7 +229,7 @@ export default {
             125,
             88
         ],
-        "points": [
+        "pt": [
             354,
             249
         ],
@@ -243,7 +243,7 @@ export default {
             1414,
             1000
         ],
-        "points": [
+        "pt": [
             4008,
             2835
         ],
@@ -257,7 +257,7 @@ export default {
             1000,
             707
         ],
-        "points": [
+        "pt": [
             2835,
             2004
         ],
@@ -271,7 +271,7 @@ export default {
             707,
             500
         ],
-        "points": [
+        "pt": [
             2004,
             1417
         ],
@@ -285,7 +285,7 @@ export default {
             500,
             353
         ],
-        "points": [
+        "pt": [
             1417,
             1001
         ],
@@ -299,7 +299,7 @@ export default {
             720,
             520
         ],
-        "points": [
+        "pt": [
             2041,
             1474
         ],
@@ -313,7 +313,7 @@ export default {
             88,
             62
         ],
-        "points": [
+        "pt": [
             249,
             176
         ],
@@ -327,7 +327,7 @@ export default {
             62,
             44
         ],
-        "points": [
+        "pt": [
             176,
             125
         ],
@@ -341,7 +341,7 @@ export default {
             40,
             28
         ],
-        "points": [
+        "pt": [
             113,
             79
         ],
@@ -355,7 +355,7 @@ export default {
             57,
             40
         ],
-        "points": [
+        "pt": [
             162,
             113
         ],
@@ -369,7 +369,7 @@ export default {
             81,
             57
         ],
-        "points": [
+        "pt": [
             230,
             162
         ],
@@ -383,7 +383,7 @@ export default {
             458,
             324
         ],
-        "points": [
+        "pt": [
             1298,
             918
         ],
@@ -397,7 +397,7 @@ export default {
             648,
             458
         ],
-        "points": [
+        "pt": [
             1837,
             1298
         ],
@@ -411,7 +411,7 @@ export default {
             917,
             648
         ],
-        "points": [
+        "pt": [
             2599,
             1837
         ],
@@ -425,7 +425,7 @@ export default {
             1297,
             917
         ],
-        "points": [
+        "pt": [
             3677,
             2599
         ],
@@ -439,7 +439,7 @@ export default {
             114,
             81
         ],
-        "points": [
+        "pt": [
             323,
             230
         ],
@@ -453,7 +453,7 @@ export default {
             162,
             114
         ],
-        "points": [
+        "pt": [
             459,
             323
         ],
@@ -467,7 +467,7 @@ export default {
             229,
             162
         ],
-        "points": [
+        "pt": [
             649,
             459
         ],
@@ -481,7 +481,7 @@ export default {
             324,
             229
         ],
-        "points": [
+        "pt": [
             918,
             649
         ],
@@ -493,25 +493,25 @@ export default {
     },
     "North American sizes": {
         "Legal": {
-        "mm": [
-            216,
-            356
-        ],
-        "points": [
-            612,
-            1009
-        ],
-        "inches": [
-            8.5,
-            14
-        ]
+            "mm": [
+                216,
+                356
+            ],
+            "pt": [
+                612,
+                1009
+            ],
+            "inches": [
+                8.5,
+                14
+            ]
         },
         "Junior Legal": {
         "mm": [
             127,
             203
         ],
-        "points": [
+        "pt": [
             360,
             575
         ],
@@ -525,7 +525,7 @@ export default {
             203.2,
             266.7
         ],
-        "points": [
+        "pt": [
             576,
             756
         ],
@@ -539,7 +539,7 @@ export default {
             216,
             279
         ],
-        "points": [
+        "pt": [
             612,
             791
         ],
@@ -553,7 +553,7 @@ export default {
             279,
             432
         ],
-        "points": [
+        "pt": [
             791,
             1225
         ],
@@ -567,7 +567,7 @@ export default {
             432,
             279
         ],
-        "points": [
+        "pt": [
             1225,
             791
         ],
@@ -583,7 +583,7 @@ export default {
             152.4,
             228.6
         ],
-        "points": [
+        "pt": [
             432,
             648
         ],
@@ -597,7 +597,7 @@ export default {
             139.7,
             190.5
         ],
-        "points": [
+        "pt": [
             396,
             540
         ],
@@ -611,7 +611,7 @@ export default {
             254,
             330.2
         ],
-        "points": [
+        "pt": [
             720,
             936
         ],
@@ -625,7 +625,7 @@ export default {
             146.05,
             225.425
         ],
-        "points": [
+        "pt": [
             414,
             639
         ],
@@ -639,7 +639,7 @@ export default {
             152.4,
             241.3
         ],
-        "points": [
+        "pt": [
             432,
             684
         ],
@@ -653,7 +653,7 @@ export default {
             241.3,
             320.675
         ],
-        "points": [
+        "pt": [
             684,
             909
         ],
@@ -667,7 +667,7 @@ export default {
             222.25,
             292.1
         ],
-        "points": [
+        "pt": [
             630,
             828
         ],
@@ -681,7 +681,7 @@ export default {
             228.6,
             304.8
         ],
-        "points": [
+        "pt": [
             648,
             864
         ],
@@ -695,7 +695,7 @@ export default {
             165.1,
             241.3
         ],
-        "points": [
+        "pt": [
             468,
             684
         ],
@@ -709,7 +709,7 @@ export default {
             190.5,
             266.7
         ],
-        "points": [
+        "pt": [
             540,
             756
         ],
@@ -723,7 +723,7 @@ export default {
             120.65,
             165.1
         ],
-        "points": [
+        "pt": [
             342,
             468
         ],
@@ -737,7 +737,7 @@ export default {
             177.8,
             254
         ],
-        "points": [
+        "pt": [
             504,
             720
         ],
@@ -753,7 +753,7 @@ export default {
             190.5,
             190.5
         ],
-        "points": [
+        "pt": [
             540,
             540
         ],
@@ -767,7 +767,7 @@ export default {
             228.6,
             228.6
         ],
-        "points": [
+        "pt": [
             648,
             648
         ],
@@ -781,7 +781,7 @@ export default {
             177.8,
             177.8
         ],
-        "points": [
+        "pt": [
             504,
             504
         ],
@@ -795,7 +795,7 @@ export default {
             152.4,
             152.4
         ],
-        "points": [
+        "pt": [
             432,
             432
         ],
@@ -809,7 +809,7 @@ export default {
             165.1,
             165.1
         ],
-        "points": [
+        "pt": [
             468,
             468
         ],
@@ -823,7 +823,7 @@ export default {
             203.2,
             203.2
         ],
-        "points": [
+        "pt": [
             576,
             576
         ],
@@ -837,7 +837,7 @@ export default {
             241.3,
             241.3
         ],
-        "points": [
+        "pt": [
             684,
             684
         ],
@@ -851,7 +851,7 @@ export default {
             215.9,
             215.9
         ],
-        "points": [
+        "pt": [
             612,
             612
         ],
@@ -867,7 +867,7 @@ export default {
             165.1,
             241.3
         ],
-        "points": [
+        "pt": [
             468,
             684
         ],
@@ -881,7 +881,7 @@ export default {
             304.8,
             393.7
         ],
-        "points": [
+        "pt": [
             864,
             1116
         ],
@@ -895,7 +895,7 @@ export default {
             222.25,
             285.75
         ],
-        "points": [
+        "pt": [
             630,
             810
         ],
@@ -909,7 +909,7 @@ export default {
             190.5,
             266.7
         ],
-        "points": [
+        "pt": [
             540,
             756
         ],
@@ -923,7 +923,7 @@ export default {
             241.3,
             317.5
         ],
-        "points": [
+        "pt": [
             684,
             900
         ],
@@ -937,7 +937,7 @@ export default {
             152.4,
             228.6
         ],
-        "points": [
+        "pt": [
             432,
             648
         ],
@@ -951,7 +951,7 @@ export default {
             177.8,
             254
         ],
-        "points": [
+        "pt": [
             504,
             720
         ],
@@ -965,7 +965,7 @@ export default {
             292.1,
             368.3
         ],
-        "points": [
+        "pt": [
             828,
             1044
         ],
@@ -979,7 +979,7 @@ export default {
             254,
             330.2
         ],
-        "points": [
+        "pt": [
             720,
             936
         ],
@@ -993,7 +993,7 @@ export default {
             228.6,
             304.8
         ],
-        "points": [
+        "pt": [
             648,
             864
         ],
@@ -1009,7 +1009,7 @@ export default {
             99,
             210
         ],
-        "points": [
+        "pt": [
             281,
             595
         ],
@@ -1023,7 +1023,7 @@ export default {
             210,
             210
         ],
-        "points": [
+        "pt": [
             595,
             595
         ],
@@ -1037,7 +1037,7 @@ export default {
             280,
             398
         ],
-        "points": [
+        "pt": [
             794,
             1128
         ],
@@ -1051,7 +1051,7 @@ export default {
             110,
             178
         ],
-        "points": [
+        "pt": [
             312,
             505
         ],
@@ -1065,7 +1065,7 @@ export default {
             120,
             120
         ],
-        "points": [
+        "pt": [
             340,
             340
         ],
@@ -1079,7 +1079,7 @@ export default {
             130,
             198
         ],
-        "points": [
+        "pt": [
             369,
             561
         ],
@@ -1093,7 +1093,7 @@ export default {
             6096,
             3048
         ],
-        "points": [
+        "pt": [
             17280,
             8640
         ],
@@ -1109,7 +1109,7 @@ export default {
             762,
             1067
         ],
-        "points": [
+        "pt": [
             2160,
             3025
         ],
@@ -1123,7 +1123,7 @@ export default {
             660,
             965
         ],
-        "points": [
+        "pt": [
             1871,
             2735
         ],
@@ -1137,7 +1137,7 @@ export default {
             686,
             991
         ],
-        "points": [
+        "pt": [
             1945,
             2809
         ],
@@ -1151,7 +1151,7 @@ export default {
             610,
             914
         ],
-        "points": [
+        "pt": [
             1729,
             2591
         ],
@@ -1165,7 +1165,7 @@ export default {
             914,
             1219
         ],
-        "points": [
+        "pt": [
             2591,
             3455
         ],
@@ -1179,7 +1179,7 @@ export default {
             305,
             457
         ],
-        "points": [
+        "pt": [
             865,
             1295
         ],
@@ -1193,7 +1193,7 @@ export default {
             457,
             610
         ],
-        "points": [
+        "pt": [
             1295,
             1729
         ],
@@ -1207,7 +1207,7 @@ export default {
             229,
             305
         ],
-        "points": [
+        "pt": [
             649,
             865
         ],
@@ -1223,7 +1223,7 @@ export default {
             51,
             89
         ],
-        "points": [
+        "pt": [
             145,
             252
         ],
@@ -1237,7 +1237,7 @@ export default {
             55,
             85
         ],
-        "points": [
+        "pt": [
             156,
             241
         ],
@@ -1251,7 +1251,7 @@ export default {
             55,
             91
         ],
-        "points": [
+        "pt": [
             156,
             258
         ],
@@ -1267,7 +1267,7 @@ export default {
             304.8,
             457.2
         ],
-        "points": [
+        "pt": [
             864,
             1296
         ],
@@ -1281,7 +1281,7 @@ export default {
             609.6,
             914.4
         ],
-        "points": [
+        "pt": [
             1728,
             2592
         ],
@@ -1295,7 +1295,7 @@ export default {
             635,
             965.2
         ],
-        "points": [
+        "pt": [
             1800,
             2736
         ],
@@ -1309,7 +1309,7 @@ export default {
             889,
             1143
         ],
-        "points": [
+        "pt": [
             2520,
             3240
         ],
@@ -1323,7 +1323,7 @@ export default {
             965.2,
             1270
         ],
-        "points": [
+        "pt": [
             2736,
             3600
         ],
@@ -1337,7 +1337,7 @@ export default {
             279.4,
             431.8
         ],
-        "points": [
+        "pt": [
             792,
             1224
         ],
@@ -1351,7 +1351,7 @@ export default {
             482.6,
             635
         ],
-        "points": [
+        "pt": [
             1368,
             1800
         ],
@@ -1365,7 +1365,7 @@ export default {
             584.2,
             736.6
         ],
-        "points": [
+        "pt": [
             1656,
             2088
         ],
@@ -1379,7 +1379,7 @@ export default {
             508,
             660.4
         ],
-        "points": [
+        "pt": [
             1440,
             1872
         ],
@@ -1393,7 +1393,7 @@ export default {
             584.2,
             889
         ],
-        "points": [
+        "pt": [
             1656,
             2520
         ],
@@ -1407,7 +1407,7 @@ export default {
             711.2,
             1016
         ],
-        "points": [
+        "pt": [
             2016,
             2880
         ],
@@ -1421,7 +1421,7 @@ export default {
             660.4,
             1016
         ],
-        "points": [
+        "pt": [
             1872,
             2880
         ],
@@ -1435,7 +1435,7 @@ export default {
             431.8,
             558.8
         ],
-        "points": [
+        "pt": [
             1224,
             1584
         ],
@@ -1451,7 +1451,7 @@ export default {
             95.25,
             171.45
         ],
-        "points": [
+        "pt": [
             270,
             486
         ],
@@ -1465,7 +1465,7 @@ export default {
             98.425,
             190.5
         ],
-        "points": [
+        "pt": [
             279,
             540
         ],
@@ -1479,7 +1479,7 @@ export default {
             92.075,
             219.075
         ],
-        "points": [
+        "pt": [
             261,
             621
         ],
@@ -1493,7 +1493,7 @@ export default {
             104.775,
             241.3
         ],
-        "points": [
+        "pt": [
             297,
             684
         ],
@@ -1507,7 +1507,7 @@ export default {
             120.65,
             279.4
         ],
-        "points": [
+        "pt": [
             342,
             792
         ],
@@ -1521,7 +1521,7 @@ export default {
             127,
             292.1
         ],
-        "points": [
+        "pt": [
             360,
             828
         ],
@@ -1535,7 +1535,7 @@ export default {
             88.9,
             152.4
         ],
-        "points": [
+        "pt": [
             252,
             432
         ],
@@ -1549,7 +1549,7 @@ export default {
             98.425,
             225.425
         ],
-        "points": [
+        "pt": [
             279,
             639
         ],
@@ -1563,7 +1563,7 @@ export default {
             92.075,
             165.1
         ],
-        "points": [
+        "pt": [
             261,
             468
         ],
@@ -1577,7 +1577,7 @@ export default {
             114.3,
             263.525
         ],
-        "points": [
+        "pt": [
             324,
             747
         ],
@@ -1593,7 +1593,7 @@ export default {
             92.075,
             130.175
         ],
-        "points": [
+        "pt": [
             261,
             369
         ],
@@ -1607,7 +1607,7 @@ export default {
             120.65,
             165.1
         ],
-        "points": [
+        "pt": [
             342,
             468
         ],
@@ -1621,7 +1621,7 @@ export default {
             111.125,
             146.05
         ],
-        "points": [
+        "pt": [
             315,
             414
         ],
@@ -1635,7 +1635,7 @@ export default {
             133.35,
             184.15
         ],
-        "points": [
+        "pt": [
             378,
             522
         ],
@@ -1651,7 +1651,7 @@ export default {
             450,
             640
         ],
-        "points": [
+        "pt": [
             1276,
             1814
         ],
@@ -1665,7 +1665,7 @@ export default {
             320,
             450
         ],
-        "points": [
+        "pt": [
             907,
             1276
         ],
@@ -1679,7 +1679,7 @@ export default {
             225,
             320
         ],
-        "points": [
+        "pt": [
             638,
             907
         ],
@@ -1693,7 +1693,7 @@ export default {
             215,
             305
         ],
-        "points": [
+        "pt": [
             609,
             865
         ],
@@ -1707,7 +1707,7 @@ export default {
             900,
             1280
         ],
-        "points": [
+        "pt": [
             2551,
             3628
         ],
@@ -1721,7 +1721,7 @@ export default {
             305,
             430
         ],
-        "points": [
+        "pt": [
             865,
             1219
         ],
@@ -1735,7 +1735,7 @@ export default {
             860,
             1220
         ],
-        "points": [
+        "pt": [
             2438,
             3458
         ],
@@ -1749,7 +1749,7 @@ export default {
             610,
             860
         ],
-        "points": [
+        "pt": [
             1729,
             2438
         ],
@@ -1763,7 +1763,7 @@ export default {
             430,
             610
         ],
-        "points": [
+        "pt": [
             1219,
             1729
         ],
@@ -1777,7 +1777,7 @@ export default {
             640,
             900
         ],
-        "points": [
+        "pt": [
             1814,
             2551
         ],
@@ -1793,7 +1793,7 @@ export default {
             432,
             559
         ],
-        "points": [
+        "pt": [
             1225,
             1585
         ],
@@ -1807,7 +1807,7 @@ export default {
             216,
             279
         ],
-        "points": [
+        "pt": [
             612,
             791
         ],
@@ -1821,7 +1821,7 @@ export default {
             279,
             432
         ],
-        "points": [
+        "pt": [
             791,
             1225
         ],
@@ -1835,7 +1835,7 @@ export default {
             864,
             1118
         ],
-        "points": [
+        "pt": [
             2449,
             3169
         ],
@@ -1849,7 +1849,7 @@ export default {
             559,
             864
         ],
-        "points": [
+        "pt": [
             1585,
             2449
         ],
@@ -1865,7 +1865,7 @@ export default {
             120.65,
             165.1
         ],
-        "points": [
+        "pt": [
             342,
             468
         ],
@@ -1879,7 +1879,7 @@ export default {
             139.7,
             206.375
         ],
-        "points": [
+        "pt": [
             396,
             585
         ],
@@ -1893,7 +1893,7 @@ export default {
             111.125,
             146.05
         ],
-        "points": [
+        "pt": [
             315,
             414
         ],
@@ -1907,7 +1907,7 @@ export default {
             152.4,
             241.3
         ],
-        "points": [
+        "pt": [
             432,
             684
         ],
@@ -1921,7 +1921,7 @@ export default {
             133.35,
             184.15
         ],
-        "points": [
+        "pt": [
             378,
             522
         ],
@@ -1935,7 +1935,7 @@ export default {
             98.425,
             225.425
         ],
-        "points": [
+        "pt": [
             279,
             639
         ],

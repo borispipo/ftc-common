@@ -16,4 +16,4 @@ export default {
         }
     }
 }
-export {iso}
+export {iso,all}

@@ -465,14 +465,12 @@ export const getPageSize = (options,force)=>{
     pageSize = pageFormat;
     pageWidth = typeof pageWidth =='number'? pageWidth : 0;
     pageHeight = typeof pageHeight =='number'? pageHeight: 0;
-    if(pageWidth > 0 || pageHeight > 0 || force){
-        if(isObj(pageSizes[pageSize]) && Array.isArray(pageSizes[pageSize].pt)){
-            if(pageWidth <= 0){
-                pageWidth = pageSizes[pageSize].pt[isLandScape? 1 : 0]
-            }
-            if(pageHeight <= 0){
-                pageHeight = pageSizes[pageSize].pt[isLandScape? 0 : 1]
-            }
+    if(isObj(pageSizes[pageSize]) && Array.isArray(pageSizes[pageSize].pt)){
+        if(pageWidth <= 0){
+            pageWidth = pageSizes[pageSize].pt[isLandScape? 1 : 0]
+        }
+        if(pageHeight <= 0){
+            pageHeight = pageSizes[pageSize].pt[isLandScape? 0 : 1]
         }
     }
     if( pageWidth > 0 && pageHeight>0){
