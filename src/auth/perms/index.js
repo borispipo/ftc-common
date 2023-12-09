@@ -77,8 +77,8 @@ const checkPAction = ({action,user_perm})=>{
     /**** par défaut, toutes les autres permission ont au moins accès en lecture */
     if(action == "read") return true;
     ///les perms sont de la forme read2write2update2delete
-    let split = user_perm.split("2");
-    let split2 = action.split("|");
+    const split = user_perm.split("2");
+    const split2 = action.split("|");
     for(let k in split){
         for(let u in split2){
             if(checkPSingle({user_perm:split[k],action:split2[u]}) == true){
@@ -146,13 +146,14 @@ const checkPerm = ({perms,resource,action}) =>{
     let r2 = false;
     for (let perm_resource in perms){
         ///la permission qu'a l'utilisateur sur la resource
-        let user_perm = defaultStr(perms[perm_resource]).trim().toLowerCase();
+        const user_perm = defaultStr(perms[perm_resource]).trim().toLowerCase();
+        const userPermSplit = user_perm.split("2");
         perm_resource = perm_resource.trim().toLowerCase();
         if(perm_resource == resource){
             let containsAll = user_perm =="all" //|| user_perm.contains("all2") || user_perm.contains("2all")
             if(!isOA){
                 action = defaultStr(action,'read').trim().toLowerCase();
-                if(containsAll || action =='read' || user_perm.contains(action)){
+                if(containsAll || action =='read' || userPermSplit.includes(action)){
                     return true;
                 }
                 if(checkPAction({action,user_perm})){
