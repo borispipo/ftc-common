@@ -36,12 +36,12 @@ import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDat
     */
 export default function (data,options){
     options = Object.assign({},options);
-    let {print,getSettings,showPreloader,hidePreloader, ...rest} = options;
+    let {print,getSettings,showPreloader,hidePreloader, ...printOptions} = options;
     showPreloader = typeof showPreloader =='function'? showPreloader : x=>true;
     hidePreloader = typeof hidePreloader =='function'? hidePreloader : x=>true;
     return new Promise((resolve,reject)=>{
         print = typeof print =='function'? print : (args)=>{
-            resolve(args);
+            return Promise.resolve(args);
         };
         getSettings = typeof getSettings == 'function' ? getSettings : (opts)=>opts;
         if(!Array.isArray(data)){
@@ -49,8 +49,7 @@ export default function (data,options){
         } 
         let allData = data;
         const multiple = allData.length > 1;
-        return Promise.resolve(getSettings({...rest,multiple,allData,data})).then(({
-            pageBreakBeforeEachDoc,pageMarginAfterEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
+        return Promise.resolve(getSettings({...printOptions,multiple,allData,data})).then(({pageBreakBeforeEachDoc,pageMarginAfterEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
             pageMarginAfterEachDoc = typeof pageMarginAfterEachDoc =='number'? Math.ceil(pageMarginAfterEachDoc) : 2;
             let pageMarginAf = "";
             for(let i=0;i<pageMarginAfterEachDoc;i++){
@@ -61,7 +60,7 @@ export default function (data,options){
             } else if(!Object.size(footerNote,true)){
                 footerNote = null;
             }
-            const printOptions = {...options,showPreloader,hidePreloader,duplicateDocOnPage,...rest};
+            printOptions = {...printOptions,showPreloader,hidePreloader,duplicateDocOnPage,...rest};
             const pageSizes = getPageSize(printOptions);
             const pageHeader = createPageHeader(options);
             if(!qrCodeAlignment || !["left","center","right"].includes(qrCodeAlignment)){
@@ -138,7 +137,7 @@ export default function (data,options){
                             if(pageBreakBeforeEachDoc){
                                 //saut de page suite à une nouveau pd
                                 allContents.push({text:'',pageBreak: 'before'});
-                            } else if(counter < results.length){
+                            } else if(counter <= results.length){
                                 allContents.push({text:pageMarginAf});
                             }   
                         }
@@ -147,9 +146,9 @@ export default function (data,options){
                 }
                 const fileName = defaultStr(rest.fileName,options.fileName) + (countD-1>0? ("-et-"+(countD-1)+"-documents"):"");
                 hidePreloader();
-                resolve({content:allContents,options:printOptions,fileName,printTitle:defaultStr(printTitle,fileName)})
+                resolve({...printOptions,content:allContents,fileName,printTitle:defaultStr(printTitle,fileName)})
             }).catch((e)=>{
-                resolve({status:false,error:e});
+                reject(e);
                 hidePreloader();
                 console.log(e,' printing all database data')
             });
