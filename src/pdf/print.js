@@ -133,15 +133,13 @@ export default function (data,options){
                         if(generateQRCode && isNonNullString(qrCode.qr)){
                             content.push(qrCode);
                         }
-                        if(counter > 1){
-                            if(pageBreakBeforeEachDoc){
-                                //saut de page suite à une nouveau pd
-                                allContents.push({text:'',pageBreak: 'before'});
-                            } else if(counter < results.length){
-                                allContents.push({text:pageMarginAf});
-                            }   
-                        } else if(!pageBreakBeforeEachDoc){
-                            allContents.push({text:pageMarginAf});
+                        if(!pageBreakBeforeEachDoc){
+                            if(counter < results.length){
+                                content.push({text:pageMarginAf});
+                            } 
+                        } else if(counter > 1){
+                            //saut de page suite à une nouveau pd
+                            allContents.push({text:'',pageBreak: 'before'}); 
                         }
                         allContents.push(content);
                     }
