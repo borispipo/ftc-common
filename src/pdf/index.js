@@ -20,7 +20,7 @@ export * from "./pdfmake";
     }
     @param {object:{createPDF|createPdf}}, en environnement node par example, l'on devra passer une autre fonction createPdf afin que ça marche car sinon une erreur sera générée
 */
-export function createPDF(_docDefinition,customPdfMake,tableLayouts, fonts, vfs){
+export function createPDF(_docDefinition,customPdfMake,...restOptions){
     _docDefinition = Object.assign({},_docDefinition);
     const docDefinition = {..._docDefinition,...getPageSize(_docDefinition)};
     const {content:dContent,pageBreakBefore:pBefore} = docDefinition;
@@ -60,15 +60,16 @@ export function createPDF(_docDefinition,customPdfMake,tableLayouts, fonts, vfs)
     // The full signature of createPdf looks like this.
     // tableLayouts, fonts and vfs are all optional - falsy values will cause
     // pdfMake.tableLayouts, pdfMake.fonts or pdfMake.vfs to be used.
-    return createPdf(docDefinition,tableLayouts, fonts, vfs);
+    //signature: docDefinition,tableLayouts, fonts, vfs
+    return createPdf(docDefinition,...restOptions);
 };
 
 /*** permet de générer le pdf à partir de la fonction print du fichier ./print
     @param {Array|Object} data, la données où l'ensemble des données à imprimer
     @param {object} options, les options supplémentaires à passer à la fonction print
 */
-export const print = (data,options,customPdfMake, tableLayouts, fonts, vfs)=>{
+export const print = (data,options,customPdfMake, ...restOptions)=>{
     return printFile(data,options).then((docDefinition)=>{
-        return createPDF({...docDefinition,pageHeader:false,printedDate:false,footerNote:false,signatories:false},customPdfMake, tableLayouts, fonts, vfs)
+        return createPDF({...docDefinition,pageHeader:false,printedDate:false,footerNote:false,signatories:false},customPdfMake, ...restOptions)
     })
 }
