@@ -65,7 +65,7 @@ export const signIn = (user,callback,trigger)=>{
           callback(user);
       }
     }
-    return {response,user,token,...rest};
+    return {response,user:getLoggedUser()||user,token,...rest};
   }).catch((e)=>{
       console.log(e.stackTrace|| e.message || e.msg," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
