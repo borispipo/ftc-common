@@ -10,6 +10,7 @@ import {getURIPathName} from "$cutils/uri";
 import {NOT_SIGNED_IN} from "$capi/status";
 
 export * from "./session";
+export {default as login} from "./login";
 export const permProfilesTableName = "PERMS_PROFILES";
 
 export const notAllowedMsg = "Vous n'êtes pas autorisé à accéder à la ressource demandée";
