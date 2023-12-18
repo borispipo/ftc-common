@@ -11,6 +11,9 @@ export const getTableDataPermResourcePrefix = (tableName,...rest)=>{
 export const getStructDataPermResourcePrefix = (tableName,...rest)=>{
     return authSignIn2SignOut.structDataPermResourcePrefix(defaultStr(tableName).trim().ltrim("/"),...rest);
 }
+
+export const defaultPermsActions = ['read','create','write','update','edit','delete','remove'];
+
 /*** 
  *  - on peut définir la liste des noms de tables data dans le propriété tables|tableNames de appConfig.tablesData
  *  - on peut définir la liste des noms struct data dans la propriété structData | structDataTableNames de appConfig.structsData
@@ -25,7 +28,7 @@ export const resetPerms = ()=>{
     Object.map(structDataPerms,(v,i)=>{
         delete structDataPerms[i];
     })
-    const action = ['read','create','write','update','edit','delete','remove']
+    const action = defaultPermsActions;
     Object.map(appConfig.tablesData,(table,tableName)=>{
         tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
         if(!(tableName)) return null;

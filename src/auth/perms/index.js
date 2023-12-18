@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$cutils";
-import {tableDataPerms,structDataPerms,resetPerms,getStructDataPermResourcePrefix,getTableDataPermResourcePrefix} from "./reset";
+import {tableDataPerms,structDataPerms,resetPerms,getStructDataPermResourcePrefix,getTableDataPermResourcePrefix,defaultPermsActions} from "./reset";
 import {getLoggedUser,isValidUser} from "../utils/session";
 import isMasterAdmin from "../isMasterAdmin";
 
@@ -310,32 +310,26 @@ export const isStructDataAllowed = (_table,action,user)=>{
         if(isObjectOrArray(action)){
             for(let k in action){
                 if(isNonNullString(action[k])){
-                    const act = action[k].toLowerCase();
+                    const act = action[k].toLowerCase().trim();
                     let b = p[act];
                     if(!isBool(b)){
                         b = isAllowed({resource:_table.resource,user,action:act})
                     }
-                    if(!b){
-                        const pResource = `${_table.resource}/${act.ltrim('/')}`;
-                        if(structDataPerms[pResource]){
-                          b = isAllowed({resource:pResource,user,action:act});
-                        }
+                    if(!b && !defaultPermsActions.includes(act)){
+                        b = isAllowed({resource:`${_table.resource}/${act.ltrim('/')}`,user,action:act});
                     }
                     p[action[k]] = b;
                 }
             }
             return p;
         } else {
-            action = defaultStr(action,'read').toLowerCase();
+            action = defaultStr(action,'read').toLowerCase().trim();
             let b = p[action];
             if(!isBool(b)){
                 b = isAllowed({resource:_table.resource,user,action})
             }
-            if(!b){
-                const pResource = `${_table.resource}/${action.ltrim('/')}`;
-                if(structDataPerms[pResource]){
-                  b = isAllowed({resource:pResource,user,action});
-                }
+            if(!b && !defaultPermsActions.includes(action)){
+              b = isAllowed({resource:`${_table.resource}/${action.ltrim('/')}`,user,action});
             }
             p[action] = b;
             return p[action] || false;
@@ -383,32 +377,26 @@ export const isTableDataAllowed = (_table,action,user)=>{
         if(isObjectOrArray(action)){
             for(let k in action){
                 if(isNonNullString(action[k])){
-                    const act = action[k].toLowerCase();
+                    const act = action[k].toLowerCase().trim();
                     let b = p[act];
                     if(!isBool(b)){
                         b = isAllowed({resource:table.resource,user,action:act})
                     }
-                    if(!b){
-                      const pResource = `${_table.resource}/${act.ltrim('/')}`;
-                      if(tableDataPerms[pResource]){
-                        b = isAllowed({resource:pResource,user,action:act});
-                      }
+                    if(!b && !defaultPermsActions.includes(act)){
+                      b = isAllowed({resource:`${_table.resource}/${act.ltrim('/')}`,user,action:act});
                     }
                     p[action[k]] = b;
                 }
             }
             return p;
         } else {
-            action = defaultStr(action,'read').toLowerCase();
+            action = defaultStr(action,'read').toLowerCase().trim();
             let b = p[action];
             if(!isBool(b)){
                 b = isAllowed({resource:_table.resource,user,action})
             }
-            if(!b){
-                const pResource = `${_table.resource}/${action.ltrim('/')}`;
-                if(tableDataPerms[pResource]){
-                  b = isAllowed({resource:pResource,user,action});
-                }
+            if(!b && !defaultPermsActions.includes(action)){
+                b = isAllowed({resource:`${_table.resource}/${action.ltrim('/')}`,user,action});
             }
             p[action] = b;
             return p[action] || false;
