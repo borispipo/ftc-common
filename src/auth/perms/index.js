@@ -310,10 +310,16 @@ export const isStructDataAllowed = (_table,action,user)=>{
         if(isObjectOrArray(action)){
             for(let k in action){
                 if(isNonNullString(action[k])){
-                    let act = action[k].toLowerCase();
+                    const act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
                         b = isAllowed({resource:_table.resource,user,action:act})
+                    }
+                    if(!b){
+                        const pResource = `${_table.resource}/${act.ltrim('/')}`;
+                        if(structDataPerms[pResource]){
+                          b = isAllowed({resource:pResource,user,action:act});
+                        }
                     }
                     p[action[k]] = b;
                 }
@@ -324,6 +330,12 @@ export const isStructDataAllowed = (_table,action,user)=>{
             let b = p[action];
             if(!isBool(b)){
                 b = isAllowed({resource:_table.resource,user,action})
+            }
+            if(!b){
+                const pResource = `${_table.resource}/${action.ltrim('/')}`;
+                if(structDataPerms[pResource]){
+                  b = isAllowed({resource:pResource,user,action});
+                }
             }
             p[action] = b;
             return p[action] || false;
@@ -371,10 +383,16 @@ export const isTableDataAllowed = (_table,action,user)=>{
         if(isObjectOrArray(action)){
             for(let k in action){
                 if(isNonNullString(action[k])){
-                    let act = action[k].toLowerCase();
+                    const act = action[k].toLowerCase();
                     let b = p[act];
                     if(!isBool(b)){
                         b = isAllowed({resource:table.resource,user,action:act})
+                    }
+                    if(!b){
+                      const pResource = `${_table.resource}/${act.ltrim('/')}`;
+                      if(tableDataPerms[pResource]){
+                        b = isAllowed({resource:pResource,user,action:act});
+                      }
                     }
                     p[action[k]] = b;
                 }
@@ -385,6 +403,12 @@ export const isTableDataAllowed = (_table,action,user)=>{
             let b = p[action];
             if(!isBool(b)){
                 b = isAllowed({resource:_table.resource,user,action})
+            }
+            if(!b){
+                const pResource = `${_table.resource}/${action.ltrim('/')}`;
+                if(tableDataPerms[pResource]){
+                  b = isAllowed({resource:pResource,user,action});
+                }
             }
             p[action] = b;
             return p[action] || false;
