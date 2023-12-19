@@ -148,7 +148,8 @@ export default function (data,options){
                         allContents.push(content);
                     }
                 }
-                const fileName = defaultStr(restFileName,options.fileName) + (countD-1>0? (`${fileName}? "-et-":""`+(countD-1)+"-documents"):"");
+                const rFileName =  defaultStr(restFileName,options.fileName);
+                const fileName = rFileName + (countD>0?`${rFileName?"":""}${countD}-documents`:"")
                 hidePreloader();
                 resolve({...printOptions,content:allContents,fileName,printTitle:defaultStr(printTitle,fileName)})
             }).catch((e)=>{
