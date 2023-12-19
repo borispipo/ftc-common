@@ -50,6 +50,7 @@ export default function (data,options){
         let allData = data;
         const multiple = allData.length > 1;
         return Promise.resolve(getSettings({...printOptions,multiple,allData,data})).then(({pageBreakBeforeEachDoc,pageMarginAfterEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
+            let restFileName = defaultStr(rest.fileName);
             pageMarginAfterEachDoc = typeof pageMarginAfterEachDoc =='number'? Math.ceil(pageMarginAfterEachDoc) : 2;
             let pageMarginAf = "";
             for(let i=0;i<pageMarginAfterEachDoc;i++){
@@ -141,10 +142,13 @@ export default function (data,options){
                             //saut de page suite à une nouveau pd
                             allContents.push({text:'',pageBreak: 'before'}); 
                         }
+                        if(isNonNullString(result.fileName)){
+                            restFileName = `${isNonNullString(restFileName)? (restFileName+"-"):''}${result.fileName}`; 
+                        }
                         allContents.push(content);
                     }
                 }
-                const fileName = defaultStr(rest.fileName,options.fileName) + (countD-1>0? ("-et-"+(countD-1)+"-documents"):"");
+                const fileName = defaultStr(restFileName,options.fileName) + (countD-1>0? (`${fileName}? "-et-":""`+(countD-1)+"-documents"):"");
                 hidePreloader();
                 resolve({...printOptions,content:allContents,fileName,printTitle:defaultStr(printTitle,fileName)})
             }).catch((e)=>{
