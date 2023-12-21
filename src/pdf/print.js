@@ -149,7 +149,7 @@ export default function (data,options){
                     }
                 }
                 const rFileName =  defaultStr(restFileName,options.fileName);
-                const fileName = rFileName + (countD>0?`${rFileName?"-":""}${countD}-documents`:"")
+                const fileName = rFileName + (countD > 1 ? ((countD>0?`${rFileName?"-":""}${countD}-documents`:"")):"")
                 hidePreloader();
                 resolve({...printOptions,content:allContents,fileName,printTitle:defaultStr(printTitle,fileName)})
             }).catch((e)=>{
