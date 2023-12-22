@@ -299,8 +299,8 @@ export const withStyles = (Component,options,mutator)=>{
     if(!Component) return React.Fragment;
     mutator = typeof customMutator =='function'? customMutator : typeof mutator =='function'? mutator : undefined;
     return styled(ComponentWrapper(Component,displayName),{...opts,
-        shouldForwardProp : (prop,defaultValidatorFn)=>{
-            if(customShouldForwardProps(prop) === false) return false;
+        shouldForwardProp : (prop,defaultValidatorFn,...rest)=>{
+            if(customShouldForwardProps(prop,defaultValidatorFn,...rest) === false) return false;
             return prop !=="cursorPointer" && prop !=="cursorNotAllowed" && !colorsKeysAlias[prop] && prop !=='surface' && prop !== 'withStyle' ? true : false;
         }
     })(({color,surface,bold,userSelect,noPadding,noMargin,textBold,cursorNotAllowed:cCursorNotAllowed,cursorPointer:cCursorPointer,loading,withStyle,disabled,backgroundColor,mode:customMode,style,...rest }) =>{
