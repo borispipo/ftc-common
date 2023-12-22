@@ -27,7 +27,7 @@ export const createTableHeader = (tableHeader,options)=>{
         options = {render:options};
     }
     options = defaultObj(options);
-    let {renderItem,filter,render,fillColor,color,...rest} = options;
+    let {renderItem,filter,render,fillColor,color,upperCase,upper,...rest} = options;
     fillColor = Colors.isValid(fillColor)? fillColor : theme.colors.background;
     filter = typeof filter =="function"? filter : x=> undefined;
     color = Colors.isValid(color)? color : theme.colors.text;
@@ -48,7 +48,7 @@ export const createTableHeader = (tableHeader,options)=>{
         if(e || f === true){
             tH.push(
                 {
-                    text : !isObj(e)? e : undefined,
+                    text : isNonNullString(e)? (upper!== false && upperCase !== false ? e.toUpperCase():"") : !isObj(e)? e : undefined,
                     fillColor,
                     color,
                     bold : true,
