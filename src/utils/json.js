@@ -61,15 +61,14 @@ export const isJSON = function (json_string){
 
 function replacer(key, value) {
     if (isRegExp(value))
-      return ("__REGEXP " + value.toString());
+      return value.toString();
     else
       return value;
 }
   
   function reviver(key, value) {
-    if (isRegExp(value)) {
-      var m = value.split("__REGEXP ")[1].match(/\/(.*)\/(.*)?/);
-      return new RegExp(m[1], m[2] || "");
+    if (isRegExp(value) && !(value instanceof RegExp)) {
+      return new RegExp(value);
     } else
       return value;
   }
