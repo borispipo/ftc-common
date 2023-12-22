@@ -2,21 +2,24 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import isDateObj from "./isDateObj";
+
+export function isRegExp(regExp){
+    if(!regExp || typeof regExp !=="object" || (!Object.prototype.toString.call(regExp).includes("RegExp"))) return false;
+    try {
+        new RegExp(regExp);
+        return true;
+    } catch(e) {
+        return false
+    }
+}
 export const isPlainObject = function ( obj ) {
-    if(typeof obj =='boolean' || typeof obj =='string' || isDateObj(obj)) return false;
-    var toString = Object.prototype.toString.call(obj);
-    if(toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]'){
+    if(!obj || typeof obj =='boolean' || typeof obj =="number" || typeof obj =='string' || isDateObj(obj)) return false;
+    const tStr = Object.prototype.toString.call(obj);
+    if(tStr !== "[object Object]"  || tStr == '[object global]' || tStr == '[object Window]' || tStr == '[object DOMWindow]' || isRegExp(obj)){
         return false;
     }
     var proto, Ctor;
-    // Detect obvious negatives
-    // Use toString instead of jQuery.type to catch host objects
-    if ( !obj || {}.toString.call( obj ) !== "[object Object]" ) {
-        return false;
-    }
-
     proto = Object.getPrototypeOf( obj );
-
     // Objects with no prototype (e.g., `Object.create( null )`) are plain
     if ( !proto ) {
         return true;
