@@ -27,24 +27,28 @@ export const createTableHeader = (tableHeader,options)=>{
         options = {render:options};
     }
     options = defaultObj(options);
-    let {renderItem,render,fillColor,color,...rest} = options;
+    let {renderItem,filter,render,fillColor,color,...rest} = options;
     fillColor = Colors.isValid(fillColor)? fillColor : theme.colors.background;
+    filter = typeof filter =="function"? filter : x=> undefined;
     color = Colors.isValid(color)? color : theme.colors.text;
     renderItem = isFunction(renderItem)? renderItem : isFunction(render)? render : undefined;
     rest = defaultObj(rest)
     let tH = [];
     Object.map(tableHeader,(e,index)=>{
+        const item = e;
         if(renderItem){
             if(isObj(e)){
-                e = renderItem({...e,item:e,index})
+                e = renderItem({...e,item,index})
             } else {
-                e = renderItem({value:e,item:e,index})
+                e = renderItem({value:e,item,index})
             }   
         }
-        if(isNonNullString(e)){
+        const f = filter({value:e,item,index});
+        if(f === false) return null;
+        if(e || f === true){
             tH.push(
                 {
-                    text : e.toUpperCase(),
+                    text : e,
                     fillColor,
                     color,
                     bold : true,
