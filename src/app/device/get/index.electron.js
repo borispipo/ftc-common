@@ -4,5 +4,5 @@
 import get from "./index.js";
 import {isElectron} from "$cplatform";
 export default function getElectronDeviceId (){
-    return get() || isElectron() && ELECTRON?.DEVICE?.computerName || '';
+    return get() || isElectron() && typeof ELECTRON !=='undefined' && typeof window !=='undefined' && ELECTRON && ELECTRON?.DEVICE?.computerName || '';
 }
