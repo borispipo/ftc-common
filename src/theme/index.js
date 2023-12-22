@@ -300,7 +300,9 @@ export const withStyles = (Component,options,mutator)=>{
     mutator = typeof customMutator =='function'? customMutator : typeof mutator =='function'? mutator : undefined;
     return styled(ComponentWrapper(Component,displayName),{...opts,
         shouldForwardProp : (prop,defaultValidatorFn,...rest)=>{
-            if(customShouldForwardProps(prop,defaultValidatorFn,...rest) === false) return false;
+            const cP = customShouldForwardProps(prop,defaultValidatorFn,...rest);
+            if(cP === false) return false;
+            if(cP === true && typeof opts.shouldForwardProp =='function') return true;
             return prop !=="cursorPointer" && prop !=="cursorNotAllowed" && !colorsKeysAlias[prop] && prop !=='surface' && prop !== 'withStyle' ? true : false;
         }
     })(({color,surface,bold,userSelect,noPadding,noMargin,textBold,cursorNotAllowed:cCursorNotAllowed,cursorPointer:cCursorPointer,loading,withStyle,disabled,backgroundColor,mode:customMode,style,...rest }) =>{
