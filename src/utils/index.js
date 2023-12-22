@@ -17,6 +17,7 @@ export {sprintf,isNonNullString};
 export {default as LorenIpsum} from "./loremIpsum";
 export {default as loremIpsum } from "./loremIpsum";
 export {default as StringBuilder} from "./StringBuilder";
+export * from "./isRegex";
 
 export * from "./compare";
 

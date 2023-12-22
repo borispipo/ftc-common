@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-
+const {stringify:stringifyJSON,parse} = JSON;
+import {isRegExp} from "./isRegex";
 export const decycle = function decycle(obj, stack = []) {
     if(typeof obj ==='function') return undefined;
     if (!obj || typeof obj !== 'object')
@@ -55,4 +56,33 @@ export const isJSON = function (json_string){
         return jsonStr;
     }
     return jsonStr;
+}
+
+
+function replacer(key, value) {
+    if (isRegExp(value))
+      return ("__REGEXP " + value.toString());
+    else
+      return value;
+}
+  
+  function reviver(key, value) {
+    if (isRegExp(value)) {
+      var m = value.split("__REGEXP ")[1].match(/\/(.*)\/(.*)?/);
+      return new RegExp(m[1], m[2] || "");
+    } else
+      return value;
+  }
+
+JSON.stringify = function(o,replacerFunc,...rest){
+    replacerFunc = typeof replacerFunc =='function' ? replacerFunc : (key,value)=>value;
+    return stringifyJSON(o,(key,value,...rest)=>{
+        return replacerFunc(key,replacer(key,value,...rest),...rest);
+    },...rest);
+}
+JSON.parse = function(o,reviverFunc,...rest){
+    reviverFunc = typeof reviverFunc =='function'? reviverFunc : (key,value)=>value;
+    return parse(o,(key,value,...rest)=>{
+        return reviverFunc(o,reviver(key,value,...rest),...rest);
+    },...rest);
 }

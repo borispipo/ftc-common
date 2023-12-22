@@ -2,16 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import isDateObj from "./isDateObj";
+import { isRegExp } from "./isRegex";
 
-export function isRegExp(regExp){
-    if(!regExp || typeof regExp !=="object" || (!Object.prototype.toString.call(regExp).includes("RegExp"))) return false;
-    try {
-        new RegExp(regExp);
-        return true;
-    } catch(e) {
-        return false
-    }
-}
 export const isPlainObject = function ( obj ) {
     if(!obj || typeof obj =='boolean' || typeof obj =="number" || typeof obj =='string' || isDateObj(obj)) return false;
     const tStr = Object.prototype.toString.call(obj);
