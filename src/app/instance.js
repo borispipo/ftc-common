@@ -117,13 +117,15 @@ const APP_INSTANCE = {
     },
     get getTotalRAM(){
         return (unit)=>{
-            if(!Platform.isElectron() || !ELECTRON.DEVICE || !isFunction(ELECTRON.DEVICE.getTotalRAM)) return 0;
+            if(!isClientSide() || !isElectron()) return 0;
+            if(!ELECTRON.DEVICE || !isFunction(ELECTRON.DEVICE.getTotalRAM)) return 0;
             return ELECTRON.DEVICE.getTotalRAM(unit);
         };
     },
     get getFreeRAM (){
         return (unit)=>{
-            if(!Platform.isElectron() || !ELECTRON.DEVICE || !isFunction(ELECTRON.DEVICE.getFreeRAM)) return 0;
+            if(!isClientSide() || !isElectron()) return 0;
+            if(!ELECTRON.DEVICE || !isFunction(ELECTRON.DEVICE.getFreeRAM)) return 0;
             return ELECTRON.DEVICE.getFreeRAM(unit);
         };
     },
