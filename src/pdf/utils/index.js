@@ -48,11 +48,12 @@ export const createTableHeader = (tableHeader,options)=>{
         if(e || f === true){
             tH.push(
                 {
-                    text : e,
+                    text : !isObj(e)? e : undefined,
                     fillColor,
                     color,
                     bold : true,
-                    ...rest
+                    ...rest,
+                    ...(isObj(item)? item:{}),
                 }
             )
         }
