@@ -4,7 +4,8 @@
 
 import  PouchDB from "pouchdb";
 import sqlPouch from "./sqlitePouch";
+import initElectron from "./init-electron";
 export default   {
     PouchDB,
-    ...require("./init-electron").default({PouchDB,sqlPouch}),
+    ...initElectron({PouchDB,sqlPouch}),
 }
