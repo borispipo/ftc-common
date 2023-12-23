@@ -74,14 +74,16 @@ function replacer(key, value) {
   }
 
 JSON.stringify = function(o,replacerFunc,...rest){
+    const context = this || JSON;
     replacerFunc = typeof replacerFunc =='function' ? replacerFunc : (key,value)=>value;
-    return stringifyJSON.call(JSON,o,(key,value,...rest)=>{
-        return replacerFunc.call(JSON,key,replacer(key,value),...rest);
+    return stringifyJSON.call(context,o,(key,value,...rest)=>{
+        return replacerFunc.call(context,key,replacer(key,value),...rest);
     },...rest);
 }
 JSON.parse = function(o,reviverFunc,...rest){
     reviverFunc = typeof reviverFunc =='function'? reviverFunc : (key,value)=>value;
-    return parse.call(JSON,o,(key,value,...rest)=>{
-        return reviverFunc.call(JSON,o,reviver(key,value),...rest);
+    const context = this || JSON;
+    return parse.call(context,o,(key,value,...rest)=>{
+        return reviverFunc.call(context,o,reviver(key,value),...rest);
     },...rest);
 }
