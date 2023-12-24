@@ -30,8 +30,8 @@ export const getBaseHost = x=>{
  * la version de l'api, cette variable peut être issue de la propriété API_VERSION des variables d'environnements
  */
 export const API_VERSION = defaultStr(process.env.API_VERSION);
-
-export const API_PATH_PREFIX = `/${defaultStr(process.env.API_PATH_PREFIX,"api").trim().ltrim("/").rtrim("/")}/`;
+const apiPref = (`/${(typeof process.env.API_PATH_PREFIX =='string'? process.env.API_PATH_PREFIX.trim() : "api").trim().ltrim("/").rtrim("/")}/`).rtrim("/");
+export const API_PATH_PREFIX = apiPref ? apiPref+"/" : apiPref;
 
 /**** 
  * @see {@link API_VERSION} 
