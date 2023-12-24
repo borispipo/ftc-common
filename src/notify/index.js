@@ -118,13 +118,16 @@
         if(p === 'granted') {
             return new Notification(message,options)
         } else {
-            throw {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."}
+            const err = {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."};
+            if(options.showError !== false){
+                error(err);
+            }
+            throw err;
         }
     }).catch((e)=>{
         if(options.showError !== false){
             error(e);
         }
-        throw e;
     });
  }
  
