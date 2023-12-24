@@ -122,7 +122,7 @@
         }
     }).catch((e)=>{
         if(options.showError !== false){
-            notify.error(e);
+            error(e);
         }
         throw e;
     });
