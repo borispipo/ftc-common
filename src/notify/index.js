@@ -35,6 +35,9 @@
      }
      settings = defaultObj(settings);
      type = defaultStr(type,settings.type);
+     if(!type || !(type in TYPES)){
+        type = TYPES.info;
+     }
      if(type =="warning"){
          type = TYPES.warning;
      } else if(!TYPES[type]){
@@ -101,7 +104,7 @@
  
  /*** @see : https://developer.mozilla.org/en-US/docs/Web/API/Notification */
  export const sendDesktop = (message,options)=>{
-    if (canSendDesktop()) {
+    if (!canSendDesktop()) {
         return Promise.resolve(notify(message,null,null,options));
     }
     return Promise.resolve((Notification.permission === 'granted'?Notification.permission:Notification.requestPermission())).then(function(p) {
