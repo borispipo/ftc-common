@@ -270,6 +270,12 @@ const config = {
     get API_HOST (){ 
         return getAPIHost();
     },
+    get getAPIHost(){
+        return getAPIHost;
+    },
+    get setAPIHost(){
+        return setAPIHost;
+    },
     set API_HOST (newAPIHost){
         return setAPIHost(newAPIHost);
     },
