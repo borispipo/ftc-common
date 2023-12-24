@@ -102,8 +102,14 @@
  
  export const canSendDesktop = x=> typeof window ==='undefined' || !window || !window?.Notification || !window?.Notification?.requestPermission ? false: true;
  
- /*** @see : https://developer.mozilla.org/en-US/docs/Web/API/Notification */
+ /*** @see : https://developer.mozilla.org/en-US/docs/Web/API/Notification 
+    @param {string} message, le message de la notification
+    @param {string|object} options, si chaine de caractère, alors il s'agit du titre de la notification, sinon, alors il s'agit des options supplémentaires
+ */
  export const sendDesktop = (message,options)=>{
+    if(typeof options ==='string'){
+        options = {title:options};
+    }
     if (!canSendDesktop()) {
         return Promise.resolve(notify(message,null,null,options));
     }
