@@ -45,11 +45,14 @@
      }
      if(!(message)) message = ''
      if(!(title)) title = ''
-     message = defaultVal(message,settings.message,settings.msg);
+     const m = defaultVal(message,settings.message,settings.msg);
+     message = defaultVal(m,typeof message !== 'boolean'? (message?.message || message?.msg || message?.toString()):undefined);
      if(isNonNullString(message)){
          message = message.trim();
      }
-     if(!message) return;
+     if(!message) {
+        return;
+     }
      settings.title = defaultVal(title,settings.title);
      if(isNonNullString(title)){
          title = title.trim();
@@ -108,7 +111,7 @@
  */
  export const sendDesktop = (message,options)=>{
     if(typeof options ==='string'){
-        options = {title:options};
+        options = {body:options};
     }
     if (!canSendDesktop()) {
         return Promise.resolve(notify(message,null,null,options));
@@ -118,16 +121,13 @@
         if(p === 'granted') {
             return new Notification(message,options)
         } else {
-            const err = {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."};
-            if(options.showError !== false){
-                error(err);
-            }
-            throw err;
+            throw {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."};
         }
     }).catch((e)=>{
         if(options.showError !== false){
-            error(e);
+            notify(e,TYPES.error);
         }
+        throw e;
     });
  }
  
