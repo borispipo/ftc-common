@@ -113,13 +113,18 @@
     if (!canSendDesktop()) {
         return Promise.resolve(notify(message,null,null,options));
     }
+    options = Object.assign({},options);
     return Promise.resolve((Notification.permission === 'granted'?Notification.permission:Notification.requestPermission())).then(function(p) {
         if(p === 'granted') {
-            options = isObj(options)? options : {};
             return new Notification(message,options)
         } else {
             throw {message:"Notifications Bloqués par l'utilisateur, veuillez autoriser l'affichage des notifications à partir du navigateur."}
         }
+    }).catch((e)=>{
+        if(options.showError !== false){
+            notify.error(e);
+        }
+        throw e;
     });
  }
  
