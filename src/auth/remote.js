@@ -148,8 +148,11 @@ export const signOut = (callback,user,trigger)=>{
      return Promise.resolve(u);
   };
 
-  const getUProps = (user,propsName)=>{
+const getUProps = (user,propsName,methodName)=>{
     user = defaultObj(user,getLoggedUser());
+    if(SignIn2SignOut.hasMethod(methodName)){
+        return SignIn2SignOut.call(methodName,user,propsName);
+    }
     return SignIn2SignOut.getUserProp(user,propsName) || user[propsName];
  }
 /*** retourne le username de l'utilsateur passé en paramètre */
@@ -158,25 +161,21 @@ export const getUserName = (user)=>{
 }
 /*** retourne le pseudo de l'utilisateur passé en paramètre */
 export const getUserPseudo = (user)=>{
-    return getUProps(user,"pseudo");
+    return getUProps(user,"pseudo","getUserPseudo");
 }
 
 export const getUserFirstName = (user)=>{
-  return getUProps(user,"firstName");
+  return getUProps(user,"firstName","getUserFirstName");
 }
 
 export const getUserLastName = (user)=>{
-  return getUProps(user,"lastName");
-}
-
-export const getUserSurname = (user)=>{
-  return getUProps(user,"surname");
+  return getUProps(user,"lastName","getUserLastName");
 }
 
 export const getUserFullName = (user)=>{
-  const fullName = getUProps(user,"fullName");
-  if(!fullName){
-    let firstName = getUserFirstName(), lastName = getUserLastName();
+  const fullName = getUProps(user,"fullName","getUserFullName");
+  if(!isNonNullString(fullName)){
+    let firstName = getUserFirstName(user), lastName = getUserLastName(user);
     if(isNonNullString(firstName) && isNonNullString(lastName)){
        if(firstName.toLowerCase() != lastName.toLowerCase()){
          return firstName +" "+lastName;
@@ -191,5 +190,5 @@ export const getUserEmail = (user)=>{
   return getUProps(user,"email");
 }
 export const getUserCode = (user)=>{
-  return getUProps(user,"code");
+  return getUProps(user,"code","getUserCode");
 }

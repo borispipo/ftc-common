@@ -12,6 +12,22 @@ export default {
         return typeof signInRef.current[methodName] === "function";
     }
   },
+  get getMethod (){
+      return (methodName)=>{
+        if(this.hasMethod(methodName)){
+          return signInRef.current[methodName];
+        }
+        return undefined;
+      }
+  },
+  get call (){
+    return (methodName,...args)=>{
+        const method = this.getMethod(methodName);
+        if(method){
+            return method(...args);
+        }
+    }
+  },
   get isMasterAdmin(){
     return function(...a){
         if(this.hasMethod("isMasterAdmin")){
