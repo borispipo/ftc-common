@@ -48,8 +48,7 @@ export const signIn = (user,callback,trigger)=>{
     if(isCustom || (isObj(response) && (response.success || response.status ==200))){
       delete user.password;
       Object.map(rest,(v,i)=>{
-        if(!(i in user) && typeof v !=='function'){
-          if(typeof v =='object' && !isPlainObject(v)) return;
+        if(typeof v !=='function'){
           user[i] = v;
         }
       });
