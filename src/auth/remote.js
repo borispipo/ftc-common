@@ -131,18 +131,11 @@ export const signOut = (callback,user,trigger)=>{
   export const upsertUser = (u,trigger)=> {
      if(isObj(u)){
       let promise = null;
-      const logU = defaultObj(getLoggedUser());
-      if(logU.code == u.code || logU.id == u.id){
-        Object.map(logU,(v,i)=>{
-          if(!(i in u)){
-             u [i] = v;
-          }
-        });
-      }
       if(SignIn2SignOut.hasMethod("upsertUser")){
           promise = SignIn2SignOut.upsertUser({user:u});
       } 
-      const cb = x=> {
+      const cb = (data)=> {
+        extendObj(u,isObj(data) && isObj(data?.data) ? data.data : data)
         login(u,trigger)
       };
       if(isPromise(promise)){
