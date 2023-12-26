@@ -17,7 +17,6 @@ import sprintf from "$cutils/sprintf";
 import i18n from "$ci18n";
 import {defaultObj} from "$cutils";
 import appConfig from "./config";
-import Platform from "$cplatform";
 import EVENTS from "./events";
 import { observable,addObserver,isObservable} from "$clib/observable";
 import NetInfo from '$cutils/NetInfo';
