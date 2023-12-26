@@ -187,7 +187,7 @@ export const getUserFullName = (user)=>{
 }
 
 export const getUserEmail = (user)=>{
-  return getUProps(user,"email");
+  return getUProps(user,"email","getUserEmail");
 }
 export const getUserCode = (user)=>{
   return getUProps(user,"code","getUserCode");
