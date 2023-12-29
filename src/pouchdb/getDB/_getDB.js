@@ -6,7 +6,7 @@ import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
 import { sanitizeName,isCommon } from '../dataFileManager/utils';
-import { getLoggedUser,getLoginId} from '$cauth/utils/session';
+import { getLoggedUser,getLoginId} from '$cauth/utils';
 import {structDataDBName } from "../dataFileManager/structData";
 import {triggerEventTableName} from "../dataFileManager/structData";
 import isDataFileDBName from '../dataFileManager/isDataFileDBName';

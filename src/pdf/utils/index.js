@@ -1,6 +1,6 @@
 import {isObj,isNonNullString,isDataURL,defaultStr,sortBy,isNumber,defaultObj,defaultFunc,isFunction,defaultVal,defaultNumber} from "$cutils";
 import theme from "$theme";
-import {getLoggedUserCode} from "$cauth/utils/session";
+import {getLoggedUserCode} from "$cauth/utils";
 import appConfig from "$capp/config";
 import textToObject from "./textToObject";
 import Colors from "$theme/colors";

@@ -2,15 +2,22 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isObj,defaultStr} from "$cutils";
 import notify from "$active-platform/notify";
 import {encrypt,decrypt} from "$crypto";
 import { SIGN_IN} from "../routes";
 import {getURIPathName} from "$cutils/uri";
 import {NOT_SIGNED_IN} from "$capi/status";
+import {defaultObj,extendObj,isNonNullString,isObj,defaultStr} from "$cutils";
+import appConfig from "$capp/config";
+import crypToJS from "$clib/crypto-js";
+import {parseJSON} from "$cutils/json";
+import {isClientSide} from "$cplatform";
+import $session from "$session";
+import {updateTheme as uTheme} from "$theme";
+import { getThemeData } from "$theme/utils";
+import APP from "$capp/instance";
 
-export * from "./session";
-export {default as login} from "./login";
+
 export const permProfilesTableName = "PERMS_PROFILES";
 
 export const notAllowedMsg = "Vous n'êtes pas autorisé à accéder à la ressource demandée";
@@ -59,3 +66,419 @@ export const handleNotSignedInApiResponse = (res)=>{
   }
   return false;
 }
+
+
+export const tableDataPerms = {};
+export const structDataPerms = {};
+
+export const defaultPermsActions = ['read','create','write','update','edit','delete','remove'];
+
+const localUserRef = {current:null};
+
+const signInRef = {};
+
+const USER_SESSION_KEY = "user-session";
+
+export const TOKEN_SESSION_KEY = "user-token-key";
+
+export const getEncryptKey = x=>defaultStr(appConfig.get("authSessionEncryptKey"),process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
+
+export const isValidLoginId = (loginId)=> isNonNullString(loginId) || typeof loginId ==='number';
+
+/*** check wheater the singleUserAllowed mode is enabled
+ * 
+ */
+export const isSingleUserAllowed = ()=>{
+    return (!!appConfig.get("isAuthSingleUserAllowed") && isObj(appConfig.get("authDefaultUser"))) && true || false;
+}
+
+/*** check wheater the multi user is allowed on application */
+export const isMultiUsersAllowed = ()=>{
+    return !isSingleUserAllowed();
+}  
+
+export const canSignOut = ()=>{
+    if(!isClientSide() || isSingleUserAllowed()) return false;
+    return true;
+}
+
+export const canLogout = canSignOut;
+
+/*** return the default single user
+ * when multiuser not allowed
+ */
+export const getDefaultSingleUser = ()=>{
+    if(isSingleUserAllowed()){
+      const defUser = appConfig.get("authDefaultUser");
+      return isObj(defUser) && defUser || null;
+    }
+    return null;
+}
+
+export const getLocalUser = x=> {
+    if(!isClientSide()) return null;
+    if(isValidUser(localUserRef.current)) return localUserRef.current;
+    const encrypted = $session.get(USER_SESSION_KEY);
+    const defaultUser = getDefaultSingleUser();
+    if(isNonNullString(encrypted)){
+      try {
+        const ded = crypToJS.decode(encrypted,getEncryptKey());
+        if(isObj(ded) && typeof ded?.toString =='function'){
+          const decoded = ded.toString(crypToJS.enc.Utf8);
+          const u = parseJSON(decoded);
+          if(isValidUser(u)){
+            localUserRef.current = extendObj({},defaultUser,u);
+            return localUserRef.current;
+          }
+        }
+      } catch(e){
+        console.log("getting local user ",e);
+      }
+    }
+    return defaultUser ;
+};
+
+export const getLoggedUser = getLocalUser;
+
+export const updateTheme = (u)=>{
+    if(!isObj(u)){
+        u = getLoggedUser();
+    }
+    if(isObj(u) && isObj(u.theme) && u.theme.name && u.theme.primary){
+        uTheme(getThemeData(u.theme).theme);
+    }
+}
+
+export const setLocalUser = u => {
+  if(!isClientSide()) return null;
+  const uToSave = isValidUser(u)? u : null;
+  localUserRef.current = uToSave;
+  let encrypted = null;
+  try {
+    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave),getEncryptKey()).toString() : null;
+  } catch(e){
+    localUserRef.current = null;
+    console.log(e," setting local user");
+  }
+  return $session.set(USER_SESSION_KEY,encrypted)
+}
+
+export const isLoggedIn = x => {
+    const u = getLocalUser();
+    return isValidUser(u)  ? true : false;
+}
+
+export const isSignedIn = isLoggedIn;
+  
+export const isValidUser = u=> {
+    if(!isObj(u) || !Object.size(u,true)) {
+      return false;
+    }
+    return !!(hasToken() || String(getUserCode(u)));
+  };
+  
+export const getToken = ()=>{
+      if(!isClientSide()) return null;
+      const token = $session.get(TOKEN_SESSION_KEY);
+      return isValidToken(token) ? token : null;
+}
+export const setToken = (token)=>{
+   if(!isClientSide()) return null;
+   return $session.set(TOKEN_SESSION_KEY,token);
+}
+export const isValidToken = (token)=>{
+   return isNonNullString(token)? true : false;
+}
+export const hasToken = ()=>{
+  const token = getToken();
+  return isValidToken(token);
+}
+  
+/**** SignIn2Signout est étendue avec le composant AuthProvider*/
+const SignIn2SignOut = {
+  get hasMethod(){
+    return function(methodName){
+        if(!isNonNullString(methodName)) return false;
+        return typeof signInRef[methodName] === "function";
+    }
+  },
+  get getMethod (){
+      return (methodName)=>{
+        if(this.hasMethod(methodName)){
+          return signInRef[methodName];
+        }
+        return undefined;
+      }
+  },
+  get call (){
+    return (methodName,...args)=>{
+        const method = this.getMethod(methodName);
+        if(method){
+            return method(...args);
+        }
+    }
+  },
+  get isMasterAdmin(){
+    return (user,...a)=>{
+        if(isSingleUserAllowed()){
+          return !!getDefaultSingleUser();
+        }
+        user = defaultObj(user,getLoggedUser());
+        if(this.hasMethod("isMasterAdmin")){
+            return signInRef.isMasterAdmin(user,...a);
+        }
+        throw "isMasterAdminFunction is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
+    }
+  },
+  get upsertUser1(){
+    return (...a)=>{
+        if(this.hasMethod("upsertUser")){
+            return signInRef.upsertUser(...a);
+        }
+        throw "upsertUser function is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
+    }
+  },
+  get signIn1(){
+     return (...p)=>{
+        if(this.hasMethod("signIn")){
+            return signInRef.signIn(...p); 
+         }
+     }
+  },
+  /***** recupère le nom de la resource table data à partir de la tableName passée en paramètre 
+    @param {string} tableName, le nom de la table,
+    @return {string}, le nom de la resource obtenue à partir de la table
+  */
+  get tableDataPermResourcePrefix(){
+      return (tableName,...rest)=>{
+        if(this.hasMethod("getTableDataPermResourcePrefix")){
+            return defaultStr(this.getTableDataPermResource(tableName,...rest));
+        }
+        return tableName.trim().toLowerCase();
+      }
+  },
+  get structDataPermResourcePrefix(){
+    return (tableName,...rest)=>{
+      if(this.hasMethod("getStructDataPermResourcePrefix")){
+          return defaultStr(this.getTableDataPermResource(tableName,...rest));
+      }
+      return tableName.trim().toLowerCase();
+    }
+  },
+  get signOut1(){
+    return (...p)=>{
+       if(this.hasMethod("signOut")){
+           return Promise.resolve(signInRef.signOut(...p)).then((d)=>{
+              logout();
+              return d;
+           }); 
+       }
+       return Promise.resolve(logout());
+    }
+  },
+  /**** permet de définir les références vers les fonctions de déconnexion et de connexion à l'application*/
+  get setRef (){
+    return (currentSigninRef)=>{
+      extendObj(signInRef,currentSigninRef);
+      return signInRef;
+    }
+  },
+  get getRef(){
+    return ()=> signInRef;
+  },
+  get getUserProp(){
+    return (user,propsName,methodName)=>{
+      user = defaultObj(user,getLocalUser());
+      if(this.hasMethod(methodName)){
+          return this.call(methodName,user,propsName);
+      }
+      if(this.hasMethod("getUserProp")){
+          return signInRef.getUserProp(user,propsName,methodName);
+      }
+      return user[propsName];
+    }
+  }
+}
+
+/*** retourne le username de l'utilsateur passé en paramètre */
+export const getUserName = (user)=>{
+   return SignIn2SignOut.getUserProp(user,"userName");
+}
+/*** retourne le pseudo de l'utilisateur passé en paramètre */
+export const getUserPseudo = (user)=>{
+  return SignIn2SignOut.getUserProp(user,"pseudo","getUserPseudo");
+}
+
+export const getUserFirstName = (user)=>{
+  return SignIn2SignOut.getUserProp(user,"firstName","getUserFirstName");
+}
+
+export const getUserLastName = (user)=>{
+  return SignIn2SignOut.getUserProp(user,"lastName","getUserLastName");
+}
+
+export const getUserFullName = (user)=>{
+  const fullName = SignIn2SignOut.getUserProp(user,"fullName","getUserFullName");
+  if(!isNonNullString(fullName)){
+    let firstName = getUserFirstName(user), lastName = getUserLastName(user);
+    if(isNonNullString(firstName) && isNonNullString(lastName)){
+       if(firstName.toLowerCase() != lastName.toLowerCase()){
+         return firstName +" "+lastName;
+       }
+    }
+    return firstName;
+  }
+  return fullName;
+}
+
+export const getUserEmail = (user)=>{
+  return SignIn2SignOut.getUserProp(user,"email","getUserEmail");
+}
+export const getUserCode = (user)=>{
+  return SignIn2SignOut.getUserProp(user,"code","getUserCode");
+}
+
+export const getLoginId = (user)=>{
+  const v = SignIn2SignOut.getUserProp(user,"loginId","getLoginId");
+  if(isValidLoginId(v)) return v;
+  return getUserCode(user);
+}
+
+
+export const getTableDataPermResourcePrefix = (tableName,...rest)=>{
+  return SignIn2SignOut.tableDataPermResourcePrefix(defaultStr(tableName).trim().ltrim("/"),...rest);
+}
+
+export const getStructDataPermResourcePrefix = (tableName,...rest)=>{
+  return SignIn2SignOut.structDataPermResourcePrefix(defaultStr(tableName).trim().ltrim("/"),...rest);
+}
+
+export const getLoggedUserCode = (data)=>{
+  return getUserCode((isValidUser(data) && data || getLocalUser()))
+}
+
+export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
+
+export const getSessionKey = (sessionName)=>{
+  sessionName = defaultStr(sessionName,DEFAULT_SESSION_NAME);
+  const userCode = getLoggedUserCode();
+  if(!isValidLoginId(userCode)) return sessionName;
+  return sessionName+"-"+userCode;
+}
+
+export const getSessionData = (sessionKey,sessionName)=>{
+  if(!isClientSide()){
+    return isNonNullString(sessionKey)? undefined : {};
+  }
+  const key = getSessionKey(sessionName);
+  const dat = isNonNullString(key)? defaultObj($session.get(key)) : {};
+  if(isNonNullString(sessionKey)){
+      return dat[sessionKey]
+  }
+  return dat;
+}
+
+export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
+  if(!isClientSide()) return null;
+  if(isObj(sessionKey)){
+    sessionName = defaultStr(sessionName,sessionValue);
+  }
+  const key = getSessionKey(sessionName);
+  if(!isNonNullString(key)) return false;
+  let dat = defaultObj(getSessionData());
+  if(isNonNullString(sessionKey)){
+      dat[sessionKey] = sessionValue;
+  } else if(isObj(sessionKey)){
+      extendObj(dat,sessionKey);
+  } else {
+      return dat;
+  }
+  $session.set(key,dat);
+  return dat;
+}
+
+/*** déconnecte l'utilisateur actuel */
+export const logout = () =>{
+    if(!canSignOut()) return null;
+    resetPerms();
+    setLocalUser(null);
+    APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
+    return true;
+}
+
+/*** 
+ *  - on peut définir la liste des noms de tables data dans le propriété tables|tableNames de appConfig.tablesData
+ *  - on peut définir la liste des noms struct data dans la propriété structData | structDataTableNames de appConfig.structsData
+ *  
+ */
+
+export const resetPerms = ()=>{
+  const allPerms = {};
+  Object.map(tableDataPerms,(v,i)=>{
+      delete tableDataPerms[i];
+  })
+  Object.map(structDataPerms,(v,i)=>{
+      delete structDataPerms[i];
+  })
+  const action = defaultPermsActions;
+  Object.map(appConfig.tablesData,(table,tableName)=>{
+      tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
+      if(!(tableName)) return null;
+      tableName = tableName.toLowerCase().trim();
+      const resource = getTableDataPermResourcePrefix(tableName).trim().rtrim("/");
+      tableDataPerms[tableName] = Auth.isAllowed({resource,action});
+  })
+  Object.map(appConfig.structsData,(table,tableName)=>{
+      tableName = defaultStr(isObj(table) && (table.tableName || table.table),tableName)
+      if(!(tableName)) return null;
+      tableName = tableName.toLowerCase().trim();
+      const resource = getStructDataPermResourcePrefix(tableName).trim().rtrim("/");
+      structDataPerms[tableName] = Auth.isAllowed({resource,action});
+  })
+  allPerms.tableDataPerms = tableDataPerms;
+  allPerms.structDataPerms = structDataPerms;
+  return allPerms;
+}
+
+export const disableAuth = ()=>{
+  appConfig.set("isAuthSingleUserAllowed",true);
+  appConfig.set("authDefaultUser",{code:"root",password:"admin123",label:"Master admin"});
+  resetPerms();
+  return true;
+}
+
+export const enableAuth = ()=>{
+  appConfig.set("isAuthSingleUserAllowed",false);
+  appConfig.set("authDefaultUser",null);
+  resetPerms();
+  return true;
+}
+
+export function login (user,trigger){
+  if(typeof user =='boolean'){
+      trigger = user;
+      user = trigger;
+  }
+  if(!isObj(user)){
+      user = getLoggedUser();
+  }
+  try {
+      if(isValidUser(user)){
+          setLocalUser(user);
+          updateTheme(user);
+          if(trigger !== false){
+              resetPerms();
+              APP.trigger(APP.EVENTS.AUTH_LOGIN_USER,user);
+          }
+          return true;
+      }
+  } catch(e){
+      console.log(e," is errror rloggin user hein");
+      return false;
+  }
+  return false;
+}
+
+export const loginUser = login;
+
+export default SignIn2SignOut;

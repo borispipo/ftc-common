@@ -5,9 +5,7 @@
 import React from "$react";
 import { signIn as signInUser,signOut } from "./remote";
 import {isSignedIn,signOut2Redirect } from "./instance";
-import {getLoggedUser,isLoggedIn} from "./utils/session";
-import { signInRef } from "./authSignIn2SignOut";
-import {extendObj} from "$cutils";
+import SignIn2Signout,{getLoggedUser,isLoggedIn} from "./utils";
 import APP from "$capp/instance";
 
 export const useIsSignedIn = ()=>{
@@ -40,7 +38,7 @@ const Auth = {
 };
 
 export default function AuthProvider({ children,...rest}) {
-  extendObj(signInRef.current,rest);
+  SignIn2Signout.setRef(rest);
   const [user, setUser] = React.useState(isLoggedIn()?getLoggedUser():null);
   const signIn = (_user)=>{
     return signInUser(_user).then((u)=>{

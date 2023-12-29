@@ -7,8 +7,7 @@ import APP from "$app/instance";
 import { getSyncOptions,normalizeSyncDirection,syncDirections } from "../../../sync/utils";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";
-import {getLoggedUser} from "$cauth/utils/session";
-import isMasterAdmin from "$cauth/isMasterAdmin";
+import SignIn2SignOut,{getLoggedUser} from "$cauth/utils";
 import isCommon from "../../../dataFileManager/isCommon";
 import dataFile from "../../../dataFileManager/dataFile";
 import fetch from "../../../dataFileManager/fetch";
@@ -337,7 +336,7 @@ export default {
         arg.syncID = uniqid("database-syncId")
         const allExistingDataFiles = {},commonDataFiles = {};
         let u = getLoggedUser();
-        const isMasterA = isMasterAdmin();
+        const isMasterA = SignIn2SignOut.isMasterAdmin();
         const dataFilesByTypes = {};
         getAllDataFiles((dF)=>{
             if(hasDataBases && !databases[dF.code]) return false;

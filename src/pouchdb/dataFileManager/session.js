@@ -1,5 +1,5 @@
 import session from "$session";
-import { getSessionKey as gsKey } from "$cauth/utils/session";
+import { getSessionKey as gsKey } from "$cauth/utils";
 import {isNonNullString,defaultStr,isObj} from "$cutils";
 
 const getSessionKey = ()=>{

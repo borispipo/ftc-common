@@ -4,7 +4,7 @@
 
 import DateLib from "$date";
 import {defaultObj,isNonNullString,isPromise,defaultStr} from "$cutils";
-import {getLoggedUser} from "$cauth/utils/session";
+import {getLoggedUser} from "$cauth/utils";
 import appConfig from "$capp/config";
 
 /*** uniqid plugin */

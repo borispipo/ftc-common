@@ -3,13 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {isObj,defaultStr,isObjectOrArray,defaultObj,isBool,defaultVal,defaultBool,isNonNullString} from "$cutils";
-import {tableDataPerms,structDataPerms,resetPerms,getStructDataPermResourcePrefix,getTableDataPermResourcePrefix,defaultPermsActions} from "./reset";
-import {getLoggedUser,isValidUser} from "../utils/session";
-import isMasterAdmin from "../isMasterAdmin";
-
-export {isMasterAdmin};
-
-export * from "./reset";
+import SignIn2SignOut,{getLoggedUser,isValidUser,tableDataPerms,structDataPerms,resetPerms,getStructDataPermResourcePrefix,getTableDataPermResourcePrefix,defaultPermsActions} from "../utils";
 
 /*** si l'utilisateur a accès à la permission lorsque la permission est définie via une chaine de caractère
  *  @param permStr{string} : la définition de la permission. 
@@ -140,7 +134,7 @@ const checkPerm = ({perms,resource,action}) =>{
     resource = resource.trim().toLowerCase();
     const isMasterAdminRessource = resource ==="masteradmin" || resource =='ismasteradmin';
     if(isMasterAdminRessource){
-        return isMasterAdmin();
+        return SignIn2SignOut.isMasterAdmin();
     }
     let isOA = isObjectOrArray(action);
     let r2 = false;
@@ -235,7 +229,7 @@ export const isAllowed = function(args){
     //success = defaultFunc(success);
     //error = defaultFunc(error);
     resource = defaultVal(resource,resources);
-    if(isMasterAdmin(user)){
+    if(SignIn2SignOut.isMasterAdmin(user)){
         if(isObjectOrArray(resource)){
             result = {};
             for(let k in resource){

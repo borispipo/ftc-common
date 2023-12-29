@@ -3,19 +3,16 @@
 // license that can be found in the LICENSE file.
 
 import {logout,setToken} from "./utils";
-import login from "./utils/login";
 import {post} from "$capi";
 import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGN_IN,SIGN_OUT,} from "./routes";
-import { getLoggedUser} from "./utils/session";
-import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
+import SignIn2SignOut, { getLoggedUser,login} from "./utils";
+import {isObj,defaultObj,extendObj} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
-import {isPromise,isNonNullString} from "$cutils";
+import {isPromise} from "$cutils";
 import appConfig from "$capp/config";
-
-import SignIn2SignOut from "./authSignIn2SignOut";
 
 /***** 
  * authentifie l'utilisateur passé en paramètre
@@ -50,7 +47,6 @@ export const signIn = (user,callback,trigger)=>{
           user[i] = v;
         }
       });
-      console.log(user," is user and v is ",rest);
       extendObj(user,preferences);
       if(token){
         setToken(token);

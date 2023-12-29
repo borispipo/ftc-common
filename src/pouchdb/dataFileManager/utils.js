@@ -4,8 +4,7 @@ import dataFileText from "./dataFileText";
 import isValid from "./isValidDataFile";
 import getAllDefault from "./getAllDefault";
 import prepareFilter from "./prepareFilter";
-import isMasterAdmin from "$cauth/isMasterAdmin";
-import {getLoggedUser,getLoginId} from "$cauth/utils/session";
+import SignIn2SignOut,{getLoggedUser,getLoginId} from "$cauth/utils";
 import { getCurrentDB } from "./session";
 import DATA_FILES from "./DATA_FILES";
 import isCommon from "./isCommon";
@@ -112,7 +111,7 @@ export const isArchived = (dFCode)=>{
 }
 
 export const isForUser = (dF,user)=>{
-    if(isMasterAdmin()) return true;
+    if(SignIn2SignOut.isMasterAdmin()) return true;
     if(!isObj(dF) || !isArray(dF.users)) return false;
     if(isNonNullString(user)){
         user = {code:user};
