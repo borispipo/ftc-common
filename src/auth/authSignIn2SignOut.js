@@ -1,21 +1,21 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+import extendObj from "$utils/extendObj";
 
-export const signInRef = {
-    current : {},
-};
+const signInRef = {};
+
 /**** SignIn2Signout est étendue avec le composant AuthProvider*/
 export default {
   get hasMethod(){
     return function(methodName){
-        return typeof signInRef.current[methodName] === "function";
+        return typeof signInRef[methodName] === "function";
     }
   },
   get getMethod (){
       return (methodName)=>{
         if(this.hasMethod(methodName)){
-          return signInRef.current[methodName];
+          return signInRef[methodName];
         }
         return undefined;
       }
@@ -31,7 +31,7 @@ export default {
   get isMasterAdmin(){
     return function(...a){
         if(this.hasMethod("isMasterAdmin")){
-            return signInRef.current.isMasterAdmin(...a);
+            return signInRef.isMasterAdmin(...a);
         }
         throw "isMasterAdminFunction is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
     }
@@ -39,7 +39,7 @@ export default {
   get upsertUser(){
     return function(...a){
         if(this.hasMethod("upsertUser")){
-            return signInRef.current.upsertUser(...a);
+            return signInRef.upsertUser(...a);
         }
         throw "upsertUser function is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
     }
@@ -47,7 +47,7 @@ export default {
   get getUserProp(){
     return function(...a){
         if(this.hasMethod("getUserProp")){
-            return signInRef.current.getUserProp(...a);
+            return signInRef.getUserProp(...a);
         }
         return null;
     }
@@ -55,7 +55,7 @@ export default {
   get signIn(){
      return function(...p){
         if(this.hasMethod("signIn")){
-            return signInRef.current.signIn(...p); 
+            return signInRef.signIn(...p); 
          }
      }
   },
@@ -82,8 +82,18 @@ export default {
   get signOut(){
     return function(...p){
        if(this.hasMethod("signOut")){
-           return signInRef.current.signOut(...p); 
+           return signInRef.signOut(...p); 
         }
     }
- }
+  },
+  /**** permet de définir les références vers les fonctions de déconnexion et de connexion à l'application*/
+  get setRef (){
+    return (currentSigninRef)=>{
+      extendObj(signInRef,currentSigninRef);
+      return signInRef;
+    }
+  },
+  get getRef(){
+    return ()=> signInRef;
+  }
 }

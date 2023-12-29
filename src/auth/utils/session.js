@@ -12,6 +12,7 @@ import { getThemeData } from "$theme/utils";
 import { resetPerms } from "../perms/reset";
 import appConfig from "$app/config";
 import crypToJS from "$clib/crypto-js";
+import SignIn2SignOut from "../authSignIn2SignOut";
 
 const USER_SESSION_KEY = "user-session";
 
@@ -19,30 +20,13 @@ export const TOKEN_SESSION_KEY = "user-token-key";
 
 export const getEncryptKey = x=>defaultStr(appConfig.get("authSessionEncryptKey"),process.env.AUTH_SESSION_ENCRYPT_KEY,"auth-decrypted-key");
 
-export const getLoginIdField = ()=> {
-  const loginId = defaultStr(appConfig.get("authLoginIdField"),process.env.AUTH_LOGIN_ID_FIELD,"code").trim();
-  const split = loginId.split(",").filter((t)=>!!isNonNullString(t));
-  if(split.length > 1) return split;
-  return split[0];
-};
-
 export const isValidLoginId = (loginId)=> isNonNullString(loginId) || typeof loginId ==='number';
-export const getLoginId = (data)=>{
-  if(!isObj(data)) return "";
-  const loginId = getLoginIdField();
-  if(Array.isArray(loginId)){
-     return loginId.filter((lId)=>!!(isNonNullString(data[lId])||typeof data[lId] =='number')).map((lId)=>data[lId]).join("/");
-  }
-  if(isValidLoginId(data[loginId])){
-    return data[loginId];
-  }
-  return "";
-}
+
 const isValidU = u=> {
   if(!isObj(u) || !Object.size(u,true)) {
     return false;
   }
-  return !!(hasToken() || String(getLoginId(u)));
+  return !!(hasToken() || String(getUserCode(u)));
 };
 
 export const isValidUser = isValidU;
@@ -68,6 +52,8 @@ export const isLoggedIn = x => {
     const u = getLocalUser();
     return isValidU(u)  ? true : false;
 }
+
+export const isSignedIn = isLoggedIn;
   
 /*** check wheater the singleUserAllowed mode is enabled
  * 
@@ -116,10 +102,8 @@ export const getLocalUser = x=> {
 export const getLoggedUser = getLocalUser;
 
 export const getLoggedUserCode = (data)=>{
-  return getLoginId((isValidU(data) && data || getLocalUser()))
+  return getUserCode((isValidU(data) && data || getLocalUser()))
 }
-
-export const getLoggedUserId = getLoggedUserCode;
 
 const localUserRef = {current:null};
 
@@ -199,4 +183,55 @@ export const updateTheme = (u)=>{
     if(isObj(u) && isObj(u.theme) && u.theme.name && u.theme.primary){
         uTheme(getThemeData(u.theme).theme);
     }
+}
+
+const getUProps = (user,propsName,methodName)=>{
+  user = defaultObj(user,getLoggedUser());
+  if(SignIn2SignOut.hasMethod(methodName)){
+      return SignIn2SignOut.call(methodName,user,propsName);
+  }
+  return SignIn2SignOut.getUserProp(user,propsName) || user[propsName];
+}
+/*** retourne le username de l'utilsateur passé en paramètre */
+export const getUserName = (user)=>{
+   return getUProps(user,"userName");
+}
+/*** retourne le pseudo de l'utilisateur passé en paramètre */
+export const getUserPseudo = (user)=>{
+  return getUProps(user,"pseudo","getUserPseudo");
+}
+
+export const getUserFirstName = (user)=>{
+return getUProps(user,"firstName","getUserFirstName");
+}
+
+export const getUserLastName = (user)=>{
+return getUProps(user,"lastName","getUserLastName");
+}
+
+export const getUserFullName = (user)=>{
+const fullName = getUProps(user,"fullName","getUserFullName");
+if(!isNonNullString(fullName)){
+  let firstName = getUserFirstName(user), lastName = getUserLastName(user);
+  if(isNonNullString(firstName) && isNonNullString(lastName)){
+     if(firstName.toLowerCase() != lastName.toLowerCase()){
+       return firstName +" "+lastName;
+     }
+  }
+  return firstName;
+}
+return fullName;
+}
+
+export const getUserEmail = (user)=>{
+return getUProps(user,"email","getUserEmail");
+}
+export const getUserCode = (user)=>{
+  return getUProps(user,"code","getUserCode");
+}
+
+export const getLoginId = (user)=>{
+  const v = getUProps(user,"loginId","getLoginId");
+  if(isValidLoginId(v)) return v;
+  return getUserCode(user);
 }

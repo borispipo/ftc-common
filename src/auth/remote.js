@@ -2,22 +2,20 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {logout,setToken,isLoggedIn} from "./utils";
+import {logout,setToken} from "./utils";
 import login from "./utils/login";
 import {post} from "$capi";
 import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
 import {SIGN_IN,SIGN_OUT,} from "./routes";
-import { getLoggedUser,getLoginId } from "./utils/session";
+import { getLoggedUser} from "./utils/session";
 import {isObj,defaultObj,extendObj,isPlainObject} from "$cutils";
 ///cet alias sert à customiser les fonction d'authentification et de déconnection d'un utilisateur
 import {isPromise,isNonNullString} from "$cutils";
 import appConfig from "$capp/config";
-import SignIn2SignOut from "./authSignIn2SignOut";
-export * from "./authSignIn2SignOut";
 
-export const isSignedIn = isLoggedIn;
+import SignIn2SignOut from "./authSignIn2SignOut";
 
 /***** 
  * authentifie l'utilisateur passé en paramètre
@@ -45,13 +43,14 @@ export const signIn = (user,callback,trigger)=>{
       body : user
   })).then((args)=>{
     const {response,done,token,preferences,fetchResponse,res,status,...rest}=  defaultObj(args);
-    if(isCustom || (isObj(response) && (response.success || response.status ==200))){
+    if(isCustom || (isObj(response) && (response.success || response.status ==200 || response.status ==201))){
       delete user.password;
       Object.map(rest,(v,i)=>{
         if(typeof v !=='function'){
           user[i] = v;
         }
       });
+      console.log(user," is user and v is ",rest);
       extendObj(user,preferences);
       if(token){
         setToken(token);
@@ -147,48 +146,3 @@ export const signOut = (callback,user,trigger)=>{
      }
      return Promise.resolve(u);
   };
-
-const getUProps = (user,propsName,methodName)=>{
-    user = defaultObj(user,getLoggedUser());
-    if(SignIn2SignOut.hasMethod(methodName)){
-        return SignIn2SignOut.call(methodName,user,propsName);
-    }
-    return SignIn2SignOut.getUserProp(user,propsName) || user[propsName];
- }
-/*** retourne le username de l'utilsateur passé en paramètre */
-export const getUserName = (user)=>{
-     return getUProps(user,"userName");
-}
-/*** retourne le pseudo de l'utilisateur passé en paramètre */
-export const getUserPseudo = (user)=>{
-    return getUProps(user,"pseudo","getUserPseudo");
-}
-
-export const getUserFirstName = (user)=>{
-  return getUProps(user,"firstName","getUserFirstName");
-}
-
-export const getUserLastName = (user)=>{
-  return getUProps(user,"lastName","getUserLastName");
-}
-
-export const getUserFullName = (user)=>{
-  const fullName = getUProps(user,"fullName","getUserFullName");
-  if(!isNonNullString(fullName)){
-    let firstName = getUserFirstName(user), lastName = getUserLastName(user);
-    if(isNonNullString(firstName) && isNonNullString(lastName)){
-       if(firstName.toLowerCase() != lastName.toLowerCase()){
-         return firstName +" "+lastName;
-       }
-    }
-    return firstName;
-  }
-  return fullName;
-}
-
-export const getUserEmail = (user)=>{
-  return getUProps(user,"email","getUserEmail");
-}
-export const getUserCode = (user)=>{
-  return getUProps(user,"code","getUserCode");
-}
