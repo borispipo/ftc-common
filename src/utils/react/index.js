@@ -36,6 +36,7 @@ React.usePreviousDifferent = usePreviousDifferent;
 React.useEventCallback = useEventCallback;
 React.isEquals = React.areEquals = React.compare = isEquals;
 
+export {usePrevious};
 export {isEquals};
 
 export {memoize};
