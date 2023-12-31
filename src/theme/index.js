@@ -144,10 +144,17 @@ export const getProfilAvatarPosition = x=>{
     if(appConfig.get("showProfilAvatarOnDrawer") === false) return "appBar";
     return "drawer";
 }
+const setAlphaColor = (color,alpha)=>{
+    return Colors.setAlpha(color,typeof alpha ==="number"? alpha : ALPHA);
+};
 const theme = {
     get ALPHA () {return ALPHA},
     get current(){ return Theme.current;},
     get name(){return Theme.current.name;},
+    get alphaColor (){
+        return setAlphaColor;
+    },
+    get setAlphaColor(){return setAlphaColor;},
     get ALPHA_OPACITY () {return ALPHA_OPACITY},
     get colors () {return Theme.current.colors},
     get primary (){ return Theme.current.colors.primary;},
