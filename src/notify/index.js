@@ -91,7 +91,7 @@
      }
      const messageText = getTextContent(message);
      /***used to avoid duplication on messages */
-     const mId = getMessageId(type+getTextContent(title)+messageText.subString(0,Math.min(messageText.length,15)));
+     const mId = getMessageId(type+getTextContent(title)+messageText.substring(0,Math.min(messageText.length,15)));
      if(!mId || messageRefs[mId] == messageText) return null;//this notification already sent
      messageRefs[mId] = messageText;
      clearTimeout(messageTimeouts[mId]);
