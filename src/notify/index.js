@@ -19,6 +19,12 @@
  
  export {notificationRef};
  export const notifyRef = React.createRef();
+ const messageRefs = {};
+ const messageTimeouts = {};
+ const getMessageId = (text)=>{
+    text = typeof text =="string" && text || "";
+    return text.replaceAll(" ",".");
+ }
  export const notify = function(message,type,title,settings){
      if(typeof notifyRef.current !=='function') return;
      type = defaultStr(type).toLowerCase();
@@ -83,8 +89,23 @@
             interval = Math.max(defInterval,(ccc.length*100));
         }
      }
+     const messageText = getTextContent(message);
+     /***used to avoid duplication on messages */
+     const mId = getMessageId(type+getTextContent(title)+messageText.subString(0,Math.min(messageText.length,15)));
+     if(!mId || messageRefs[mId] == messageText) return null;//this notification already sent
+     messageRefs[mId] = messageText;
+     clearTimeout(messageTimeouts[mId]);
      const payload = isObj(settings.payload)? settings.payload : undefined;
      const options = {...settings,type, title, message, payload, interval};
+     const {onClose} = options;
+     options.onClose = (...args)=>{
+        messageTimeouts[mId] = setTimeout(()=>{
+            delete messageRefs[mId];
+            clearTimeout(messageTimeouts[mId]);
+        },5000);
+        if(typeof onClose =="function") return onClose(...args);
+        return true;
+     }
      return notifyRef.current(options);
  }
  export const error = (message,title,set)=>{
