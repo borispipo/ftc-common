@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import isNonNullString from "./isNonNullString";
+import extendObj from "./extendObj";
 /*** cette fonction prend en paramètre une chaine de caractère et échape certains motifs  
  *  les motifs à remplacer sont de la forme : {motif}, mis entre crochet
  *  exemple le motif {date} : est remplacé par la date courante dans la chaine de caractère
