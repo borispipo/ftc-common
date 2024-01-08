@@ -33,7 +33,7 @@ export function createPDF(_docDefinition,customPdfMake,...restOptions){
         }
     }
     delete docDefinition.pageHeader;
-    if(docDefinition.pageFooter !== false && docDefinition.pageFooter){
+    if(docDefinition.pageFooter !== false){
         docDefinition.pageFooter = Array.isArray(docDefinition.pageFooter) && docDefinition.pageFooter.length && docDefinition.pageFooter || isObj(docDefinition.pageFooter) && Object.size(docDefinition.pageFooter,true) && docDefinition.pageFooter || createPageFooter(docDefinition);
     }
     delete docDefinition.pageFooter;
