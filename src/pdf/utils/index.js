@@ -1,6 +1,6 @@
 import {isObj,isNonNullString,isDataURL,defaultStr,sortBy,isNumber,defaultObj,defaultFunc,isFunction,defaultVal,defaultNumber} from "$cutils";
 import theme from "$theme";
-import {getLoggedUserCode} from "$cauth/utils";
+import {getLoggedUserCode,getUserFullName,getUserEmail,getUserPseudo} from "$cauth/utils";
 import appConfig from "$capp/config";
 import textToObject from "./textToObject";
 import Colors from "$theme/colors";
@@ -418,13 +418,19 @@ export const createSignatories = (signatories,options)=>{
     }
 }
 
+/**** includesEmailOnPrintedUser{boolean}, si le mail  */
 export const getPrintedDate = (opts)=>{
     opts = defaultObj(opts);
     let displayPrintedDate = opts.displayPrintedDate !== undefined ? opts.displayPrintedDate : true;
     if(!displayPrintedDate){
         return null;
     }
-    const code = getLoggedUserCode();
+    const uEmail = getUserEmail();
+    const pseudo = getUserPseudo();
+    const fullName = getUserFullName() || pseudo || getLoggedUserCode();
+    const includesEmailOnPrintedUser = opts.includesEmailOnPrintedUser !== false && opts.includesEmailOnPrintedUser !== 0;
+    const cCode = isNonNullString(fullName)? (includesEmailOnPrintedUser ? `${fullName}${uEmail?`[${uEmail}]`:""}`: fullName) : "";
+    const code = cCode.length > 60 && includesEmailOnPrintedUser ? cCode?.substring(0,60) : cCode;
     const hasCode = isNonNullString(code) || typeof code =='number';
     return {
         text : [(`Date de tirage : ${new Date().toFormat(DateLib.defaultDateTimeFormat)} ${hasCode ? `, par : `:""}`).toUpperCase(),hasCode ? {text:code,bold:true}:{text:""}],
