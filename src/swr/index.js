@@ -28,8 +28,9 @@ import {canFetchOffline} from "$capi/utils";
  * 
  */
 export default function useSwr (path,opts) {
+  const isNull = path === null || path === false;
   const {swrOptions,...options} = getFetcherOptions(opts);
-  const { data, error,mutate,...rest } = useSWR(path,(fetchUrl)=>{
+  const { data, error,mutate,...rest } = useSWR(isNull?null:path,(fetchUrl)=>{
     const {fetcher,...rest} = apiGetFetcherOptions(fetchUrl,options);
     rest.swrQueryKey = options.swrQueryPath = fetchUrl;
     rest.fetchUrl = fetchUrl;

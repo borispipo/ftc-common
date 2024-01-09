@@ -1,12 +1,12 @@
 {
   "name": "@fto-consult/common",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
     "test": "npx jest",
     "clear-jest": "npx jest --clearCache",
-    "jest-clear" : "npx run clear-jest",
+    "jest-clear": "npx run clear-jest",
     "unpublish": "npm -f unpublish @fto-consult/common",
     "delete-docs": "node ./deleteDocsFolder",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
