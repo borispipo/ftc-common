@@ -1,9 +1,12 @@
 {
   "name": "@fto-consult/common",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
+    "test": "npx jest",
+    "clear-jest": "npx jest --clearCache",
+    "jest-clear" : "npx run clear-jest",
     "unpublish": "npm -f unpublish @fto-consult/common",
     "delete-docs": "node ./deleteDocsFolder",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
@@ -51,5 +54,12 @@
     "stable-hash": "^0.0.3",
     "swr": "^2.2.4",
     "written-number": "^0.11.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.7",
+    "babel-jest": "^29.7.0",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "jest": "^29.7.0"
   }
 }
