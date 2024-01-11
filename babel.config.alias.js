@@ -100,7 +100,7 @@ module.exports = function(opts){
         $useSWR : path.resolve(common,"swr"),
     }
     r["$cpdf"] = path.resolve(common,"pdf");
-    r.$pdf = r.$pdf || r.$epdf;
+    r.$pdf = r.$pdf || r.$cpdf;
     r.$eventSource = r.$eventSource || r.$ceventSource;
     r.$currencies = r.$ccurrency;
     if(!r.$api){
