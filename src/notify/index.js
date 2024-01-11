@@ -102,7 +102,7 @@
         messageTimeouts[mId] = setTimeout(()=>{
             delete messageRefs[mId];
             clearTimeout(messageTimeouts[mId]);
-        },5000);
+        },2000);
         if(typeof onClose =="function") return onClose(...args);
         return true;
      }
