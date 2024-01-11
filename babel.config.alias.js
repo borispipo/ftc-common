@@ -102,7 +102,7 @@ module.exports = function(opts){
     r["$cpdf"] = path.resolve(common,"pdf");
     r.$pdf = r.$pdf || r.$epdf;
     r.$eventSource = r.$eventSource || r.$ceventSource;
-    r.currencies = r.$ccurrency;
+    r.$currencies = r.$ccurrency;
     if(!r.$api){
         r.$api = r.$capi;
     }
