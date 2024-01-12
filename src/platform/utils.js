@@ -1,5 +1,5 @@
 import Platform from "./device";
-const Neu = require("r.$cneutralino");
+const Neu = require("$cneutralino");
 const ios = 'ios',android = 'android', web = 'web',electron = 'electron';
 const pf = Platform.platform;
 
