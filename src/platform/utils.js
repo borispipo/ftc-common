@@ -36,6 +36,23 @@ export const isElectron = function() {
   return false;
 }
 
+export const isNeutralino = function(){
+  if(typeof window =='undefined' || !window || typeof navigator ==='undefined' || !navigator) return false;
+  if(typeof window?.Neutralino ==="object" && Neutralino){
+    if(Neutralino?.app && typeof Neutralino?.app =="function") return true;
+    if(Neutralino?.events && Neutralino?.app) return true;
+    if(Neutralino?.events && typeof Neutralino?.events?.on =="function") return true;
+    if(Neutralino?.os && typeof Neutralino?.os?.getEnvs =="function") return true;
+  }
+  if(isNonNullString(window?.NL_APPID) && window?.NL_APPID.toLowerCase().includes("neutralino")) return true;
+  if(isNonNullString(window?.NL_CVERSION) && isNonNullString(window?.NL_CWD) && isNonNullString(window?.NL_MODE) && isNonNullString(window?.NL_OS)) return true;
+  if(typeof navigator === 'object' && navigator && typeof navigator?.userAgent === 'string'){
+    if(navigator.userAgent?.toLowerCase().includes('neutralino')) return true;
+    if(navigator?.userAgent.toLowerCase().includes("@fto-consult/neut")) return true;
+  }
+  return false;
+}
+
 export const isWeb = (onlyPureWeb)=>{
     if(isMobileNative()) return false;
     return  onlyPureWeb ===true ? !isElectron() : isClientSide(); 
@@ -72,7 +89,7 @@ export const isNextJS = isClientSide() && window.next?.version?true :  (typeof p
 
 export const canTextBeSelectable = x => !isMobileNative() && !isTouchDevice()?true : false;
 
-export const isNativeDesktop = isElectron;
+export const isNativeDesktop = x=>isElectron() || isNeutralino();
 
  /**
    * @property isNode
