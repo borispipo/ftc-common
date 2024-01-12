@@ -1,7 +1,7 @@
 import pdfMake from "./pdfmake";
-import {isObj,isNonNullString,defaultStr} from "$cutils";
+import {isObj,isNonNullString,defaultStr,extendObj} from "$cutils";
 import { pageBreakBefore,createPageFooter,createPageHeader,getPrintedDate,getPageSize,getPageMargins,textToObject,createSignatories} from "./utils";
-
+import packageJSON from "$packageJSON";
 import printFile from "./print";
 
 export * from "./formats";
@@ -54,6 +54,16 @@ export function createPDF(_docDefinition,customPdfMake,...restOptions){
     }
     delete docDefinition.signatories;
     docDefinition.content = content;
+    docDefinition.info = extendObj({},{
+        title: defaultStr(restOptions.title,),
+        author: defaultStr(packageJSON?.author,"Boris Fouomene"),
+        subject: defaultStr(restOptions?.description,packageJSON?.description),
+        creator : defaultStr(packageJSON?.author),
+        producer : defaultStr(packageJSON?.author),
+        creationDate : new Date(),
+        keywords: defaultStr(restOptions.keywords,packageJSON?.keywords),
+    },docDefinition.info);
+    
     const createPdf = customPdfMake && typeof customPdfMake?.createPDF =='function'? customPdfMake.createPDF : typeof customPdfMake?.createPdf =='function'? customPdfMake.createPdf : pdfMake.createPdf;
     
     //@see : https://pdfmake.github.io/docs/0.1/document-definition-object/tables
