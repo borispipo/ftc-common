@@ -137,7 +137,7 @@ module.exports = function(opts){
     const neuLib = path.resolve(projectRoot,"node_modules","@neutralinojs/lib");
     const $cneu = fs.existsSync(neuLib) && neuLib || path.resolve(common,"neu");
     r.$cneu = r.$cneutralino = $cneu;
-    r.$neu = r.$neutralino = r.$neu || r.$cneu;
+    r.$neu = r.$neutralino = r.$neu || r.$neutralino || r.$cneu;
     return r;
 }
 
