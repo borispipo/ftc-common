@@ -1,4 +1,5 @@
 import Platform from "./device";
+const Neu = require("r.$cneutralino");
 const ios = 'ios',android = 'android', web = 'web',electron = 'electron';
 const pf = Platform.platform;
 
@@ -38,6 +39,9 @@ export const isElectron = function() {
 
 export const isNeutralino = function(){
   if(typeof window =='undefined' || !window || typeof navigator ==='undefined' || !navigator) return false;
+  if(window && !window?.Neutralino){
+    window.Neutralino = Neu;
+  }
   if(typeof window?.Neutralino ==="object" && Neutralino){
     if(Neutralino?.app && typeof Neutralino?.app =="function") return true;
     if(Neutralino?.events && Neutralino?.app) return true;
