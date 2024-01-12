@@ -134,6 +134,10 @@ module.exports = function(opts){
         r["$auth"] = r["$cauth"];
     }
     r.$print = r.$print || r["$cprint"];
+    const neuLib = path.resolve(projectRoot,"node_modules","@neutralinojs/lib");
+    const $cneu = fs.existsSync(neuLib) && neuLib || path.resolve($src,"neu");
+    r.$cneu =  $cneu;
+    r.$neu = r.$neutralino = r.$neu || r.$cneu;
     return r;
 }
 
