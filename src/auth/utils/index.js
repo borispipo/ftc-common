@@ -361,7 +361,7 @@ export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
 
 export const getSessionKey = (sessionName)=>{
   sessionName = defaultStr(sessionName,DEFAULT_SESSION_NAME);
-  const userCode = getLoggedUserCode();
+  const userCode = getLoginId();
   if(!isValidLoginId(userCode)) return sessionName;
   return sessionName+"-"+userCode;
 }
@@ -389,7 +389,7 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
   if(isNonNullString(sessionKey)){
       dat[sessionKey] = sessionValue;
   } else if(isObj(sessionKey)){
-      extendObj(dat,sessionKey);
+      extendObj(dat,sessionKey,sessionValue);
   } else {
       return dat;
   }
