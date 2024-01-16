@@ -174,7 +174,7 @@ export const isValidUser = u=> {
     if(!isObj(u) || !Object.size(u,true)) {
       return false;
     }
-    return !!(hasToken() || String(getUserCode(u)));
+    return !!(hasToken() || String(getUserCode(u,false)));
   };
   
 export const getToken = ()=>{
@@ -193,29 +193,31 @@ export const hasToken = ()=>{
   const token = getToken();
   return isValidToken(token);
 }
-  
+
+const hasMethod = function(methodName){
+  if(!isNonNullString(methodName)) return false;
+  return typeof signInRef[methodName] === "function";
+};
 /**** SignIn2Signout est étendue avec le composant AuthProvider*/
 const SignIn2SignOut = {
   get hasMethod(){
-    return function(methodName){
-        if(!isNonNullString(methodName)) return false;
-        return typeof signInRef[methodName] === "function";
-    }
+    return hasMethod;
   },
   get getMethod (){
       return (methodName)=>{
-        if(this.hasMethod(methodName)){
+        if(hasMethod(methodName)){
           return signInRef[methodName];
         }
         return undefined;
       }
   },
-  get call (){
+  get callMethod (){
     return (methodName,...args)=>{
         const method = this.getMethod(methodName);
         if(method){
             return method(...args);
         }
+        return undefined;
     }
   },
   get isMasterAdmin(){
@@ -224,7 +226,7 @@ const SignIn2SignOut = {
           return !!getDefaultSingleUser();
         }
         user = defaultObj(user,getLoggedUser());
-        if(this.hasMethod("isMasterAdmin")){
+        if(hasMethod("isMasterAdmin")){
             return signInRef.isMasterAdmin(user,...a);
         }
         throw "isMasterAdminFunction is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
@@ -232,7 +234,7 @@ const SignIn2SignOut = {
   },
   get upsertUser1(){
     return (...a)=>{
-        if(this.hasMethod("upsertUser")){
+        if(hasMethod("upsertUser")){
             return signInRef.upsertUser(...a);
         }
         throw "upsertUser function is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
@@ -240,7 +242,7 @@ const SignIn2SignOut = {
   },
   get signIn1(){
      return (...p)=>{
-        if(this.hasMethod("signIn")){
+        if(hasMethod("signIn")){
             return signInRef.signIn(...p); 
          }
      }
@@ -251,7 +253,7 @@ const SignIn2SignOut = {
   */
   get tableDataPermResourcePrefix(){
       return (tableName,...rest)=>{
-        if(this.hasMethod("getTableDataPermResourcePrefix")){
+        if(hasMethod("getTableDataPermResourcePrefix")){
             return defaultStr(this.getTableDataPermResource(tableName,...rest));
         }
         return tableName.trim().toLowerCase();
@@ -259,7 +261,7 @@ const SignIn2SignOut = {
   },
   get structDataPermResourcePrefix(){
     return (tableName,...rest)=>{
-      if(this.hasMethod("getStructDataPermResourcePrefix")){
+      if(hasMethod("getStructDataPermResourcePrefix")){
           return defaultStr(this.getTableDataPermResource(tableName,...rest));
       }
       return tableName.trim().toLowerCase();
@@ -267,7 +269,7 @@ const SignIn2SignOut = {
   },
   get signOut1(){
     return (...p)=>{
-       if(this.hasMethod("signOut")){
+       if(hasMethod("signOut")){
            return Promise.resolve(signInRef.signOut(...p)).then((d)=>{
               logout();
               return d;
@@ -287,12 +289,15 @@ const SignIn2SignOut = {
     return ()=> signInRef;
   },
   get getUserProp(){
-    return (user,propsName,methodName)=>{
-      user = defaultObj(user,getLocalUser());
-      if(this.hasMethod(methodName)){
-          return this.call(methodName,user,propsName);
+    return (user,propsName,methodName,force)=>{
+      if(!isObj(user) && force !== false){
+        user = getLocalUser();
       }
-      if(this.hasMethod("getUserProp")){
+      user = defaultObj(user);
+      if(hasMethod(methodName)){
+          return signInRef[methodName](methodName,user,propsName);
+      }
+      if(hasMethod("getUserProp")){
           return signInRef.getUserProp(user,propsName,methodName);
       }
       return user[propsName];
@@ -302,7 +307,7 @@ const SignIn2SignOut = {
 
 /*** retourne le username de l'utilsateur passé en paramètre */
 export const getUserName = (user)=>{
-   return SignIn2SignOut.getUserProp(user,"userName");
+   return SignIn2SignOut.getUserProp(user,"userName","getUserName");
 }
 /*** retourne le pseudo de l'utilisateur passé en paramètre */
 export const getUserPseudo = (user)=>{
@@ -334,8 +339,8 @@ export const getUserFullName = (user)=>{
 export const getUserEmail = (user)=>{
   return SignIn2SignOut.getUserProp(user,"email","getUserEmail");
 }
-export const getUserCode = (user)=>{
-  return SignIn2SignOut.getUserProp(user,"code","getUserCode");
+export const getUserCode = (user,force)=>{
+  return SignIn2SignOut.getUserProp(user,"code","getUserCode",force);
 }
 
 export const getLoginId = (user)=>{
@@ -354,7 +359,7 @@ export const getStructDataPermResourcePrefix = (tableName,...rest)=>{
 }
 
 export const getLoggedUserCode = (data)=>{
-  return getUserCode((isValidUser(data) && data || getLocalUser()))
+  return getUserCode((isObj(data) && data || getLocalUser()))
 }
 
 export const DEFAULT_SESSION_NAME = "USER-DEFAULT-SESSION";
