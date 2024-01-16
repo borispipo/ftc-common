@@ -460,7 +460,7 @@ String.prototype.toSnakeCase = String.prototype.snakeCase = String.prototype.toS
 export const toCamelCase = (text) => {
     if(!isNonNullString(text)) return '';
     text = text.trim();
-    return text.charAt(0)+ ((text.indexOf("_")!=-1)?text.toLowerCase():text).replace(/(_\w)/g, k => k[1].toUpperCase()).substring(1)
+    return text.charAt(0)+text.replace(/(_\w)/g, k => k[1].toUpperCase()).substring(1)
 }
 
 export const toCamel = toCamelCase;
