@@ -9,7 +9,7 @@ import APP from "$capp/instance";
 import {isValidUrl} from "$cutils/uri";
 import {UPPER_CASE,LOWER_CASE} from "./utils";
 import {isValidDate} from "$common/lib/date";
-import appConfig from "$app/config";
+import appConfig from "$capp/config";
 
 export * from "./utils";
 

@@ -3,7 +3,7 @@ import {getLabel,getAll as getAllDataFiles,sanitizeName,isValid} from "../../../
 import isCommonDataFile from "../../../dataFileManager/isCommon";
 import Background from "../../background";
 import getDB,{PouchDB} from "$pouchdb/getDB";
-import APP from "$app/instance";
+import APP from "$capp/instance";
 import { getSyncOptions,normalizeSyncDirection,syncDirections } from "../../../sync/utils";
 import {open as showPreloader,close as hidePreloader} from "$preloader";
 import {getSyncProgressPreloaderProps} from "$active-platform/pouchdb";

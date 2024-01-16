@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {isObj,isNonNullString} from "$cutils";
-import APP from "$app/instance";
+import APP from "$capp/instance";
 import fetch from "./fetch";
 import getDB  from "./getDB";
 import getPouchDB from "$pouchdb/getDB/getDB";
