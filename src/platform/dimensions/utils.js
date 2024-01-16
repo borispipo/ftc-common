@@ -5,7 +5,7 @@
 import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from './breakpoints';
 import {useEffect,useState} from "react";
-import {isObj,defaultStr} from "$cutils"
+import {isObj,defaultStr,isNonNullString} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
 import isTouchDevice from "$cutils/isTouchDevice";
