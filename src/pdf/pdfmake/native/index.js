@@ -4,19 +4,18 @@ import WebView from "$ecomponents/WebView";
 import View from "$ecomponents/View";
 import {isObj,isBase64} from "$cutils";
 
-export const methodsNames = ["createPdf"];
-
-export const webViewRef = React.createRef();
+export const webViewRef = {current:null};
 
 export const Provider = React.forwardRef(({onLoadEnd},ref)=>{
-    const style = {display : "none",opacity : 0,width : 0,height : 0};
+    const style = {display:"none",opacity : 0,width : 0,height : 0};
     return <View ref={ref} style={style}>
         <WebView.Local
             style = {style}
             originWhitelist={["*"]}
             file = {htmlTemplate}
-            ref = {webViewRef}
+            ref = {(el)=>webViewRef.current = el}
             onMessage = {(event)=>{
+                console.log(event?.nativeEvent?.data," has receive message")
                 if(typeof webViewRef.current?.onMessage ==="function"){
                     webViewRef?.current.onMessage(event?.nativeEvent?.data);
                 }
@@ -31,47 +30,43 @@ export const Provider = React.forwardRef(({onLoadEnd},ref)=>{
     </View>
 });
 
-const decycle = (options)=>{
-    for(let i in options){
-        if(["content","text"].includes(i)) continue;
-        if(typeof options[i] =="function"){
-             options[i] = String(options[i]);
-        }
-        if(isObj(options[i])){
-            const o = options[i];
-            for(let j in o){
-                if(["content","text"].includes(j)) continue;
-                if(typeof o[j] =="function"){
-                    o[j] = String(o[j]);
-                }
-            }
-        }
-    }
-    return options;
-}
-
 /*** les options de la fonction createPdf
     @options 
 */
-export const createPdf = (method,options)=>{
+export const createPdf = (options,...rest)=>{
     if(!webViewRef.current) return Promise.reject({message:"pdf webview not available"});
-    options = decycle(options);
+    const str = JSON.stringify(options, (key, val)=> {
+        if (typeof val === 'function') {
+            return String(val)
+        }
+        return val
+      }, 2);
     return new Promise((resolve,reject)=>{
         webViewRef.current.onMessage = (data)=>{
+            console.log(data," is created pdf make");
             if(isBase64(data)){
                 resolve(data);
             } else {console.error(data,"creating pdfmake");reject({message:data})}
         }
         webViewRef.current.injectJavaScript(`
-            const method = "${method}";
-            const options = ${JSON.stringify(options)};
-            if(!window.pdfMake || typeof pdfMake.createPdf !='function') return;
             try {
-                const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-                pdfDocGenerator.getBase64((data) => {
-                	window.ReactNativeWebView.postMessage(data);
-                });
-            } catch (e){window.ReactNativeWebView.postMessage(e?.toString())}
+                const options = ${str};
+                if(!window.pdfMake) {
+                    window.ReactNativeWebView.postMessage("Pdf instance not defined");
+                } else {
+                    const pdfDocGenerator = window.pdfMake?.createPdf(options);
+                    if(typeof pdfDocGenerator.getBase64 ==="function"){
+                        pdfDocGenerator.getBase64((data) => {
+                            window.ReactNativeWebView.postMessage(data);
+                            return data;
+                        });
+                    } else {
+                        window.ReactNativeWebView.postMessage("Invalid pdf options");
+                    }
+                }
+            } catch (e){
+                window.ReactNativeWebView.postMessage(e?.toString())
+            }
         `);
     });
 };
