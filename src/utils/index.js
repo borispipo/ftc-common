@@ -1175,7 +1175,6 @@ export const defaultBase64 = function(){
         const str = args[i];
         if(isNonNullString(str)){
             if(isBase64(str)){
-                console.log(str," is found base64",isBase64(str))
                 return str;
             }
             if(!noBase64){

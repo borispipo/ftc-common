@@ -114,7 +114,6 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
           }
           return handleFetchError({...restOpts,...d,handleError}).catch(reject);
         }
-        d = isJson ?  (!isObj(d)? {data:d,result:d} : d) : d;
         const response = {};
         if(res && typeof res !=="boolean" && typeof res !=="string" && !Array.isArray(res)){
            ['ok','status','statusText','error','headers'].map((v)=>{
@@ -123,11 +122,8 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
                }
             });
         }
-        if(hasSuccessResult && !("status" in response) && !("ok" in response)){
-            response.status = SUCCESS;
-            response.ok = true;
-        }   
-        response.success = response.status === SUCCESS || response.status === CREATED || response.status === ACCEPTED ? true : false;
+        const hasResponse = !!Object.size(response);
+        d = isJson || Array.isArray(d) ?  (!isObj(d)? {data:d,result:d} : d) : !hasResponse && !isObj(d) ? ({data:d}) : d;
         if(!isJson && !isObj(d)){
            d = {};
         }
@@ -136,6 +132,13 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
         d.parsed = isJson;
         d.res = res;
         d[fetchOptionsKey] = true;
+        if(!d?.error){
+            if(!hasResponse || (hasSuccessResult && !("status" in response) && !("ok" in response))){
+                response.status = SUCCESS;
+                response.ok = true;
+            }  
+         } 
+        response.success = response.status === SUCCESS || response.status === CREATED || response.status === ACCEPTED ? true : false;
         if(d.error && typeof d.error =='string'){
              d.message = response.message = response.msg = d.error;
         }
