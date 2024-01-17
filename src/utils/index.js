@@ -1182,7 +1182,6 @@ export const defaultBase64 = function(){
             }
         }
     }
-    console.log(noBase64," is not base 64 hein")
     if(noBase64){
         return base64.encode(noBase64);
     }
