@@ -102,7 +102,7 @@ export {deleteApi as delete};
  *   Si le résultat issue de l'api est un objet, alors cet objet est décomposé dans la réponse à retourner à l'utilisateur
  *   Si le résultat issue de l'api n'est pas un objet, alors celui-ci est transmis dans la variable data qui résolvra la promessage * 
  */
-export const handleFetchResult = ({fetchResult:res,json,handleError,...restOpts}) =>{
+export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleError,...restOpts}) =>{
    return new Promise((resolve,reject)=>{
       const getH = x => typeof res?.headers?.get =="function"? res.headers.get(x) : undefined;
       const contentType = defaultStr(getH("Content-Type"),getH("content-type")).toLowerCase();
@@ -116,12 +116,17 @@ export const handleFetchResult = ({fetchResult:res,json,handleError,...restOpts}
         }
         d = isJson ?  (!isObj(d)? {data:d,result:d} : d) : d;
         const response = {};
-        if(res && typeof res !=='boolean' && typeof res !='string'){
+        if(res && typeof res !=="boolean" && typeof res !=="string" && !Array.isArray(res)){
            ['ok','status','statusText','error','headers'].map((v)=>{
-              response[v] = res[v];
+              if(res[v] !== undefined){
+                  response[v] = res[v];
+               }
             });
         }
-        response.status = response.status || res?.status;
+        if(hasSuccessResult && !("status" in response) && !("ok" in response)){
+            response.status = SUCCESS;
+            response.ok = true;
+        }   
         response.success = response.status === SUCCESS || response.status === CREATED || response.status === ACCEPTED ? true : false;
         if(!isJson && !isObj(d)){
            d = {};
@@ -260,7 +265,7 @@ export function getFetcherOptions (opts,options){
         if(checkOnl && isNonNullString(url) && (url.toLowerCase().contains("localhost") || url.contains("127.0.0.1"))){
             checkOnl = false;
         }
-        const cb = x=> fetcher2(url,opts2).then(res=>handleFetchResult({...opts,fetchResult:res}));
+        const cb = x=> fetcher2(url,opts2).then(res=>handleFetchResult({...opts,hasSuccessResult:true,fetchResult:res}));
         return timeout((checkOnl ? APP.checkOnline().then(cb) : cb()),delay).catch((error)=>{
            return handleFetchError({...opts,...opts2,error})
         });
