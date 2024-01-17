@@ -174,7 +174,7 @@ export const isValidUser = u=> {
     if(!isObj(u) || !Object.size(u,true)) {
       return false;
     }
-    return !!(hasToken() || String(getUserCode(u,false)));
+    return !!(hasToken() || String(getLoginId(u,false)));
   };
   
 export const getToken = ()=>{
@@ -295,7 +295,7 @@ const SignIn2SignOut = {
       }
       user = defaultObj(user);
       if(hasMethod(methodName)){
-          return signInRef[methodName](methodName,user,propsName);
+          return signInRef[methodName](user,propsName,methodName);
       }
       if(hasMethod("getUserProp")){
           return signInRef.getUserProp(user,propsName,methodName);
@@ -343,10 +343,10 @@ export const getUserCode = (user,force)=>{
   return SignIn2SignOut.getUserProp(user,"code","getUserCode",force);
 }
 
-export const getLoginId = (user)=>{
-  const v = SignIn2SignOut.getUserProp(user,"loginId","getLoginId");
+export const getLoginId = (user,force)=>{
+  const v = SignIn2SignOut.getUserProp(user,"loginId","getLoginId",force);
   if(isValidLoginId(v)) return v;
-  return getUserCode(user);
+  return getUserCode(user,force);
 }
 
 
