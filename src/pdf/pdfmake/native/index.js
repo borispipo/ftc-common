@@ -8,7 +8,7 @@ export const methodsNames = ["createPdf"];
 
 export const webViewRef = React.createRef();
 
-export const Provider = React.forwardRef(({},ref)=>{
+export const Provider = React.forwardRef(({onLoadEnd},ref)=>{
     const style = {display : "none",opacity : 0,width : 0,height : 0};
     return <View ref={ref} style={style}>
         <WebView.Local
@@ -22,8 +22,8 @@ export const Provider = React.forwardRef(({},ref)=>{
                 }
             }}
             onLoadEnd={(event) => {
-                if(typeof webViewProps.onLoadEnd =='function'){
-                    webViewProps.onLoadEnd({event,webViewRef,chartContext});
+                if(typeof onLoadEnd =='function'){
+                    onLoadEnd({event,webViewRef,chartContext});
                 }
             }}
         >
