@@ -14,3 +14,5 @@ pdfMake.fonts = fonts;
 export {fonts,pdfMake};
 
 export default pdfMake;
+
+export const Provider = ()=>null;
