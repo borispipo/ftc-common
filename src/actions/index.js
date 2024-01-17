@@ -15,7 +15,7 @@ import defaultStr from "$cutils/defaultStr";
  *  @param : string componentName : le nom du composant 
  *  @param : string type : le type de l'action 
  *  Exemple : actions('structData','show') => SRUCT_DATA_SHOW : pour afficher un composant StructData
- *            actions('productsCategories','upsert') => PRODUCTS_CATEGORIES_UPSERT : appelée lorsqu'une catégorie de produit est mise à jour
+ *            actions('productsCategories','upsert') => PRODUCTS_CATEGORIES_UPSERT : appelée lorsqu'une catégorie d'article est mise à jour
  */
 export default function actions(componentName,type){
     type = defaultStr(type).trim();
