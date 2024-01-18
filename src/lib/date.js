@@ -12,6 +12,10 @@ import defaultStr from "$cutils/defaultStr";
 import isDateObj from "$cutils/isDateObj";
 import moment from 'moment';
 
+try {
+    moment.updateLocale("fr-FR");
+} catch{}
+
 export const SQLDateFormat = "yyyy-mm-dd";
 export const SQLDateTimeFormat = "yyyy-mm-dd HH:MM:ss"
 export const SQLTimeFormat = "HH:MM:ss";
