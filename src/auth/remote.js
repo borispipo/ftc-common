@@ -97,7 +97,8 @@ export const signOut = (callback,user,trigger)=>{
   return (isCustom?SignIn2SignOut.callMethod("signOut",{user}):post({
       url : SIGN_OUT
   })).catch((e)=>{
-      return e;
+      console.log(e," is signout user");
+      throw e;
     }).finally(cb);
 }
 

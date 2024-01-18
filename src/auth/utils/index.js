@@ -405,8 +405,8 @@ export const setSessionData = (sessionKey,sessionValue,sessionName)=>{
 /*** déconnecte l'utilisateur actuel */
 export const logout = () =>{
     if(!canSignOut()) return null;
-    resetPerms();
     setLocalUser(null);
+    resetPerms();
     APP.trigger(APP.EVENTS.AUTH_LOGOUT_USER);
     return true;
 }
