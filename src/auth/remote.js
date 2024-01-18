@@ -31,7 +31,7 @@ export const signIn = (user,callback,trigger)=>{
     callback = t;
   }
   const isCustom = SignIn2SignOut.hasMethod("signIn");
-  return (isCustom?SignIn2SignOut.call("signIn",{
+  return (isCustom?SignIn2SignOut.callMethod("signIn",{
     user,
   }):post({
       isAuth : true,
@@ -94,7 +94,7 @@ export const signOut = (callback,user,trigger)=>{
     if(callback === false) return;
     notify.success(i18n.lang("you_are_successfull_logged_out"))
   }
-  return (isCustom?SignIn2SignOut.call("signOut",{user}):post({
+  return (isCustom?SignIn2SignOut.callMethod("signOut",{user}):post({
       url : SIGN_OUT
   })).catch((e)=>{
       return e;
@@ -126,7 +126,7 @@ export const signOut = (callback,user,trigger)=>{
      if(isObj(u)){
       let promise = null;
       if(SignIn2SignOut.hasMethod("upsertUser")){
-          promise = SignIn2SignOut.call("upsertUser",{user:u});
+          promise = SignIn2SignOut.callMethod("upsertUser",{user:u});
       } 
       const cb = (data)=> {
         extendObj(u,isObj(data) && isObj(data?.data) ? data.data : data)
