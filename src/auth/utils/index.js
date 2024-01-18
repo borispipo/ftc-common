@@ -225,7 +225,7 @@ const SignIn2SignOut = {
         if(isSingleUserAllowed()){
           return !!getDefaultSingleUser();
         }
-        user = defaultObj(user,getLoggedUser());
+        user = isObj(user)? user : defaultObj(getLoggedUser());
         if(hasMethod("isMasterAdmin")){
             return signInRef.isMasterAdmin(user,...a);
         }

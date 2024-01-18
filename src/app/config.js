@@ -10,11 +10,12 @@ import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
 import defaultStr from "$cutils/defaultStr";
+import  "../utils/extendObj";
 
-const pJson = require("$packageJSON");
+const pJson = Object.clone(Object.assign({},require("$packageJSON")))
 
 export const getPackageJson = ()=>{
-    return pJson && typeof pJson =='object' && pJson && !Array.isArray(pJson) && pJson || {};
+    return Object.clone(pJson);
 }
 
 const configRef = {current:getPackageJson()};
@@ -342,7 +343,7 @@ const config = {
     }
 }
 
-export const getName = x=>defaultStr(getConfigValue("name")).trim().toUpperCase();
+export const getName = x=>defaultStr(pJson.name).trim().toUpperCase();
 export const getDescription = x=>getConfigValue("description","desc");
 export const getDesc = getDescription;
 export const getVersion = x=>getConfigValue("version");
@@ -354,12 +355,11 @@ export const getDevWebsite = x=>getConfigValue("devWebsite");
 export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
 export const getAppId = x=>{
-    const appID = defaultStr(getConfigValue("appId","id"));
-    const name = getName().trim().replaceAll(" ",".");
+    const appID = defaultStr(pJson?.appId,pJson?.id);
     if(appID){
-        return `${name}-${appID}`;
+        return appID;
     }
-    return name;
+    return getName().trim().replaceAll(" ",".");
 };
 export const getAppVersion = x=>getConfigValue("apiVersion");0
 export const getFeeds = x=>getConfigValue("feeds");
