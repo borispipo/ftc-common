@@ -1,7 +1,7 @@
 /*** fix IE 11 : fetch  is undefined with fetch polyfill @see : https://github.com/github/fetch */
 import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
-import {extendObj,isNonNullString,defaultStr,isPromise,isObj,urlJoin,defaultObj} from "$cutils";
+import {extendObj,isNonNullString,defaultStr,isPromise,isObj,urlJoin,defaultObj,parseURI} from "$cutils";
 import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
@@ -456,17 +456,21 @@ const newPouchDB = (options)=>{
     }  else {
         pDBName = localDBName
     }
-    let willSkip = isValidUrl(pDBName) && isNonNullString(settings.username) && isNonNullString(settings.password);
-    if(willSkip){
-        settings.skipSetup = false;
-    }
+    const willSkip =  isValidUrl(pDBName) && isNonNullString(settings.username) && isNonNullString(settings.password);
     let args = {settings,pDBName,localName:localDBName};
     if(!isServer && isElectron()){
         pDBName =pDBName.rtrim(".db")+".db";
     }
+    if(willSkip){
+        const {protocol,pathname,host} = parseURI(pDBName);
+        if(protocol && pathname && host){
+            pDBName = `${protocol}//${settings.username}:${settings.password}@${host.ltrim("/").rtrim("/")}/${pathname.ltrim("/")}`;
+        }
+    }
+    //settings.willSkip = willSkip;
+    //settings.skip_setup = settings.skipSetup = willSkip;
     args.db = new PouchDB(pDBName, settings);
     args.isServer = isServer;
-    args.skipSetup = willSkip;
     args.realName = realName;
     args.server = server;
     args.isDataFileManager = options.isDataFileManager || isDataFileDBName(pDBName);

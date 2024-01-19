@@ -33,7 +33,7 @@ export const getCouchDB = function(dbName){
             getDB.apply(getDB,arg).then((r)=>{
                 resolve(r);
                 r.db.initialize().then(x=>resolve(r)).catch((e)=>{
-                    console.log(e,' unable to iniitialize couchdb');
+                    console.log(e,' unable to iniitialize couchdb',opts);
                     reject({status:false,msg:"Impossible d'initialiser la base "+dbName,error:e,result:r});
                 });
             }).catch((e)=>{
@@ -165,7 +165,9 @@ export const syncDB = (args)=>{
     changedDatabases = defaultObj(changedDatabases);
     const triggerAfterSync = (trigger)=>{
         if(localDB){
-            localDB.unlock(trigger);
+            if(typeof localDB.unlock =="function"){
+                localDB.unlock(trigger);
+            }
             /** à la fin de la synchronisation, on actualise la liste des fichiers de données de l'application, et on met à jour les informations sur la base de données */
             if(typeof localDB.getInfos =="function"){
                 localDB.getInfos();
@@ -254,7 +256,9 @@ export const syncDB = (args)=>{
             }
             return remoteDB.info().then(()=>{
                 return getDB({dbName}).then(({db})=>{
-                    db.lock();//on vérouille la base de données
+                    if(typeof db?.lock =="function"){
+                        db.lock();//on vérouille la base de données
+                    }
                     localDB = db;
                     let target = remoteDB, source = localDB, 
                     filter = undefined;
