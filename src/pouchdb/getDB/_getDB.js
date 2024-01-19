@@ -1,7 +1,7 @@
 /*** fix IE 11 : fetch  is undefined with fetch polyfill @see : https://github.com/github/fetch */
 import 'whatwg-fetch'
 import {isElectron} from "$cplatform";
-import {extendObj,isNonNullString,defaultStr,isPromise,isObj,defaultObj} from "$cutils";
+import {extendObj,isNonNullString,defaultStr,isPromise,isObj,urlJoin,defaultObj} from "$cutils";
 import DateLib from "$date";
 import {getDBName,getDBNamePrefix,sanitizeDBName,parseDBName,isDocUpdate,isTableLocked,POUCH_DATABASES} from "../utils";
 import actions from "$cactions";
