@@ -365,7 +365,7 @@ export default {
          */
         if(hasDataBases){
             Object.map(databases,(dbName,syncType)=>{
-                if(!isNonNullString(dbName) || !syncType || !syncDirections(syncType)) return null;
+                if(!isNonNullString(dbName) || !syncType || !syncDirections[syncType]) return null;
                 const isCommon = !!(isCommonDataFile(dbName) || commonDataFiles[dbName]);
                 dbName = sanitizeName(dbName,false);
                 if(isCommon) {
@@ -381,7 +381,7 @@ export default {
         } else if(hasSyncTypes){
             Object.map(syncDataTypes,(dataFileType,syncType)=>{
                 ///on synchronise les bases pour lesquelles les types ont été sélectionnées, y compris avec leur direction
-                if(!isNonNullString(dataFileType) || !syncType || !syncDirections(syncType)) return null; 
+                if(!isNonNullString(dataFileType) || !syncType || !syncDirections[syncType]) return null; 
                 if(dataFilesByTypes[dataFileType]){
                     ////seules les bases de données dont le type a été spécifié, peuvent être synchronisées
                     Object.map(dataFilesByTypes[dataFileType],(dF,i)=>{
