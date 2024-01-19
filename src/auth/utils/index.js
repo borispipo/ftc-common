@@ -220,14 +220,22 @@ const SignIn2SignOut = {
         return undefined;
     }
   },
+  /**** vérifie si l'utilisateur est le master admin
+    @param {object}, l'utilisateur
+    @parma {booleans}, si l'objet vide est passé alors il sera remplacé par l'utilisateur connecté s'il est vide à moins que cet options ne passe à false
+  */
   get isMasterAdmin(){
-    return (user,...a)=>{
+    return (user,pickDefaultUser)=>{
         if(isSingleUserAllowed()){
           return !!getDefaultSingleUser();
         }
-        user = isObj(user)? user : defaultObj(getLoggedUser());
+        if(pickDefaultUser !== false){
+          user = defaultObj(user,getLoggedUser());
+        } else {
+          user = isObj(user)? user : defaultObj(getLoggedUser());
+        }
         if(hasMethod("isMasterAdmin")){
-            return signInRef.isMasterAdmin(user,...a);
+            return signInRef.isMasterAdmin(user,pickDefaultUser);
         }
         throw "isMasterAdminFunction is not defined on AuthProvider. set IsMasterAdmin callback on AuthProvider";
     }
