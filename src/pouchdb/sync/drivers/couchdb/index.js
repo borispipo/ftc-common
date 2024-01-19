@@ -347,7 +347,7 @@ export default {
             if(hasSyncTypes > 0 && !(syncDataTypes[dF.type])){
                 return false;
             }
-            if(!isCommon(dF.code) && !isMasterA && !isForUser(dF,u)){
+            if(!isCommon(dF.code)){
                 return false;
             }
             const type = defaultStr(dF.type);
