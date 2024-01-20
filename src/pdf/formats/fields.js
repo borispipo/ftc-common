@@ -96,6 +96,29 @@ export default {
         tooltip : 'Afficher les contacts sociétés, à l\'instar de l\'email, les numéros de télphone, le fax',
         defaultValue : 1,
     },
+    header : {
+        text : "Entête de page",
+        format : 'hashtag',
+        title : "Spécifier l'entête du document pdf à générer",
+    },
+    headerAlignment : {
+        text : "Alignement de l'entête de page",
+        type : "select",
+        items : [{code:"left",label:"Gauche"},{code:"center",label:"Centré"},{code:"right",label:'Droid'},{code:"justify’",label:"Justifié"}],
+        defaultValue : "center",
+    },
+    headerFontSize : {
+        type : "number",
+        text : "Taille police Entête de page",
+        tooltip : "Définissez la taille de la police de l'entête de page",
+        defaultValue : 11,
+    },
+    headerTextColor : {
+        type : "color",
+        text : "Couleur de texte de l'entête de page",
+        tooltip : "Définissez la couleur de texte de l'entête de page",
+        defaultValue : 11,
+    },
     footerNote : {
         text : 'Note de bas de page',
         format : 'hashtag',

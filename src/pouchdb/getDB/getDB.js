@@ -19,18 +19,7 @@ export default function getDBUsingLocalServer(dbName,options){
                     success(null);
                 });
             })
-        ]).then((localArgs,remoteArgs)=>{
-            const {db} = localArgs;
-            if(isObj(remoteArgs) && remoteArgs.db && remoteArgs.db.find){
-                if(!db.localServer || !db.localServer?.allDocs || !db.localServer?.get){
-                    Object.defineProperties(db,{
-                        localServer : {
-                            value : remoteArgs.db,
-                        }
-                    });
-                }
-            }
-        });
+        ]);
     })
 }
 

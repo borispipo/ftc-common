@@ -1,6 +1,6 @@
 import pdfMake from "./pdfmake";
 import {isObj,isNonNullString,defaultStr,extendObj} from "$cutils";
-import { pageBreakBefore,createPageFooter,createPageHeader,getPrintedDate,getPageSize,getPageMargins,textToObject,createSignatories} from "./utils";
+import { pageBreakBefore,createPageHeader,getHeader,getFooter,getPrintedDate,prepareOptions,getPageSize,getPageMargins,textToObject,createSignatories} from "./utils";
 import packageJSON from "$packageJSON";
 import printFile from "./print";
 
@@ -9,19 +9,19 @@ export * from "./utils";
 export * from "./pdfmake";
 
 
+
 /*** permet de créere un pdf à partir de l'utilitaire pdfmake
     @see https://pdfmake.github.io/docs/0.1
     @param {object} docDefinition {
         la définition selon pdfmake
         pageHeader {false|string|array|object}, si false, le header de la page ne sera pas généré
-        pageFooter {false|string|array|object}, si false, le footer de la page ne sera pas généré
         signatories {Array<{object}>}, la liste des signataires, générés en bas de page
         printedDate {false}, si la date de tirage sera affichée où non
     }
     @param {object:{createPDF|createPdf}}, en environnement node par example, l'on devra passer une autre fonction createPdf afin que ça marche car sinon une erreur sera générée
 */
 export function createPDF(_docDefinition,customPdfMake,...restOptions){
-    _docDefinition = Object.assign({},_docDefinition);
+    _docDefinition = prepareOptions(_docDefinition);
     const docDefinition = {..._docDefinition,...getPageSize(_docDefinition)};
     const {content:dContent,pageBreakBefore:pBefore} = docDefinition;
     const content = Array.isArray(dContent)? dContent : isObj(dContent) || isNonNullString(content) ? [dContent] : [];
@@ -33,10 +33,8 @@ export function createPDF(_docDefinition,customPdfMake,...restOptions){
         }
     }
     delete docDefinition.pageHeader;
-    if(docDefinition.pageFooter !== false){
-        docDefinition.pageFooter = Array.isArray(docDefinition.pageFooter) && docDefinition.pageFooter.length && docDefinition.pageFooter || isObj(docDefinition.pageFooter) && Object.size(docDefinition.pageFooter,true) && docDefinition.pageFooter || createPageFooter(docDefinition);
-    }
-    delete docDefinition.pageFooter;
+    docDefinition.header = getHeader(docDefinition);
+    docDefinition.footer = getFooter(docDefinition);
     
     if(isNonNullString(docDefinition.footerNote)){
         content.push({text:textToObject(docDefinition.footerNote)})

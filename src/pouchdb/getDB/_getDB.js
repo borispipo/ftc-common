@@ -348,10 +348,6 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
                 if(!isDataFileManager){
                     triggerDB({db,deleted,doc,isDelete:true});
                 }
-                //on synchronise également la base de données avec le serveur local, après une suppression
-                if(upserted !== true){
-                    context.syncOnLocalServer().catch(e=>e);
-                }
                 return deleted;
             }
             if(force !== true && isObj(doc) && isNonNullString(doc._id)){
@@ -402,9 +398,6 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         }
         db.fullDBName = pDBName;
         return new Promise((resolve)=>{
-            setTimeout(()=>{
-                db.syncOnLocalServer().catch(e=>e);
-            },0);
             const p = !isDataFileManager && typeof db.getInfos ==='function' ? db.getInfos() : Promise.resolve({});
             const cbSuccess = ()=>{
                 DATABASES[sDBName] = db;

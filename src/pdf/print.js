@@ -1,5 +1,6 @@
 import {defaultObj,isNonNullString,defaultStr} from "$cutils";
-import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDate,getPageSize} from "./utils";
+import Preloader from "$preloader";
+import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDate,getPageSize,prepareOptions} from "./utils";
 /*** cette fonction prend en paramètre un tableau de donnés ou un objet à imprimer
     *  @param data {ArrayOf[object]|| object} les/la données à imprimer.
     *  lorsque data est un tableau, alors il s'agit de l'impression cumulée de plusieurs document
@@ -35,10 +36,7 @@ import { createPageHeader,createSignatories,textToObject,printTags,getPrintedDat
     * 
     */
 export default function (data,options){
-    options = Object.assign({},options);
-    let {print,getSettings,showPreloader,hidePreloader, ...printOptions} = options;
-    showPreloader = typeof showPreloader =='function'? showPreloader : x=>true;
-    hidePreloader = typeof hidePreloader =='function'? hidePreloader : x=>true;
+    let {print,getSettings,showPreloader,hidePreloader, ...printOptions} = prepareOptions(options);
     return new Promise((resolve,reject)=>{
         print = typeof print =='function'? print : (args)=>{
             return Promise.resolve(args);

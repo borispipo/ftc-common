@@ -11,6 +11,17 @@ import { defaultPageFormat,defaultPageOrientation } from "../formats";
 import outlineText from "./outlineText";
 import pageSizes from "../formats/pageSizes/iso";
 const MAX_CREATED_SIGNATURE_PRINT_SIZE = 50;
+import Preloader from "$preloader";
+
+///prepare les options d'impression
+export const prepareOptions = (options)=>{
+    options = defaultObj(options);
+    const {showPreloader,hidePreloader} = options;
+    options.showPreloader = typeof showPreloader =='function'? showPreloader : typeof Preloader?.open =="function"? Preloader.open : typeof Preloader?.showPreloader =='function'? Preloader. showPreloader : x=>true;
+    options.hidePreloader = typeof hidePreloader =='function'? hidePreloader : typeof Preloader?.close =="function" ? Preloader?. close : typeof Preloader?.hidePreloader =="function" ? Preloader.hidePreloader : x=>true;
+    return options;
+}
+
 /*permet de créer l'entête des données de type tableau
     @param {Array} tableHeader : l'entte du tableau à créer
     @param {function|object} : les options supplémentaires. is function alors il s'agit de la méthode render par défaut
@@ -90,6 +101,22 @@ export const pageBreakBefore = (cb)=>{
    }
 };
 
+export const createHeader = (options)=>{
+    options = defaultObj(options);
+    if(isObj(header) && Object.size(header,true)) return header;
+    if(Array.isArray(header) && header.length) return header;
+    const {header,headerAlignment,headerFontSize,headerTextColor} = options;
+    if(isNonNullString(header)){
+        return {
+            text : header,
+            fontSize : typeof headerFontSize === 'number' ? headerFontSize : 11,
+            margin : [10,7,10,0],
+            color : theme.Colors.isValid(headerTextColor)? headerTextColor : undefined,
+            alignment : isNonNullString(headerAlignment) && ['left','center','right','justify'].includes(headerAlignment.trim().toLowerCase())? headerAlignment.trim().toLowerCase() : "center",
+        }
+    }
+    return undefined;
+}
 
 /**** permet d'évaluer le contenu du pied de page
     permet de créer le footer de la page à générer
@@ -100,10 +127,10 @@ export const pageBreakBefore = (cb)=>{
            hidePreloader {function()}, la fonction appelée pour masquer le preloader
     * }
 */
-export const createPageFooter = (opts)=>{
-   opts = defaultObj(opts);
+export const createFooter = (opt)=>{
+   const {showPreloader,hidePreloader,...opts} = prepareOptions(opt);
    const margin = [10,0,10,10];
-   let footerCopyRight = opts.footerCopyRight === false ? "" : defaultVal(opts.footerCopyRight,undefined)
+   let footerCopyRight = opts.footerCopyRight === false ? "" : defaultVal(opts.footerCopyRight,isNonNullString(opts.footer) ? opts.footer:undefined,undefined)
    if(isNonNullString(footerCopyRight)){
        footerCopyRight = {
            text : textToObject(footerCopyRight),
@@ -114,18 +141,18 @@ export const createPageFooter = (opts)=>{
        }
    }
    let devWebsite = appConfig.devWebsite;
-   const showPreloader = defaultFunc(opts.showPreloader), hidePreloader = defaultFunc(opts.hidePreloader);
    return function(currentPage, pageCount, pageSize) {
        currentPage = defaultNumber(currentPage);
        const currentPageStr = currentPage.formatNumber().toString();
        pageCount = defaultNumber(pageCount);
+       if(currentPage === 1) hidePreloader();
        showPreloader("page "+currentPage.formatNumber()+"/"+pageCount.formatNumber());
-       if(currentPage >=  pageCount){
-         setTimeout(hidePreloader,10);
+       if(currentPage >= pageCount){
+            setTimeout(hidePreloader,50);
        }
        pageCount = pageCount > 2 ? {
            fontSize: 9,
-           width : "140",
+           //width : "140",
            text:[
                {
                    text : '     Page '+currentPageStr + '/' + pageCount.formatNumber(),
@@ -138,7 +165,7 @@ export const createPageFooter = (opts)=>{
                    link : isValidUrl(devWebsite)? devWebsite : undefined
                }
            ],
-           margin : [5,0,20,0],
+           margin : [5,0,10,0],
            alignment: 'right'
        } : null;
        if(isObj(footerCopyRight) && footerCopyRight.text && pageCount){
@@ -158,6 +185,27 @@ export const createPageFooter = (opts)=>{
        return content;
    }
 };
+const getHeaderOrFooter = (options,name,fallback)=>{
+    options = defaultObj(options);
+    name = name.trim();
+    if(options[name] === false){
+        delete options[name];
+        return undefined;
+    }
+    if(typeof options[name] === "function") return options[name];
+    if(Array.isArray(options[name]) && options[name].length || isObj(options[name]) && Object.size(options[name],true)){
+        return options[name];
+    }
+    return fallback(options);
+}
+/*** permet de récupérer le footer du doc definition : @see : https://pdfmake.github.io/docs/0.1/document-definition-object/headers-footers/ */
+export const getFooter = (options)=>{
+    return getHeaderOrFooter(options,"footer",createFooter,true);
+}
+export const getHeader = (options)=>{
+    return getHeaderOrFooter(options,"header",createHeader)
+}
+
 export const pageHeaderMargin = [ 0, 0, 0, 8 ];
 /**** retourne l'espace entre les colonnes des entêtes du document, espace entre la colonnes du tiers et celle de la société */
 export const getHeaderColumnGap = ()=>{

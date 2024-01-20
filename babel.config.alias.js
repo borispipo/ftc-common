@@ -120,6 +120,10 @@ module.exports = function(opts){
     if(!r["$app"]){
         r["$app"] = r["$capp"];
     }
+    r.$cpreloader = path.resolve(common,"preloader");
+    if(!r.$preloader){
+        r.$preloader = r.$cpreloader;
+    }
     /*** alias interne utile pour la compilation en fonction de la platform, soi next où expo */
     r["$active-platform"] = path.resolve(common,"platforms",platform);
     r["$clipboard"] = path.resolve(r["$active-platform"],"clipboard");
