@@ -331,17 +331,10 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
             }
         }
         db.put = function(...args){
-            return put.apply(db,args).then((data)=>{
-                //sync or replicate database on local server if its set
-                db.syncOnLocalServer().catch(e=>e);
-                return data;
-            })
+            return put.apply(db,args);
         }
         db.bulkDocs = function(...args){
-            return bulkDocs.apply(db,args).then((data)=>{
-                db.syncOnLocalServer().catch(e=>e);
-                return data;
-            });
+            return bulkDocs.apply(db,args);
         }
         const _remove = function({context,doc,force}){
             if(!isBool(force)){
