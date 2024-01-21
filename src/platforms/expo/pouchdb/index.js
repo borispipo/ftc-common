@@ -1,7 +1,7 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import Label from "$components/Label";
+import Label from "$ecomponents/Label";
 import {View} from "react-native";
 import theme from "$theme";
 import {isObj} from "$cutils";
