@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import APP from "$capp/instance";
-import config from "$capp/config";
+import appConfig from "$capp/config";
 
 export const timeoutDelai = 5*1000*60; //3 minutes
 
@@ -11,7 +11,7 @@ const timeoutRef = {current:null};
 
 const runBackgroundTasks = APP.runBackgroundTasks = (force)=>{
     return new Promise((resolve,reject)=>{
-        if(!config.canRunBackgroundTasks()){
+        if(!appConfig.canRunBackgroundTasks()){
             return resolve(true);
         }
         if(APP.isBackgroundTaskRunning){
@@ -22,14 +22,15 @@ const runBackgroundTasks = APP.runBackgroundTasks = (force)=>{
             const callback = ()=>{
                 clearTimeout(timeoutRef.current);
                 APP.isBackgroundTaskRunning = false;
+                resolve({message:'Execution déroulée avecc succès'});
             }
-            let delay = config.get("backgroundTasksDelai");
+            let delay = appConfig.get("backgroundTasksDelai");
             if(typeof delay !== 'number' || !delay){
                 delay = timeoutDelai;
             }
             const args = {isOnline:APP.isOnline(),callback};
             timeoutRef.current = setTimeout(callback,delay);
-            const rBgTask = config.runBackgroundTasks;
+            const rBgTask = appConfig.runBackgroundTasks;
             if(typeof rBgTask =='function'){
                 const rp = rBgTask(args);
                 clearTimeout(timeoutRef.current);

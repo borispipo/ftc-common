@@ -11,15 +11,23 @@ import appConfig from "../config";
 let idleTime = 10000;
 let isIDLRunning = false;
 let inactiveLastTime = undefined;
+let activeLastTime = undefined;
+let appStateActive = undefined;
 
 const resetDate = x=> new Date().getTime();
 
 export const canRun = ()=>{
     //si l'application a été laissé inactive pendant le temps d'attente, alors, l'opération d'exécution des tâches d'arrière plan est exécutée   
-    if(idleTime > 0 && typeof(inactiveLastTime) =="number"){
-        return resetDate() - inactiveLastTime > idleTime ? true : false;
+    if(idleTime > 0){
+        if(!appStateActive){
+            if(typeof(inactiveLastTime) =="number"){
+                return resetDate() - inactiveLastTime > idleTime ? true : false
+            }
+        } else if(typeof(activeLastTime) =="number"){
+            return resetDate() - activeLastTime > idleTime ? true : false
+        }
     }
-    return true;
+    return false;
 }
 
 /*** reset idle timeout */
@@ -39,6 +47,7 @@ export function run(force) {
     }).finally(()=>{
         isIDLRunning = undefined;
         inactiveLastTime = resetDate();
+        activeLastTime = resetDate();
     });
 }
 
@@ -63,12 +72,16 @@ export const trackIDLE = (forceRun,clearEvents) =>{
 export {stop as stopIDLE};
 
 const onAppStateChange = (nState)=>{
+    const cRun = canRun();
     resetTimeout();
     let {isActive} = nState;
-    let cRun = canRun();
+    appStateActive = isActive;
     if(isActive){
         if(cRun){
             run(true);
+        }
+        if(!activeLastTime || cRun){
+            activeLastTime = resetDate();
         }
     } else {
         if(cRun){
@@ -77,7 +90,6 @@ const onAppStateChange = (nState)=>{
         if(!inactiveLastTime || cRun){
             inactiveLastTime = resetDate();
         }
-        //stop(cRun);
     }
 }
 

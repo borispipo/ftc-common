@@ -53,7 +53,7 @@ export const setConfigValue = (key,value)=>{
     const conf = getConfig();
     if(isNonNullString(key)){
         try {
-            if(key in config && key !=='current' && (!isGetter(key) || isSetter(key))){
+            if(key in config && key !=='current' && !(isGetter(key) || isSetter(key))){
                 config[key] = value;
             } else {
                 conf[key] = value;
