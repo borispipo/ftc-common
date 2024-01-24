@@ -18,7 +18,7 @@
     /*** le délai d'attente après lequel, si la promesse liée à l'exécution des tâches d'arrière plan n'est pas resolue, alors
         la promesse des tâches d'arrière plan est résolue automatiquement
     */
-    backgroundTasksDelai | backgroundTasksTimeout {number}
+    backgroundTasksDelai {number}
 
     /**The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if useNativeReachability is false. */
     netInfoReachabilityLongTimeout : {number}

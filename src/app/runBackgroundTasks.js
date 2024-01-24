@@ -4,7 +4,6 @@
 
 import APP from "$capp/instance";
 import config from "$capp/config";
-import isPromise from "$cutils/isPromise";
 
 export const timeoutDelai = 5*1000*60; //3 minutes
 
@@ -24,21 +23,17 @@ const runBackgroundTasks = APP.runBackgroundTasks = (force)=>{
                 clearTimeout(timeoutRef.current);
                 APP.isBackgroundTaskRunning = false;
             }
-            let timeout = config.get("backgroundTasksDelai","backgroundTasksTimeout");
-            if(typeof timeout !== 'number' || !timeout){
-                timeout = timeoutDelai;
+            let delay = config.get("backgroundTasksDelai");
+            if(typeof delay !== 'number' || !delay){
+                delay = timeoutDelai;
             }
             const args = {isOnline:APP.isOnline(),callback};
-            timeoutRef.current = setTimeout(callback,timeout);
+            timeoutRef.current = setTimeout(callback,delay);
             const rBgTask = config.runBackgroundTasks;
             if(typeof rBgTask =='function'){
                 const rp = rBgTask(args);
-                if(!isPromise(rp)){
-                    console.error("La fonction runBackgroundTask du fichier de configuration de l'application, doit retourner une promesse");
-                    return;
-                }
                 clearTimeout(timeoutRef.current);
-                rp.finally(callback);
+                Promise.resolve(rp).finally(callback);
             }
             ///le trigger RUN_BACKGROUND_TASK prend en paramètre la props isOnline permettant de déterminer si l'app est en ligne
             //et la fonction callback de rappel à appeler automatiquement lorsque la fonction run backgroundTasks est appelée

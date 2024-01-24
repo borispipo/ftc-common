@@ -6,7 +6,6 @@ export {default as AppStateService} from "./AppStateService";
 import APP from "$capp/instance";
 import runBackgroundTasks from "$capp/runBackgroundTasks";
 import appConfig from "../config";
-import {defaultNumber} from "$cutils";
 
 /**** l'intervalle d'attente pour l'exécution des tâches d'arrières plans */
 let idleTime = 10000;
@@ -14,12 +13,13 @@ let isIDLRunning = false;
 let inactiveLastTime = undefined;
 
 const resetDate = x=> new Date().getTime();
+
 export const canRun = ()=>{
     //si l'application a été laissé inactive pendant le temps d'attente, alors, l'opération d'exécution des tâches d'arrière plan est exécutée   
     if(idleTime > 0 && typeof(inactiveLastTime) =="number"){
         return resetDate() - inactiveLastTime > idleTime ? true : false;
     }
-    return false;
+    return true;
 }
 
 /*** reset idle timeout */
