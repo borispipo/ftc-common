@@ -1,4 +1,4 @@
-import getDB from "$pouchdb/getDB/getDB";
+import getDB from "../getDB/getDB";
 import dbName from "./dbName";
 import {extendObj,isObj} from "$cutils";
 export default function getDataFileDB(opts1,opts2){

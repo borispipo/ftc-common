@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import getDB from "./_getDB";
+import getDB from "./getDB";
 import {isNonNullString,defaultArray,defaultObj,isObj} from "$cutils";
 import {PouchDB} from "./pouchdb";
 

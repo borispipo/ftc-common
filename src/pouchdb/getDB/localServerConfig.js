@@ -69,9 +69,6 @@ export default {
     get password(){
         return getConfigValue("password",process.env.POUCHDB_LOCAL_SERVER_PASSWORD);
     },
-    get oldDocsSince(){
-        return getConfigValue("oldDocsSince",process.env.POUCHDB_LOCAL_SERVER_OLD_DOCS_SINCE);
-    },
     /*** specify wheater local coonfig database exists */
     get exits(){
         return exits();
@@ -79,5 +76,8 @@ export default {
     /***if the local server is set on the application*/
     get isSet(){
         return exits();
-    }
+    },
+    get isEnabled(){
+        return exits();
+    },
 }

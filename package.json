@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "4.11.2",
+  "version": "4.13.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {

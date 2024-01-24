@@ -30,7 +30,7 @@ export const normalizeSyncDirection = (dbsOrDFTypes)=>{
         }
         let syncDirection = defaultStr(st[1]).toLowerCase();
         if(!syncDirection || !syncDirections[syncDirection]){
-            syncDirection = syncDirections[isCommon?"full":"desc"];
+            syncDirection = syncDirections[isCommon(dat)?"full":"desc"];
         }
         result[dat] = syncDirection;
     });

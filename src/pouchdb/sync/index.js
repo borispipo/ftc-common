@@ -5,12 +5,10 @@ import Background from "./background";
 import $session from "$session";
 const $sessionKey = "sync-data-session-key";
 import drivers from "./drivers";
-import {getAllServers} from "./servers";
 import lastSyncDate from "./lastSyncDate";
 import BG_TASK_MANAGER from "./bakgroundTaskManager";
 import isRunning from "./isRunning";
 import {isObjOrArray} from "$cutils";
-import allServersManager from "./servers";
 import getAllDB from "../dataFileManager/getAllDB";
 import { syncDirections} from "./utils";
 
@@ -75,12 +73,7 @@ export const sync = (args)=>{
     }
     restA = defaultObj(restA);
     const servers = [];
-    const allServers = isObjOrArray(args.servers)? args.servers : getAllServers((server,i)=>{
-        if(server.status !== 0){
-            servers.push(server);
-        }
-        return false;
-    });
+    const allServers = isObjOrArray(args.servers)? args.servers : [];
     ///on a la possibilité de passer la liste des serveurs directement à l'agent de synchronisation des données
     Object.map(allServers,(server,i)=>{
         if(isObj(server) && defaultVal(server.status,true) && isValidUrl(server.url)){
@@ -106,7 +99,7 @@ export const sync = (args)=>{
         if(!Auth.isLoggedIn()){
             return errorF({msg:'Utilisateur non connecté, impossible d\'Effectuer la synchronisation des données.',error,reject});
         }
-        let next = ()=>{
+        const next = ()=>{
             index++;
             if(index >= length) {
                 if(Background.isNotDBSyncBackground()){
@@ -126,16 +119,16 @@ export const sync = (args)=>{
                 return;
             }
             let servCode = defaultStr(server.code,server._id);
-            let lSyncDate = lastSyncDate.get(servCode);
+            const lSyncDate = lastSyncDate.get(servCode);
             if(args.forceSync !== true && lSyncDate && isDecimal(server.timeout) && server.timeout >0 && lSyncDate.getTime){
-                let diff = new Date().getTime() - lSyncDate.getTime();
+                const diff = new Date().getTime() - lSyncDate.getTime();
                 if(diff < server.timeout){
                     return next();
                 }
             }
 
             let sType = server.type;
-            let driver = drivers[sType] || drivers[sType.toLowerCase()];
+            const driver = drivers[sType] || drivers[sType.toLowerCase()];
             if(!isObj(driver) || !isFunction(driver.sync)) return next();
             let {local} = server;
             if(local === true || local === 1){
@@ -146,7 +139,7 @@ export const sync = (args)=>{
             if(Background.isNotDBSyncBackground()){
                 showPreloader("Synchronisation, serveur "+defaultStr(server.code,server._id)+"");
             }
-            let ret = driver.sync({...restA,...server,onTimeoutEnd:(err)=>{
+            const ret = driver.sync({...restA,...server,onTimeoutEnd:(err)=>{
                 next();
             },syncIndex:index,syncLength:length,...server,local});
             if(isPromise(ret)) {
@@ -166,8 +159,6 @@ export const sync = (args)=>{
 
 export {sync as run, isRunning};
 
-export {allServersManager as servers};
-
 /**** sync dbs with local server */
 export const syncOnLocalServer = ()=>{
     return getAllDB().then((dbs)=>{
@@ -184,7 +175,6 @@ export default {
     run : sync,
     syncDirections,
     syncOnLocalServer, //use to sync every database with local server
-    servers : allServersManager,
     isRunning,
     setInfo,
     getInfo,
