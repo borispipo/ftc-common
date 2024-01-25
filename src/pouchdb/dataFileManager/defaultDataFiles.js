@@ -27,18 +27,7 @@ const defaultDataFiles = {
         removable : false,
         system : true,
         desc : "La base de données des utilisateurs de l'application, permet de manipuler les utilisateurs de l'application",
-    },
-    struct_data : {
-        code : 'struct_data',
-        label: 'Données de structures',
-        archivable : 0,
-        archived : 0,
-        common : 1,
-        type : 'common',
-        removable : 0, //si le fichier de données peut être supprimée
-        system : true, //si c'est un fichier de données système
-        desc : "Permet de stocker toutes les données de structures de la société, notemment : les modes de règlements, les conditions de règlements, les civilités, les villes,..."
-    },
+    }
 };
 
 
