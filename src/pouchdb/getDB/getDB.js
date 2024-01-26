@@ -10,7 +10,8 @@ import { getLoggedUser,getLoginId} from '$cauth/utils';
 import {structDataDBName } from "../dataFileManager/structData";
 import {triggerEventTableName} from "../dataFileManager/structData";
 import isDataFileDBName from '../dataFileManager/isDataFileDBName';
-import { PouchDB } from './pouchdb';
+import PouchDBObj from './pouchdb';
+const {PouchDB,...pouchdbRest} = PouchDBObj;
 import isValidDataFile from '../dataFileManager/isValidDataFile';
 import localServer from "./localServerConfig";
 
@@ -449,7 +450,7 @@ const newPouchDB = (options)=>{
     const willSkip =  isValidUrl(pDBName) && isNonNullString(settings.username) && isNonNullString(settings.password);
     let args = {settings,pDBName,localName:localDBName};
     if(!isServer && isElectron()){
-        pDBName =pDBName.rtrim(".db")+".db";
+        pDBName = pDBName.rtrim(".db")+".db";
     }
     if(willSkip){
         const {protocol,pathname,host} = parseURI(pDBName);
@@ -459,6 +460,7 @@ const newPouchDB = (options)=>{
     }
     //settings.willSkip = willSkip;
     //settings.skip_setup = settings.skipSetup = willSkip;
+    settings = extendObj({},pouchdbRest,settings);
     args.db = new PouchDB(pDBName, settings);
     args.isServer = isServer;
     args.realName = realName;

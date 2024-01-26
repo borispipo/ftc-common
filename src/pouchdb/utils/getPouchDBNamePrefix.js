@@ -3,7 +3,7 @@ import {isNonNullString,defaultStr} from "$cutils";
 
 export default function getPouchDBNamePrefix(x){
     let pref = "";
-    if(isElectron() && typeof ELECTRON !=='object' && ELECTRON && typeof(ELECTRON.getDatabasePath) =="function"){
+    if(isElectron() &&  window?.ELECTRON && typeof(ELECTRON.getDatabasePath) =="function"){
         pref = ELECTRON.getDatabasePath() || "";
     }
     if(typeof(pref) =="function") pref = pref();

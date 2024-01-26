@@ -4,9 +4,10 @@
 
 import {isAndroid,isIos} from "$cplatform"
 import mobileNativePouchAdapter from "./native.adapter";
-let extra = {adapter : mobileNativePouchAdapter.adapter};
 import 'react-native-get-random-values';
 import  PouchDB from "pouchdb";
+
+const extra = {adapter : mobileNativePouchAdapter.adapter};
 PouchDB
   .plugin(mobileNativePouchAdapter)
 if(isIos()){

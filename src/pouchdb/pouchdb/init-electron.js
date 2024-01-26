@@ -2,11 +2,14 @@ import {isElectron} from "$cplatform";
 
 export default function ({PouchDB,sqlPouch}){
     if(isElectron() && typeof ELECTRON !=='undefined' && ELECTRON && typeof ELECTRON?.openPouchDBDatabase =='function' ){
-        window.sqlitePlugin = {openDatabase:ELECTRON.openPouchDBDatabase};
-        PouchDB.plugin(function (PouchDB) {
-            PouchDB.adapter('node-sqlite', sqlPouch(), true)
-        });
-        return {adapter:"node-sqlite"};
+        const adapter = "electron-node-sqlite";
+        window.sqlitePlugin = {openDatabase:ELECTRON.openPouchDBDatabase,sqlitePluginAdater:adapter};
+        const electronPouchdbSQLite = function (PouchDB) {
+            PouchDB.adapter(adapter, sqlPouch(), true)
+        };
+        electronPouchdbSQLite.adapter = adapter;
+        PouchDB.plugin(electronPouchdbSQLite);
+        return {adapter};
     }
     return {};
 }

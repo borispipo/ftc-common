@@ -7,15 +7,15 @@
 // license that can be found in the LICENSE file.
 
 export default function(){
-  var WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
-  let sqlitePlugin = window.sqlitePlugin;
+  const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
+  const sqlitePlugin = window.sqlitePlugin;
   if(typeof(sqlitePlugin) !=='object' || !sqlitePlugin || typeof(sqlitePlugin.openDatabase) !=='function'){
     alert("L'application ne pourra pas charger car le plugin de base de données sql est indisponible");
   }
   /* global , sqlitePlugin, openDatabase */
   function createOpenDBFunction (opts,callback) {
     return function (name, version, description, size) {
-       let openOpts = Object.assign({}, opts, {
+       const openOpts = Object.assign({}, opts, {
           name: name,
           version: version,
           description: description,
@@ -36,7 +36,7 @@ export default function(){
   }
 
   function SQLitePouch (opts, callback) {
-    var _opts = Object.assign({
+    const _opts = Object.assign({
       websql: createOpenDBFunction(opts)
     }, opts)
 
@@ -50,7 +50,9 @@ export default function(){
   SQLitePouch.valid = function () {
     return true
   }
-
+  if(typeof window?.sqlitePluginAdater =="string"){
+    SQLitePouch.adapter = window?.sqlitePluginAdater;
+  }
   // no need for a prefix in  (i.e. no need for `_pouch_` prefix
   SQLitePouch.use_prefix = false
   return SQLitePouch;

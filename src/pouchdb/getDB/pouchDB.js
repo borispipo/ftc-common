@@ -34,6 +34,4 @@ PouchDB.plugin({
     getInfos,
 });
 
-export default {PouchDB,...pouchdbRest};
-
-export {PouchDB};
+export default {...pouchdbRest,PouchDB};
