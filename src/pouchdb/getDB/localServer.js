@@ -1,4 +1,5 @@
-import { PouchDB } from "./pouchdb";
+import PouchDBObj from "./pouchdb";
+const {PouchDB} = PouchDBObj;
 import localServerConfig from "./localServerConfig";
 import {isNonNullString} from "$cutils";
 
