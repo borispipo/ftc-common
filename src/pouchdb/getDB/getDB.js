@@ -295,7 +295,6 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         });
     }
     const sDBName = sanitizeName(realName);
-    console.log(sDBName," is name for ",realName," and pdfname is ",pDBName);
     db.isDataFileManager = db.isManager = isDataFileManager;
     if(!isObj(db.infos)){
         Object.defineProperties(db,{
