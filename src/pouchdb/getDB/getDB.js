@@ -572,5 +572,5 @@ export default function getDBFunction (sDBName,opts){
     } 
     return resolveDB(dbName,callback,options,error) 
 }
-export {PouchDB};
+
 export {getDBFunction as getDB};

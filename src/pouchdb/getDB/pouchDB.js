@@ -6,7 +6,7 @@ import toJSON from "../pouchdb/plugins/toJSON";
 import canOverrideRemove from "../pouchdb/plugins/canOverrideRemove";
 import getInfos from "../pouchdb/plugins/getInfos";
 
-const {PouchDB,...pouchdbRest} = PouchObj;    
+const {PouchDB,...PouchDBRest} = PouchObj;    
 
 if(typeof window !== 'undefined' && !window.PouchDB){
     Object.defineProperties(window,{
@@ -34,4 +34,6 @@ PouchDB.plugin({
     getInfos,
 });
 
-export default {...pouchdbRest,PouchDB};
+export default {...PouchDBRest,PouchDB};
+export {PouchDBRest}
+export {PouchDB};
