@@ -1,14 +1,17 @@
 import {isElectron} from "$cplatform";
+import {electronAdapter as adapter} from "./utils";
 
 export default function ({PouchDB,sqlPouch}){
-    if(isElectron() && typeof ELECTRON !=='undefined' && ELECTRON && typeof ELECTRON?.openPouchDBDatabase =='function' ){
-        const adapter = "electron-node-sqlite";
-        window.sqlitePlugin = {openDatabase:ELECTRON.openPouchDBDatabase,sqlitePluginAdater:adapter};
-        const electronPouchdbSQLite = function (PouchDB) {
-            PouchDB.adapter(adapter, sqlPouch(), true)
-        };
-        electronPouchdbSQLite.adapter = adapter;
-        PouchDB.plugin(electronPouchdbSQLite);
+    if(typeof window !=='undefined' && window && isElectron() && typeof ELECTRON !=='undefined' && ELECTRON && typeof ELECTRON?.openPouchDBDatabase =='function' ){
+        const SQLitePouch = sqlPouch(function(...args){
+            return ELECTRON.openPouchDBDatabase(...args);
+        },"use-callbck");
+        SQLitePouch.adapter = adapter;
+        function customQSitePouchAdapter (PouchDB) {
+            PouchDB.adapter(adapter, SQLitePouch, true)
+        }
+        customQSitePouchAdapter.adapter = adapter;
+        PouchDB.plugin(customQSitePouchAdapter);
         return {adapter};
     }
     return {};

@@ -11,7 +11,7 @@ export default function getDBNamePrefix(isServer){
     if(dbP){
         dbP = dbP.rtrim("/")+"/";
     }
-    prefix = prefix.toLowerCase().ltrim("/").rtrim("/").replaceAll(" ","__").replaceAll(".","-");
+    prefix = prefix.ltrim("/").rtrim("/").replaceAll(" ","__").replaceAll(".","-");
     prefix = dbP+((dbP+prefix.ltrim(dbP)).replaceAll("//","/")).ltrim(dbP);
     return prefix
 }

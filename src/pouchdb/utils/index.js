@@ -1,4 +1,3 @@
-import _sanitizeDBName from "./sanitizeDBName";
 import isDocUpdate from "./isDocUpdate";
 import { sanitizeTableName } from "./table";
 import {defaultStr} from "$cutils";
@@ -11,13 +10,10 @@ export {default as getDBNamePrefix} from "./getDBNamePrefix";
 export * from "./table";
 export {isDocUpdate};
 
+export {default as sanitizeDBName} from "./sanitizeDBName";
 
 /**** la liste des tables et bases de données montées dans un composant react*/
 export const MOUNTED_DATABASES_TABLES = {}
-
-export const sanitizeDBName = (dbName)=>{
-    return _sanitizeDBName(defaultStr(dbName));
-}
 
 /*** mounte la table de données dont la base est passée en paramètre 
  * @param tableName {string}

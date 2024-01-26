@@ -1,8 +1,7 @@
 import getDBNamePrefix from "./getDBNamePrefix";
 
 export default function sanitizeDBName(dbName,isServer){
-    let prefix = getDBNamePrefix(isServer);
+    const prefix = getDBNamePrefix(isServer);
     dbName = defaultStr(dbName).toLowerCase().replaceAll(" ","__").replaceAll(".","-");
-    dbName = (prefix+(dbName.ltrim(prefix))).trim();
-    return dbName;
+    return (prefix+(dbName.ltrim(prefix))).trim();
 };

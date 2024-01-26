@@ -288,13 +288,14 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
     db.isRemoteServer = db.isRemote = isServer ? true : false;
     const DATABASES = POUCH_DATABASES.get();
     const isDataFileManager = settings.isDataFileManager;
-    realName = realName.ltrim(getDBNamePrefix());
+    realName = realName.ltrim(getDBNamePrefix(isServer));
     if(isNonNullString(realName) && !db.realName) {
         Object.defineProperties(db,{
             realName : {value:realName,override:false,writable:false}
         });
     }
     const sDBName = sanitizeName(realName);
+    console.log(sDBName," is name for ",realName," and pdfname is ",pDBName);
     db.isDataFileManager = db.isManager = isDataFileManager;
     if(!isObj(db.infos)){
         Object.defineProperties(db,{
@@ -427,8 +428,17 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
  */
 const newPouchDB = (options)=>{
     options = defaultObj(options);
-    let settings = {auto_compaction: true,size:10000000,revs_limit1:100,...options};
+    const settings = {...pouchdbRest,auto_compaction: true,size:10000000,revs_limit1:100,...options};
     let pDBName = defaultStr(options.dbName,options.name);
+    if(!isValidUrl(pDBName)){
+        const localServerUrl = localServer.isEnabled && localServer.url || undefined;
+        if(isValidUrl(localServerUrl)){
+            options.server = localServerUrl;
+            options.isLocalServer = true;
+            options.username = localServer.username;
+            options.password = localServer.password;
+        }
+    }
     options.dbName = pDBName;
     const {realName} = options;
     const parse = parseDBName(options);
@@ -458,9 +468,6 @@ const newPouchDB = (options)=>{
             pDBName = `${protocol}//${settings.username}:${settings.password}@${host.ltrim("/").rtrim("/")}/${pathname.ltrim("/")}`;
         }
     }
-    //settings.willSkip = willSkip;
-    //settings.skip_setup = settings.skipSetup = willSkip;
-    settings = extendObj({},pouchdbRest,settings);
     args.db = new PouchDB(pDBName, settings);
     args.isServer = isServer;
     args.realName = realName;
@@ -484,15 +491,6 @@ const resolveDB = (dbName,callback,options,error)=>{
         return Promise.reject({
             msg : 'The dbName must be a non null string'
         });
-    }
-    if(!isValidUrl(options.server) && !isValidUrl(dbName)){
-        const localServerUrl = localServer.isEnabled && localServer.url || undefined;
-        if(isValidUrl(localServerUrl)){
-            options.server = localServerUrl;
-            options.isLocalServer = true;
-            options.username = localServer.username;
-            options.password = localServer.password;
-        }
     }
     let db;
     if(options && isValidUrl(options.server) || isValidUrl(dbName)){

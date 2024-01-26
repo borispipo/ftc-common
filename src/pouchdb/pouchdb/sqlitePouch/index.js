@@ -1,16 +1,10 @@
-// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
 
-// Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-export default function(){
-  const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
-  const sqlitePlugin = window.sqlitePlugin;
+const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
+export default function(openDatabase,useCallback){
+  const sqlitePlugin = typeof openDatabase =='function'? {openDatabase} : window.sqlitePlugin;
   if(typeof(sqlitePlugin) !=='object' || !sqlitePlugin || typeof(sqlitePlugin.openDatabase) !=='function'){
     alert("L'application ne pourra pas charger car le plugin de base de données sql est indisponible");
+    console.error("L'application ne pourra pas charger car le plugin de base de données sql est indisponible");
   }
   /* global , sqlitePlugin, openDatabase */
   function createOpenDBFunction (opts,callback) {
@@ -31,15 +25,14 @@ export default function(){
 
         }
         //return sqlitePlugin.openDatabase(sqlitePluginOpts)
-        return sqlitePlugin.openDatabase(openOpts.name, openOpts.version, openOpts.description, openOpts.size, null, onError)
+        return sqlitePlugin.openDatabase(openOpts.name, openOpts.version, openOpts.description, openOpts.size, callback, onError)
     }
   }
 
   function SQLitePouch (opts, callback) {
     const _opts = Object.assign({
-      websql: createOpenDBFunction(opts)
-    }, opts)
-
+      websql: createOpenDBFunction(opts,useCallback ==="use-callbck"? callback : undefined)
+    }, opts);
     if ('default' in WebSqlPouchCore && typeof WebSqlPouchCore.default.call === 'function') {
       WebSqlPouchCore.default.call(this, _opts, callback)
     } else {
@@ -49,9 +42,6 @@ export default function(){
 
   SQLitePouch.valid = function () {
     return true
-  }
-  if(typeof window?.sqlitePluginAdater =="string"){
-    SQLitePouch.adapter = window?.sqlitePluginAdater;
   }
   // no need for a prefix in  (i.e. no need for `_pouch_` prefix
   SQLitePouch.use_prefix = false
