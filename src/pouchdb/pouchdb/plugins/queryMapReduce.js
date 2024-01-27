@@ -29,23 +29,24 @@ export const queryMapReduce = function(designId,options){
     let {filter,table,reference,type,mutator,design,designName,...rest} = options;
     filter = defaultFunc(filter,({doc})=>doc);
     mutator = defaultFunc(mutator,({doc})=>doc);
-    rest.include_docs = defaultBool(rest.include_docs,true);
+    const include_docs = rest.include_docs = defaultBool(rest.include_docs,true);
     rest.reduce = defaultVal(rest.reduce,false);
     return new Promise((resolve,reject)=>{
         const handleFinalResult = (result)=>{
             if(handleResult){
-                let {rows} = result;
-                let docs = [];
+                const {rows} = result;
+                const docs = [];
                 rows.map((doc)=>{
                     if(/^_design\//.test(doc.id) || doc._deleted)return null;
-                    let arg = {doc:defaultObj(doc.doc),data:defaultObj(doc.doc),value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
+                    const row = include_docs ? defaultObj(doc.doc) : doc;
+                    const arg = {doc:row,data:row,rowData:row,value:doc.value,key:doc.key,_id:doc.id,id:doc.id};
                     if(filter(arg)){
-                        let mDoc = mutator(arg);
+                        const mDoc = mutator(arg);
                         if(isObj(mDoc)){
                             docs.push(mDoc);
                         }
                     }
-                })
+                });
                 resolve(docs);
                 return docs;
             }
