@@ -45,7 +45,7 @@ const createIndex = (db,idx,dbName)=>{
             if(viewFuncs.length){
                 promises.push(new Promise((resolve,reject)=>{
                     const success = (r)=>{
-                        if(!pouchdbIndexes[dbName]){
+                        if(false && !pouchdbIndexes[dbName]){
                             viewFuncs.map(v=>{
                                 db.queryMapReduce({designId:name+"/"+v,key:uniqid("query-key-refresh-view-"+v)});
                             });
