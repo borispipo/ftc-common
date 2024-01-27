@@ -53,17 +53,18 @@ export const queryMapReduce = function(designId,options){
             return result;
         }
         return db.query(designId,rest).then(handleFinalResult).catch((e)=>{
-            if(e && e?.status == 404){
+            const hasView = db.hasDesignView(designId);
+            if( e?.status == 404 && hasView){
                 const docId = defaultStr(e?.docId).toLowerCase().trim();
                 const d = designId?.toLocaleLowerCase().trim();
                 if(d.startsWith(docId) || docId.startsWith("_design/")){
                     return db.createDefaultIndexes().then((i)=>{
-                        db.getIndexes().then((i)=>{
-                            console.log(i," is def indexess");
-                        });
                         return db.query(designId,rest).then(handleFinalResult).catch(reject);
+                    }).catch((e)=>{
+                        console.log(e,"trying to recreate index for query map reduce",docId,designId,options)
+                        reject(e);
                     });
-                }         
+                }       
             }
             reject(e);
         });
