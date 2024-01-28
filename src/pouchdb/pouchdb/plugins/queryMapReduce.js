@@ -13,9 +13,17 @@ import {defaultFunc,isNonNullString,defaultBool,defaultStr,defaultVal} from "$cu
  *      ...rest {object} le reste d'options à passer à la fonction pouchdb query
  * }
  */
-export const queryMapReduce = function(designId,options){
+export const queryMapReduce = function(designId,_options){
     const db = this;
-    options = defaultObj(options);
+    const {limit,skip,page,withTotal,...options} = defaultObj(_options);
+    if(typeof limit =='number' && limit){
+        options.limit = Math.ceil(limit);
+    }
+    if(typeof skip =='number' && skip){
+        options.skip = Math.ceil(skip);
+    } else if(typeof page =='number' && Math.ceil(page)>0 && options.limit){
+        options.skip = Math.ceil(page)*options.page;
+    }
     if(isObj(designId)){
         options = extendObj({},designId,options);
     } else if(isNonNullString(designId)){
@@ -37,6 +45,21 @@ export const queryMapReduce = function(designId,options){
     rest.reduce = defaultVal(rest.reduce,false);
     return new Promise((resolve,reject)=>{
         const handleFinalResult = (result)=>{
+            const cb = (result)=>{
+                if(withTotal){
+                    return db.query(designId,{
+                        ...rest,
+                        limit : undefined,
+                        skip : undefined,
+                        handleResult : false,
+                        include_docs : false,
+                    }).then(({total_rows})=>{
+                        return resolve({data:result,total_rows,total:total_rows})
+                    })
+                } else {
+                    resolve(result);
+                }
+            }
             if(handleResult){
                 const {rows} = result;
                 const docs = [];
@@ -51,10 +74,10 @@ export const queryMapReduce = function(designId,options){
                         }
                     }
                 });
-                resolve(docs);
+                cb(docs);
                 return docs;
             }
-            resolve(result);
+            cb(result);
             return result;
         }
         return db.query(designId,rest).then(handleFinalResult).catch((e)=>{
