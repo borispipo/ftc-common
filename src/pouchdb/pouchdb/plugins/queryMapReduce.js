@@ -53,9 +53,10 @@ export const queryMapReduce = function(designId,_options){
                         skip : undefined,
                         handleResult : false,
                         include_docs : false,
-                    }).then(({total_rows})=>{
+                    }).then(({total_rows,...rest})=>{
+                        total_rows = Math.max(total_rows-1,0);
                         return resolve({data:result,total_rows,total:total_rows})
-                    })
+                    }).catch(reject);
                 } else {
                     resolve(result);
                 }
