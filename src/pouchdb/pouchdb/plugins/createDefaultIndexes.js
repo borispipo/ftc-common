@@ -63,7 +63,11 @@ const createIndex = (db,idx,dbName)=>{
                 }));
             }
         } else if(Array.isArray(index?.fields)){
-            promises.push(db.createIndex({index:{...indexToCreate[name],ddoc:name,name}}))
+            promises.push(db.createIndex({index:{...indexToCreate[name],ddoc:name,name}}).catch((e)=>{
+                    //console.log(db.adapter," is pouchdb adapter for creating indexxx ", e," is disturbing indexx ",name," is dddd index disturnggg ",indexToCreate[name]," ifddddd");
+                    //throw e;
+                })
+            );
         }
     }
     return Promise.all(promises).then((r)=>{

@@ -75,8 +75,17 @@ const getDataWithPouchInstance = (db,fetchOptions) =>{
         return db.find(fetchOptions).then(({docs})=>{
             resolve(docs);
         }).catch(e=>{
-            console.log(e," willdddd getting data");
-            if(false && e?.status === 404 && isNonNullString(fetchOptions.use_index)){
+            console.log("will find options ",fetchOptions,e,db," = is database");
+            const useIndex = fetchOptions.use_index;
+            if(e?.status === 404){
+                console.log("getting indexes",useIndex,fetchOptions);
+                db.getIndexes().then((indexes)=>{
+                    console.log(indexes, " are indexes for index ",useIndex);
+                }).finally(()=>{
+                
+                });
+            }
+            if(e?.status === 404 && isNonNullString(fetchOptions.use_index)){
                 return db.createDefaultIndexes().finally(d=>{
                     delete fetchOptions.use_index;
                     return db.find(fetchOptions).then(({docs})=>{

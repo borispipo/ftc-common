@@ -2,7 +2,7 @@ import {isElectron} from "$cplatform";
 import {electronAdapter as adapter} from "./utils";
 
 export default function ({PouchDB,sqlPouch}){
-    if(typeof window !=='undefined' && window && isElectron() && typeof ELECTRON !=='undefined' && ELECTRON && typeof ELECTRON?.openPouchDBDatabase =='function' ){
+    if(false && typeof window !=='undefined' && window && isElectron() && typeof ELECTRON !=='undefined' && ELECTRON && typeof ELECTRON?.openPouchDBDatabase =='function' ){
         const SQLitePouch = sqlPouch(function(...args){
             return ELECTRON.openPouchDBDatabase(...args);
         },"use-callbck");
