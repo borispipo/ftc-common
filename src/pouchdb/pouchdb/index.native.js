@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import {isAndroid,isIos} from "$cplatform"
 import mobileNativePouchAdapter from "./native.adapter";
 import 'react-native-get-random-values';
 import  PouchDB from "pouchdb";
@@ -10,11 +9,6 @@ import  PouchDB from "pouchdb";
 const extra = {adapter : mobileNativePouchAdapter.adapter};
 PouchDB
   .plugin(mobileNativePouchAdapter)
-if(isIos()){
-  extra.iosDatabaseLocation = 'Library';
-} else if(isAndroid()){
-  extra.androidDatabaseImplementation = 2
-}
 export default {
   PouchDB,
   ...extra
