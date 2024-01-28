@@ -1,7 +1,6 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import isCommonDataFile from "../../dataFileManager/isCommon";
 import sanitizeName from "../../dataFileManager/sanitizeName";
 import isStructData from "../../dataFileManager/isStructData";
 import pouchdbIndexes from "../../utils/pouchdbIndexes";

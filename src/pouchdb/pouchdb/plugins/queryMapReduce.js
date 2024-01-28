@@ -14,7 +14,7 @@ import {defaultFunc,isNonNullString,defaultBool,defaultStr,defaultVal} from "$cu
  * }
  */
 export const queryMapReduce = function(designId,options){
-    let db = this;
+    const db = this;
     options = defaultObj(options);
     if(isObj(designId)){
         options = extendObj({},designId,options);
@@ -25,6 +25,10 @@ export const queryMapReduce = function(designId,options){
     designId = defaultStr(options.designId,options.designName,options.design);
     if(!designId){
         return handleResult? Promise.resolve([]) : {docs:[],total_rows:0};
+    }
+    const hasView = db.hasDesignView(designId);
+    if(!hasView){
+        return Promise.reject({message:`Impossible de faire la requête sur la vue ${designId} car celle-ci n'est pas définie comme une vue valide de la base de donnée ${db.realName}`})
     }
     let {filter,table,reference,type,mutator,design,designName,...rest} = options;
     filter = defaultFunc(filter,({doc})=>doc);
@@ -54,7 +58,6 @@ export const queryMapReduce = function(designId,options){
             return result;
         }
         return db.query(designId,rest).then(handleFinalResult).catch((e)=>{
-            const hasView = db.hasDesignView(designId);
             if( e?.status == 404 && hasView){
                 const docId = defaultStr(e?.docId).toLowerCase().trim();
                 const d = designId?.toLocaleLowerCase().trim();
