@@ -14,7 +14,6 @@ import pouch from "./pouchdb";
 import sync from "./sync";
 import common from "./common";
 import getAllData from "./getDB/getAllData";
-import servers from "./sync/servers";
 import { getCompany,setCompany } from "./common";
 
 export * from "./utils";
@@ -29,7 +28,6 @@ export {
     getDB,
     getCompany,
     setCompany,
-    servers,
     common,
     CONSTANTS,
     getData,
@@ -43,7 +41,6 @@ export default {
     getDB,
     getCompany,
     setCompany,
-    servers,
     common,
     CONSTANTS,
     getData,
