@@ -6,15 +6,25 @@ import isValid from "./isValidDataFile";
 import getDB from "./getDB";
 import fetch from "./fetch";
 import APP from "$capp/instance";
+import {isObj,isNonNullString} from "$cutils";
 
 const upsert = (dF,diffFunc)=>{
-    if(!isValid(dF)){
+    if(isNonNullString(dF)){
+        dF = {code:dF};
+    }
+    const hasDiff = typeof diffFunc ==='function';
+    
+    if(!hasDiff &&!isValid(dF)){
         return Promise.reject({message:'Invalid data file, could not insert it ',dataFile : dF});
+    } else if(!isObj(dF) || !isNonNullString(dF.code)){
+        return Promise.reject({message:`Invalid data file to upsert`,dataFile:dF});
     }
     return new Promise((resolve,reject)=>{
         return getDB().then(({db})=>{
             return db.upsert(dF.code,(newDoc)=>{
-                return {...newDoc,...dF};
+                const ret = {...newDoc,...dF};
+                if(typeof diffFunc =='function') return diffFunc(ret);
+                return ret;
             }).then((nD)=>{
                 return fetch().finally(()=>{
                     resolve(nD);
