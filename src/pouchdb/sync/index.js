@@ -42,16 +42,16 @@ export const setInfo = (data)=>{
     data = defaultObj(data);
     $session.set($sessionKey,extendObj(getInfo(),data,r));
 }
-const errorF = ({msg,error,reject})=>{
+const errorF = ({message,error,reject})=>{
     BG_TASK_MANAGER.running = false;
-    if(Background.isNotDBSyncBackground() && isNonNullString(msg)){
-        notify.error(msg);
+    if(Background.isNotDBSyncBackground()){
+        notify.error(message||error);
     }
     if(isFunction(error)){
-        error(msg)
+        error(message||error)
     }
     setInfo(false);
-    return reject(msg);
+    return reject({message:message||error?.toString()});
 }
 /*** 
  * synchronise les bases de données locales vers un serveur distant
@@ -84,20 +84,22 @@ export const sync = (args)=>{
             servers.push(server);
         }
     })
-    let syncResults = {};
+    const syncResults = {};
     return new Promise((resolve,reject)=>{
         let index = -1,length=servers.length,server = undefined; 
+        Background.setDBSyncBackground(args);
         if(BG_TASK_MANAGER.running){
-            return Promise.reject({
+            return errorF({
                 status : false,
                 code : 2000,
-                msg : "Une autre instance de la tâche de synchronisation des données est en cours"
+                error,
+                reject,
+                message : "Une autre instance de la tâche de synchronisation des données est en cours"
             })
         }
         BG_TASK_MANAGER.running = true;  
-        Background.setDBSyncBackground(args);
         if(!Auth.isLoggedIn()){
-            return errorF({msg:'Utilisateur non connecté, impossible d\'Effectuer la synchronisation des données.',error,reject});
+            return errorF({message:'Utilisateur non connecté, impossible d\'Effectuer la synchronisation des données.',error,reject});
         }
         const next = ()=>{
             index++;
@@ -147,7 +149,7 @@ export const sync = (args)=>{
                     syncResults[servCode] = databases;
                     lastSyncDate.set(servCode);
                 }).catch((err)=>{
-                    errorF({msg:err,error,reject});
+                    errorF({message:err?.toString(),error,reject});
                 }).finally(next);
             } else {      
                 next();
