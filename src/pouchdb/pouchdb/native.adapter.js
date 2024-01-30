@@ -3,8 +3,8 @@
 // license that can be found in the LICENSE file.
 
 'use strict'
-var WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core').default
 import * as SQLite from 'expo-sqlite';
+const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core').default
 const adapter = 'mobile-native-sqlite';
 function createOpenDBFunction (opts) {
   return function (name, version, description, size) {
