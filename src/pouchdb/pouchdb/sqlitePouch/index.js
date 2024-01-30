@@ -25,13 +25,13 @@ export default function(openDatabase,useCallback){
 
         }
         //return sqlitePlugin.openDatabase(sqlitePluginOpts)
-        return sqlitePlugin.openDatabase(openOpts.name, openOpts.version, openOpts.description, openOpts.size, callback, onError)
+        return sqlitePlugin.openDatabase(openOpts.name, openOpts.version, openOpts.description, openOpts.size,null, onError)
     }
   }
 
   function SQLitePouch (opts, callback) {
     const _opts = Object.assign({
-      websql: createOpenDBFunction(opts,useCallback ==="use-callbck"? callback : undefined)
+      websql: createOpenDBFunction(opts),
     }, opts);
     if ('default' in WebSqlPouchCore && typeof WebSqlPouchCore.default.call === 'function') {
       WebSqlPouchCore.default.call(this, _opts, callback)
