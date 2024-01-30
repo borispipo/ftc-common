@@ -1,6 +1,6 @@
 
 const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
-export default function(openDatabase,useCallback){
+export default function(openDatabase){
   const sqlitePlugin = typeof openDatabase =='function'? {openDatabase} : window.sqlitePlugin;
   if(typeof(sqlitePlugin) !=='object' || !sqlitePlugin || typeof(sqlitePlugin.openDatabase) !=='function'){
     alert("L'application ne pourra pas charger car le plugin de base de données sql est indisponible");
@@ -31,7 +31,7 @@ export default function(openDatabase,useCallback){
 
   function SQLitePouch (opts, callback) {
     const _opts = Object.assign({
-      websql: createOpenDBFunction(opts),
+      websql: createOpenDBFunction(opts)
     }, opts);
     if ('default' in WebSqlPouchCore && typeof WebSqlPouchCore.default.call === 'function') {
       WebSqlPouchCore.default.call(this, _opts, callback)
