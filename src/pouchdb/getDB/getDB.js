@@ -406,9 +406,7 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
             const p = !isDataFileManager && typeof db.getInfos ==='function' ? db.getInfos() : Promise.resolve({});
             const cbSuccess = ()=>{
                 DATABASES[sDBName] = db;
-                db.createDefaultIndexes({dbName:sDBName}).finally(()=>{
-                    resolve(db);
-                });
+                resolve(db);
             }
             return isPromise(p)? p.catch((e=>e)).finally(cbSuccess) : cbSuccess();
         });
