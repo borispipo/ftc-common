@@ -328,18 +328,12 @@ const initDB = ({db,pDBName,server,realName,localName,settings,isServer}) =>{
         });
     }
     if(!db.isRemoteServer){
-        const {remove,bulkDocs,put} = db;
+        const {remove} = db;
         if(DATABASES[sDBName]){
             if(isValidDataFile(DATABASES[sDBName]?.infos)){
                 DATABASES[sDBName].retrievedFromCache = true;
                 return Promise.resolve(DATABASES[sDBName]);
             }
-        }
-        db.put = function(...args){
-            return put.apply(db,args);
-        }
-        db.bulkDocs = function(...args){
-            return bulkDocs.apply(db,args);
         }
         const _remove = function({context,doc,force}){
             if(!isBool(force)){

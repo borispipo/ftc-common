@@ -52,15 +52,11 @@ export default function fetchDataFiles(){
                     setDataFiles(result);
                     APP.trigger(APP.EVENTS.FETCH_POUCHDB_DATA_FILES,result);
                     hasFetchRef.current = true;
-                    if(APP.getStorageUsage){
-                        APP.getStorageUsage();
-                    }
                     resolve(result);
                 });
             })
         }).catch((e)=>{
-            if(e && e.status == 404) return undefined;
-            //setDataFiles(dataFiles);
+            reject(e);
             console.log(e,' fetching data files in databases');
             return e;
         })
