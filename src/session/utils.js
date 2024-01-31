@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 /*** @namespace session/utils */
-import {isJSON, parseJSON,stringify} from "$cutils/json";
-import appConfig from "$capp/config";
+import {parseJSON,stringify} from "$cutils/json";
+import {prefixStrWithAppId} from "$capp/config.utils";
 import {isNonNullString} from "$cutils";
 
 export const sanitizeKey = (key)=>{
   if(!isNonNullString(key)) return "";
-  return appConfig.prefixWithAppId(key);
+  return prefixStrWithAppId(key);
 }
 export const handleSetValue = (value,decycle) => {
   value = value ? stringify(value,decycle) : value;

@@ -9,14 +9,10 @@ import session from "$session";
 import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
-import defaultStr from "$cutils/defaultStr";
 import  "../utils/extendObj";
+import { getPackageJson,getName,getAppId,prefixStrWithAppId} from "./config.utils";
 
-const pJson = Object.clone(Object.assign({},require("$packageJSON")))
-
-export const getPackageJson = ()=>{
-    return Object.clone(pJson);
-}
+export * from "./config.utils";
 
 const configRef = {current:getPackageJson()};
 
@@ -343,7 +339,6 @@ const config = {
     }
 }
 
-export const getName = x=>defaultStr(pJson.name).trim().toUpperCase();
 export const getDescription = x=>getConfigValue("description","desc");
 export const getDesc = getDescription;
 export const getVersion = x=>getConfigValue("version");
@@ -354,13 +349,7 @@ export const getDevMail = x=>getConfigValue("devMail");
 export const getDevWebsite = x=>getConfigValue("devWebsite");
 export const getCopyright = x=>getConfigValue("copyRight");
 export const getAuthor = x=>getConfigValue("author");
-export const getAppId = x=>{
-    const appID = defaultStr(pJson?.appId,pJson?.id);
-    if(appID){
-        return appID;
-    }
-    return getName().trim().replaceAll(" ",".");
-};
+
 export const getAppVersion = x=>getConfigValue("apiVersion");0
 export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("pouchdbNamePrefix") || getAppId();
@@ -418,16 +407,7 @@ export const getTheme  =x=>{
     return {};
 }
 
-export const prefixStrWithAppId = (text,sep)=>{
-    const appId = getAppId();
-    if(isInitializedRef.current && !isNonNullString(appId) && typeof window !='undefined' && typeof window =='object' && window){
-        console.error("Id de l'application non définie dans le fichier de configuration. vous devez le définir comme chaine de caractère non nulle dans la propriété appId ou id de ce même fichier");
-    }
-    if(typeof text !=="string") return appId;
-    sep = typeof sep =="string"? sep : "-";
-    const r = appId+sep;
-    return r+text.trim().ltrim(r); 
-}
+
 export const prefixWithAppId = prefixStrWithAppId;
 
 export const getTablesData  = ()=>{
