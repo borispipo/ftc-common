@@ -4,7 +4,7 @@
 /*** @namespace session/utils */
 import {parseJSON,stringify} from "$cutils/json";
 import {prefixStrWithAppId} from "$capp/config.utils";
-import {isNonNullString} from "$cutils";
+import isNonNullString from "$cutils/isNonNullString";
 
 export const sanitizeKey = (key)=>{
   if(!isNonNullString(key)) return "";

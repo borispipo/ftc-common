@@ -10,7 +10,7 @@ import { isValidURL } from "$cutils/uri";
 import currencies from "$ccurrency/currencies";
 import {isValidCurrency} from "$ccurrency/utils";
 import  "../utils/extendObj";
-import { getPackageJson,getName,getAppId,prefixStrWithAppId} from "./config.utils";
+import { getPackageJson,getName,getAppId,prefixStrWithAppId,isInitializedRef} from "./config.utils";
 
 export * from "./config.utils";
 
@@ -33,7 +33,6 @@ export const getConfig = x=>{
     return configRef.current;
 };
 const configValuesRef = {current:{}};
-const isInitializedRef = {current:null};
 
 export const setConfig = configValue=> {
     if(typeof configValue =="object" && configValue && !Array.isArray(configValue)){

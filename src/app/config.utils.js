@@ -6,7 +6,7 @@ import "../utils/extendObj";
 export const getPackageJson = ()=>{
     return Object.clone(pJson);
 }
-
+export const isInitializedRef = {current:null};
 export const getAppId = x=>{
     const appID = defaultStr(pJson?.appId,pJson?.id);
     if(appID){

@@ -7,7 +7,7 @@
  */
 import storage from "./web/storage";
 import {isJSON, parseJSON,stringify} from "$cutils/json"
-import {isNonNullString} from "$cutils";
+import isNonNullString from "$cutils/isNonNullString";
 import { sanitizeKey } from "./utils";
 import isDateObj from "$cutils/isDateObj";
 function extend () {
