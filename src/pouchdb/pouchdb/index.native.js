@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import mobileNativePouchAdapter from "./native.adapter";
-import 'react-native-get-random-values';
 import  PouchDB from "pouchdb";
 
 const extra = {adapter : mobileNativePouchAdapter.adapter};
