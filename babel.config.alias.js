@@ -142,7 +142,7 @@ module.exports = function(opts){
     const $cneu = fs.existsSync(neuLib) && neuLib || path.resolve(common,"neu");
     r.$cneu = r.$cneutralino = $cneu;
     r.$neu = r.$neutralino = r.$neu || r.$neutralino || r.$cneu;
-    if(!r["$pouchdb-expo-ui-native-adapter"] || !fs.existsSync(path.resolve(r["$pouchdb-expo-ui-native-adapter"]))){
+    if(!r["$pouchdb-expo-ui-native-adapter"]){
         r["$pouchdb-expo-ui-native-adapter"] = path.resolve(common,"pouchdb","pouchdb","expo-ui-native-adapter");
     }
     return r;
