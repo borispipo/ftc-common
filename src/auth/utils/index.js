@@ -121,16 +121,35 @@ const maxProcessSessionAge = parseFloat(process.env.AUTH_SESSION_MAX_AGE||'') ||
 //par défaut les sessions utilisateur expirent après 3 jours
 export const getAuthSessionMaxAge = ()=>{
   const maxAgeConfig = appConfig.get("authMaxSessionAge");
-  if(typeof maxAgeConfig =='number' && maxAgeConfig > 1000) return maxAgeConfig;
-  return typeof maxProcessSessionAge =="number" && maxProcessSessionAge > 1000 ? maxProcessSessionAge : 3* 60 * 60 * 24  // 3 days
+  if(typeof maxAgeConfig =='number' && maxAgeConfig > 10) return maxAgeConfig;
+  return typeof maxProcessSessionAge =="number" && maxProcessSessionAge > 10 ? maxProcessSessionAge : 3* 60 * 60 * 24  // 3 days
 }
 
+export const checkSessionExpire = (u)=>{
+  if(!isValidUser(u) || isSingleUserAllowed()) return false;
+  const {authSessionCreatedAt} = u;
+  if(typeof authSessionCreatedAt ==="number" && authSessionCreatedAt){
+    const expiresAt = authSessionCreatedAt + getAuthSessionMaxAge() * 1000;
+    if (new Date().getTime() > expiresAt) {
+       setLocalUser(null); //la session utilisateur a expirée, on la supprime
+       throw new Error(`Session utilisateur expirée pour l'utilisateur`);
+    }
+  }
+  return false;
+}
 
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
-    if(isValidUser(localUserRef.current)) return localUserRef.current;
-    const encrypted = $session.get(USER_SESSION_KEY);
     const defaultUser = getDefaultSingleUser();
+    if(isValidUser(localUserRef.current)){
+      try {
+        checkSessionExpire(localUserRef.current);
+        return localUserRef.current;
+      } catch(e){
+        return defaultUser;
+      }
+    }
+    const encrypted = $session.get(USER_SESSION_KEY);
     if(isNonNullString(encrypted)){
       try {
         const ded = crypToJS.decode(encrypted,getEncryptKey());
@@ -138,17 +157,7 @@ export const getLocalUser = x=> {
           const decoded = ded.toString(crypToJS.enc.Utf8);
           const u = parseJSON(decoded);
           if(isValidUser(u)){
-            const {authSessionCreatedAt} = u;
-            if(authSessionCreatedAt && !isSingleUserAllowed()){
-              const d = new Date(authSessionCreatedAt);
-              if(DateLib.isValid(d)){
-                const expiresAt = authSessionCreatedAt + getAuthSessionMaxAge() * 1000;
-                if (Date.now() > expiresAt) {
-                   setLocalUser(null); //la session utilisateur a expirée, on la supprime
-                   throw new Error(`Session utilisateur expirée pour l'utilisateur`);
-                }
-              }
-            }
+            checkSessionExpire(u);
             localUserRef.current = extendObj({},defaultUser,u);
             return localUserRef.current;
           }
@@ -178,9 +187,9 @@ export const setLocalUser = u => {
   let encrypted = null;
   try {
     if(isObj(uToSave)){
-      uToSave.authSessionCreatedAt = new Date();
+      uToSave.authSessionCreatedAt = new Date().getTime();
     }
-    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave)).toString() : null;
+    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave),getEncryptKey()).toString() : null;
   } catch(e){
     localUserRef.current = null;
     console.log(e," setting local user");
