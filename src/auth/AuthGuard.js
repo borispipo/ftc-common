@@ -14,7 +14,7 @@ export default function AuthGuard({ children,...rest}) {
     return React.isValidElement(child)? child : null;
   }
   if(!React.isComponent(LoginComponent)){
-    throw "Login component not defined!!! Merci de définir le composant de connextion à traver la propriété LoginComponent de $appConfig";
+    throw "Login component non définit!!! Merci de définir le composant de connextion à traver la propriété LoginComponent de $appConfig";
   }
   return <LoginComponent
     {...rest}

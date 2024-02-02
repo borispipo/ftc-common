@@ -4,6 +4,7 @@
 
 ///les paramètres de configuration à exploiter : 
 {
+    authMaxSessionAge | process.env.AUTH_SESSION_MAX_AGE : {number(secondes)} permet de renseigner sur la durée maximale des sessions utilisateurs
     includeCredentialsOnApiFetch : {boolean}, ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
     API_HOST : {string|validURL} ///l'adresse url par défaut es apiFetch
     RUN_API_ONLINE; si l'API s'exécute en ligne

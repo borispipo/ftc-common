@@ -16,6 +16,7 @@ import $session from "$session";
 import {updateTheme as uTheme} from "$theme";
 import { getThemeData } from "$theme/utils";
 import APP from "$capp/instance";
+import DateLib from "$clib/date";
 
 
 export const permProfilesTableName = "PERMS_PROFILES";
@@ -115,6 +116,16 @@ export const getDefaultSingleUser = ()=>{
     return null;
 }
 
+
+const maxProcessSessionAge = parseFloat(process.env.AUTH_SESSION_MAX_AGE||'') || 0;
+//par défaut les sessions utilisateur expirent après 3 jours
+export const getAuthSessionMaxAge = ()=>{
+  const maxAgeConfig = appConfig.get("authMaxSessionAge");
+  if(typeof maxAgeConfig =='number' && maxAgeConfig > 1000) return maxAgeConfig;
+  return typeof maxProcessSessionAge =="number" && maxProcessSessionAge > 1000 ? maxProcessSessionAge : 3* 60 * 60 * 24  // 3 days
+}
+
+
 export const getLocalUser = x=> {
     if(!isClientSide()) return null;
     if(isValidUser(localUserRef.current)) return localUserRef.current;
@@ -127,6 +138,17 @@ export const getLocalUser = x=> {
           const decoded = ded.toString(crypToJS.enc.Utf8);
           const u = parseJSON(decoded);
           if(isValidUser(u)){
+            const {authSessionCreatedAt} = u;
+            if(authSessionCreatedAt && !isSingleUserAllowed()){
+              const d = new Date(authSessionCreatedAt);
+              if(DateLib.isValid(d)){
+                const expiresAt = authSessionCreatedAt + getAuthSessionMaxAge() * 1000;
+                if (Date.now() > expiresAt) {
+                   setLocalUser(null); //la session utilisateur a expirée, on la supprime
+                   throw new Error(`Session utilisateur expirée pour l'utilisateur`);
+                }
+              }
+            }
             localUserRef.current = extendObj({},defaultUser,u);
             return localUserRef.current;
           }
@@ -155,7 +177,10 @@ export const setLocalUser = u => {
   localUserRef.current = uToSave;
   let encrypted = null;
   try {
-    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave),getEncryptKey()).toString() : null;
+    if(isObj(uToSave)){
+      uToSave.authSessionCreatedAt = new Date();
+    }
+    encrypted = uToSave ? crypToJS.encode(JSON.stringify(uToSave)).toString() : null;
   } catch(e){
     localUserRef.current = null;
     console.log(e," setting local user");
