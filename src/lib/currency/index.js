@@ -27,11 +27,11 @@ const lib = {};
 lib.settings = {
 		get currency(){
 			return {
-				symbol : "€",        // default currency symbol is '$'
-				format : "%v%s",    // controls output: %s = symbol, %v = value (can be object, see docs)
+				symbol : "FCFA",        // default currency symbol is '$'
+				format : "%v %s",    // controls output: %s = symbol, %v = value (can be object, see docs)
 				decimal : ".",        // decimal point separator
 				thousand : " ",        // thousands separator
-				decimal_digits : 2,        // decimal places
+				decimal_digits : 0,        // decimal places
 				grouping : 3,        // digit grouping (not implemented yet)
 				...Object.assign({},appConfig.currency)
 			}

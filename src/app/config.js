@@ -355,7 +355,11 @@ export const getDBNamePrefix = x=> getConfigValue("pouchdbNamePrefix") || getApp
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
 const runBackgroundTasksRef = {current:null};
 export const getCurrency = ()=> {
-    const currency = Object.assign({},session.get("appConfigCurrency"));
+    let currency = Object.assign({},session.get("appConfigCurrency"));
+    const currencyCode = getConfigValue("currencyCode");
+    if(isNonNullString(currencyCode) && isValidCurrency(currencies[currencyCode.trim().toUpperCase()])){
+        currency = {...currency,...currencies[currencyCode.trim().toUpperCase()]};
+    }
     const format = getCurrencyFormat();
     if(format){
         currency.format = typeof currency.format =="string" && currency.format.toLowerCase().trim() || format;
@@ -369,16 +373,16 @@ export const isInitialized = ()=>{
     return isInitializedRef.current;;
 }
 export const getCurrencyFormat = ()=>{
-    const r = session.get("appConfigCurrencyFormat");
+    const r = session.get("currencyFormat");
     return r && typeof r =="string" && r.toLowerCase().contains("%v")? r.toLowerCase() : "%v %s";
 }
 export const setCurrencyFormat = (format)=>{
     format = format && typeof format =="string"? format.trim() : "";
-    return session.set("appConfigCurrencyFormat",format);
+    return session.set("currencyFormat",format);
 }
 export const setCurrency = (currency)=>{
     if(!isValidCurrency(currency)){
-        let cCode = typeof currency =="object" && currency && !Array.isArray(currency) ? currency.code : undefined;
+        let cCode = typeof currency =="object" && currency && !Array.isArray(currency) ? currency.code : typeof currency =="string" ? currency : undefined;
         if(cCode){
             cCode = cCode.trim().toUpperCase();
         }
