@@ -129,7 +129,7 @@ export const checkSessionExpire = (u)=>{
   if(!isValidUser(u) || isSingleUserAllowed()) return false;
   const {authSessionCreatedAt} = u;
   if(typeof authSessionCreatedAt ==="number" && authSessionCreatedAt){
-    const expiresAt = authSessionCreatedAt + getAuthSessionMaxAge() * 1000;
+    const expiresAt = authSessionCreatedAt + (getAuthSessionMaxAge() * 1000);
     if (new Date().getTime() > expiresAt) {
        setLocalUser(null); //la session utilisateur a expirée, on la supprime
        throw new Error(`Session utilisateur expirée pour l'utilisateur`);
