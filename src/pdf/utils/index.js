@@ -303,9 +303,13 @@ export const getCompanyHeader = (options)=>{
         });
     }
     const displaySocialReason = !!defaultVal(options.displaySocialReason,1);
+    const companyName = displaySocialReason && defaultStr(options.companyName).trim || '';
+    if(companyName){
+        headerColumn.push({text:companyName+"\n",fontSize:13,bold})
+    }
     const socialReason = displaySocialReason && defaultStr(options.socialReason).trim() ||'';
     if(socialReason){
-        headerColumn.push({text:socialReason+"\n",fontSize:13,bold})
+        headerColumn.push({text:socialReason+"\n",fontSize:13,bold:false})
     }
     let phone = defaultStr(options.phone);
     if(isNonNullString(options.mobile)){
