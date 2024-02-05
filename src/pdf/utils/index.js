@@ -303,7 +303,7 @@ export const getCompanyHeader = (options)=>{
         });
     }
     const displaySocialReason = !!defaultVal(options.displaySocialReason,1);
-    const companyName = displaySocialReason && defaultStr(options.companyName).trim || '';
+    const companyName = displaySocialReason && defaultStr(options.companyName).trim() || '';
     if(companyName){
         headerColumn.push({text:companyName+"\n",fontSize:13,bold})
     }
