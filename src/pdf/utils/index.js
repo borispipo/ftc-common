@@ -308,6 +308,9 @@ export const getCompanyHeader = (options)=>{
         headerColumn.push({text:socialReason+"\n",fontSize:13,bold})
     }
     let phone = defaultStr(options.phone);
+    if(isNonNullString(options.mobile)){
+        phone += (isNonNullString(phone)?"/":"")+options.mobile
+    }
     if(isNonNullString(options.mobile1)){
         phone += (isNonNullString(phone)?"/":"")+options.mobile1
     }
