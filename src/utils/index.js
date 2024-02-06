@@ -21,6 +21,8 @@ export * from "./isRegex";
 
 export * from "./compare";
 
+export {default as stringify} from "./stringify";
+
 export const uniqid = _uniqid;
 export const parseJSON = pJSON;
 export const isJSON = isJ;
