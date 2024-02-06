@@ -18,10 +18,13 @@ function isType(obj, type) {
 }
 
 const defaultOptions = {
-  parenthesis: true
+  parenthesis: false,
 }
 
 export default function stringify(obj, options) {
+  if(typeof Error !=='undefined' && obj instanceof Error){
+    return obj?.toString();
+  }
   options = Object.assign({}, defaultOptions, options || {})
 
   var openParen = options.parenthesis ? '(' : ''
