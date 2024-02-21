@@ -469,7 +469,9 @@ export const getOptimizedOperator = (operator,opts)=>{
 export const MANGO_QUERY_OPERATOR = "MANGO_QUERY_OPERATOR";
 const whereClauseToSQL = (currentMongoParserElement,opts) => {
     let { field, operator, operand } = currentMongoParserElement;
-    if(!isNonNullString(operator) || !operatorsMap[operator]) return null;
+    if(!isNonNullString(operator) || !operatorsMap[operator]) {
+        return null;
+    }
     operator = operatorsMap[operator]
     if(operator == 'LIKE'){
         const deparsed = regexDeparser(operand);
@@ -493,7 +495,7 @@ const whereClauseToSQL = (currentMongoParserElement,opts) => {
     }
     operator = getOptimizedOperator(operator,opts);
     // AND or OR operators with nested elements
-    if (typeof field === 'undefined') {
+    if (!isNonNullString(field)) {
       // parse nested elements
       const nested = operand.reduce((prev, curr) => {
         const parsed = mangoParser.parse(curr);
@@ -502,8 +504,7 @@ const whereClauseToSQL = (currentMongoParserElement,opts) => {
             return [...prev,prepared]
         }
         return prev;
-      }, [])
-  
+      }, []);
       // nested WHERE element
       return {
         field: MANGO_QUERY_OPERATOR,
@@ -585,9 +586,9 @@ const operatorsMap = {
       // recursively call 'buildSQLWhereElement' for nested elements
       // join each element with operator AND or OR
       return operand.reduce((prev, curr) => {
-        const bb = buildSQLWhereElement(curr,statementsParams,fields,opts);
-        if(isNonNullString(bb) && bb.trim()){
-            prev.push(bb);
+        const sqlElt = buildSQLWhereElement(curr,statementsParams,fields,opts);
+        if(isNonNullString(sqlElt) && sqlElt.trim()){
+            prev.push(sqlElt);
         }
         return prev;
       }, []).join(' ' + operator + ' ')
@@ -631,6 +632,12 @@ const operatorsMap = {
   }
   
   /**** construit une requête SQL d'instructions Where à partir des filtres préparé dans le tableau whereClausePrepared
+    Les mangoes queries groupent les requêtes en deux types, les filtres en OR et les filtres en AND. 
+    tous les filtres en OR sont mis dans un groupe OR, tous les filtres en AND sont mis dans le groupe AND;
+        - Si uniquement 2 champs sont filtrés, l'un en OR et l'autre en AND alors la requête sera (conditionChamp1 OR conditionChamp2)
+        - Si au moins 2 champs sont filtrés en OR alors la requête sera ((conditionChampsAnd1 AND conditionChampAnd2, ...conditionChampAndN) AND (conditionsChamps en OR))
+        - Si plus d'un champ sont filtrés en OR et au moins un champ est filtré en AND alors la requête sera ((conditionChampsAnd1 AND conditionChampAnd2, ...conditionChampAndN) OR (conditionChamps en OR))
+        - Sinon, la requête sera ((conditionChampsAnd1 AND conditionChampAnd2, ...conditionChampAndN) and (conditionsChampOR1 OR conditionsChampO2, ...conditionsChampsOrN))
    * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
    * @parm {array|object} whereClausePrepared, les filtres préparés avec la méthode prepareFilters puis convertis avec la fonction parseMangoQueries
      @param {object} statementsParams, cet objet portera les valeurs des requêtes paremétrées, ces valeurs seront sous forme de : {champ:[operand]}, où les champs seront substitués dans les requêtes
@@ -668,13 +675,30 @@ const operatorsMap = {
     statementParamsCounterRef.current = -1;
     statementsParams = isObj(statementsParams) ? statementsParams : null;
     // build WHERE const clause by adding each element of array to it, separated with AND
-    return whereClausePrepared.reduce((prev, curr) => {
-       const bb = buildSQLWhereElement(curr,statementsParams,fields,opts);
-       if(isNonNullString(bb) && bb.trim()){
-            prev.push(bb);
+    const operators = [];
+    const cursors = [];
+    const results = whereClausePrepared.reduce((prev, curr) => {
+       let sqlElt = buildSQLWhereElement(curr,statementsParams,fields,opts);
+       if(isNonNullString(sqlElt) && sqlElt.trim()){
+            if(Array.isArray(curr?.operand) && isNonNullString(curr?.operator) && ["AND","OR"].includes(curr.operator.toUpperCase())){
+                operators.push(curr.operator.toUpperCase());
+                cursors.push(curr);
+            }
+            prev.push(sqlElt);
        }
        return prev;
-    }, []).join(' AND ');
+    }, []);
+    if(operators.length){
+        if(operators.length == 2 && results.length === 2 && operators[0] !== operators[1]){
+            const orIndex = operators[0] === "OR" ? 0 : 1;
+            const andIndex = operators.length - orIndex-1;
+            const cursorOr = cursors[orIndex];
+            if(isObj(cursorOr) && Array.isArray(cursorOr.operand) && cursorOr.operand.length === 1){
+                return `(${results[andIndex]}) OR (${results[orIndex]})`
+            }
+        }
+    } 
+    return results.join(' AND ');
   }
 
 const sKey = "FILTER-ITEM-KEY";
