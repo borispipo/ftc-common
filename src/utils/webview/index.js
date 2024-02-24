@@ -1,6 +1,6 @@
+import {isReactNativeWebview} from "../../platform/utils";
 export const canPostWebviewMessage = ()=>{
-    if(typeof window !=="undefined" || !window || ! window?.ReactNativeWebView || typeof window?.ReactNativeWebView?.postMessage !=="function") return false;
-    return true;
+    return isReactNativeWebview();
 }
 
 /*** permet d'envoyer un message webview depuis l'interface client
