@@ -195,6 +195,9 @@ const theme = {
     },
     get getProperty(){
         return getProperty;
+    },
+    get isValid(){
+        return isValid;
     }
 }
 
