@@ -415,9 +415,9 @@ updateColors(defaultDarkTheme);
 
 export {defaultTheme as defaultLightTheme,defaultDarkTheme};
 
-if(typeof window !=="undefined" && window && typeof window?.getActiveAppTheme !=="function"){
+if(typeof window !=="undefined" && window && typeof window?.getCurrentAppTheme !=="function"){
     Object.defineProperties(window,{
-        getActiveAppTheme : {
+        getCurrentAppTheme : {
             value : ()=>{
                 return Theme.current;
             }
