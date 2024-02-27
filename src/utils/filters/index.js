@@ -631,6 +631,14 @@ const operatorsMap = {
     return isNonNullString(field) ? ((field + ' ' + operator + ' ' +op)) :  ('(' + op + ')');
   }
   
+  export const filterDescription = `
+  Lorsque plusieurs champs sont filtrés, les filtres sont regroupés en deux groupes :  
+  tous les champs filtrés avec l'opérateur [ET] dans le groupe des [ET] et tous les champs filtrés avec l'opérateur [OU] dans le groupe des [OU].
+      - Si uniquement 2 champs sont filtrés, l'un avec l'opérateur [OU] et l'autre avec l'opérateur [ET] alors la requête émise sera (conditionChamp1 OU conditionChamp2)
+      - Si un seul champ est filtré avec l'opérateur OU et au moins un champ est filtré avec l'opérateur ET, alors la requête sera ((conditionChampsOperateur[ET]1 ET ...conditionChampsOperateur[ET]N) OU (conditionChampOperateur[OU]))
+      - Sinon, si plus d'un champ est filtré avec l'opérateur [OU] et au moins un champ avec l'opérateur [ET] la requête sera ((conditionChampsOperateur[ET]1 ET conditionChampsOperateur[ET]2 ... ET conditionChampsOperateur[ET]N) ET (conditionChampsOperateur[OU]1 OU conditionChampsOperateur[OU]2 OU ...conditionChampsOperateur[OU]N)) 
+  `
+  
   /**** construit une requête SQL d'instructions Where à partir des filtres préparé dans le tableau whereClausePrepared
     Les mangoes queries groupent les requêtes en deux types, les filtres en OR et les filtres en AND. 
     tous les filtres en OR sont mis dans un groupe OR, tous les filtres en AND sont mis dans le groupe AND;
