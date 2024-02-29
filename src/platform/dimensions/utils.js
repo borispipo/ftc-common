@@ -140,13 +140,10 @@ if(!isObj(breakpoints.allNormalized)){
 
 
 export const usePageDimensions = ()=>{
-	const isMounted = useIsMounted();
 	const [dimensions,setDimensions] = useState(getDimensionsProps());
 	useEffect(()=>{
 		const onResize = ()=>{
-			if(isMounted()){
-				setDimensions(getDimensionsProps());
-			}
+			setDimensions(getDimensionsProps());
 		}
 		APP.on(APP.EVENTS.RESIZE_PAGE,onResize);
 		return ()=>{
