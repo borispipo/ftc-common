@@ -2,12 +2,12 @@ import formats from "./formats";
 import defaultPageFormat from "./defaultPageFormat";
 import defaultPageOrientation from "./defaultPageOrientation";
 import appConfig from "$capp/config";
-import {isElectron,isMobileNative} from "$cplatform";
+import {isElectron,isMobileNative,isReactNativeWebview} from "$cplatform";
 
 export const LOGO_WIDTH = 100;
 
 export default {
-    fileName : isElectron() || isMobileNative()? {
+    fileName : isElectron() || isMobileNative() || isReactNativeWebview() ? {
         text : "Nom du fichier",
     }: undefined,
     pageFormat : {
