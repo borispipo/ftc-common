@@ -7,7 +7,7 @@ export const WEBVIEW_EXPO_UI_MESSAGE = "EXPO_UI_MESSAGE";
 
 export const WEBVIEW_LOG_EVENT = "WEBVIEW_LOG_EVENT";
 
-export const WEBVIEW_FILE_SAVER_SAVE_FILE = "WEBVIEW_FILE_SAVER_SAVE_FILE";
+export const WEBVIEW_SAVE_FILE_EVENT = "WEBVIEW_SAVE_FILE_EVENT";
 
 /*** 
     permet d'afficher les messages logs au niveau de la webview
