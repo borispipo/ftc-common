@@ -12,7 +12,7 @@ import sprintf  from "./sprintf";
 import base64 from "$base64";
 import "./object.filter";
 
-export * from "./webview";
+export * from "./rn-webview";
 export {default as classNames} from "./classNames";
 export {sprintf,isNonNullString};
 export {default as LorenIpsum} from "./loremIpsum";
