@@ -14,7 +14,7 @@ export const isNativeMobile = x=> isAndroid() || isIos();
 export const isMobileNative = isNativeMobile;
 
 export const isReactNativeWebview = ()=>{
-  if(typeof window =="undefined" || !window || ! window?.ReactNativeWebView || typeof window?.ReactNativeWebView?.postMessage !=="function") return false;
+  if(!isClientSide() || ! window?.ReactNativeWebView || typeof window?.ReactNativeWebView?.postMessage !=="function") return false;
   return true;
 }
 
