@@ -148,6 +148,7 @@ const setAlphaColor = (color,alpha)=>{
     return Colors.setAlpha(color,typeof alpha ==="number"? alpha : ALPHA);
 };
 const theme = {
+    get isV3 (){ return true;},
     get ALPHA () {return ALPHA},
     get current(){ return Theme.current;},
     get name(){return Theme.current.name;},
