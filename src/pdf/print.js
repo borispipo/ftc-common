@@ -115,9 +115,6 @@ export default function (data,options){
                         } else if(footerNote){
                             content.push(footerNote);
                         }
-                        if(printedDateStr){
-                            content.push(printedDateStr);
-                        }
                         const tagsA = Array.isArray(result.tags)? result.tags : tags;
                         if(Array.isArray(tagsA) && tagsA.length){
                             const pTag = printTags(tagsA,printOptions);
@@ -132,6 +129,10 @@ export default function (data,options){
                         if(generateQRCode && isNonNullString(qrCode.qr)){
                             content.push(qrCode);
                         }
+                        if(printedDateStr){
+                            content.push(printedDateStr);
+                        }
+                        
                         if(!pageBreakBeforeEachDoc){
                             if(counter < results.length){
                                 content.push({text:pageMarginAf});
