@@ -15,21 +15,39 @@ export const white = "white";
 
 export const transparent = "transparent";
 
-///les couleurs du theme light par défaut, définit dans les configurations
-export const getDefaultLight = x=>{
-    const t = appConfig.theme;
-    return isObj(t.light) && Colors.isValid(t.light.primary) ? t.light : t;
-};
-  
-///les couleurs du theme dark par défaut, définit dans les configurations
-export const getDefaultDark = x=>{
-    const t = appConfig.theme;
-    return isObj(t.dark) && t.dark.primary ? t.dark : {};
-};
 
+export const getDefaultTheme = ()=>{
+    const t = appConfig.theme;
+    if(isObj(t)){
+        const dark = t.dark === true ? true : isObj(t.dark) && !!t.dark.primary || false;
+        const rT = {};
+        for(let i in t){
+            if(!(["dark","light","colors"].includes(i))){
+                rT[i] = t[i];
+            }
+        }
+        return {
+            ...rT,
+            dark,
+            colors : {
+                ...(dark ? defDarkColors : defLightColors),
+                ...(isObj(t.dark) ? {...t.dark} : isObj(t.light) ? {...t.light} : Object.assign({},t.colors)),
+            },
+        }
+    }
+    return { colors : {},dark:false};
+}
+export const getDefaultLight = ()=>{
+    const t = getDefaultTheme();
+    return Object.assign({},!t.dark ? t.colors : {});
+}
+export const getDefaultDark = ()=>{
+    const t = getDefaultTheme();
+    return Object.assign({},t.dark ? t.colors : {});
+}
 
 let colors = {};
-export const lightColors = {
+const defLightColors = {
     info : '#1890FF',
     onInfo : "white",
     success : '#4caf50',
@@ -45,9 +63,8 @@ export const lightColors = {
     placeholder: Colors.setAlpha(black,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(black,0.18),
-    ...getDefaultLight(),
 }
-export const darkColors = {
+const defDarkColors = {
     info : '#39c0ed',
     onInfo: "black",
     success : '#00b74a',
@@ -64,6 +81,13 @@ export const darkColors = {
     placeholder: Colors.setAlpha(white,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
     divider : Colors.setAlpha(white,0.18),
+};
+export const lightColors = {
+    ...defLightColors,
+    ...getDefaultLight(),
+}
+export const darkColors = {
+    ...defDarkColors,
     ...getDefaultDark(),
 }
 const dark1name = "Sombre|Dark";
@@ -71,27 +95,12 @@ const dark1name = "Sombre|Dark";
 const defaultTheme = {
     dark: false,
     roundness: 4,
-    version: 2,
+    version: 3,
     fonts: configureFonts(),
     animation: {
         scale: 1.0,
     },
-    colors : {
-        primary: "#3D8B5F",
-        secondary : "#354448",
-        accent: '#03dac4',
-        background: '#f6f6f6',
-        surface: white,
-        error: '#B00020',
-        text: black,
-        onSurface: '#000000',
-        disabled: Colors.setAlpha(black,0.26),
-        placeholder: Colors.setAlpha(black,0.54),
-        backdrop: Colors.setAlpha(black,0.5),
-        notification: pinkA400,
-        ...lightColors,
-        ...getDefaultLight(),
-    },
+    ...getDefaultTheme(),
     get name (){
         return appConfig.name || '';
     }
