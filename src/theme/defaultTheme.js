@@ -48,6 +48,15 @@ export const getDefaultDark = ()=>{
 
 let colors = {};
 const defLightColors = {
+    primary: "#3D8B5F",
+    secondary : "#354448",
+    accent: '#03dac4',
+    background: '#f6f6f6',
+    surface: white,
+    error: '#B00020',
+    onSurface: '#000000',
+    notification: pinkA400,
+    
     info : '#1890FF',
     onInfo : "white",
     success : '#4caf50',
@@ -56,9 +65,6 @@ const defLightColors = {
     error: '#B00020',
     onError : "white",
     text: black,
-    background: '#f6f6f6',
-    surface: white,
-    onSurface: '#000000',
     disabled: Colors.setAlpha(black,0.26),
     placeholder: Colors.setAlpha(black,ALPHA),
     backdrop: Colors.setAlpha(black,0.5),
@@ -137,7 +143,7 @@ export const namedColors = [
 export const getColors = (opts)=>{
     extendObj(lightColors,getDefaultLight());
     extendObj(darkColors,getDefaultDark());
-    extendObj(defaultTheme.colors,getDefaultLight());
+    extendObj(defaultTheme.colors,defaultTheme.dark ? getDefaultDark():getDefaultLight());
     opts = isObj(opts)? opts : {};
     const {withDefaults,withNamed,withNamedColors,withDefaultsColors} = opts;
     const odoo = {
@@ -192,6 +198,8 @@ export const getColors = (opts)=>{
         return Colors.get(colorStr);    
     }
     colors = {};
+    const isDefaultThemeDark = !!defaultTheme.dark;
+    const nPrefix = isDefaultThemeDark ? "light" : "dark";
     for(let i in t){
         if(isObj(t[i])){
            const c = t[i];
@@ -227,6 +235,21 @@ export const getColors = (opts)=>{
             c.secondaryOnSurface = primary;
             c.onSecondary = black;
             c.disabled = Colors.setAlpha(black,0.6);
+        }
+        if(secondaryName !='white' && s && namedColors.includes(s) && c.name && typeof c.name =="string"){
+            const newTheme = Object.clone(c);
+            newTheme.name = `${c.name}-${nPrefix}`;
+            colors[newTheme.name] = {
+                ...newTheme,
+                ...(isDefaultThemeDark ? getDefaultLight():getDefaultDark()),
+                name : newTheme.name,
+                primaryName : c.primaryName,
+                secondaryName : c.secondaryName ? `${c.secondaryName}-${nPrefix}` : c.secondaryName,
+                primary,
+                onPrimary : Colors.getContrast(primary),
+                secondary,
+                onSecondary : Colors.getContrast(secondary),
+            }
         }
         if(isMainTheme){
             colors[dark1name] = dark1;
