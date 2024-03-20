@@ -71,6 +71,12 @@ export const updateColors  = (theme,force)=>{
             colors.secondaryOnSurface = colors.onSurface;
         }
     }
+    ["dark","light"].map((c)=>{
+        if(typeof colors[c] =="boolean"){
+            theme[c] = colors[c];
+            delete colors[c];
+        }
+    });
     //la couleur du status bar
     colors.statusBar = theme.dark ? colors.surface : isStatusBarColorDarken() ? Colors.darken(colors.primary) : colors.primary;
     return theme;

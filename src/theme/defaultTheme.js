@@ -199,7 +199,8 @@ export const getColors = (opts)=>{
     }
     colors = {};
     const isDefaultThemeDark = !!defaultTheme.dark;
-    const nPrefix = isDefaultThemeDark ? "light" : "dark";
+    const nPrefix = isDefaultThemeDark ? "dark":"light";
+    const secondPrefix = isDefaultThemeDark ? "light":"dark";
     for(let i in t){
         if(isObj(t[i])){
            const c = t[i];
@@ -220,10 +221,14 @@ export const getColors = (opts)=>{
         if(!primary || !secondary) {
             continue;
         }
-        const c = colors[t[i]] =  {
-            name : t[i], //le nom du thème
+        const canTh = t[i] && namedColors.includes(t[i]);
+        const nnSuffix = (canTh ? `-${nPrefix}`:"");
+        const cName = t[i]+nnSuffix;
+        const c = colors[cName] =  {
+            name : cName, //le nom du thème
             primaryName,
-            secondaryName,
+            dark : isDefaultThemeDark,
+            secondaryName : secondaryName+nnSuffix,
             ...defaultTheme.colors,
             primary,
             onPrimary : Colors.getContrast(primary),
@@ -236,19 +241,20 @@ export const getColors = (opts)=>{
             c.onSecondary = black;
             c.disabled = Colors.setAlpha(black,0.6);
         }
-        if(secondaryName !='white' && s && namedColors.includes(s) && c.name && typeof c.name =="string"){
+        if(canTh){
             const newTheme = Object.clone(c);
-            newTheme.name = `${c.name}-${nPrefix}`;
+            newTheme.name = `${t[i]}-${secondPrefix}`;
             colors[newTheme.name] = {
                 ...newTheme,
-                ...(isDefaultThemeDark ? getDefaultLight():getDefaultDark()),
+                ...(isDefaultThemeDark ? lightColors:darkColors),
+                dark : !isDefaultThemeDark,
                 name : newTheme.name,
                 primaryName : c.primaryName,
-                secondaryName : c.secondaryName ? `${c.secondaryName}-${nPrefix}` : c.secondaryName,
+                secondaryName : secondaryName+"-"+secondPrefix,
                 primary,
-                onPrimary : Colors.getContrast(primary),
+                onPrimary : c.onPrimary,
                 secondary,
-                onSecondary : Colors.getContrast(secondary),
+                onSecondary : c.onSecondary,
             }
         }
         if(isMainTheme){
