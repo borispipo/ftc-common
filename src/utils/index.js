@@ -12,6 +12,8 @@ import sprintf  from "./sprintf";
 import base64 from "$base64";
 import "./object.filter";
 
+export {default as parseCSV} from "./parseCSV";
+
 export * from "./rn-webview";
 export {default as classNames} from "./classNames";
 export {sprintf,isNonNullString};
