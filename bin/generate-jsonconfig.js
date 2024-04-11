@@ -48,12 +48,23 @@ module.exports = function generateJSONConfig(opts){
                     let np = path.relative(baseUrl,aa).trim().split("\\").join("/");
                     if(lstat.isDirectory() && !lstat.isFile()){
                         np = np.trim().rtrim("/*").rtrim("/").rtrim("\\").trim();
+                        const hasIndexJs = fs.existsSync(path.resolve(aa,"index.js"));
+                        const hasIndexJsx = fs.existsSync(path.resolve(aa,"index.jsx"));
+                        const hasIndexTs = fs.existsSync(path.resolve(aa,"index.ts"));
+                        const hasIndexTsx = fs.existsSync(path.resolve(aa,"index.tsx"));
+                        const hasIndexFile =  hasIndexJs || hasIndexTs  || hasIndexJsx || hasIndexTsx ;
+                        aliasIndex = aliasIndex.rtrim("/*").rtrim("/").rtrim("\\");
+                        if(hasIndexFile){
+                            const indexF = hasIndexJs || hasIndexTs ? "index" : hasIndexJsx ? "index.jsx" : "index.tsx";
+                            paths[aliasIndex+`/${indexF}`] = !np ? [`./${indexF}`]:[`${np.rtrim("/")}/${indexF}`];
+                            hasFoundAlias = true;
+                        }
                         if(!np){
                             np = "./*"
                         } else if(!np.endsWith("/*")){
                             np+="/*";
                         }
-                        aliasIndex = aliasIndex.rtrim("/*").rtrim("/").rtrim("\\")+"/*";
+                        aliasIndex = aliasIndex+"/*";
                     }
                     if(np){
                         rAlias.push(np);
