@@ -56,7 +56,7 @@ module.exports = function generateJSONConfig(opts){
                         aliasIndex = aliasIndex.rtrim("/*").rtrim("/").rtrim("\\");
                         if(hasIndexFile){
                             const indexF = hasIndexJs || hasIndexTs ? "index" : hasIndexJsx ? "index.jsx" : "index.tsx";
-                            paths[aliasIndex+`/${indexF}`] = !np ? [`./${indexF}`]:[`${np.rtrim("/")}/${indexF}`];
+                            paths[aliasIndex] = !np ? [`./${indexF}`]:[`${np.rtrim("/")}/${indexF}`];
                             hasFoundAlias = true;
                         }
                         if(!np){
