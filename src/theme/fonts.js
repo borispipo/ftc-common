@@ -62,6 +62,6 @@ export const fontConfig = {
 };
 
 export default function configureFonts(config){
-  const fonts = Platform.select({ ...fontConfig, ...config });
+  const fonts = Platform.select({isV3:true,...fontConfig, ...config});
   return fonts;
 }

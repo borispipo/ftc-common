@@ -102,7 +102,7 @@ const defaultTheme = {
     dark: false,
     roundness: 4,
     version: 3,
-    fonts: configureFonts(),
+    fonts: configureFonts({isV3:true}),
     animation: {
         scale: 1.0,
     },
