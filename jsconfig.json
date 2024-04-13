@@ -1,0 +1,380 @@
+{
+	"compilerOptions": {
+		"paths": {
+			"$packageJSON": [
+				"package.json"
+			],
+			"$capp": [
+				"src/app/index"
+			],
+			"$capp/*": [
+				"src/app/*"
+			],
+			"$capi": [
+				"src/api/index"
+			],
+			"$capi/*": [
+				"src/api/*"
+			],
+			"$ci18n": [
+				"src/i18n/index"
+			],
+			"$ci18n/*": [
+				"src/i18n/*"
+			],
+			"$clib/*": [
+				"src/lib/*"
+			],
+			"$cauth": [
+				"src/auth/index"
+			],
+			"$cauth/*": [
+				"src/auth/*"
+			],
+			"$cnavigation": [
+				"src/navigation/index"
+			],
+			"$cnavigation/*": [
+				"src/navigation/*"
+			],
+			"$cplatform": [
+				"src/platform/index"
+			],
+			"$cplatform/*": [
+				"src/platform/*"
+			],
+			"$cdimensions": [
+				"src/platform/dimensions/index"
+			],
+			"$cdimensions/*": [
+				"src/platform/dimensions/*"
+			],
+			"$cvalidator": [
+				"src/lib/validator/index"
+			],
+			"$cvalidator/*": [
+				"src/lib/validator/*"
+			],
+			"$crypto-js": [
+				"src/lib/crypto-js/index"
+			],
+			"$crypto-js/*": [
+				"src/lib/crypto-js/*"
+			],
+			"$pouchdb": [
+				"src/pouchdb/index"
+			],
+			"$pouchdb/*": [
+				"src/pouchdb/*"
+			],
+			"$pouchDB": [
+				"src/pouchdb/index"
+			],
+			"$pouchDB/*": [
+				"src/pouchdb/*"
+			],
+			"$ctheme": [
+				"src/theme/index"
+			],
+			"$ctheme/*": [
+				"src/theme/*"
+			],
+			"$cnotify": [
+				"src/notify/index"
+			],
+			"$cnotify/*": [
+				"src/notify/*"
+			],
+			"$cutils": [
+				"src/utils/index"
+			],
+			"$cutils/*": [
+				"src/utils/*"
+			],
+			"$curi": [
+				"src/utils/uri/index"
+			],
+			"$curi/*": [
+				"src/utils/uri/*"
+			],
+			"$ccurrency": [
+				"src/lib/currency/index"
+			],
+			"$ccurrency/*": [
+				"src/lib/currency/*"
+			],
+			"$csession": [
+				"src/session/index"
+			],
+			"$csession/*": [
+				"src/session/*"
+			],
+			"$cbase64": [
+				"src/lib/base-64/index"
+			],
+			"$cbase64/*": [
+				"src/lib/base-64/*"
+			],
+			"$base64": [
+				"src/lib/base-64/index"
+			],
+			"$base64/*": [
+				"src/lib/base-64/*"
+			],
+			"$cactions": [
+				"src/actions/index"
+			],
+			"$cactions/*": [
+				"src/actions/*"
+			],
+			"$i18n": [
+				"src/i18n/index"
+			],
+			"$i18n/*": [
+				"src/i18n/*"
+			],
+			"$lib/*": [
+				"src/lib/*"
+			],
+			"$platform": [
+				"src/platform/index"
+			],
+			"$platform/*": [
+				"src/platform/*"
+			],
+			"$dimensions": [
+				"src/platform/dimensions/index"
+			],
+			"$dimensions/*": [
+				"src/platform/dimensions/*"
+			],
+			"$validator": [
+				"src/lib/validator/index"
+			],
+			"$validator/*": [
+				"src/lib/validator/*"
+			],
+			"$crypto": [
+				"src/lib/crypto-js/index"
+			],
+			"$crypto/*": [
+				"src/lib/crypto-js/*"
+			],
+			"$cfilters": [
+				"src/utils/filters/index"
+			],
+			"$cfilters/*": [
+				"src/utils/filters/*"
+			],
+			"$cdatabaseUtils": [
+				"src/utils/database/index"
+			],
+			"$cdatabaseUtils/*": [
+				"src/utils/database/*"
+			],
+			"$notify": [
+				"src/notify/index"
+			],
+			"$notify/*": [
+				"src/notify/*"
+			],
+			"$theme": [
+				"src/theme/index"
+			],
+			"$theme/*": [
+				"src/theme/*"
+			],
+			"$utils": [
+				"src/utils/index"
+			],
+			"$utils/*": [
+				"src/utils/*"
+			],
+			"$uri": [
+				"src/utils/uri/index"
+			],
+			"$uri/*": [
+				"src/utils/uri/*"
+			],
+			"$currency": [
+				"src/lib/currency/index"
+			],
+			"$currency/*": [
+				"src/lib/currency/*"
+			],
+			"$session": [
+				"src/session/index"
+			],
+			"$session/*": [
+				"src/session/*"
+			],
+			"$actions": [
+				"src/actions/index"
+			],
+			"$actions/*": [
+				"src/actions/*"
+			],
+			"$projectRoot/*": [
+				"./*"
+			],
+			"$base/*": [
+				"./*"
+			],
+			"$src/*": [
+				"src/*"
+			],
+			"$cdatafileManager": [
+				"src/pouchdb/dataFileManager/index"
+			],
+			"$cdatafileManager/*": [
+				"src/pouchdb/dataFileManager/*"
+			],
+			"$datafileManager": [
+				"src/pouchdb/dataFileManager/index"
+			],
+			"$datafileManager/*": [
+				"src/pouchdb/dataFileManager/*"
+			],
+			"$ftc-common/*": [
+				"./*"
+			],
+			"$ceventSource": [
+				"src/utils/eventSource/index"
+			],
+			"$ceventSource/*": [
+				"src/utils/eventSource/*"
+			],
+			"$swr": [
+				"src/swr/index"
+			],
+			"$swr/*": [
+				"src/swr/*"
+			],
+			"$useSWR": [
+				"src/swr/index"
+			],
+			"$useSWR/*": [
+				"src/swr/*"
+			],
+			"$cpdf": [
+				"src/pdf/index"
+			],
+			"$cpdf/*": [
+				"src/pdf/*"
+			],
+			"$pdf": [
+				"src/pdf/index"
+			],
+			"$pdf/*": [
+				"src/pdf/*"
+			],
+			"$eventSource": [
+				"src/utils/eventSource/index"
+			],
+			"$eventSource/*": [
+				"src/utils/eventSource/*"
+			],
+			"$currencies": [
+				"src/lib/currency/index"
+			],
+			"$currencies/*": [
+				"src/lib/currency/*"
+			],
+			"$api": [
+				"src/api/index"
+			],
+			"$api/*": [
+				"src/api/*"
+			],
+			"$app": [
+				"src/app/index"
+			],
+			"$app/*": [
+				"src/app/*"
+			],
+			"$cpreloader": [
+				"src/preloader/index"
+			],
+			"$cpreloader/*": [
+				"src/preloader/*"
+			],
+			"$preloader": [
+				"src/preloader/index"
+			],
+			"$preloader/*": [
+				"src/preloader/*"
+			],
+			"$active-platform": [
+				"src/platforms/web/index"
+			],
+			"$active-platform/*": [
+				"src/platforms/web/*"
+			],
+			"$clipboard": [
+				"src/platforms/web/clipboard/index"
+			],
+			"$clipboard/*": [
+				"src/platforms/web/clipboard/*"
+			],
+			"$makePhoneCall": [
+				"src/platforms/web/makePhoneCall/index"
+			],
+			"$makePhoneCall/*": [
+				"src/platforms/web/makePhoneCall/*"
+			],
+			"$common/*": [
+				"src/*"
+			],
+			"$react": [
+				"src/utils/react/index"
+			],
+			"$react/*": [
+				"src/utils/react/*"
+			],
+			"$navigation": [
+				"src/navigation/index"
+			],
+			"$navigation/*": [
+				"src/navigation/*"
+			],
+			"$auth": [
+				"src/auth/index"
+			],
+			"$auth/*": [
+				"src/auth/*"
+			],
+			"$cneutralino": [
+				"src/neu/index"
+			],
+			"$cneutralino/*": [
+				"src/neu/*"
+			],
+			"$cneu": [
+				"src/neu/index"
+			],
+			"$cneu/*": [
+				"src/neu/*"
+			],
+			"$neutralino": [
+				"src/neu/index"
+			],
+			"$neutralino/*": [
+				"src/neu/*"
+			],
+			"$neu": [
+				"src/neu/index"
+			],
+			"$neu/*": [
+				"src/neu/*"
+			]
+		},
+		"baseUrl": "./"
+	},
+	"exclude": [
+		"node_modules",
+		"build",
+		"dist",
+		"out",
+		"web-build"
+	]
+}
