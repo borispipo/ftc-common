@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "4.40.1",
+  "version": "4.41.0",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -49,7 +49,7 @@
     "pouchdb-erase": "^1.0.2",
     "pouchdb-find": "^8.0.1",
     "prop-types": "^15.8.1",
-    "qs": "^6.12.0",
+    "qs": "^6.12.1",
     "react-fast-compare": "^3.2.2",
     "react-is": "^18.2.0",
     "sanitize-filename": "^1.6.3",
