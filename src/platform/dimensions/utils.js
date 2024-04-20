@@ -9,6 +9,7 @@ import {isObj,defaultStr,isNonNullString} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
 import isTouchDevice from "$cutils/isTouchDevice";
+import Keyboard,{isKeyboardVisible} from '$cplatform/keyboard';
 
 export {default as useWindowDimensions} from "$active-platform/useWindowDimensions";
 
@@ -104,6 +105,10 @@ if(!isObj(breakpoints.allNormalized)){
 	let mediaTimer = null;
 	const updateMedia = ()=>{
 		clearTimeout(mediaTimer);
+		if(isKeyboardVisible()) {
+			console.log("platform dimension keyboard is visible");
+			return;
+		}
 		APP.trigger(APP.EVENTS.RESIZE_PAGE,Dimensions.get("window"))
 		updateDeviceClassName();
 	}
@@ -114,6 +119,18 @@ if(!isObj(breakpoints.allNormalized)){
 		clearTimeout(mediaTimer);
         mediaTimer = setTimeout(updateMedia,150);
     });
+    if(typeof Keyboard.addEventListener =="function"){
+        const onKeyboardShow = (event) => {
+			keyBoardVisibleRef.current = true;
+		}, onKeyboardHide = (event) => {
+			keyBoardVisibleRef.current = false;
+		};
+		Keyboard.addListener('keyboardDidShow', onKeyboardShow);
+		DeviceEventEmitter.addListener('keyboardWillShow',onKeyboardShow);
+		
+		Keyboard.addListener('keyboardDidHide', onKeyboardHide);
+		Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    }
 }
 
 /**** retourne les dimensions props à exploiter pour le calcul des nouvelles dimensions lorsque la taille de l'écran change

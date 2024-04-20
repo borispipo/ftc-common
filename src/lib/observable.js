@@ -35,7 +35,11 @@ export const observable = function(el) {
         if (typeof fn == 'function' && event && typeof event ==='string')  {
             (callbacks[event] = callbacks[event] || []).push(fn);
         }
-        return el
+        return {
+          remove : ()=>{
+            el.off(event,fn);
+          }
+        }
       },
       enumerable: false,
       writable: false,
