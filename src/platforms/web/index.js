@@ -14,3 +14,6 @@ const Platform = {
   };
   
   export default Platform;
+  
+  
+export const isReactNative = ()=> false;

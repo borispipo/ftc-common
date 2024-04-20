@@ -1,4 +1,5 @@
 import Platform from "./device";
+import { isReactNative } from "$active-platform";
 const Neu = require("$cneutralino");
 const ios = 'ios',android = 'android', web = 'web',electron = 'electron';
 const pf = Platform.platform;
@@ -12,6 +13,8 @@ export const isAndroid =  x=> pf ===android ? true : false;
 export const isNativeMobile = x=> isAndroid() || isIos();
 
 export const isMobileNative = isNativeMobile;
+
+export {isReactNative};
 
 export const isReactNativeWebview = ()=>{
   if(!isClientSide() || ! window?.ReactNativeWebView || typeof window?.ReactNativeWebView?.postMessage !=="function") return false;
@@ -88,10 +91,6 @@ export const isWebOrElectron = x=> isWeb() || isElectron();
 export const isServerSide = x => typeof window === 'undefined' && typeof process !=='undefined' || !window || typeof window !=='object' ? true : false;
 
 export const isClientSide = x=> typeof window =="undefined"? false : typeof window !=="undefined" && typeof window === "object" ? true : false;
-
-
-///s'il s'agit d'un environnement react-native où expo
-export const isReactNative = x=> isClientSide() && "__DEV__" in window;
 
 export const isExpo = isReactNative;
 
