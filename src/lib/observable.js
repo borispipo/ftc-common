@@ -14,7 +14,7 @@ export const observable = function(el) {
   /**
    * Private variables
    */
-  var callbacks = {},finallyCallback = {},
+  let callbacks = {},finallyCallback = {},
     slice = Array.prototype.slice
 
   /**
@@ -70,7 +70,10 @@ export const observable = function(el) {
                   arr.splice(i--, 1)
               }
             }
-          } else delete callbacks[event]
+          } else {
+            console.warn("observable, call off on event "+event+" with invalid function "+fn);
+            //else delete callbacks[event], le bug qui supprime le callback des évènemenmts lorsque fn est à undefined
+          }
         }
         return el
       },
@@ -81,8 +84,8 @@ export const observable = function(el) {
     offAll : {
         value : function(){
             MS_OBSERVER.removeObserver(this);
-            callbacks = [];
-            finallyCallback = [];
+            callbacks = {};
+            finallyCallback = {};
         },
         enumerable: false,
         writable: false,
@@ -124,31 +127,19 @@ export const observable = function(el) {
      * @returns { Object } el
      */
     trigger: {
-      value: function(event) {
-        // getting the arguments
-        var arglen = arguments.length - 1,
-          args = new Array((arglen <= 0)? 0 : (arglen-1)),
-          fns,
-          fn,
-          i;
-          var finaly = null;
-        if(typeof arguments[arglen] == 'function'){
-            finaly = arguments[arglen];
-            arglen -=1;
-        } else  {
-            args.push(arguments[arglen]);
-        }
-        for (i = 0; i < arglen; i++) {
-          args[i] = arguments[i + 1] // skip first argument
-        }
-
+      value: function(event,...args) {
+          if(typeof event !== "string" || !event) return;
+          // getting the arguments
+          let  fns,fn,i;
+          let finaly = null;
+          if(typeof args[args.length-1] == 'function'){
+              finaly = args.pop();
+          } 
           fns = slice.call(callbacks[event] || [], 0);
           let fnsReturns = [];
-          let hasTriggering =false;
           for (i = 0; fn = fns[i]; ++i) {
               if(typeof fn === 'function') {
                 fnsReturns.push(fn.apply(el, args));
-                hasTriggering = true;
               }
           }
           if (callbacks['*'] && event != '*'){

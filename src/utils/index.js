@@ -12,6 +12,8 @@ import sprintf  from "./sprintf";
 import base64 from "$base64";
 import "./object.filter";
 
+export {default as global} from "./global";
+
 export {default as parseCSV} from "./parseCSV";
 
 export * from "./rn-webview";
@@ -41,11 +43,7 @@ export function isFunction(function_name){
 export const isWindowClient = x=> typeof window !== "undefined" && typeof (window) =="object" ? true : false;
 
 if(typeof __DEV__ == 'undefined'){
-    if(isWindowClient()){
-        window.__DEV__ = true;
-    } else if(typeof global !=='undefined' && global){
-        global.__DEV__ = true;
-    }
+    global.__DEV__ = true;
 }
 
 export * from "./uri";

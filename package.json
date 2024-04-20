@@ -1,6 +1,6 @@
 {
   "name": "@fto-consult/common",
-  "version": "4.41.1",
+  "version": "4.43.5",
   "description": "Un ensemble de bibliothèques et d'utilistaires communs pour le développement d'applications javascript",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "unpublish": "npm -f unpublish @fto-consult/common",
     "delete-docs": "node ./deleteDocsFolder",
     "update-pdfmake": "node ./bin/update-pdfmake.js",
-    "generate-jsonconfig" : "node ./bin/generate-my-jsonconfig.js",
+    "generate-jsonconfig": "node ./bin/generate-my-jsonconfig.js",
     "build-docs": "npm run delete-docs && npx jsdoc -r src  -c ./jsdoc.conf.json -d docs",
     "docs": "npm run build-docs",
     "update": "npm i js-base64@latest pdfmake@latest mongo-parse@latest @craftzdog/pouchdb-adapter-websql-core@latest pouchdb@latest pouchdb-authentication@latest pouchdb-erase@latest pouchdb-find@latest prop-types@latest qs@latest react-fast-compare@latest react-is@latest sanitize-filename@latest stable-hash@latest written-number@latest swr@latest && npm run update-pdfmake"

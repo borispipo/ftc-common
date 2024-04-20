@@ -4,12 +4,11 @@
 
 import Dimensions from '$active-platform/dimensions';
 import breakpoints, {initBreakPoints} from './breakpoints';
-import {useEffect,useState} from "react";
+import {useEffect,useState,useRef} from "react";
 import {isObj,defaultStr,isNonNullString} from "$cutils"
 import APP from "$capp/instance";
 import {addClassName,removeClassName,isDOMElement} from "$cutils/dom";
 import isTouchDevice from "$cutils/isTouchDevice";
-import useIsMounted from "$cutils/react/useIsMounted";
 
 export {default as useWindowDimensions} from "$active-platform/useWindowDimensions";
 
@@ -138,17 +137,23 @@ if(!isObj(breakpoints.allNormalized)){
     };
 }
 
-
-export const usePageDimensions = ()=>{
+/****
+	hoook permettant de récupérer les dimensions de la page lorsque la fenêtre est redimensionnée
+	@param {responsive} boolean, par défaut true, lorsque responsive est à false, alors l'éccoute de l'èvenement de redimensionement est non écouté
+*/
+export const usePageDimensions = (responsive)=>{
 	const [dimensions,setDimensions] = useState(getDimensionsProps());
+	responsive = typeof responsive =="boolean"? responsive : true;
 	useEffect(()=>{
 		const onResize = ()=>{
 			setDimensions(getDimensionsProps());
 		}
-		APP.on(APP.EVENTS.RESIZE_PAGE,onResize);
+		if(responsive){
+			APP.on(APP.EVENTS.RESIZE_PAGE,onResize);
+		}
 		return ()=>{
 			APP.off(APP.EVENTS.RESIZE_PAGE,onResize);
 		}
-	},[]);
+	},[responsive]);
 	return dimensions;
 }

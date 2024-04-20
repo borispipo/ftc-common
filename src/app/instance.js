@@ -1,8 +1,7 @@
 // Copyright 2022 @fto-consult/Boris Fouomene. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
-const mainGlobal = typeof globalThis !=='undefined' && typeof globalThis ==='object' ? globalThis : typeof global !=='undefined' && typeof global=='object' ? global  : typeof window !=='undefined' && typeof window =='object'? window : {};
+import mainGlobal from "$cutils/global";
 import * as Utils from "$cutils";
 import {isObj, isNonNullString} from "$cutils";
 import {isClientSide,isElectron} from "$cplatform/utils";
@@ -57,7 +56,7 @@ const electronMessageApi = typeof window === 'undefined' ? null : isClientSide()
     (isObj(mainGlobal.electronIpcRenderCustomRender) && mainGlobal.electronIpcRenderCustomRender || {})
 || null;
 
-const APP_INSTANCE = {
+const APP_INSTANCE = isObj(mainGlobal.APP) ? mainGlobal.APP : {
     get NAME (){
         return appConfig.name;
     },
@@ -81,10 +80,7 @@ const APP_INSTANCE = {
     },
     get getInstance(){
         return ()=>{
-            if(!isObservable(APP_INSTANCE)){
-                observable(APP_INSTANCE);
-                addObserver(APP_INSTANCE);
-            }
+            initAppInstance();
             return APP_INSTANCE;
         }
     },
@@ -162,15 +158,17 @@ const APP_INSTANCE = {
         }
     },
 };
+export const initAppInstance = ()=>{
+    if(!isObservable(APP_INSTANCE)){
+        observable(APP_INSTANCE);
+        addObserver(APP_INSTANCE);
+    }
+}
 if(!isObj(mainGlobal.APP) || !mainGlobal.APP){
     Object.defineProperties(mainGlobal,{
         APP : {value : APP_INSTANCE,override:false,writable:false}
     });
 } 
-
-observable(APP_INSTANCE);
-addObserver(APP_INSTANCE);
-
 if(electronMessageApi){
     if(typeof electronIpcRenderCustomRender !=='object' && !isObj(mainGlobal.electronIpcRenderCustomRender)){
         mainGlobal.electronIpcRenderCustomRender  = electronMessageApi;
@@ -207,4 +205,5 @@ if(electronMessageApi){
     }
 }
 
+initAppInstance();
 export default APP_INSTANCE;
