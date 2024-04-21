@@ -42,16 +42,16 @@ export const getRequestHeaders = function (opts){
       }
     }
     ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
-    if(opts.includeCredentials && appConfig.get("includeCredentialsOnApiFetch") !== false && isNonNullString(ret.Authorization)){
-         opts.credentials = "include";
+    if(!ret.credentials && opts.includeCredentials && appConfig.get("includeCredentialsOnApiFetch") !== false && isNonNullString(ret.Authorization)){
+         ret.credentials = "include";
     }
-    const contentType = ["Content-Type","content-type","Content-type", "content-Type"].filter(c=>(isNonNullString(ret.headers[c])))[0];
+    const contentType = ["Content-Type","content-type","Content-type", "content-Type"].filter(c=>isNonNullString(ret[c]))[0];
     if(contentType){
-      ret["Content-Type"] = contentType;
+      ret["Content-Type"] = ret[contentType];
     }
     delete ret.authorization;
-    if(typeof appConfig.mutateApiRequestHeader === "function"){
-      appConfig.mutateApiRequestHeader(ret);
+    if(typeof appConfig.apiRequestHeaderMutator === "function"){
+      appConfig.apiRequestHeaderMutator(ret);
     }
     return ret;
 }
@@ -243,7 +243,7 @@ export const prepareFetchOptions = (_opts,options)=>{
      if(isObj(opts.body)){
         if(!hasContentType){
            opts.headers["Content-Type"] = "application/json";
-           opts.headers["Accept"] = defaultStr(options.headers["Accept"],"application/json");
+           opts.headers["Accept"] = defaultStr(opts.headers["Accept"],"application/json");
         }
         opts.body  = JSON.stringify(opts.body);
      } else if(!opts.body && !hasContentType){
