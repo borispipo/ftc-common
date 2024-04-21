@@ -25,6 +25,10 @@ import i18n from "$i18n";
 export const getRequestHeaders = function (opts){
     opts = defaultObj(opts);
     const ret = extendObj({},opts.headers);
+    if(isNonNullString(ret.authorization) && !isNonNullString(ret.Authorization)){
+      ret.Authorization = ret.authorization;
+      delete ret.authorization;
+    }
     if(!ret.Authorization  && !ret.authorization && opts.authorization !==false && opts.Authorization !==false){
        const token = getToken();
        if(token){
@@ -33,11 +37,22 @@ export const getRequestHeaders = function (opts){
          delete ret.Authorization;
        }
     } else {
-      if(!ret.Authorization || typeof ret.Authorization ==='boolean'){
+      if(!isNonNullString(ret.Authorization)){
          delete ret.Authorization;
       }
     }
+    ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
+    if(opts.includeCredentials && appConfig.get("includeCredentialsOnApiFetch") !== false && isNonNullString(ret.Authorization)){
+         opts.credentials = "include";
+    }
+    const contentType = ["Content-Type","content-type","Content-type", "content-Type"].filter(c=>(isNonNullString(ret.headers[c])))[0];
+    if(contentType){
+      ret["Content-Type"] = contentType;
+    }
     delete ret.authorization;
+    if(typeof appConfig.mutateApiRequestHeader === "function"){
+      appConfig.mutateApiRequestHeader(ret);
+    }
     return ret;
 }
 
@@ -222,16 +237,13 @@ export const prepareFetchOptions = (_opts,options)=>{
       delete opts.fetchOptions;
      }
      opts.headers = getRequestHeaders(opts);
+     const hasContentType = isNonNullString(opts.headers["Content-Type"]);
+     delete opts.includeCredentials;
      opts.url = buildAPIPath(url,opts.queryParams);
-     ///includeCredentialsOnApiFetch doit être définit pour l'inclusion automatique des crédentials aux entête des apiFetch
-     if(includeCredentials !== false && appConfig.get("includeCredentialsOnApiFetch") !== false && (opts.headers.Authorization)){
-        opts.credentials = "include";
-     }
-     const hasContentType = !!(["Content-Type","content-type","Content-type", "content-Type"].filter(c=>!!(c in opts.headers)).length);
      if(isObj(opts.body)){
         if(!hasContentType){
            opts.headers["Content-Type"] = "application/json";
-           opts.headers["Accept"] = "application/json";
+           opts.headers["Accept"] = defaultStr(options.headers["Accept"],"application/json");
         }
         opts.body  = JSON.stringify(opts.body);
      } else if(!opts.body && !hasContentType){
@@ -239,6 +251,7 @@ export const prepareFetchOptions = (_opts,options)=>{
      }
      delete opts.authorization;
      delete opts.Authorization;
+     delete opts.data;
      if(typeof mutator =='function'){
          mutator(opts)
      }
