@@ -47,6 +47,9 @@ export default function (data,options){
         } 
         let allData = data;
         const multiple = allData.length > 1;
+        if(!multiple){
+            data = defaultObj(data[0]);
+        }
         return Promise.resolve(getSettings({...printOptions,multiple,allData,data})).then(({pageBreakBeforeEachDoc,pageMarginAfterEachDoc,data:cData,printTitle,generateQRCode,footerNote,title,duplicateDocOnPage,qrCodeAlignment,tags,signatories,...rest})=>{
             let restFileName = defaultStr(rest.fileName);
             pageMarginAfterEachDoc = typeof pageMarginAfterEachDoc =='number'? Math.ceil(pageMarginAfterEachDoc) : 2;
