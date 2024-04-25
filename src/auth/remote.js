@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import {logout,setToken} from "./utils";
-import {post} from "$capi";
+import {post,isSuccessStatus} from "$capi";
 import {navigate} from "$cnavigation";
 import notify from "$active-platform/notify";
 import i18n from "$ci18n";
@@ -39,8 +39,9 @@ export const signIn = (user,callback,trigger)=>{
       url : SIGN_IN,
       body : user
   })).then((args)=>{
-    const {response,done,token,preferences,fetchResponse,res,status,...rest}=  defaultObj(args);
-    if(isCustom || (isObj(response) && (response.success || response.status ==200 || response.status ==201))){
+    const isSuccess = isSuccessStatus(args);
+    const {done,token,preferences,response,fetchResponse,res,status,...rest}=  defaultObj(args);
+    if(isCustom || isSuccess){
       delete user.password;
       Object.map(rest,(v,i)=>{
         if(typeof v !=='function'){
@@ -59,7 +60,7 @@ export const signIn = (user,callback,trigger)=>{
           callback(user);
       }
     }
-    return {response,user:getLoggedUser()||user,token,...rest};
+    return {fetchResponse,user:getLoggedUser()||user,token,...rest};
   }).catch((e)=>{
       console.log(e.stackTrace|| e.message || e.msg," unable to signIn user")
       notify.error({...defaultObj(e),position:'top'});
