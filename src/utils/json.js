@@ -24,7 +24,11 @@ export const decycle = function decycle(obj, stack = []) {
 export const stringify = function(jsonObj,decylcleVal){
     return isJSON(jsonObj) ? jsonObj : JSON.stringify(decylcleVal !== false ? decycle(jsonObj) : jsonObj);
 }
-
+/****
+    Prend en paramètre une chaine de caractère et détermine s'il s'agit d'un JSON encodé
+    @param {json_string}, la chine de caractère à vérifier
+    @return {boolean}
+*/
 export const isJSON = function (json_string){
     if(!json_string || typeof json_string != 'string') return false;
     var text = json_string;

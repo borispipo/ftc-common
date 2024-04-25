@@ -6,7 +6,7 @@
  */
 import originalFetch from "./unfetch";
 import { buildAPIPath} from "./utils";
-import { isObj,defaultNumber,isNonNullString,defaultObj,defaultVal,extendObj,isValidURL,defaultStr} from "$cutils";
+import { isObj,defaultNumber,isNonNullString,defaultObj,defaultVal,extendObj,isValidURL,defaultStr,isJSON} from "$cutils";
 import {NOT_SIGNED_IN,SUCCESS,CREATED,ACCEPTED} from "./status/status";
 import notify from "$active-platform/notify";
 import {getToken} from "$cauth/utils";
@@ -160,7 +160,7 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
         if(d.error && typeof d.error =='string'){
              d.message = defaultVal(d.message,response.message,response.msg,d.error);
         }
-        if(isJson(d.message)){
+        if(isJSON(d.message)){
             extendObj(d,JSON.parse(d.message));    
         }
         if(response.success){
