@@ -6,7 +6,7 @@
  */
 import originalFetch from "./unfetch";
 import { buildAPIPath} from "./utils";
-import { isObj,defaultNumber,isNonNullString,defaultObj,extendObj,isValidURL,defaultStr} from "$cutils";
+import { isObj,defaultNumber,isNonNullString,defaultObj,defaultVal,extendObj,isValidURL,defaultStr} from "$cutils";
 import {NOT_SIGNED_IN,SUCCESS,CREATED,ACCEPTED} from "./status/status";
 import notify from "$active-platform/notify";
 import {getToken} from "$cauth/utils";
@@ -116,8 +116,13 @@ export {deleteApi as delete};
  *   
  *   Si le résultat issue de l'api est un objet, alors cet objet est décomposé dans la réponse à retourner à l'utilisateur
  *   Si le résultat issue de l'api n'est pas un objet, alors celui-ci est transmis dans la variable data qui résolvra la promessage * 
+     @param {
+         handleResponse {boolean}, si la reponse sera parsée où non
+         fetchResult {Any}, l'objet response issue de la fonction unfetch
+         json {boolean}, si l'objet sera parsé au format JSON
+     } si l'on veut éviter de handleResult, alors la reponse sera retournée en brute;
  */
-export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleError,...restOpts}) =>{
+export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleError,handleResponse,...restOpts}) =>{
    return new Promise((resolve,reject)=>{
       const getH = x => typeof res?.headers?.get =="function"? res.headers.get(x) : undefined;
       const contentType = defaultStr(getH("Content-Type"),getH("content-type")).toLowerCase();
@@ -142,11 +147,9 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
         if(!isJson && !isObj(d)){
            d = {};
         }
-        d.response = response;
-        d.fetchResponse = res;
-        d.parsed = isJson;
-        d.res = res;
-        d[fetchOptionsKey] = true;
+        response.res = response.response = res;
+        d.fetchResponse = response;
+        response[fetchOptionsKey] = true;
         if(!d?.error){
             if(!hasResponse || (hasSuccessResult && !("status" in response) && !("ok" in response))){
                 response.status = SUCCESS;
@@ -155,14 +158,17 @@ export const handleFetchResult = ({fetchResult:res,json,hasSuccessResult,handleE
          } 
         response.success = response.status === SUCCESS || response.status === CREATED || response.status === ACCEPTED ? true : false;
         if(d.error && typeof d.error =='string'){
-             d.message = response.message = response.msg = d.error;
+             d.message = defaultVal(d.message,response.message,response.msg,d.error);
+        }
+        if(isJson(d.message)){
+            extendObj(d,JSON.parse(d.message));    
         }
         if(response.success){
            return resolve(d)
         }
         return handleFetchError({...restOpts,...d,response,handleError}).catch(reject);
       };
-      return json !== false && isJson  && typeof res?.json =='function' ? res.json().then(cb).catch(reject) : resolve(cb(res));
+      return handleResponse !== false && json !== false && isJson  && typeof res?.json =='function' ? res.json().then(cb).catch(reject) : resolve(cb(res));
    })
  }
 export const handleFetchError = ({showError,isAuth,reject,redirectWhenNoSignin,error,response,...rest})=>{
