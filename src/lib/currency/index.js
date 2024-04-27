@@ -2,8 +2,10 @@
 import currencies from "./currencies";
 import isString from "$cutils/isString";
 import defaultStr from "$cutils/defaultStr";
+import isNonNullString from "$cutils/isNonNullString";
 const isObj = x => x && typeof x =='object';
-import appConfig from "$capp/config";
+import { getCurrency } from "$capp/currency";
+import  extendObj  from "$cutils/extendObj";
 const defaultObj = function() {
     var args = Array.prototype.slice.call(arguments,0);
     if(args.length === 1 && isObj(args[0])) return args[0];
@@ -33,7 +35,7 @@ lib.settings = {
 				thousand : " ",        // thousands separator
 				decimal_digits : 0,        // decimal places
 				grouping : 3,        // digit grouping (not implemented yet)
-				...Object.assign({},appConfig.currency)
+				...getCurrency()
 			}
 		},
 		number: {
@@ -47,22 +49,19 @@ lib.settings = {
 /* --- Internal Helper Methods --- */
 
 /**
- * Extends an object with a defaults object, similar to underscore's _.defaults
+ * Extends settings object
  *
  * Used for abstracting parameter handling from API methods
  */
-function defaults(object, defs) {
-	var custSetting = {};
-	var key;
-	if(!object | !isObj(object)){
-		object = {};
-	}
-	defs = defs || {};
-	// Iterate over object non-prototype properties:
-	for (key in defs) {
-		if (defs.hasOwnProperty(key)) {
-			// Replace values with defaults only if undefined (allow empty/zero values):
-			if (object[key] == null) object[key] = (custSetting[key] != null)? custSetting[key]:defs[key];
+function prepareOptions(...rest) {
+	const object = extendObj({},lib.settings.currency,...rest);
+	if(isNonNullString(object.format)){
+		const p = parseFormat(object.format);
+		if(p.format){
+			object.format = p.format;
+		}
+		if(typeof p.decimal_digits =="number"){
+			object.decimal_digits = p.decimal_digits;
 		}
 	}
 	return object;
@@ -87,7 +86,7 @@ function checkPrecision(val, base) {
  * Either string or format.pos must contain "%v" (value) to be valid
  */
 function checkCurrencyFormat(format) {
-	var defaults = lib.settings.currency.format;
+	let formatS = lib.settings.currency.format;
 
 	// Allow function as format parameter (should return string or object):
 	if ( typeof format === "function" ) format = format();
@@ -102,14 +101,13 @@ function checkCurrencyFormat(format) {
 			zero : format
 		};
 
-	// If no format, or object is missing valid positive value, use defaults:
+	// If no format, or object is missing valid positive value, use formatS:
 	} else if ( !format || !format.pos || !format.pos.match("%v") ) {
-
-		// If defaults is a string, casts it to an object for faster checking next time:
-		return ( !isString( defaults ) ) ? defaults : lib.settings.currency.format = {
-			pos : defaults,
-			neg : defaults.replace("%v", "-%v"),
-			zero : defaults
+		// If formatS is a string, casts it to an object for faster checking next time:
+		return ( !isString( formatS ) ) ? formatS : lib.settings.currency.format = {
+			pos : formatS,
+			neg : formatS.replace("%v", "-%v"),
+			zero : formatS
 		};
 
 	}
@@ -124,7 +122,7 @@ function checkCurrencyFormat(format) {
  * Takes a string/array of strings, removes all formatting/cruft and returns the raw float value
  * Alias: `accounting.parse(string)`
  *
- * Decimal must be included in the regular expression to match floats (defaults to
+ * Decimal must be included in the regular expression to match floats (default options to
  * accounting.settings.number.decimal), so if the number uses a non-standard decimal 
  * separator, provide it as the second argument.
  *
@@ -132,7 +130,7 @@ function checkCurrencyFormat(format) {
  *
  * Doesn't throw any errors (`NaN`s become 0) but this may change in future
  */
-var unformat = lib.unformat = lib.parse = function(value, decimal) {
+export const unformat = lib.unformat = lib.parse = function(value, decimal) {
 	// Recursively unformat arrays:
 	if ((value) && typeof value === 'object') {
 		return Object.mapToArray(value,function(val) {
@@ -162,6 +160,7 @@ var unformat = lib.unformat = lib.parse = function(value, decimal) {
 	return !isNaN(unformatted) ? unformatted : 0;
 };
 
+export const parse = unformat;
 
 /**
  * Implementation of toFixed() that treats floats more like decimals
@@ -169,7 +168,7 @@ var unformat = lib.unformat = lib.parse = function(value, decimal) {
  * Fixes binary rounding issues (eg. (0.615).toFixed(2) === "0.61") that present
  * problems for accounting- and finance-related software.
  */
-var toFixed = lib.toFixed = function(value, decimal_digits) {
+export const toFixed = lib.toFixed = function(value, decimal_digits) {
 	decimal_digits = checkPrecision(decimal_digits, lib.settings.number.decimal_digits);
 
 	var exponentialForm = Number(lib.unformat(value) + 'e' + decimal_digits);
@@ -186,7 +185,7 @@ var toFixed = lib.toFixed = function(value, decimal_digits) {
  * Localise by overriding the decimal_digits and thousand / decimal separators
  * 2nd parameter `decimal_digits` can be an object matching `settings.number`
  */
-var formatNumber = lib.formatNumber = lib.format = function(number, decimal_digits, thousand, decimal) {
+export const formatNumber = lib.formatNumber = lib.format = function(number, decimal_digits, thousand, decimal) {
 	// Resursively format arrays:
 	if ((number) && typeof number === 'object') {
 		return Object.mapToArray(number, function(val) {
@@ -197,14 +196,13 @@ var formatNumber = lib.formatNumber = lib.format = function(number, decimal_digi
 	// Clean up number:
 	number = unformat(number);
 	
-	// Build options object from second param (if object) or all params, extending defaults:
-	var opts = defaults(
+	// Build options object from second param (if object) or all params, extending default options :
+	var opts = prepareOptions(
 			(isObj(decimal_digits) ? decimal_digits : {
 				decimal_digits : decimal_digits,
 				thousand : thousand,
 				decimal : decimal
 			}),
-			lib.settings.number
 		),
 
 		// Clean up decimal_digits
@@ -214,9 +212,16 @@ var formatNumber = lib.formatNumber = lib.format = function(number, decimal_digi
 		negative = number < 0 ? "-" : "",
 		base = parseInt(toFixed(Math.abs(number || 0), usePrecision), 10) + "",
 		mod = base.length > 3 ? base.length % 3 : 0;
-
+		
+	let decimalStr = "";
+	if(usePrecision){
+		const fNum = String(parseFloat(toFixed(Math.abs(number), usePrecision)) || 0);
+		if(fNum.includes(".")){
+			decimalStr = defaultStr(fNum.split(".")[1]).trim();
+		}
+	}
 	// Format the number:
-	return negative + (mod ? base.substr(0, mod) + opts.thousand : "") + base.substr(mod).replace(/(\d{3})(?=\d)/g, "$1" + opts.thousand) + (usePrecision ? opts.decimal + toFixed(Math.abs(number), usePrecision).split('.')[1] : "");
+	return negative + (mod ? base.substr(0, mod) + opts.thousand : "") + base.substr(mod).replace(/(\d{3})(?=\d)/g, "$1" + opts.thousand) + (usePrecision && decimalStr ? (opts.decimal + decimalStr) : "");
 };
 
 /*** use for digit grouping 
@@ -226,7 +231,7 @@ function commafy( number,separator,decimal ) {
 	if(isNonNullString(separator)){
 		separator = " ";
 	}
-	if(typeof decimal != 'string') decimal = defaults({},lib.settings.currency).decimal
+	if(typeof decimal != 'string') decimal = prepareOptions({},lib.settings.currency).decimal
 	number += '';                                         // stringify
 	var num = number.split(decimal);                          // incase decimals
 	if (typeof num[0] !== 'undefined'){
@@ -251,8 +256,9 @@ function commafy( number,separator,decimal ) {
 /**
  * Format a number into currency
  *
+   le symbole peut être un objet, dans ce cas les autres propriétés peuvent être nulles
  * Usage: accounting.formatMoney(number, symbol, decimal_digits, thousandsSep, decimalSep, format)
- * defaults: (0, "$", 2, ",", ".", "%s%v")
+ * prepareOptions: (0, "$", 2, ",", ".", "%s%v")
  *
  * Localise by overriding the symbol, decimal_digits, thousand / decimal separators and format
  * Second param can be an object matching `settings.currency` which is the easiest way.
@@ -270,17 +276,15 @@ export const formatMoney = lib.formatMoney = function(number, symbol, decimal_di
 	// Clean up number:
 	number = unformat(number);
 
-	// Build options object from second param (if object) or all params, extending defaults:
-	const opts = defaults(
+	// Build options object from second param (if object) or all params, extending default options :
+	const opts = prepareOptions(
 			(isObj(symbol) ? symbol: {
-				symbol : symbol,
-				decimal_digits : decimal_digits,
-				thousand : thousand,
-				decimal : decimal,
-				format : format
-			}),
-			lib.settings.currency
-		),
+				symbol,
+				decimal_digits,
+				thousand,
+				decimal,
+				format
+			})),
 
 		// Check format (returns object with pos, neg and zero):
 		formats = defaultObj(checkCurrencyFormat(opts.format)),
@@ -290,8 +294,17 @@ export const formatMoney = lib.formatMoney = function(number, symbol, decimal_di
     const formattedValue = useFormat.replace('%s', opts.symbol);
 	const formattedNumber =  formatNumber(Math.abs(number), checkPrecision(opts.decimal_digits), opts.thousand, opts.decimal);
 	const formattedResult = formattedValue.replace('%v',formattedNumber);
+	console.log({
+		...opts,
+		formattedValue,
+		formattedNumber,
+		symbol : opts.symbol,
+		useFormat,
+		formattedResult,
+	}," is result for formated money of value ",formattedResult);
 	if(returnObject ===true){
 		return {
+			...opts,
 			formattedValue,
 			formattedNumber,
 			symbol : opts.symbol,
@@ -318,16 +331,14 @@ export const formatMoney = lib.formatMoney = function(number, symbol, decimal_di
  */
 lib.formatColumn = function(list, symbol, decimal_digits, thousand, decimal, format) {
 	if (!list || !isArray(list)) return [];
-	// Build options object from second param (if object) or all params, extending defaults:
-	var opts = defaults(
+	var opts = prepareOptions(
 			(isObj(symbol) ? symbol : {
 				symbol : symbol,
 				decimal_digits : decimal_digits,
 				thousand : thousand,
 				decimal : decimal,
 				format : format
-			}),
-			lib.settings.currency
+			})
 		),
 
 		// Check format (returns object with pos, neg and zero), only need pos for now:
@@ -369,12 +380,7 @@ lib.formatColumn = function(list, symbol, decimal_digits, thousand, decimal, for
 		return val;
 	});
 };
-if(typeof(String.prototype.formatMoney) !=='function'){
-	String.prototype.formatMoney = function({symbol, decimal_digits,decimalDigits,decimalSeparator, thousand, decimal, format}){
-		decimal_digits = defaultNumber(decimal_digits,decimalSeparator,decimalDigits)
-		return formatMoney(defaultNumber(this.toString()),symbol,decimal_digits,thousand,decimal,format)
-	}
-}
+
 export const getDefaultCurrency = ()=>{
 	let currency = {};
 	if(lib.settings.currency){
@@ -391,6 +397,39 @@ export const getDefaultCurrency = ()=>{
 	}
 	return defaultObj(lib.settings.currency);
 };
+/***
+	parse le format de la devise, et retourne un objet portant le cas échéants 2 propriétés : 
+	format : le format de la dévise parsé
+	decimals : le nombre de décimales le cas où il est inclut dans le format
+	@param {string} format, le format de la dévise, chaine de caractère combinant les caractères %s, %v et .#{0,n}, où : 
+		- %s représente le code de la dévise d'affichage,
+		- %v représente la valeur du nombre à formatté
+		- .#{0,n} représeente le nombre de décimales que l'on souhaite utiliser pour le format. avec n le n'ombre de décimales
+	 Par exemple, le format %v %s .### permet de formatter le nombre 12555.6893300244 en $ de la sorte : [12555.689 $], avec 3 décimales
+	 Si l'on souhaite n'avoir pas de décimales dans le format, il suffit de ne préciser aucun # après le point (.); par example : %s %v .
+*/
+export const parseFormat = lib.parseFormat = (format)=>{
+	format = defaultStr(format).trim();
+	const ret = {};
+	if(format){
+		const reg = /(\.)(\#{0,9}\s*$)/; //le format contient le nombre de décimales spécifiés. 
+		const m = format.match(reg);
+		if(Array.isArray(m)){
+			if(m.length === 3){
+				//on récupère le nombre de décimales
+				ret.decimal_digits = defaultStr(m[2]).trim().length; //le nombre de décimales est récupéré
+			}
+			format = format.replace(reg,""); //on remplace l'expression regulière trouvée dans le format
+		}
+		//si le format inclut le motif .[d], avec d un nombre alors le nombre suivant represente le nombre de décimale
+		ret.format = format;
+	}
+	return ret;
+}
+export const formatDescription = `Format d'affichage des valeurs numériques : une chaine de caractère constituée des lettre %v et %s où %v représente la valeur du montant et %s représente la devise : exemple %s%v => $10 et %v %s => 10 $.
+	Pour définir les décimales, utiliser le motif [.][#{0,n}], exemple : .### pour l'affichage avec 3 decimales et . pour ne pas inclure les decimales dans l'affichage. 
+	par exemple, Le format %v %s .## retourne : 12.35 $ pour la valeur 12.357777 convertie en dollard.  
+`;
 
 const CurrenCy =  {
 	updateCurrency : (currency,format,decimal_digits)=>{
@@ -405,12 +444,15 @@ const CurrenCy =  {
 			...lib.settings.currency,
 			...defaultObj(currency)
 		}
-		format = defaultStr(format,options.currencyFormat);
-		if(isNonNullString(format)){
-			lib.settings.currency.format = format;
-		}
 		decimal_digits = typeof decimal_digits =='number'? decimal_digits : typeof options.currencyDecimalDigits =='number'? options.currencyDecimalDigits : undefined;
-		if(decimal_digits){
+		const p = parseFormat(defaultStr(format,options.currencyFormat).trim())
+		if(p.format){
+			lib.settings.currency.format = p.format;
+		}
+		if(typeof p.decimal_digits =="number"){
+			decimal_digits = p.decimal_digits;
+		}
+		if(typeof decimal_digits == "number"){
 			lib.settings.number.decimal_digits =lib.settings.currency.decimal_digits = decimal_digits;
 		}
 		return lib.settings;
@@ -420,7 +462,9 @@ const CurrenCy =  {
 	currencies,
 	format : lib.formatMoney,
 	...lib,
+	formatDescription,
 }
+
 
 export default CurrenCy;
 

@@ -7,10 +7,14 @@ import isNonNullString from "$cutils/isNonNullString";
 import device from "./device";
 import session from "$session";
 import { isValidURL } from "$cutils/uri";
-import currencies from "$ccurrency/currencies";
-import {isValidCurrency} from "$ccurrency/utils";
+import { isSerializableJSON } from "$cutils/json";
+
 import  "../utils/extendObj";
 import { getPackageJson,getName,getAppId,prefixStrWithAppId,isInitializedRef} from "./config.utils";
+
+import { getCurrency,setCurrency,setCurrencyFormat,currencies } from "./currency";
+
+export * from "./currency";
 
 export * from "./config.utils";
 
@@ -44,6 +48,24 @@ export const setConfig = configValue=> {
         isInitializedRef.current = true;
     }
 }
+
+/***
+    toutes les clés de sessions dont les paramètres sont persistés en session lors de l'appel de la fonction
+    appConfig.set(key,value);
+*/
+const sessionKeys = {countryCodeSessionKey,currencyFormat:"currencyFormat",currencyCode:"currencyCode",sessionDatatKey,sessionAPIHostKey,countryCodeSessionKey};
+
+export const addSessionKey = (key)=>{
+    if(!isNonNullString(key)) return false;
+    sessionKeys[key] = key;
+    return true;
+}
+export const removeSessionKey = (key)=>{
+    if(!isNonNullString(key)) return false;
+    delete sessionKeys[key];
+    return true;
+}
+
 export const setConfigValue = (key,value)=>{
     const conf = getConfig();
     if(isNonNullString(key)){
@@ -53,11 +75,16 @@ export const setConfigValue = (key,value)=>{
             } else {
                 conf[key] = value;
             }
+
         } catch(e){
             try {
                 conf[key] = value;
             } catch{}
             console.log(e," setting config value ",key,value);
+        } finally{
+            if(sessionKeys[key] && isSerializableJSON(value)){
+                session.set(key,value);
+            }
         }
     }
     return conf;
@@ -121,6 +148,14 @@ export const setSWR = (swr)=>{
     swr = swr && typeof swr =='object' && !Array.isArray(swr)? swr : {};
     return setSessionData('swr',swr);
 }
+/****
+    supprime toutes les données de sessions liés aux configurations
+*/
+export const clearAllSessions = ()=>{
+    for(let sessionKey in sessionKeys){
+        session.set(sessionKey,null);
+    }
+}
 const config = {
     get current(){
         return getConfig();
@@ -142,6 +177,15 @@ const config = {
     },
     get env (){
         return getEnv();
+    },
+    get sessionKeys(){
+        return Object.keys(sessionKeys);
+    },
+    get addSessionKey(){
+        return addSessionKey;
+    },
+    get removeSessionKey(){
+        return removeSessionKey;
     },
     get realeaseDateStr (){
         return getReleaseDateStr();
@@ -318,6 +362,9 @@ const config = {
         }
         return getTableDataRef.current;
     },
+    get clearAllSessions(){
+        return clearAllSessions;
+    },
     get getStructData (){
         return getStructData;
     },
@@ -354,54 +401,15 @@ export const getFeeds = x=>getConfigValue("feeds");
 export const getDBNamePrefix = x=> getConfigValue("pouchdbNamePrefix") || getAppId();
 export const canRunBackgroundTasks = x=>getConfigValue("runBackgroundTasks","canRunBackgroundTasks","backgroundTasks");
 const runBackgroundTasksRef = {current:null};
-export const getCurrency = ()=> {
-    let currency = Object.assign({},session.get("appConfigCurrency"));
-    const currencyCode = getConfigValue("currencyCode");
-    if(isNonNullString(currencyCode) && isValidCurrency(currencies[currencyCode.trim().toUpperCase()])){
-        currency = {...currency,...currencies[currencyCode.trim().toUpperCase()]};
-    }
-    const format = getCurrencyFormat();
-    if(format){
-        currency.format = typeof currency.format =="string" && currency.format.toLowerCase().trim() || format;
-    }
-    return currency;
-};
+
 export const getInit = ()=>{
     return getConfigValue("init");
 }
 export const isInitialized = ()=>{
     return isInitializedRef.current;;
 }
-export const getCurrencyFormat = ()=>{
-    const r = session.get("currencyFormat");
-    return r && typeof r =="string" && r.toLowerCase().contains("%v")? r.toLowerCase() : "%v %s";
-}
-export const setCurrencyFormat = (format)=>{
-    format = format && typeof format =="string"? format.trim() : "";
-    return session.set("currencyFormat",format);
-}
-export const setCurrency = (currency)=>{
-    if(!isValidCurrency(currency)){
-        let cCode = typeof currency =="object" && currency && !Array.isArray(currency) ? currency.code : typeof currency =="string" ? currency : undefined;
-        if(cCode){
-            cCode = cCode.trim().toUpperCase();
-        }
-        if(cCode && isValidCurrency(currencies[cCode])){
-            currency = currencies[cCode];
-        } else if(typeof currency =='string') {
-            cCode = currency.trim().toUpperCase();
-            if(isValidCurrency(currencies[cCode])){
-                currency = currencies[cCode];
-            }
-        }
-    }
-    currency = Object.assign({},currency);
-    const format = getCurrencyFormat();
-    if(format){
-        currency.format = format;
-    }
-    return session.set("appConfigCurrency",currency);
-}
+
+
 export const getTheme  =x=>{
     const t = getConfigValue("theme");
     if(typeof t =='object' && t && !Array.isArray(t)){

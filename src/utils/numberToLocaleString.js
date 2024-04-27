@@ -4,7 +4,7 @@
 
 import defaultStr from "$cutils/defaultStr";
 import fNumber from "./formatNumber";
-import Currency,{getDefaultCurrency} from "$ccurrency";
+import Currency from "$ccurrency";
 import isNonNullString from "./isNonNullString";
 
 // Got this from MDN:
@@ -348,13 +348,30 @@ String.prototype.parseToDecimal = function(){
 
 /*** 
  * formate un nombre en devise : symbol, decimal_digits, thousand, decimal, format
+    @param {String} symbol, le symbole de la devise
+    @param {number} decimal_digits, le nombre de décimales
+    @param {string} thousand, le séparateur de milliers
+    @param {string} decimal, le séparateur de décimales
+    @param {string} format, le format d'affichage de la dévise par exemple : %s %v .##
+    @param {boolean} returnObject, si true alors un objet sera retourné
+    @return {string}, le nombre formatté au format money
  */
-Number.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format){
-    return Currency.formatMoney(this.valueOf(),symbol, decimal_digits, thousand, decimal, format);
+Number.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format,returnObject){
+    return Currency.formatMoney(this.valueOf(),symbol, decimal_digits, thousand, decimal, format,returnObject);
 }
 
-String.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format){
-    return Currency.formatMoney((this.toString().replaceAll(" ",'')),symbol, decimal_digits, thousand, decimal, format);
+/*** 
+ * formate un nombre en devise : symbol, decimal_digits, thousand, decimal, format
+    @param {String} symbol, le symbole de la devise
+    @param {number} decimal_digits, le nombre de décimales
+    @param {string} thousand, le séparateur de milliers
+    @param {string} decimal, le séparateur de décimales
+    @param {string} format, le format d'affichage de la dévise par exemple : %s %v .##
+    @return {string}, le nombre formatté au format money
+    @param {boolean} returnObject, si true alors un objet sera retourné
+ */
+String.prototype.formatMoney = function(symbol, decimal_digits, thousand, decimal, format,returnObject){
+    return Currency.formatMoney((this.toString().replaceAll(" ",'')),symbol, decimal_digits, thousand, decimal, format,returnObject);
 }
 
 /**** @see : https://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn */
@@ -402,13 +419,21 @@ Number.prototype.abreviate = function(){
     return abreviateNumber(this.valueOf());
 }
 /****abbrège un nombre et le formate en devise
- * @param {number} number le nombre a formatter et abréger
+ * 
+    @param {number} number le nombre a formatter et abréger
+    @param {String} symbol, le symbole de la devise
+    @param {number} decimal_digits, le nombre de décimales
+    @param {string} thousand, le séparateur de milliers
+    @param {string} decimal, le séparateur de décimales
+    @param {string} format, le format d'affichage de la dévise par exemple : %s %v .##
+    @return {string}, le nombre formatté au format money
+    @param {boolean} returnObject, si true alors un objet sera retourné
  */
-export const abreviate2FormatMoney = (number)=>{
-    const {value,format,formattedValue} = _abreviateNumber(number,true);
+export const abreviate2FormatMoney = (number,symbol, decimal_digits, thousand, decimal, format)=>{
+    const {value,format:fStr,formattedValue} = _abreviateNumber(number,true);
     if(typeof value !='number') return formattedValue;
-    const {formattedValue:fVal} =  Currency.formatMoney(value,undefined, undefined, undefined, undefined, undefined,true);
-    return fVal.replace('%v',Math.abs(value).formatNumber()+format);
+    const {formattedValue:fVal} =  Currency.formatMoney(value,symbol, decimal_digits, thousand, decimal, format,true);
+    return fVal.replace('%v',Math.abs(value).formatNumber()+fStr);
 }
 Number.prototype.abreviate2FormatMoney = Number.prototype.abreviate2formatMoney = function(){
     return abreviate2FormatMoney(this.valueOf());
