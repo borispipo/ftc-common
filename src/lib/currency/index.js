@@ -294,14 +294,6 @@ export const formatMoney = lib.formatMoney = function(number, symbol, decimal_di
     const formattedValue = useFormat.replace('%s', opts.symbol);
 	const formattedNumber =  formatNumber(Math.abs(number), checkPrecision(opts.decimal_digits), opts.thousand, opts.decimal);
 	const formattedResult = formattedValue.replace('%v',formattedNumber);
-	console.log({
-		...opts,
-		formattedValue,
-		formattedNumber,
-		symbol : opts.symbol,
-		useFormat,
-		formattedResult,
-	}," is result for formated money of value ",formattedResult);
 	if(returnObject ===true){
 		return {
 			...opts,
