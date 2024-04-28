@@ -115,7 +115,11 @@ export const observable = function(el) {
       writable: false,
       configurable: false
     },
-
+    getEventCallBacks : {
+      value : function(){
+        return callbacks
+      }
+    },
     /**
      * Execute all callback functions that listen to
      * the given `event`. if the last argument is function then il will be considered as the

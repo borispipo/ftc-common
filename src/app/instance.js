@@ -182,23 +182,24 @@ if(electronMessageApi){
         mainGlobal.addEventListener("message", function(event) {
             // event.source === window means the message is coming from the preload
             // script, as opposed to from an <iframe> or other source
-            if (/*event.origin === "file://" &&*/ event.source === window) {
+            if (event.source === mainGlobal) {
                 if(!isObj(event.data) || !event.data.message || typeof event.data.message !=='string' || !event.data.message.startsWith("ELECTRON_MESSAGE/")){
                     return ;
                 }
-                const {message:cMessage,params:cParams,...rest} = event.data;
+                const {message:cMessage,params:cParams} = event.data;
                 const message = cMessage.trim().ltrim("ELECTRON_MESSAGE/");
                 const params = Array.isArray(cParams)? cParams : [];
                 params.unshift(message);
+                console.log(message," electron event message ",params);
                 switch(message){
                     case "GET_APP_INSTANCE" :
-                        if(typeof ELECTRON.onGetAppInstance =="function"){
+                        if(typeof ELECTRON.onGetAppInstance =="function",mainGlobal.ELECTRON?.onGetAppInstance, ELECTRON){
                             return ELECTRON.onGetAppInstance(APP_INSTANCE);
                         } 
                         break;
                 }
                 if(typeof electronMessageApi.trigger =='function'){
-                    electronMessageApi.trigger.call(electronMessageApi,params);
+                    electronMessageApi.trigger.call(electronMessageApi,message,params);
                 }   
             }
         });

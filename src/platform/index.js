@@ -5,5 +5,8 @@ export * from "./utils";
 
 export default {
     ...Platform,
-    ...ActivePlatform
+    ...ActivePlatform,
+    get isExpoUI (){
+        return ()=> ActivePlatform.IS_EXPO_UI_APP === true;
+    }
 };

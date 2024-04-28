@@ -7,3 +7,5 @@ import { Platform } from "react-native";
 export default Platform;
 
 export const isReactNative = ()=> true;
+
+export const IS_EXPO_UI_APP = true;
