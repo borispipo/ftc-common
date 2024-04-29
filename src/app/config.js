@@ -20,6 +20,8 @@ export * from "./config.utils";
 
 const configRef = {current:getPackageJson()};
 
+const countryCodeSessionKey = "countryCodeSessionKey";
+
 /**** l'ensemble des tables de la base de données */
 const tablesDataRef = {current:null};
 
@@ -89,7 +91,6 @@ export const setConfigValue = (key,value)=>{
     }
     return conf;
 }
-const countryCodeSessionKey = "countryCodeSessionKey";
 export const getCountryCode = ()=>{
     const s = session.get(countryCodeSessionKey);
     return s && typeof s =='string'? s.trim() : "";
