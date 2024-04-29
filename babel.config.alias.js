@@ -109,6 +109,8 @@ module.exports = function(opts){
     if(!r.$appConfig){
         r.$appConfig = r.$cappConfig;
     }
+    const cAssets = path.resolve(src,"assets");
+    assets = typeof assets =="string" && fs.existsSync(path.resolve(assets))? path.resolve(assets) : fs.existsSync(cAssets) ? cAssets : undefined;
     if(assets){
         r["$assets"] = assets;
         r["$images"] = path.resolve(assets,"images");
