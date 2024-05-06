@@ -434,6 +434,19 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
 
 export default utils;
 
+const reduceParts = (parts,opts)=>{
+    return (Array.isArray(parts)? parts : []).reduce((prev, curr) => {
+        const c = whereClauseToSQL(curr,opts);
+        return c ? [...prev,c] : prev;
+    }, []).map((query)=>{
+        if(query.field === MANGO_QUERY_OPERATOR){
+            delete query.field;
+            query.operand = reduceParts(query.operand,opts);
+        }
+        return query;
+    });
+}
+
 /*** convertis les filtres pris au format mangoesQuey, au format de sortie SQL
  * @see : https://github.com/gordonBusyman/mongo-to-sql-converter
  * @param {object} queries, les requêtes au format mango query à convertir au format SQL
@@ -441,16 +454,7 @@ export default utils;
 export const parseMangoQueries = (queries,opts)=>{
     if(!isObjOrArray(queries)) return [];
     opts = isObj(opts)? opts : {}; 
-    const whereParsed = mangoParser.parse(queries)
-    return whereParsed.parts.reduce((prev, curr) => {
-        const c = whereClauseToSQL(curr,opts);
-        return c ? [...prev,c] : prev;
-    }, []).map((query)=>{
-        if(query.field === MANGO_QUERY_OPERATOR){
-            delete query.field;
-        }
-        return query;
-    });
+    return reduceParts(mangoParser.parse(queries)?.parts,opts)
 }
 export const getOptimizedOperator = (operator,opts)=>{
     opts = typeof opts =='object' && opts || {};
@@ -469,10 +473,13 @@ export const getOptimizedOperator = (operator,opts)=>{
 export const MANGO_QUERY_OPERATOR = "MANGO_QUERY_OPERATOR";
 const whereClauseToSQL = (currentMongoParserElement,opts) => {
     let { field, operator, operand } = currentMongoParserElement;
-    if(!isNonNullString(operator) || !operatorsMap[operator]) {
-        return null;
+    if(!isNonNullString(operator)) return null;
+    if(!operatorsValuesByKeys[operator]){
+        if(!operatorsMap[operator]) {
+            return null;
+        }
+        operator = operatorsMap[operator];
     }
-    operator = operatorsMap[operator]
     if(operator == 'LIKE'){
         const deparsed = regexDeparser(operand);
         if(!isObj(deparsed)){
@@ -534,7 +541,10 @@ const operatorsMap = {
     $eq: '=',
     $regex : "LIKE"
   }
-
+  const operatorsValuesByKeys = {};
+  for(let i in operatorsMap){
+    operatorsValuesByKeys[operatorsMap[i]] = i;
+  }
   const statementParamsCounterRef = {current:0};
  /**
  *
