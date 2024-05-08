@@ -25,7 +25,7 @@ module.exports = function(opts){
     /***** faire une copie du fichier package.json, situé à la racine du projet */
     const rootDir = path.resolve(__dirname);
     const common = path.resolve(rootDir,"src");
-    let {projectRoot,withPouchdb,withPouchDB,assets,alias,packageJSON:cPackageJSON,platform} = opts && typeof opts =="object"? opts : {};
+    let {projectRoot,withPouchdb,withPouchDB,assets,alias,platform} = opts && typeof opts =="object"? opts : {};
     platform = getPlatform(platform);
     withPouchDB = withPouchDB || withPouchdb;
     projectRoot = projectRoot && typeof projectRoot =='string' && fs.existsSync(projectRoot) ? projectRoot : process.cwd();;
