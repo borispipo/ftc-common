@@ -1,6 +1,8 @@
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+const pdfMake = require('pdfmake/build/pdfmake.js');
+const pdfFonts = require('pdfmake/build/vfs_fonts.js');
+if(pdfFonts?.pdfMake?.vfs){
+	pdfMake.vfs = pdfFonts.pdfMake.vfs;
+}
 const fonts = {
 	Roboto: {
 		normal: 'Roboto-Regular.ttf',

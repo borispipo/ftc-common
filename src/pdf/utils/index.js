@@ -103,9 +103,9 @@ export const pageBreakBefore = (cb)=>{
 
 export const createHeader = (options)=>{
     options = defaultObj(options);
+    const {header,headerAlignment,headerFontSize,headerTextColor} = options;
     if(isObj(header) && Object.size(header,true)) return header;
     if(Array.isArray(header) && header.length) return header;
-    const {header,headerAlignment,headerFontSize,headerTextColor} = options;
     if(isNonNullString(header)){
         return {
             text : header,
