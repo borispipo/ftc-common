@@ -3,9 +3,9 @@
 // license that can be found in the LICENSE file.
 
 import defaultStr from "$cutils/defaultStr";
+import { getCurrency } from "$capp/currency";
 const writtenNumber = require('written-number');
 const isNumber = x=> typeof x =="number";
-import appConfig from "$capp/config";
 
 export default function numberToWords(number,options){
     if(isNonNullString(options)){
@@ -27,7 +27,7 @@ Number.prototype.formatWord = function(language,withCurrency){
     let ret = number.formatNumber();
     try {
         ret = writtenNumber(Math.trunc(number),{lang:language});
-        const currency = Object.assign({},appConfig.currency);
+        const currency = Object.assign({},getCurrency());
         if(isNumber(currency.decimal_digits) && currency.decimal_digits > 0){
             decimalPart = number.toFixed(currency.decimal_digits);
             if(decimalPart.contains(".")){

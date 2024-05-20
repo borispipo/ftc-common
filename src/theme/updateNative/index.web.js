@@ -6,7 +6,7 @@ import {uniqid,defaultStr} from "$cutils";
 import { isWeb } from "$cplatform";
 import { TIPPY_THEME } from "./utils";
 const themeDomId = uniqid("web-theme-id");
-import {Colors} from "$theme";
+import Colors from "$theme/colors";
 
 /*** met à jour le theme en environnement web */
 export default function updateWebTheme(theme){
