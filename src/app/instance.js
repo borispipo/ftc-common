@@ -190,7 +190,6 @@ if(electronMessageApi){
                 const message = cMessage.trim().ltrim("ELECTRON_MESSAGE/");
                 const params = Array.isArray(cParams)? cParams : [];
                 params.unshift(message);
-                console.log(message," electron event message ",params);
                 switch(message){
                     case "GET_APP_INSTANCE" :
                         if(typeof ELECTRON.onGetAppInstance =="function",mainGlobal.ELECTRON?.onGetAppInstance, ELECTRON){
