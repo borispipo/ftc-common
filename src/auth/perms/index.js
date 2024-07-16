@@ -128,7 +128,16 @@ const checkPerm = ({perms,resource,action}) =>{
         }
         return result;
     }
-    if(!isObj(perms) || !isNonNullString(resource)) {
+    if(isObjectOrArray(action)){
+        const r2 = {};
+        for(let k in action){
+            if(isNonNullString(action[k])){
+                r2[action[k]] =  checkPerm({perms,resource,action:action[k]});
+            }
+        }
+        return r2;
+    }
+    if(!isObj(perms) || !isNonNullString(resource) || !isNonNullString(action)) {
         return false;
     }
     resource = resource.trim().toLowerCase();
@@ -136,8 +145,10 @@ const checkPerm = ({perms,resource,action}) =>{
     if(isMasterAdminRessource){
         return SignIn2SignOut.isMasterAdmin();
     }
-    let isOA = isObjectOrArray(action);
-    let r2 = false;
+    const action2resource = `${resource.rtrim("/")}/${action.ltrim("/")}`;
+    if(isNonNullString(perms[action2resource]) && perms[action2resource].toLowerCase().split("2").includes("all")){
+       return true;
+    }
     for (let perm_resource in perms){
         ///la permission qu'a l'utilisateur sur la resource
         const user_perm = defaultStr(perms[perm_resource]).trim().toLowerCase();
@@ -145,45 +156,16 @@ const checkPerm = ({perms,resource,action}) =>{
         perm_resource = perm_resource.trim().toLowerCase();
         if(perm_resource == resource){
             let containsAll = user_perm =="all" //|| user_perm.contains("all2") || user_perm.contains("2all")
-            if(!isOA){
-                action = defaultStr(action,'read').trim().toLowerCase();
-                if(containsAll || action =='read' || userPermSplit.includes(action)){
-                    return true;
-                }
-                if(checkPAction({action,user_perm})){
-                    return true;
-                } 
-            } else {
-                r2 = {};
-                if(containsAll) {
-                    for(let k in action){
-                        if(isNonNullString(action[k])){
-                            r2[action[k]] = true;
-                        }
-                    }
-                    return r2;
-                }  else {
-                    for(let k in action){
-                        if(isNonNullString(action[k])){
-                            let p = checkPAction({action:action[k],user_perm});;
-                            r2[action[k]] = p;
-                        }
-                        r2.read = true;
-                    }
-                }
-                return r2;
+            action = defaultStr(action,'read').trim().toLowerCase();
+            if(containsAll || action =='read' || userPermSplit.includes(action)){
+                return true;
             }
+            if(checkPAction({action,user_perm})){
+                return true;
+            } 
         }
     }
-    if(isOA){
-        r2 = {};
-        for(let k in action){
-            if(isNonNullString(action[k])){
-                r2[action[k]] = false;
-            }
-        }
-    } 
-    return r2;
+    return false;
 }
 /**** 
  *  vérifie si l'utilisateur est autorisé à manipuler la ressource
