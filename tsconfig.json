@@ -3,6 +3,8 @@
       "*.tsx": "typescriptreact",
       "*.ts": "typescriptreact"
     },
+    "include": ["src/*"],
+    "exclude": [],
     "compilerOptions": {
       "strict": true,
       "baseUrl": ".",

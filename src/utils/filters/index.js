@@ -434,17 +434,19 @@ export const prepareFilters = (filtersToPrepare,opts)=>{
 
 export default utils;
 
-const reduceParts = (parts,opts)=>{
-    return (Array.isArray(parts)? parts : []).reduce((prev, curr) => {
+const reduceParts = (queries,opts)=>{
+    const parts = Array.isArray(queries?.parts)? queries.parts : [];
+    if(queries?.parts){
+        delete queries.parts;
+    }
+    return (parts).reduce((prev, curr) => {
+        if(Array.isArray(curr?.parts) && curr?.parts?.length){
+            curr.operand = reduceParts(curr,opts);
+        }
+        delete curr.parts;
         const c = whereClauseToSQL(curr,opts);
         return c ? [...prev,c] : prev;
-    }, []).map((query)=>{
-        if(query.field === MANGO_QUERY_OPERATOR){
-            delete query.field;
-            query.operand = reduceParts(query.operand,opts);
-        }
-        return query;
-    });
+    }, []);
 }
 
 /*** convertis les filtres pris au format mangoesQuey, au format de sortie SQL
@@ -454,7 +456,7 @@ const reduceParts = (parts,opts)=>{
 export const parseMangoQueries = (queries,opts)=>{
     if(!isObjOrArray(queries)) return [];
     opts = isObj(opts)? opts : {}; 
-    return reduceParts(mangoParser.parse(queries)?.parts,opts)
+    return reduceParts(mangoParser.parse(queries),opts)
 }
 export const getOptimizedOperator = (operator,opts)=>{
     opts = typeof opts =='object' && opts || {};
@@ -505,8 +507,7 @@ const whereClauseToSQL = (currentMongoParserElement,opts) => {
     if (!isNonNullString(field)) {
       // parse nested elements
       const nested = operand.reduce((prev, curr) => {
-        const parsed = mangoParser.parse(curr);
-        const prepared = whereClauseToSQL(parsed.parts[0],opts);
+        const prepared = whereClauseToSQL(curr,opts);
         if(prepared){
             return [...prev,prepared]
         }
@@ -514,7 +515,7 @@ const whereClauseToSQL = (currentMongoParserElement,opts) => {
       }, []);
       // nested WHERE element
       return {
-        field: MANGO_QUERY_OPERATOR,
+        //field: MANGO_QUERY_OPERATOR,
         operator,
         operand: nested
       }
@@ -526,6 +527,7 @@ const whereClauseToSQL = (currentMongoParserElement,opts) => {
       operand
     }
   }
+  
 
   // map mongoDB -> SQL operators
 const operatorsMap = {
@@ -577,6 +579,7 @@ const operatorsMap = {
         }
         return isInOperator? `(:...${_field})` : `:${_field}`;
     }
+    const getFieldCondition = x=>hasStamentsParms ? getStatement() : operand;
     if (typeof operand === 'string') { // wrap strings in double quots
       if(!isNonNullString(field)) return null;
       if(hasStamentsParms){
@@ -593,8 +596,9 @@ const operatorsMap = {
         const opRand = operand.join(', ');
         return isNonNullString(opRand)? ('(' + opRand + ')') : "";
     } else if (!isNonNullString(field) && Array.isArray(operand)) { // AND or OR elements
-      // recursively call 'buildSQLWhereElement' for nested elements
-      // join each element with operator AND or OR
+      const sqlConditions = operand.map(elem => buildSQLWhereElement(elem,statementsParams,fields,opts)).filter((v)=>isNonNullString(v) && !!v.trim()).join(` ${operator} `)
+      return sqlConditions ? `${sqlConditions}` : "";
+
       return operand.reduce((prev, curr) => {
         const sqlElt = buildSQLWhereElement(curr,statementsParams,fields,opts);
         if(isNonNullString(sqlElt) && sqlElt.trim()){
@@ -603,7 +607,7 @@ const operatorsMap = {
         return prev;
       }, []).join(' ' + operator + ' ')
     } else if(isNonNullString(field)) {
-        return hasStamentsParms ? getStatement() : operand;
+        return getFieldCondition();
     }
     return null;
 }
@@ -623,6 +627,10 @@ const operatorsMap = {
      }
      return field;
   }
+  
+  
+
+
   /**
    *
    * @param {*} elem
