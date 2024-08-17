@@ -61,9 +61,9 @@ export const isAllowedFromString = isAllowedFromStr;
 const checkPSingle = ({user_perm,action})=>{
     if(user_perm == action) return true;
     if(user_perm =="all") return true;
-    if(user_perm == "write" && action == "create") return true;
-    if(user_perm == "remove" && action == "delete") return true;
-    if(user_perm == "update" && action == "edit") return true;
+    if(user_perm == "write" && action == "create" || user_perm =="create" && action =="write") return true;
+    if(user_perm == "remove" && action == "delete" || user_perm === "delete" && action ==="remove") return true;
+    if(user_perm == "update" && action == "edit" || user_perm ==="edit" && action =="update") return true;
     if(action == "read") return true;
     return false;
 }
