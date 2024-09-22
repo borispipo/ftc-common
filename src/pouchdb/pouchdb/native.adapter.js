@@ -4,7 +4,7 @@
 
 'use strict'
 import * as SQLite from 'expo-sqlite';
-const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core').default
+const WebSqlPouchCore = require('./adapters/websql').default
 const adapter = 'mobile-native-sqlite';
 function createOpenDBFunction (opts) {
   return function (name, version, description, size) {
