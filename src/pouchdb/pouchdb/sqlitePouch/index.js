@@ -1,5 +1,5 @@
 
-const WebSqlPouchCore = require('@craftzdog/pouchdb-adapter-websql-core')
+const WebSqlPouchCore = require('../adapters/websql')
 export default function(openDatabase){
   const sqlitePlugin = typeof openDatabase =='function'? {openDatabase} : window.sqlitePlugin;
   if(typeof(sqlitePlugin) !=='object' || !sqlitePlugin || typeof(sqlitePlugin.openDatabase) !=='function'){
